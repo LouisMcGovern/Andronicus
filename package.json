@@ -5,7 +5,8 @@
   "description": "Andronicus English grinds website",
   "scripts": {
     "start": "serve .",
-    "dev": "serve ."
+    "dev": "serve .",
+    "build": "node scripts/generate-config.js"
   },
   "devDependencies": {
     "serve": "^14.2.4"

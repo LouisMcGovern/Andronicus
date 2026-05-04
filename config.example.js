@@ -1,6 +1,15 @@
 /**
- * Copy this file to config.local.js (same folder as index.html) and fill in values.
- * config.local.js is gitignored so keys stay off the repo.
+ * Local development:
+ * - Copy this file to config.local.js (same folder as index.html) and fill in values.
+ * - config.local.js is gitignored so keys stay off the repo.
+ *
+ * Vercel production:
+ * - Do not commit config.local.js.
+ * - Set environment variables in Vercel:
+ *   ANDRONICUS_SUPABASE_URL
+ *   ANDRONICUS_SUPABASE_ANON_KEY
+ *   ANDRONICUS_ADMIN_API_SECRET
+ * - Build step runs scripts/generate-config.js to create config.local.js at deploy time.
  *
  * 1) Create a project at https://supabase.com
  * 2) Run the SQL in supabase/migrations/ (SQL Editor → New query → paste → Run)
