@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Online English grinds for French-speaking students. Small groups, clear structure, progress checks. Louis McGovern, Trinity College Dublin." />
+  <title>Andronicus · English Grinds</title>
+  <script>
+    try {
+      if (localStorage.getItem("andronicus_lang") === "fr") document.documentElement.lang = "fr";
+    } catch (e) {}
+    try {
+      document.documentElement.setAttribute(
+        "data-theme",
+        localStorage.getItem("andronicus_theme") === "dark" ? "dark" : "light"
+      );
+    } catch (e) {
+      document.documentElement.setAttribute("data-theme", "light");
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Outfit:wght@400;500;600&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a href="#main-content" class="skip-link" data-i18n="skip_to_content">Skip to content</a>
+  <div class="theme-switch theme-switch--fixed" role="group" data-i18n-aria="theme_aria">
+    <button type="button" class="theme-switch__btn" data-theme-value="light" data-i18n="theme_light" aria-pressed="true">Light</button>
+    <button type="button" class="theme-switch__btn" data-theme-value="dark" data-i18n="theme_dark" aria-pressed="false">Dark</button>
+  </div>
+  <div class="lang-switch lang-switch--fixed" role="group" data-i18n-aria="lang_aria">
+    <button type="button" class="lang-switch__btn" data-lang="en" data-i18n="lang_en" aria-pressed="true">English</button>
+    <button type="button" class="lang-switch__btn" data-lang="fr" data-i18n="lang_fr" aria-pressed="false">Français</button>
+  </div>
+
+  <div id="intro-overlay" class="intro-overlay" aria-hidden="true">
+    <h1 class="intro-title">Andronicus</h1>
+  </div>
+
+  <div id="app" class="app hidden-until-intro">
+    <header class="site-header">
+      <div class="brand-card">
+        <h1 class="site-title">Andronicus</h1>
+        <p class="tagline" data-i18n="tagline">Learn English with confidence, energy, and real progress</p>
+      </div>
+    </header>
+
+    <nav class="main-nav" data-i18n-aria="nav_main_aria" aria-label="Main sections">
+      <button type="button" class="nav-card" data-section="about">
+        <span class="nav-card__label" data-i18n="nav_about_label">About the teacher</span>
+        <span class="nav-card__hint" data-i18n="nav_about_hint">Who I am &amp; my background</span>
+      </button>
+      <button type="button" class="nav-card" data-section="process">
+        <span class="nav-card__label" data-i18n="nav_process_label">The process</span>
+        <span class="nav-card__hint" data-i18n="nav_process_hint">How grinds work &amp; what to expect</span>
+      </button>
+      <button type="button" class="nav-card" data-section="content">
+        <span class="nav-card__label" data-i18n="nav_content_label">Content</span>
+        <span class="nav-card__hint" data-i18n="nav_content_hint">Learning materials by level</span>
+      </button>
+      <button type="button" class="nav-card" data-section="booking">
+        <span class="nav-card__label" data-i18n="nav_booking_label">Booking</span>
+        <span class="nav-card__hint" data-i18n="nav_booking_hint">Choose a time &amp; register</span>
+      </button>
+      <button type="button" class="nav-card" data-section="account">
+        <span class="nav-card__label" data-i18n="nav_account_label">Student account</span>
+        <span class="nav-card__hint" data-i18n="nav_account_hint">Log in and track your progress</span>
+      </button>
+    </nav>
+
+    <main id="main-content" class="panels" tabindex="-1">
+      <!-- Home / back control -->
+      <div class="panel-toolbar">
+        <button type="button" id="btn-home" class="btn-text hidden" data-i18n="btn_home">← Back to home</button>
+      </div>
+
+      <section id="panel-home" class="panel panel--home">
+        <section class="home-why" aria-labelledby="home-why-heading">
+          <h2 id="home-why-heading" class="home-section-title home-section-title--why" data-i18n="why_section_title">Why Choose Andronicus?</h2>
+          <ul class="why-points">
+            <li class="why-point">
+              <h3 class="why-point__title" data-i18n="why_3_title">I'm a Student Too</h3>
+              <p class="why-point__body" data-i18n="why_3_body"></p>
+            </li>
+            <li class="why-point">
+              <h3 class="why-point__title" data-i18n="why_2_title">You Can See Progress</h3>
+              <p class="why-point__body" data-i18n="why_2_body"></p>
+            </li>
+            <li class="why-point">
+              <h3 class="why-point__title" data-i18n="why_1_title">Small Groups</h3>
+              <p class="why-point__body" data-i18n="why_1_body"></p>
+            </li>
+          </ul>
+        </section>
+
+        <p class="home-trust-line" data-i18n="home_trust_line"></p>
+
+        <section class="home-faq" aria-labelledby="home-faq-heading">
+          <h2 id="home-faq-heading" class="home-section-title" data-i18n="faq_section_title">Frequently asked questions</h2>
+          <dl class="faq-list">
+            <div class="faq-item">
+              <dt class="faq-q" data-i18n="faq_q1">Who are the lessons for?</dt>
+              <dd class="faq-a" data-i18n="faq_a1"></dd>
+            </div>
+            <div class="faq-item">
+              <dt class="faq-q" data-i18n="faq_q2">Where do lessons happen?</dt>
+              <dd class="faq-a" data-i18n="faq_a2">On Zoom. You’ll get the practical details after we confirm your booking.</dd>
+            </div>
+            <div class="faq-item">
+              <dt class="faq-q" data-i18n="faq_q3">How do I book?</dt>
+              <dd class="faq-a" data-i18n="faq_a3">Send a booking request with your preferred times. It is not final until I confirm with you by message or email.</dd>
+            </div>
+            <div class="faq-item">
+              <dt class="faq-q" data-i18n="faq_q4">What level do I need?</dt>
+              <dd class="faq-a" data-i18n="faq_a4">Beginner, intermediate, and advanced tracks are available. If you are unsure, tell me in your message and we’ll place you sensibly.</dd>
+            </div>
+            <div class="faq-item">
+              <dt class="faq-q" data-i18n="faq_q5">How will I know my booking is confirmed?</dt>
+              <dd class="faq-a" data-i18n="faq_a5"></dd>
+            </div>
+            <div class="faq-item">
+              <dt class="faq-q" data-i18n="faq_q6"></dt>
+              <dd class="faq-a" data-i18n="faq_a6"></dd>
+            </div>
+          </dl>
+        </section>
+
+        <section class="home-contact card-cta" aria-labelledby="home-contact-heading">
+          <h2 id="home-contact-heading" class="home-section-title home-section-title--compact" data-i18n="contact_section_title">Questions before you book?</h2>
+          <p class="home-contact__text" data-i18n-html="contact_section_html"></p>
+          <button type="button" class="btn-primary" id="btn-home-contact-booking" data-i18n="hero_cta_book">Book a lesson</button>
+        </section>
+      </section>
+
+      <section id="panel-about" class="panel hidden">
+        <h2 data-i18n="about_title">About the teacher</h2>
+        <div class="prose prose--about">
+          <p data-i18n-html="about_p1_html"></p>
+          <p data-i18n-html="about_p2_html"></p>
+          <p data-i18n-html="about_p3_html"></p>
+          <p data-i18n-html="about_p4_html"></p>
+          <p data-i18n-html="about_p5_html"></p>
+        </div>
+        <div class="teacher-gallery" aria-label="Teacher photos">
+          <div class="teacher-gallery__frame teacher-gallery__frame--focus-left">
+            <img src="assets/teacher-1.png" alt="Louis McGovern in a collared shirt (left) at a dinner event" loading="lazy" />
+          </div>
+          <div class="teacher-gallery__frame teacher-gallery__frame--focus-left teacher-gallery__frame--chess">
+            <img src="assets/teacher-chess.png" alt="Louis McGovern in a navy suit, smiling, playing chess" loading="lazy" />
+          </div>
+        </div>
+      </section>
+
+      <section id="panel-process" class="panel hidden">
+        <h2 data-i18n="process_title">The process</h2>
+        <p class="process-intro" data-i18n="process_steps_intro"></p>
+        <div class="process-steps" role="list">
+          <article class="step-card" role="listitem">
+            <span class="step-card__num" aria-hidden="true">1</span>
+            <h3 class="step-card__title" data-i18n="process_step_1_title">Get in touch</h3>
+            <p class="step-card__body" data-i18n-html="process_step_1_html"></p>
+          </article>
+          <article class="step-card" role="listitem">
+            <span class="step-card__num" aria-hidden="true">2</span>
+            <h3 class="step-card__title" data-i18n="process_step_2_title">Booking</h3>
+            <p class="step-card__body" data-i18n-html="process_step_2_html"></p>
+          </article>
+          <article class="step-card" role="listitem">
+            <span class="step-card__num" aria-hidden="true">3</span>
+            <h3 class="step-card__title" data-i18n="process_step_3_title">Pay and attend</h3>
+            <p class="step-card__body" data-i18n-html="process_step_3_html"></p>
+          </article>
+        </div>
+        <div class="process-actions">
+          <button type="button" class="btn-primary process-actions__btn" id="btn-process-open-booking" data-i18n="process_btn_booking">Open booking</button>
+          <p class="process-actions__hint" data-i18n="process_actions_hint"></p>
+        </div>
+        <section class="process-extra" aria-labelledby="process-extra-heading">
+          <h3 id="process-extra-heading" class="process-extra__title" data-i18n="process_extra_heading">Fees, homework, and how it works</h3>
+          <div class="prose prose--process-detail">
+          <p data-i18n-html="process_p1_html">
+            Each grind lasts <strong>one hour</strong> and costs <strong>€25 per student per session</strong>.
+            There is a <strong>maximum of four students</strong> in each class so everyone can participate and
+            receive attention.
+          </p>
+          <p data-i18n-html="process_p2_html">
+            Every student is followed individually. Progress is tracked over the year with
+            <strong>graphs</strong> that reflect improvement alongside <strong>test results</strong> and
+            <strong>class performance</strong>, so strengths and next steps stay visible.
+          </p>
+          <p data-i18n-html="process_p3_html">
+            Lessons combine structure and immersion: we cover <strong>grammar</strong> systematically, and we
+            also use <strong>debates</strong>, <strong>homework</strong>, recommended <strong>films and series</strong>,
+            and <strong>music</strong> so English comes from real situations, not only a textbook.
+          </p>
+          <p data-i18n-html="process_zoom_plus_html"></p>
+          <p data-i18n-html="process_p4_html"></p>
+          <p data-i18n-html="process_p5_html">
+            <strong>Contact:</strong>
+            <a href="tel:+353833198980">+353 (83) 319 8980</a>
+            ·
+            <a href="mailto:louis.f.mcgovern@gmail.com">louis.f.mcgovern@gmail.com</a>
+          </p>
+          </div>
+        </section>
+      </section>
+
+      <section id="panel-content" class="panel panel--content hidden">
+        <div id="content-levels" class="content-levels">
+          <div id="level-picker" class="level-picker">
+            <p class="content-intro" data-i18n-html="content_intro">Choose your level. Content is uploaded by English level, and the password is required each time. If you would like access, <strong>contact me</strong> and we can arrange a <strong>10-minute chat</strong>.</p>
+            <div class="level-buttons" role="group" data-i18n-aria="content_levels_aria" aria-label="English level">
+              <button type="button" class="btn-level" data-level="beginner" data-i18n="level_beginner">Beginner</button>
+              <button type="button" class="btn-level" data-level="intermediate" data-i18n="level_intermediate">Intermediate</button>
+              <button type="button" class="btn-level" data-level="advanced" data-i18n="level_advanced">Advanced</button>
+            </div>
+          </div>
+          <div id="content-password-overlay" class="content-password-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="content-password-heading">
+            <div class="content-password-overlay__box">
+              <div class="content-password-overlay__head">
+                <h2 id="content-password-heading" class="content-password-overlay__title" data-i18n="content_password_title">Enter password</h2>
+                <button type="button" id="content-password-close" class="btn-icon-close" data-i18n-aria="content_password_close_aria" aria-label="Cancel and return to levels">×</button>
+              </div>
+              <p id="content-password-for-level" class="content-password-overlay__hint"></p>
+              <form id="content-password-form" class="inline-form inline-form--stack">
+                <label for="content-password" data-i18n="content_password_label">Password</label>
+                <input type="password" id="content-password" name="password" autocomplete="off" />
+                <button type="submit" class="btn-primary" data-i18n="content_password_submit">Continue</button>
+              </form>
+              <p id="content-password-error" class="form-error hidden" role="alert" data-i18n="content_password_error">Incorrect password.</p>
+            </div>
+          </div>
+          <article id="content-beginner" class="level-article hidden">
+            <div class="level-article__top">
+              <button type="button" class="btn-level-back" data-i18n="content_back_levels">← Back to levels</button>
+              <button type="button" class="btn-level-close btn-icon-close" data-i18n-aria="content_close_aria" aria-label="Close and return to levels">×</button>
+            </div>
+            <h3 data-i18n="level_beginner">Beginner</h3>
+            <div class="learning-tools" data-learning-level="beginner">
+              <div class="tool-menu">
+                <button type="button" class="tool-menu__btn is-active" data-tool="flashcards">Flashcards</button>
+                <button type="button" class="tool-menu__btn" data-tool="vocab">Vocabulary</button>
+                <button type="button" class="tool-menu__btn" data-tool="exercises">Exercises</button>
+                <button type="button" class="tool-menu__btn" data-tool="schedule">Weekly Schedule</button>
+              </div>
+              <section class="tool-panel" data-tool-panel="flashcards"></section>
+              <section class="tool-panel hidden" data-tool-panel="vocab"></section>
+              <section class="tool-panel hidden" data-tool-panel="exercises"></section>
+              <section class="tool-panel hidden" data-tool-panel="schedule"></section>
+            </div>
+          </article>
+          <article id="content-intermediate" class="level-article hidden">
+            <div class="level-article__top">
+              <button type="button" class="btn-level-back" data-i18n="content_back_levels">← Back to levels</button>
+              <button type="button" class="btn-level-close btn-icon-close" data-i18n-aria="content_close_aria" aria-label="Close and return to levels">×</button>
+            </div>
+            <h3 data-i18n="level_intermediate">Intermediate</h3>
+            <div class="learning-tools" data-learning-level="intermediate">
+              <div class="tool-menu">
+                <button type="button" class="tool-menu__btn is-active" data-tool="flashcards">Flashcards</button>
+                <button type="button" class="tool-menu__btn" data-tool="vocab">Vocabulary</button>
+                <button type="button" class="tool-menu__btn" data-tool="exercises">Exercises</button>
+                <button type="button" class="tool-menu__btn" data-tool="schedule">Weekly Schedule</button>
+              </div>
+              <section class="tool-panel" data-tool-panel="flashcards"></section>
+              <section class="tool-panel hidden" data-tool-panel="vocab"></section>
+              <section class="tool-panel hidden" data-tool-panel="exercises"></section>
+              <section class="tool-panel hidden" data-tool-panel="schedule"></section>
+            </div>
+          </article>
+          <article id="content-advanced" class="level-article hidden">
+            <div class="level-article__top">
+              <button type="button" class="btn-level-back" data-i18n="content_back_levels">← Back to levels</button>
+              <button type="button" class="btn-level-close btn-icon-close" data-i18n-aria="content_close_aria" aria-label="Close and return to levels">×</button>
+            </div>
+            <h3 data-i18n="level_advanced">Advanced</h3>
+            <div class="learning-tools" data-learning-level="advanced">
+              <div class="tool-menu">
+                <button type="button" class="tool-menu__btn is-active" data-tool="flashcards">Flashcards</button>
+                <button type="button" class="tool-menu__btn" data-tool="vocab">Vocabulary</button>
+                <button type="button" class="tool-menu__btn" data-tool="exercises">Exercises</button>
+                <button type="button" class="tool-menu__btn" data-tool="schedule">Weekly Schedule</button>
+              </div>
+              <section class="tool-panel" data-tool-panel="flashcards"></section>
+              <section class="tool-panel hidden" data-tool-panel="vocab"></section>
+              <section class="tool-panel hidden" data-tool-panel="exercises"></section>
+              <section class="tool-panel hidden" data-tool-panel="schedule"></section>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="panel-booking" class="panel hidden">
+        <h2 data-i18n="booking_title">Booking</h2>
+        <div class="prose booking-intro">
+          <p data-i18n-html="booking_intro_html">
+            Pick the hour that suits you best during the week. I use these preferences to organise classes around
+            the <strong>most popular slots</strong>. You will receive an email with an <strong>IBAN</strong> at the
+            <strong>start of each month</strong> for payment. Your <strong>first class is free</strong> so you can
+            see whether the format works for you before committing.
+          </p>
+          <p class="booking-request-note" data-i18n-html="booking_request_note_html"></p>
+        </div>
+        <form id="booking-form" class="booking-form">
+          <label for="booking-name" data-i18n="booking_name_label">Your name</label>
+          <input type="text" id="booking-name" name="name" required autocomplete="name" data-i18n-placeholder="booking_name_ph" />
+
+          <label for="booking-phone" data-i18n="booking_phone_label">Phone number</label>
+          <input type="tel" id="booking-phone" name="phone" required autocomplete="tel" data-i18n-placeholder="booking_phone_ph" />
+
+          <label for="booking-level" data-i18n="booking_level_label">Student’s English level</label>
+          <p class="field-hint field-hint--tight" data-i18n="booking_level_help">Choose the track that best matches school level or confidence.</p>
+          <select id="booking-level" name="level" required>
+            <option value="" data-i18n="booking_level_empty">Select level</option>
+            <option value="beginner" data-i18n="level_beginner">Beginner</option>
+            <option value="intermediate" data-i18n="level_intermediate">Intermediate</option>
+            <option value="advanced" data-i18n="level_advanced">Advanced</option>
+          </select>
+
+          <fieldset class="slot-fieldset booking-slot-fieldset">
+            <legend data-i18n="booking_slots_legend">Preferred times (Paris time)</legend>
+            <p class="field-hint" data-i18n="booking_slots_hint">
+              Pick a weekday, then tap the hours that work. Add more days if you like. I confirm by email.
+            </p>
+
+            <div class="booking-calendar">
+              <div class="booking-calendar__step">
+                <p class="booking-calendar__pick-label" data-i18n="booking_pick_day">1 · Choose a day</p>
+                <div id="booking-day-grid" class="booking-day-grid" role="group"></div>
+              </div>
+
+              <div id="booking-hours-wrap" class="booking-hours-wrap hidden">
+                <p id="booking-times-heading" class="booking-hours-wrap__heading" aria-live="polite"></p>
+                <p class="field-hint booking-hours-hint" data-i18n="booking_hours_hint">
+                  Tap hours to add or remove them for this day.
+                </p>
+                <div id="booking-hours-grid" class="booking-hours-grid" role="group"></div>
+              </div>
+
+              <div class="booking-selected-block">
+                <p class="booking-selected-block__label" data-i18n="booking_selected_label">Your selected slots</p>
+                <ul id="booking-selected-list" class="booking-selected-list"></ul>
+                <p id="booking-selected-empty" class="booking-selected-empty" data-i18n="booking_no_slots">
+                  None yet. Choose a day and times above.
+                </p>
+              </div>
+            </div>
+
+            <div id="booking-slots-hidden" class="booking-slots-hidden" aria-hidden="true"></div>
+          </fieldset>
+
+          <p id="booking-slots-warning" class="form-error hidden" role="alert" data-i18n="booking_err_no_slots">
+            Please choose at least one time slot.
+          </p>
+
+          <p id="booking-submit-error" class="form-error booking-submit-error hidden" role="alert" aria-live="polite"></p>
+
+          <button type="submit" class="btn-primary booking-submit-btn" data-i18n="booking_submit">Submit preferences</button>
+        </form>
+        <div id="booking-success" class="booking-success hidden" role="status">
+          <p id="booking-success-warning" class="booking-sync-warning hidden" role="alert"></p>
+          <p data-i18n="booking_success_p1">Thank you. Your preferences have been noted. I will contact you by email to confirm timing and next steps.</p>
+          <p id="booking-success-detail" class="small-print">
+            Offline mode: this copy shows if the site is not connected to a server.
+          </p>
+          <p id="booking-success-confirm" class="small-print booking-success-note" data-i18n-html="booking_success_confirm_note_html"></p>
+        </div>
+      </section>
+
+      <section id="panel-account" class="panel hidden panel--student">
+        <h2 data-i18n="account_title">Your account</h2>
+        <p class="panel-lead" data-i18n="account_intro">For students who want to track exercises and quiz progress on this device.</p>
+        <div id="account-auth" class="account-auth">
+          <form id="account-register-form" class="account-card">
+            <h3 data-i18n="account_register_heading">Create account</h3>
+            <label for="account-register-fullname" data-i18n="account_label_fullname">Full name</label>
+            <input type="text" id="account-register-fullname" autocomplete="name" required />
+            <label for="account-register-name" data-i18n="account_label_username">Account name</label>
+            <input type="text" id="account-register-name" autocomplete="username" required />
+            <label for="account-register-password" data-i18n="account_label_password">Password</label>
+            <input type="password" id="account-register-password" autocomplete="new-password" required />
+            <button type="submit" class="btn-primary" data-i18n="account_btn_register">Create account</button>
+          </form>
+          <form id="account-login-form" class="account-card">
+            <h3 data-i18n="account_login_heading">Log in</h3>
+            <label for="account-login-name" data-i18n="account_label_username">Account name</label>
+            <input type="text" id="account-login-name" autocomplete="username" required />
+            <label for="account-login-password" data-i18n="account_label_password">Password</label>
+            <input type="password" id="account-login-password" autocomplete="current-password" required />
+            <button type="submit" class="btn-primary" data-i18n="account_btn_login">Log in</button>
+          </form>
+          <p id="account-auth-feedback" class="form-error hidden" role="alert"></p>
+        </div>
+        <div id="account-dashboard" class="account-dashboard hidden">
+          <div class="account-dashboard__top">
+            <p id="account-welcome" class="account-welcome"></p>
+            <button type="button" id="account-logout-btn" class="btn-text" data-i18n="account_btn_logout">Log out</button>
+          </div>
+          <div id="account-progress-cards" class="account-progress-cards"></div>
+          <div class="account-card">
+            <h3 data-i18n="account_completed_heading">Completed exercises</h3>
+            <ul id="account-completed-exercises" class="resource-list"></ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="panel-admin" class="panel hidden panel--admin" aria-label="Admin">
+        <div class="admin-banner">
+          <h2 data-i18n="admin_title">Site admin</h2>
+          <p class="admin-banner__note" data-i18n="admin_banner_note"></p>
+        </div>
+        <div id="admin-login-wrap" class="account-card account-card--admin">
+          <h3 data-i18n="admin_login_heading">Admin login</h3>
+          <label for="admin-password" data-i18n="admin_password_label">Admin password</label>
+          <input type="password" id="admin-password" autocomplete="current-password" />
+          <button type="button" id="admin-login-btn" class="btn-primary" data-i18n="admin_login_btn">Open dashboard</button>
+          <p id="admin-login-feedback" class="form-error hidden"></p>
+        </div>
+        <div id="admin-dashboard" class="admin-surface hidden">
+          <div class="account-dashboard__top">
+            <p class="account-welcome" data-i18n="admin_controls_title">Admin controls</p>
+            <button type="button" id="admin-logout-btn" class="btn-text" data-i18n="admin_logout_btn">Close admin</button>
+          </div>
+          <p id="admin-cloud-status" class="field-hint admin-cloud-status hidden" aria-live="polite"></p>
+          <div class="admin-dashboard__actions">
+            <button type="button" id="admin-cloud-refresh-btn" class="btn-text hidden" data-i18n="admin_refresh_cloud">Refresh cloud data</button>
+          </div>
+          <div class="tool-menu tool-menu--admin">
+            <button type="button" class="tool-menu__btn is-active" data-admin-tab="bookings" data-i18n="admin_tab_bookings">Bookings</button>
+            <button type="button" class="tool-menu__btn" data-admin-tab="progress" data-i18n="admin_tab_progress">Student progress</button>
+            <button type="button" class="tool-menu__btn" data-admin-tab="payments" data-i18n="admin_tab_payments">Payments</button>
+          </div>
+          <div id="admin-bookings-tab" class="admin-tab">
+            <div class="account-card account-card--admin">
+              <h3 data-i18n="admin_bookings_heading">Class bookings</h3>
+              <div class="table-scroll">
+              <table id="admin-bookings-table" class="admin-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="admin_col_name">Name</th>
+                    <th data-i18n="admin_col_phone">Phone</th>
+                    <th data-i18n="admin_col_level">Level</th>
+                    <th data-i18n="admin_col_slots">Slots</th>
+                    <th data-i18n="admin_col_booked">Booked at</th>
+                    <th data-i18n="admin_col_actions">Actions</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+              </div>
+            </div>
+          </div>
+          <div id="admin-progress-tab" class="admin-tab hidden">
+          <div class="account-card account-card--admin">
+            <h3 data-i18n="admin_progress_heading">Student progress</h3>
+            <div class="table-scroll">
+            <table id="admin-students-table" class="admin-table">
+              <thead>
+                <tr>
+                  <th data-i18n="admin_col_name">Name</th>
+                  <th data-i18n="admin_col_username">Username</th>
+                  <th data-i18n="admin_col_flashcards">Flashcards</th>
+                  <th data-i18n="admin_col_quiz">Quiz sessions</th>
+                  <th data-i18n="admin_col_done">Completed exercises</th>
+                  <th data-i18n="admin_col_actions">Actions</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+            </div>
+          </div>
+          </div>
+          <div id="admin-payments-tab" class="admin-tab hidden">
+            <div class="account-card account-card--admin">
+              <h3 data-i18n="admin_payments_heading">Parent payment checklist</h3>
+              <form id="admin-payment-form" class="inline-form inline-form--stack">
+                <label for="admin-payment-name" data-i18n="admin_payment_name_label">Parent or student name</label>
+                <input type="text" id="admin-payment-name" required />
+                <button type="submit" class="btn-primary" data-i18n="admin_payment_add_btn">Add to checklist</button>
+              </form>
+              <ul id="admin-payment-list" class="resource-list"></ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p class="site-footer__brand" data-i18n="footer_line">Andronicus · English grinds · Zoom</p>
+      <p class="site-footer__contact" data-i18n-html="footer_contact_html"></p>
+    </footer>
+  </div>
+  <button type="button" id="admin-corner-btn" class="admin-corner-btn" data-i18n-aria="admin_corner_aria" aria-label="Open admin"></button>
+
+  <script>
+    window.ANDRONICUS_CONFIG = window.ANDRONICUS_CONFIG || {
+      enabled: false,
+      supabaseUrl: "",
+      supabaseAnonKey: "",
+      adminApiSecret: "",
+    };
+  </script>
+  <script src="config.local.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="i18n.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

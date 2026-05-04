@@ -1,0 +1,621 @@
+/**
+ * Site copy in English and French. When you add or change visible text:
+ * add the same key under both `en` and `fr` in STRINGS below, then wire
+ * the element with data-i18n / data-i18n-html in index.html (or use t() in app.js).
+ */
+(function (global) {
+  const STORAGE_KEY = "andronicus_lang";
+  const THEME_STORAGE_KEY = "andronicus_theme";
+
+  const STRINGS = {
+    en: {
+      meta_title: "Andronicus · English Grinds",
+      meta_description:
+        "Online English grinds for French-speaking students. Small groups, weekly structure, progress checks. Louis McGovern, Trinity College Dublin.",
+      lang_aria: "Language",
+      lang_en: "English",
+      lang_fr: "French",
+      theme_aria: "Color theme",
+      theme_light: "Light",
+      theme_dark: "Dark",
+      tagline: "Online English grinds for French-speaking students.",
+      nav_main_aria: "Main sections",
+      nav_about_label: "About the Teacher",
+      nav_about_hint: "Louis McGovern, Trinity, and how I teach",
+      nav_process_label: "The Process",
+      nav_process_hint: "Chat, booking, then weekly classes",
+      nav_content_label: "Content",
+      nav_content_hint: "Materials by level (password)",
+      nav_booking_label: "Booking",
+      nav_booking_hint: "Send a time request",
+      nav_account_label: "Student Account",
+      nav_account_hint: "Optional login to track practice",
+      btn_home: "← Back to home",
+      skip_to_content: "Skip to content",
+      hero_cta_book: "Book a lesson",
+      why_section_title: "Why Choose Andronicus?",
+      why_1_title: "Small Groups",
+      why_1_body: "Four students at most, so you get speaking time and feedback every week.",
+      why_2_title: "You Can See Progress",
+      why_2_body: "Simple graphs over time, alongside short checks and how you take part in class.",
+      why_3_title: "I'm a Student Too",
+      why_3_body:
+        "I'm still at university myself, so I know what learning a new language is like: new grammar, keeping momentum, and wanting room to speak without feeling judged.",
+      home_trust_line: "Most students who start stay for the year. Message or call if you want to talk before booking.",
+      faq_section_title: "Frequently Asked Questions",
+      faq_q1: "Who are the lessons for?",
+      faq_a1:
+        "Mostly teens who speak French at home and need English for school, an exam, or everyday confidence. Groups stay small.",
+      faq_q2: "Where do lessons happen?",
+      faq_a2:
+        "Lessons are online in small groups. After we agree a slot, I send the join link and what you need. I will be on Zoom Plus so I can use premium features: that helps keep things reliable and simple for students every time they join.",
+      faq_q3: "How does booking work?",
+      faq_a3:
+        "You send times that suit you. That is only a request until I reply by email or message with a definite slot.",
+      faq_q4: "What level do I need?",
+      faq_a4:
+        "Beginner, intermediate, or advanced tracks. If you are not sure, say so in the form and I will place you sensibly.",
+      faq_q5: "When is it really confirmed?",
+      faq_a5:
+        "When I have answered you with a time and the practical details. Until then, assume nothing is fixed.",
+      faq_q6: "What do I need for a lesson?",
+      faq_a6:
+        "Somewhere you can focus, decent Wi-Fi, and the Zoom link I send. Pen and paper help. Headphones help if it is noisy at home.",
+      contact_section_title: "Rather Talk First?",
+      contact_section_html:
+        "Call or email and we can sort level and timing in a few minutes. <a href=\"tel:+353833198980\">+353 (83) 319 8980</a> · <a href=\"mailto:louis.f.mcgovern@gmail.com\">louis.f.mcgovern@gmail.com</a>",
+      about_title: "About the Teacher",
+      about_p1_html:
+        "My name is <strong>Louis McGovern</strong>. I am <strong>21</strong> and I study <strong>French</strong> at <strong>Trinity College Dublin</strong> — widely ranked as Ireland's top university.",
+      about_p2_html:
+        "In my Leaving Certificate I was awarded an <strong>H1</strong> — the highest possible grade — in Higher-Level French.",
+      about_p3_html:
+        "I have travelled a lot in France: I've been in the <strong>Pyrenees</strong> and the <strong>Alps</strong>, stayed in <strong>Le Mans</strong> for two months and <strong>Laval</strong> for a month, visited <strong>Paris</strong> many times, and taught in <strong>Nantes</strong>. Next year I will spend a year in <strong>Strasbourg</strong> on <strong>Erasmus</strong>.",
+      about_p4_html:
+        "I taught English to children through <strong>Living Language</strong>. I have taught <strong>sailing</strong> for the past four years and I work with young people in other teaching settings too.",
+      about_p5_html:
+        "To get in touch: <a href=\"tel:+353833198980\">+353 (83) 319 8980</a> · <a href=\"mailto:louis.f.mcgovern@gmail.com\">louis.f.mcgovern@gmail.com</a>",
+      process_title: "The Process",
+      process_steps_intro: "Talk → book → join each week.",
+      process_step_1_title: "Get in touch",
+      process_step_1_html:
+        "<div class=\"step-card__stack\"><p>Call, text, or email — same number for texts.</p><p>Optional 10-minute chat first.</p></div><div class=\"step-card__links\"><a href=\"tel:+353833198980\">+353 (83) 319 8980</a><span class=\"step-card__dot\" aria-hidden=\"true\">·</span><a href=\"mailto:louis.f.mcgovern@gmail.com\">Email</a></div>",
+      process_step_2_title: "Booking",
+      process_step_2_html:
+        "<div class=\"step-card__stack\"><p>Open Booking — menu or button below.</p><p><strong>Choose your English level and the times that work for you</strong>, then send. I confirm by message.</p></div>",
+      process_step_3_title: "Pay and come to grinds",
+      process_step_3_html:
+        "<div class=\"step-card__stack\"><p><strong>Slot confirmed</strong> — pay at the start of each month.</p><p>Join every week on Zoom: one hour, small group.</p></div>",
+      process_btn_booking: "Open booking form",
+      process_actions_hint: "Same form as in the main menu.",
+      process_extra_heading: "Fees, Homework, and How It Works",
+      process_p1_html:
+        "Each class is <strong>one hour</strong>. It costs <strong>€25 per student per session</strong>. There are <strong>at most four students</strong>, so everyone can speak and get feedback.",
+      process_p2_html:
+        "I track how each student moves forward with simple <strong>progress graphs</strong>, plus short tests and how you join in during class.",
+      process_p3_html:
+        "Grammar is steady and explicit. We also use <strong>debates</strong>, <strong>homework</strong>, and suggestions for <strong>films, series, and music</strong> so English feels lived-in, not only like a workbook.",
+      process_zoom_plus_html:
+        "I will be using <strong>Zoom Plus</strong> so I can access premium features: that supports a more reliable connection and a simpler join flow for students each week.",
+      process_p4_html:
+        "Classes run on <strong>Zoom</strong> in small groups. If anything is unclear after our chat, you can always message me before you use the booking form.",
+      process_p5_html:
+        "<strong>Contact:</strong> <a href=\"tel:+353833198980\">+353 (83) 319 8980</a> · <a href=\"mailto:louis.f.mcgovern@gmail.com\">louis.f.mcgovern@gmail.com</a>",
+      content_intro:
+        "Choose your level. Content is uploaded by English level, and the password is required each time. If you would like access, <strong>contact me</strong> and we can arrange a <strong>10-minute chat</strong>.",
+      content_levels_aria: "English level",
+      level_beginner: "Beginner",
+      level_intermediate: "Intermediate",
+      level_advanced: "Advanced",
+      content_password_title: "Enter Password",
+      content_password_close_aria: "Cancel and return to levels",
+      content_password_label: "Password",
+      content_password_submit: "Continue",
+      content_password_error: "Incorrect password.",
+      content_back_levels: "← Back to levels",
+      content_close_aria: "Close and return to levels",
+      content_opening: "Opening {level} material.",
+      article_beginner_intro_html:
+        "Focus on high-frequency vocabulary, present simple and continuous, basic questions, and everyday situations (greetings, school, hobbies). Short dialogues, picture prompts, and repetition build confidence before longer texts.",
+      article_beginner_li1_html:
+        "<strong>Grammar:</strong> be/have, articles, there is/are, word order in questions.",
+      article_beginner_li2_html:
+        "<strong>Skills:</strong> listening to slow, clear audio; reading short paragraphs; speaking in structured pairs.",
+      article_beginner_li3_html:
+        "<strong>Homework:</strong> vocabulary lists with spaced review; short diary sentences in English.",
+      article_intermediate_intro_html:
+        "Expand tense range (past, present perfect, conditionals), linking words, and paragraph writing. Topics include travel, media, and short opinion texts with room to debate without losing clarity.",
+      article_intermediate_li1_html:
+        "<strong>Grammar:</strong> reported speech, passive voice, relative clauses, comparatives.",
+      article_intermediate_li2_html:
+        "<strong>Skills:</strong> summarising articles; mini-debates; writing emails and short essays.",
+      article_intermediate_li3_html:
+        "<strong>Media:</strong> one episode per week of a graded series or podcast with a short reflection.",
+      article_advanced_intro_html:
+        "Refine nuance, register, and cohesion. We analyse essays, speeches, and journalism. You learn to argue clearly and edit your own writing for tone. Strong preparation for exams and university English.",
+      article_advanced_li1_html:
+        "<strong>Grammar &amp; style:</strong> inversion, cleft sentences, hedging, formal vs informal vocabulary.",
+      article_advanced_li2_html:
+        "<strong>Skills:</strong> timed essays; abstract discussion; reformulation and paraphrase under pressure.",
+      article_advanced_li3_html:
+        "<strong>Extension:</strong> long-form reading (non-fiction or literary extracts) with vocabulary journals.",
+      booking_title: "Booking",
+      booking_intro_html:
+        "Classes start in <strong>September 2026</strong> and run <strong>each week</strong> through the school year, with <strong>homework</strong> when it helps. There are breaks around holidays (for example <strong>Christmas</strong>) and I tell everyone the dates in advance. Pick every hour you can honestly make each week: it makes grouping easier. The usual slot should work most weeks, but real life happens. Pay at the <strong>start of the month</strong>. Miss a class with fair warning (ideally when you pay, or at least <strong>three days before</strong>) and you are not charged for that hour.",
+      booking_name_label: "Name (student or parent)",
+      booking_phone_label: "Phone (for my reply)",
+      booking_level_label: "English level",
+      booking_level_help: "Roughly where the student is now: beginner, intermediate, or advanced.",
+      booking_name_ph: "Full name",
+      booking_phone_ph: "Mobile, with country code if not Ireland",
+      booking_request_note_html:
+        "<strong>This form is only a request.</strong> Your place is fixed once I have answered you by email or message.",
+      booking_level_empty: "Select level",
+      booking_slots_legend: "Preferred times (France · Paris time)",
+      booking_slots_hint:
+        "Hours are in France (Paris) local time. Pick a weekday, then tap the hours that work. Add other days if you need. I confirm by email.",
+      booking_pick_day: "1 · Choose a day",
+      booking_times_for: "Times for {day}",
+      booking_hours_hint: "Tap hours to add or remove them for this day.",
+      booking_selected_label: "Your selected slots",
+      booking_no_slots: "None yet. Choose a day and times above.",
+      booking_remove_aria: "Remove {slot}",
+      booking_err_no_slots: "Please choose at least one time slot.",
+      booking_submit: "Send request",
+      booking_success_p1:
+        "Thanks, I have your request. I will email or message you to confirm a slot and what happens next.",
+      booking_success_small:
+        "The site is not connected to the server from here. Please email me so I still receive your request.",
+      booking_success_cloud:
+        "Your request reached me online. I will email or message you to confirm the slot.",
+      booking_success_local_fallback:
+        "The server was unreachable, so this device saved a copy only. Please email or text me as well so I see it.",
+      booking_success_confirm_note_html:
+        "<strong>Still a request until I reply.</strong> Check your inbox or phone for my confirmation.",
+      booking_error_submit:
+        "Nothing was saved online. Try again in a minute, or phone or email me and we will book manually.",
+      booking_error_submit_partial:
+        "Your booking was saved on this device only because the server was unavailable. Please also email or call me so I receive it.",
+      footer_line: "Andronicus · English grinds",
+      footer_contact_html:
+        "<a href=\"mailto:louis.f.mcgovern@gmail.com\">louis.f.mcgovern@gmail.com</a> · <a href=\"tel:+353833198980\">+353 (83) 319 8980</a>",
+      account_title: "Your Account",
+      account_intro: "For students who want to track exercises and quiz progress on this device.",
+      account_register_heading: "Create account",
+      account_login_heading: "Log in",
+      account_label_fullname: "Full name",
+      account_label_username: "Account name",
+      account_label_password: "Password",
+      account_btn_register: "Create account",
+      account_btn_login: "Log in",
+      account_btn_logout: "Log out",
+      account_completed_heading: "Completed exercises",
+      account_err_register_fields: "Please enter full name, account name, and password.",
+      account_err_register_exists: "That account name is already taken.",
+      account_err_login: "Invalid account name or password.",
+      account_ok_register: "Account created successfully.",
+      account_ok_login: "Logged in.",
+      account_welcome_logged_in: "Logged in as: {user}",
+      account_no_exercises_done: "No exercises marked completed yet.",
+      admin_title: "Site Admin",
+      admin_banner_note: "For the site owner only. Students do not need this page.",
+      admin_login_heading: "Admin login",
+      admin_password_label: "Admin password",
+      admin_login_btn: "Open dashboard",
+      admin_login_fail: "Incorrect admin password.",
+      admin_controls_title: "Admin Controls",
+      admin_logout_btn: "Close admin",
+      admin_refresh_cloud: "Refresh cloud data",
+      admin_tab_bookings: "Bookings",
+      admin_tab_progress: "Student progress",
+      admin_tab_payments: "Payments",
+      admin_bookings_heading: "Class bookings",
+      admin_progress_heading: "Student progress",
+      admin_payments_heading: "Parent payment checklist",
+      admin_col_name: "Name",
+      admin_col_phone: "Phone",
+      admin_col_level: "Level",
+      admin_col_slots: "Slots",
+      admin_col_booked: "Booked at",
+      admin_col_actions: "Actions",
+      admin_col_username: "Username",
+      admin_col_flashcards: "Flashcards",
+      admin_col_quiz: "Quiz sessions",
+      admin_col_done: "Completed exercises",
+      admin_payment_name_label: "Parent or student name",
+      admin_payment_add_btn: "Add to checklist",
+      admin_edit_name: "Edit name",
+      admin_reset_password: "Reset password",
+      admin_booking_remove: "Remove",
+      admin_payment_remove: "Remove",
+      admin_booking_remove_confirm: "Remove booking for {name}?",
+      admin_cloud_syncing: "Syncing with cloud…",
+      admin_cloud_ok:
+        "Cloud on: bookings and payments load from Supabase on every device.",
+      admin_cloud_fail_prefix:
+        "Cloud sync failed. Showing data stored on this device. Check config and Supabase.",
+      admin_cloud_no_secret:
+        "Bookings go online, but adminApiSecret is missing in config. Admin lists stay on this device until you add it.",
+      admin_corner_aria: "Open site admin",
+      slot_day_mon: "Mon",
+      slot_day_tue: "Tue",
+      slot_day_wed: "Wed",
+      slot_day_thu: "Thu",
+      slot_day_fri: "Fri",
+      slot_day_sat: "Sat",
+      slot_day_sun: "Sun",
+    },
+    fr: {
+      meta_title: "Andronicus · Cours d’anglais",
+      meta_description:
+        "Cours d’anglais en ligne pour élèves francophones. Petits groupes, cadre clair, suivi des progrès. Louis McGovern, Trinity College Dublin.",
+      lang_aria: "Langue",
+      lang_en: "Anglais",
+      lang_fr: "Français",
+      theme_aria: "Thème d’affichage",
+      theme_light: "Clair",
+      theme_dark: "Sombre",
+      tagline: "Cours d’anglais en ligne pour élèves francophones.",
+      nav_main_aria: "Sections principales",
+      nav_about_label: "À propos du professeur",
+      nav_about_hint: "Louis McGovern, Trinity, et ma façon d’enseigner",
+      nav_process_label: "Le déroulement des cours",
+      nav_process_hint: "Échange, inscription, cours chaque semaine",
+      nav_content_label: "Contenu",
+      nav_content_hint: "Supports par niveau (mot de passe)",
+      nav_booking_label: "Inscription",
+      nav_booking_hint: "Envoyer une demande de créneau",
+      nav_account_label: "Compte élève",
+      nav_account_hint: "Connexion facultative pour suivre le travail",
+      btn_home: "← Retour à l’accueil",
+      skip_to_content: "Aller au contenu",
+      hero_cta_book: "Réserver un cours",
+      why_section_title: "Pourquoi choisir Andronicus ?",
+      why_1_title: "Petits groupes",
+      why_1_body: "Quatre élèves au plus : chacun parle et reçoit des retours chaque semaine.",
+      why_2_title: "Des progrès visibles",
+      why_2_body: "Graphiques simples dans le temps, avec les petits contrôles et votre participation en cours.",
+      why_3_title: "Je suis aussi étudiant",
+      why_3_body:
+        "Je suis encore à l’université, donc je sais ce que c’est qu’apprendre une langue : la grammaire nouvelle, tenir le rythme, et avoir envie qu’on vous écoute sans vous juger.",
+      home_trust_line: "La plupart des élèves qui commencent restent l’année. Écrivez ou appelez si vous voulez en parler avant de réserver.",
+      faq_section_title: "Questions fréquentes",
+      faq_q1: "À qui s’adressent les cours ?",
+      faq_a1:
+        "Surtout à des lycéens francophones qui veulent renforcer l’anglais pour l’école, un examen ou le quotidien. Les groupes restent petits.",
+      faq_q2: "Où ont lieu les cours ?",
+      faq_a2:
+        "Les cours sont en ligne, en petits groupes. Une fois le créneau convenu, j’envoie le lien de connexion et le nécessaire. Je passerai à Zoom Plus pour accéder aux fonctions premium : cela renforce la fiabilité et simplifie la connexion pour les élèves à chaque cours.",
+      faq_q3: "Comment fonctionne l’inscription ?",
+      faq_a3:
+        "Vous proposez des horaires possibles. Tant que je ne vous ai pas répondu, ce n’est qu’une demande, pas une place garantie.",
+      faq_q4: "Quel niveau il faut ?",
+      faq_a4:
+        "Parcours débutant, intermédiaire ou avancé. Si vous doutez, écrivez-le dans le formulaire et je vous oriente.",
+      faq_q5: "Quand c’est vraiment confirmé ?",
+      faq_a5:
+        "Quand je vous ai répondu avec un créneau et les infos pratiques. Avant ça, ne partez pas du principe que c’est acté.",
+      faq_q6: "De quoi j’ai besoin pour le cours ?",
+      faq_a6:
+        "Un endroit où vous pouvez vous concentrer, une connexion correcte, et le lien Zoom que j’envoie. Papier-crayon utile, casque utile si c’est bruyant chez vous.",
+      contact_section_title: "Envie d’en parler avant ?",
+      contact_section_html:
+        "Appelez ou écrivez, on règle souvent niveau et créneau en quelques minutes. <a href=\"tel:+353833198980\">+353 (83) 319 8980</a> · <a href=\"mailto:louis.f.mcgovern@gmail.com\">louis.f.mcgovern@gmail.com</a>",
+      about_title: "À propos du professeur",
+      about_p1_html:
+        "Je m’appelle <strong>Louis McGovern</strong>, j’ai <strong>21 ans</strong>, et je fais du <strong>français</strong> à <strong>Trinity College Dublin</strong>, souvent classée comme la meilleure université d’Irlande dans les grands classements.",
+      about_p2_html:
+        "Au Leaving Certificate j’ai obtenu un <strong>H1</strong>, la note la plus élevée, en français niveau supérieur.",
+      about_p3_html:
+        "Je connais bien la France sur le terrain : <strong>Pyrénées</strong> et <strong>Alpes</strong>, deux mois au <strong>Mans</strong>, un mois à <strong>Laval</strong>, <strong>Paris</strong> très souvent, et j’ai enseigné à <strong>Nantes</strong>. L’année prochaine je passe une année à <strong>Strasbourg</strong> en <strong>Erasmus</strong>.",
+      about_p4_html:
+        "J’ai enseigné l’anglais à des enfants avec <strong>Living Language</strong>. J’enseigne la <strong>voile</strong> depuis quatre ans et je travaille souvent avec des jeunes dans d’autres contextes.",
+      about_p5_html:
+        "Pour me joindre : <a href=\"tel:+353833198980\">+353 (83) 319 8980</a> · <a href=\"mailto:louis.f.mcgovern@gmail.com\">louis.f.mcgovern@gmail.com</a>",
+      process_title: "Le déroulement des cours",
+      process_steps_intro: "On en parle → inscription → cours chaque semaine.",
+      process_step_1_title: "Me contacter",
+      process_step_1_html:
+        "<div class=\"step-card__stack\"><p>Appel, SMS ou mail — le même numéro pour les SMS.</p><p>Échange de dix minutes si vous le souhaitez.</p></div><div class=\"step-card__links\"><a href=\"tel:+353833198980\">+353 (83) 319 8980</a><span class=\"step-card__dot\" aria-hidden=\"true\">·</span><a href=\"mailto:louis.f.mcgovern@gmail.com\">Email</a></div>",
+      process_step_2_title: "Inscription",
+      process_step_2_html:
+        "<div class=\"step-card__stack\"><p>Ouvrir Inscription — menu ou bouton ci-dessous.</p><p><strong>Choisissez votre niveau d’anglais et les horaires qui vous conviennent</strong>, puis envoyez. Je confirme.</p></div>",
+      process_step_3_title: "Payer et venir aux cours",
+      process_step_3_html:
+        "<div class=\"step-card__stack\"><p><strong>Créneau confirmé</strong> — paiement en début de mois.</p><p>Cours chaque semaine sur Zoom : 1 h, petit groupe.</p></div>",
+      process_btn_booking: "Ouvrir le formulaire d’inscription",
+      process_actions_hint: "Même formulaire que dans le menu.",
+      process_extra_heading: "Tarif, devoirs, et comment ça fonctionne",
+      process_p1_html:
+        "Chaque séance dure <strong>une heure</strong>. C’est <strong>25 € par élève et par cours</strong>. Il y a <strong>au plus quatre élèves</strong>, pour que chacun puisse prendre la parole et recevoir des retours.",
+      process_p2_html:
+        "Je suis la progression avec des <strong>graphiques simples</strong>, des petits contrôles, et la façon dont vous participez en cours.",
+      process_p3_html:
+        "La grammaire est expliquée méthodiquement. On ajoute des <strong>débats</strong>, des <strong>devoirs</strong>, et des idées de <strong>films, séries ou musique</strong> pour que l’anglais sonne comme une langue vivante, pas seulement comme un manuel.",
+      process_zoom_plus_html:
+        "J’adopterai <strong>Zoom Plus</strong> pour accéder aux fonctions premium : une connexion plus fiable et une invitation plus simple pour les élèves chaque semaine.",
+      process_p4_html:
+        "Les cours ont lieu sur <strong>Zoom</strong> en petits groupes. Si quelque chose n’est pas clair après notre échange, vous pouvez m’écrire avant de remplir le formulaire d’inscription.",
+      process_p5_html:
+        "<strong>Contact :</strong> <a href=\"tel:+353833198980\">+353 (83) 319 8980</a> · <a href=\"mailto:louis.f.mcgovern@gmail.com\">louis.f.mcgovern@gmail.com</a>.",
+      content_intro:
+        "Choisissez votre niveau. Le contenu est publié selon le niveau d’anglais, et le mot de passe est demandé à chaque fois. Pour obtenir l’accès, <strong>contactez-moi</strong> et nous pourrons organiser un <strong>échange de dix minutes</strong>.",
+      content_levels_aria: "Niveau d’anglais",
+      level_beginner: "Débutant",
+      level_intermediate: "Intermédiaire",
+      level_advanced: "Avancé",
+      content_password_title: "Saisir le mot de passe",
+      content_password_close_aria: "Annuler et revenir au choix des niveaux",
+      content_password_label: "Mot de passe",
+      content_password_submit: "Continuer",
+      content_password_error: "Mot de passe incorrect.",
+      content_back_levels: "← Retour aux niveaux",
+      content_close_aria: "Fermer et revenir aux niveaux",
+      content_opening: "Ouverture du contenu {level}.",
+      article_beginner_intro_html:
+        "Acquisition du vocabulaire fréquent, présent simple et continu, questions de base et situations quotidiennes (salutations, école, loisirs). Courts dialogues, images-éclair et répétition pour prendre confiance avant des textes plus longs.",
+      article_beginner_li1_html:
+        "<strong>Grammaire :</strong> be/have, articles, there is/are, ordre des mots dans les questions.",
+      article_beginner_li2_html:
+        "<strong>Compétences :</strong> écoute d’audio lent et clair ; lecture de courts paragraphes ; expression à deux structurée.",
+      article_beginner_li3_html:
+        "<strong>Devoirs :</strong> listes de vocabulaire avec révision espacée ; courtes phrases de journal en anglais.",
+      article_intermediate_intro_html:
+        "Élargir les temps (passé, present perfect, conditionnelles), les connecteurs et la rédaction de paragraphes. Thèmes : voyage, médias, textes d’opinion, avec assez de matière pour débattre sans se perdre.",
+      article_intermediate_li1_html:
+        "<strong>Grammaire :</strong> discours rapporté, voix passive, propositions relatives, comparatifs.",
+      article_intermediate_li2_html:
+        "<strong>Compétences :</strong> résumer des articles ; mini-débats ; e-mails et courtes dissertations.",
+      article_intermediate_li3_html:
+        "<strong>Médias :</strong> un épisode par semaine d’une série ou d’un podcast adapté, avec un court compte rendu.",
+      article_advanced_intro_html:
+        "Affiner la nuance, le registre et la cohésion. On lit dissertations, discours et articles ; vous apprenez à argumenter net et à réécrire vos textes. Solide pour les examens et l’anglais à l’université.",
+      article_advanced_li1_html:
+        "<strong>Grammaire &amp; style :</strong> inversion, phrases clivées, atténuation, vocabulaire formel vs familier.",
+      article_advanced_li2_html:
+        "<strong>Compétences :</strong> dissertations chronométrées ; discussion abstraite ; reformulation sous pression.",
+      article_advanced_li3_html:
+        "<strong>Approfondissement :</strong> lecture longue (non-fiction ou extraits littéraires) et carnets de vocabulaire.",
+      booking_title: "Inscription",
+      booking_intro_html:
+        "Les cours commencent en <strong>septembre 2026</strong>, <strong>une séance par semaine</strong> pendant l’année scolaire, avec des <strong>devoirs</strong> quand ça aide. Il y a des pauses aux vacances (par exemple à <strong>Noël</strong>) et je préviens tout le monde des dates. Cochez toutes les plages où vous êtes vraiment libres : ça simplifie les groupes. Le créneau habituel doit marcher la plupart du temps, mais la vie arrive. Paiement en <strong>début de mois</strong>. Si vous ne pouvez pas venir, prévenez (idéalement au paiement, ou au moins <strong>trois jours avant</strong>) et ce cours n’est pas facturé.",
+      booking_name_label: "Nom (élève ou parent)",
+      booking_phone_label: "Téléphone (pour ma réponse)",
+      booking_level_label: "Niveau d’anglais",
+      booking_level_help: "Où l’élève en est à peu près : débutant, intermédiaire, ou avancé.",
+      booking_name_ph: "Nom complet",
+      booking_phone_ph: "Portable, indicatif si hors d’Irlande",
+      booking_request_note_html:
+        "<strong>Ce formulaire ne fait qu’une demande.</strong> La place est sûre seulement quand je vous ai répondu par mail ou message.",
+      booking_level_empty: "Choisir un niveau",
+      booking_slots_legend: "Créneaux souhaités (heure de Paris)",
+      booking_slots_hint:
+        "Les heures sont en heure locale de Paris. Choisissez un jour, puis les créneaux qui vous vont. Ajoutez d’autres jours si besoin. Je confirme par mail.",
+      booking_pick_day: "1 · Choisir un jour",
+      booking_times_for: "Créneaux pour {day}",
+      booking_hours_hint: "Touchez une heure pour l’ajouter ou la retirer pour ce jour.",
+      booking_selected_label: "Créneaux sélectionnés",
+      booking_no_slots: "Aucun pour l’instant. Choisissez un jour et des heures ci-dessus.",
+      booking_remove_aria: "Retirer {slot}",
+      booking_err_no_slots: "Veuillez choisir au moins un créneau.",
+      booking_submit: "Envoyer la demande",
+      booking_success_p1:
+        "Merci, j’ai bien reçu votre demande. Je vous écris ou vous envoie un message pour confirmer un créneau et la suite.",
+      booking_success_small:
+        "Ici le site n’atteint pas le serveur. Écrivez-moi pour que je reçoive quand même votre demande.",
+      booking_success_cloud:
+        "Votre demande est bien arrivée en ligne. Je vous réponds pour confirmer le créneau.",
+      booking_success_local_fallback:
+        "Le serveur ne répondait pas, donc une copie est restée sur cet appareil. Écrivez-moi aussi pour être sûr que je la voie.",
+      booking_success_confirm_note_html:
+        "<strong>Tant que je n’ai pas répondu, ce n’est pas confirmé.</strong> Surveillez vos mails ou messages.",
+      booking_error_submit:
+        "Rien n’a été enregistré en ligne. Réessayez dans une minute, ou appelez ou écrivez et on fera l’inscription à la main.",
+      booking_error_submit_partial:
+        "La demande n’a été enregistrée que sur cet appareil car le serveur était indisponible. Écrivez-moi aussi par e-mail ou téléphone pour que je la reçoive.",
+      footer_line: "Andronicus · Cours d’anglais",
+      footer_contact_html:
+        "<a href=\"mailto:louis.f.mcgovern@gmail.com\">louis.f.mcgovern@gmail.com</a> · <a href=\"tel:+353833198980\">+353 (83) 319 8980</a>",
+      account_title: "Votre compte",
+      account_intro: "Pour les élèves qui souhaitent suivre leurs exercices et quiz sur cet appareil.",
+      account_register_heading: "Créer un compte",
+      account_login_heading: "Connexion",
+      account_label_fullname: "Nom complet",
+      account_label_username: "Nom du compte",
+      account_label_password: "Mot de passe",
+      account_btn_register: "Créer le compte",
+      account_btn_login: "Se connecter",
+      account_btn_logout: "Se déconnecter",
+      account_completed_heading: "Exercices terminés",
+      account_err_register_fields: "Veuillez indiquer le nom complet, le nom du compte et le mot de passe.",
+      account_err_register_exists: "Ce nom de compte est déjà utilisé.",
+      account_err_login: "Nom de compte ou mot de passe incorrect.",
+      account_ok_register: "Compte créé avec succès.",
+      account_ok_login: "Vous êtes connecté(e).",
+      account_welcome_logged_in: "Connecté(e) en tant que : {user}",
+      account_no_exercises_done: "Aucun exercice marqué comme terminé pour l’instant.",
+      admin_title: "Administration du site",
+      admin_banner_note: "Réservé au propriétaire du site. Les élèves n’en ont pas besoin.",
+      admin_login_heading: "Connexion administrateur",
+      admin_password_label: "Mot de passe administrateur",
+      admin_login_btn: "Ouvrir le tableau de bord",
+      admin_login_fail: "Mot de passe administrateur incorrect.",
+      admin_controls_title: "Contrôles admin",
+      admin_logout_btn: "Fermer l’admin",
+      admin_refresh_cloud: "Actualiser les données en ligne",
+      admin_tab_bookings: "Réservations",
+      admin_tab_progress: "Progression des élèves",
+      admin_tab_payments: "Paiements",
+      admin_bookings_heading: "Demandes de cours",
+      admin_progress_heading: "Progression des élèves",
+      admin_payments_heading: "Liste de suivi des paiements (parents)",
+      admin_col_name: "Nom",
+      admin_col_phone: "Téléphone",
+      admin_col_level: "Niveau",
+      admin_col_slots: "Créneaux",
+      admin_col_booked: "Date de la demande",
+      admin_col_actions: "Actions",
+      admin_col_username: "Identifiant",
+      admin_col_flashcards: "Cartes mémoire",
+      admin_col_quiz: "Sessions quiz",
+      admin_col_done: "Exercices faits",
+      admin_payment_name_label: "Nom du parent ou de l’élève",
+      admin_payment_add_btn: "Ajouter à la liste",
+      admin_edit_name: "Modifier le nom",
+      admin_reset_password: "Réinitialiser le mot de passe",
+      admin_booking_remove: "Retirer",
+      admin_payment_remove: "Retirer",
+      admin_booking_remove_confirm: "Retirer la réservation de {name} ?",
+      admin_cloud_syncing: "Synchronisation…",
+      admin_cloud_ok:
+        "Nuage actif : réservations et paiements viennent de Supabase partout.",
+      admin_cloud_fail_prefix:
+        "Échec de synchro. Affichage des données sur cet appareil. Vérifiez la config et Supabase.",
+      admin_cloud_no_secret:
+        "Les réservations partent en ligne, mais adminApiSecret manque dans la config. Les listes admin restent ici tant que ce n’est pas corrigé.",
+      admin_corner_aria: "Ouvrir l’administration du site",
+      slot_day_mon: "Lun",
+      slot_day_tue: "Mar",
+      slot_day_wed: "Mer",
+      slot_day_thu: "Jeu",
+      slot_day_fri: "Ven",
+      slot_day_sat: "Sam",
+      slot_day_sun: "Dim",
+    },
+  };
+
+  function getLang() {
+    return localStorage.getItem(STORAGE_KEY) === "fr" ? "fr" : "en";
+  }
+
+  function setLang(lang) {
+    const next = lang === "fr" ? "fr" : "en";
+    if (next === getLang()) return;
+    localStorage.setItem(STORAGE_KEY, next);
+    apply();
+    global.dispatchEvent(new CustomEvent("andronicus:langchange"));
+  }
+
+  function t(key, vars) {
+    const L = getLang();
+    let s = STRINGS[L][key];
+    if (s == null) s = STRINGS.en[key];
+    if (s == null) return key;
+    if (vars) {
+      Object.keys(vars).forEach(function (k) {
+        s = s.split("{" + k + "}").join(String(vars[k]));
+      });
+    }
+    return s;
+  }
+
+  function apply() {
+    const L = getLang();
+    document.documentElement.lang = L === "fr" ? "fr" : "en";
+
+    document.querySelectorAll("[data-i18n]").forEach(function (el) {
+      const key = el.getAttribute("data-i18n");
+      if (key && STRINGS[L][key] != null) {
+        el.textContent = STRINGS[L][key];
+      }
+    });
+
+    document.querySelectorAll("[data-i18n-html]").forEach(function (el) {
+      const key = el.getAttribute("data-i18n-html");
+      if (key && STRINGS[L][key] != null) {
+        el.innerHTML = STRINGS[L][key];
+      }
+    });
+
+    document.querySelectorAll("[data-i18n-placeholder]").forEach(function (el) {
+      const key = el.getAttribute("data-i18n-placeholder");
+      if (key && STRINGS[L][key] != null) {
+        el.setAttribute("placeholder", STRINGS[L][key]);
+      }
+    });
+
+    document.querySelectorAll("[data-i18n-aria]").forEach(function (el) {
+      const key = el.getAttribute("data-i18n-aria");
+      if (key && STRINGS[L][key] != null) {
+        el.setAttribute("aria-label", STRINGS[L][key]);
+      }
+    });
+
+    document.title = STRINGS[L].meta_title || STRINGS.en.meta_title;
+
+    var metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute("content", STRINGS[L].meta_description || STRINGS.en.meta_description || "");
+    }
+
+    document.querySelectorAll(".lang-switch__btn").forEach(function (btn) {
+      const isFr = btn.getAttribute("data-lang") === "fr";
+      const active = (isFr && L === "fr") || (!isFr && L === "en");
+      btn.classList.toggle("is-active", active);
+      btn.setAttribute("aria-pressed", active ? "true" : "false");
+    });
+
+    syncThemeToggle();
+
+    document.querySelectorAll("[data-i18n-title]").forEach(function (el) {
+      const key = el.getAttribute("data-i18n-title");
+      if (key && STRINGS[L][key] != null) {
+        el.setAttribute("title", STRINGS[L][key]);
+      }
+    });
+  }
+
+  function initLangSwitch(root) {
+    var r = root || document;
+    r.querySelectorAll(".lang-switch__btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        setLang(btn.getAttribute("data-lang"));
+      });
+    });
+  }
+
+  function getTheme() {
+    return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+  }
+
+  function syncThemeToggle() {
+    var t = getTheme();
+    document.querySelectorAll(".theme-switch__btn").forEach(function (btn) {
+      var v = btn.getAttribute("data-theme-value");
+      var active = v === t;
+      btn.classList.toggle("is-active", active);
+      btn.setAttribute("aria-pressed", active ? "true" : "false");
+    });
+  }
+
+  function setTheme(theme) {
+    var next = theme === "dark" ? "dark" : "light";
+    if (next === getTheme()) return;
+    document.documentElement.setAttribute("data-theme", next);
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, next);
+    } catch (e) {}
+    syncThemeToggle();
+  }
+
+  function initThemeSwitch(root) {
+    var r = root || document;
+    r.querySelectorAll(".theme-switch__btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        setTheme(btn.getAttribute("data-theme-value"));
+      });
+    });
+    syncThemeToggle();
+  }
+
+  global.AndronicusI18n = {
+    getLang: getLang,
+    setLang: setLang,
+    getTheme: getTheme,
+    setTheme: setTheme,
+    t: t,
+    apply: apply,
+    initLangSwitch: initLangSwitch,
+    initThemeSwitch: initThemeSwitch,
+  };
+})(window);
