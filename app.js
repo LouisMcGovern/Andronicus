@@ -27,9 +27,12 @@
   const levelPicker = document.getElementById("level-picker");
 
   const bookingForm = document.getElementById("booking-form");
-  const bookingNameInput = document.getElementById("booking-name");
+  const bookingParentNameInput = document.getElementById("booking-parent-name");
+  const bookingStudentNameInput = document.getElementById("booking-student-name");
   const bookingPhoneInput = document.getElementById("booking-phone");
   const bookingLevelInput = document.getElementById("booking-level");
+  const bookingTimesUnknownInput = document.getElementById("booking-times-unknown");
+  const bookingCalendar = document.getElementById("booking-calendar");
   const bookingSuccess = document.getElementById("booking-success");
   const bookingDayGrid = document.getElementById("booking-day-grid");
   const bookingHoursWrap = document.getElementById("booking-hours-wrap");
@@ -1276,11 +1279,13 @@
         .reverse()
         .forEach(function (b) {
           const tr = document.createElement("tr");
-          [b.name, b.phone, b.level, (b.slots || []).join(", "), b.createdAt].forEach(function (txt) {
+          [bookingDisplayName(b), b.phone, b.level, (b.slots || []).join(", "), b.createdAt].forEach(
+            function (txt) {
             const td = document.createElement("td");
             td.textContent = txt || "-";
             tr.appendChild(td);
-          });
+            }
+          );
           const actionTd = document.createElement("td");
           const removeBtn = document.createElement("button");
           removeBtn.type = "button";
@@ -1288,7 +1293,7 @@
           removeBtn.textContent = I18n.t("admin_booking_remove");
           removeBtn.addEventListener("click", async function () {
             const ok = window.confirm(
-              I18n.t("admin_booking_remove_confirm", { name: b.name || "…" })
+              I18n.t("admin_booking_remove_confirm", { name: bookingDisplayName(b) || "…" })
             );
             if (!ok) return;
             if (isSupabaseConfigured() && hasAdminApiSecret() && b.id) {
@@ -1755,6 +1760,36 @@
     return bookingDayLabels[dayIndex] + " " + hour + ":00";
   }
 
+  function bookingTimesUnknownSelected() {
+    return !!(bookingTimesUnknownInput && bookingTimesUnknownInput.checked);
+  }
+
+  function getBookingMissingFields() {
+    const missing = [];
+    const parentName = (bookingParentNameInput && bookingParentNameInput.value.trim()) || "";
+    const studentName = (bookingStudentNameInput && bookingStudentNameInput.value.trim()) || "";
+    const phone = (bookingPhoneInput && bookingPhoneInput.value.trim()) || "";
+    const level = (bookingLevelInput && bookingLevelInput.value) || "";
+    const timesUnknown = bookingTimesUnknownSelected();
+
+    if (!parentName) missing.push(I18n.t("booking_missing_parent_name"));
+    if (!studentName) missing.push(I18n.t("booking_missing_student_name"));
+    if (!phone) missing.push(I18n.t("booking_missing_phone"));
+    if (!level) missing.push(I18n.t("booking_missing_level"));
+    if (!timesUnknown && bookingSlotSelections.length === 0) {
+      missing.push(I18n.t("booking_missing_times"));
+    }
+    return missing;
+  }
+
+  function bookingDisplayName(row) {
+    if (!row) return "";
+    if (row.studentName && row.parentName) {
+      return row.studentName + " (" + row.parentName + ")";
+    }
+    return row.name || "";
+  }
+
   function bookingIsSelected(dayIndex, hour) {
     return bookingSlotSelections.some(function (s) {
       return s.dayIndex === dayIndex && s.hour === hour;
@@ -1783,6 +1818,7 @@
   function bookingRenderDays() {
     if (!bookingDayGrid) return;
     bookingDayGrid.innerHTML = "";
+    if (bookingTimesUnknownSelected()) return;
     bookingDayLabels.forEach(function (label, i) {
       const btn = document.createElement("button");
       btn.type = "button";
@@ -1804,6 +1840,7 @@
   function bookingRenderHours() {
     if (!bookingHoursGrid) return;
     bookingHoursGrid.innerHTML = "";
+    if (bookingTimesUnknownSelected()) return;
     if (bookingActiveDayIndex === null) return;
     for (let h = 9; h <= 20; h++) {
       const btn = document.createElement("button");
@@ -1867,11 +1904,21 @@
     bookingDayLabels = DAY_KEYS.map(function (k) {
       return I18n.t(k);
     });
+    if (bookingTimesUnknownSelected()) {
+      bookingSlotSelections = [];
+      bookingActiveDayIndex = null;
+    }
     if (bookingActiveDayIndex !== null && bookingActiveDayIndex >= bookingDayLabels.length) {
       bookingActiveDayIndex = null;
     }
+    if (bookingCalendar) {
+      bookingCalendar.classList.toggle("hidden", bookingTimesUnknownSelected());
+    }
     bookingRenderDays();
-    if (bookingActiveDayIndex !== null) {
+    if (bookingTimesUnknownSelected()) {
+      bookingHoursWrap.classList.add("hidden");
+      bookingTimesHeading.textContent = "";
+    } else if (bookingActiveDayIndex !== null) {
       bookingHoursWrap.classList.remove("hidden");
       bookingTimesHeading.textContent = I18n.t("booking_times_for", {
         day: bookingDayLabels[bookingActiveDayIndex],
@@ -2429,29 +2476,55 @@
     });
   }
 
+  if (bookingTimesUnknownInput) {
+    bookingTimesUnknownInput.addEventListener("change", function () {
+      if (bookingTimesUnknownInput.checked) {
+        bookingSlotSelections = [];
+        bookingActiveDayIndex = null;
+        bookingSlotsWarning.classList.add("hidden");
+      }
+      buildBookingCalendar();
+    });
+  }
+
   bookingForm.addEventListener("submit", async function (e) {
-    if (bookingSlotSelections.length === 0) {
-      e.preventDefault();
-      bookingSlotsWarning.classList.remove("hidden");
-      bookingSlotsWarning.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      return;
-    }
     e.preventDefault();
+    const missingFields = getBookingMissingFields();
     bookingSlotsWarning.classList.add("hidden");
     if (bookingSubmitError) {
       bookingSubmitError.textContent = "";
       bookingSubmitError.classList.add("hidden");
     }
+    if (missingFields.length > 0) {
+      if (bookingSubmitError) {
+        bookingSubmitError.textContent = I18n.t("booking_err_missing_fields_intro", {
+          fields: missingFields.join(", "),
+        });
+        bookingSubmitError.classList.remove("hidden");
+        bookingSubmitError.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+      return;
+    }
+    const levelValue = (bookingLevelInput && bookingLevelInput.value) || "";
+    const slotLabels = bookingTimesUnknownSelected()
+      ? [I18n.t("booking_times_unknown_label")]
+      : bookingSlotSelections
+          .slice()
+          .sort(bookingSortSelections)
+          .map(function (s) {
+            return bookingFormatSlot(s.dayIndex, s.hour);
+          });
     const row = {
-      name: (bookingNameInput && bookingNameInput.value) || "",
-      phone: (bookingPhoneInput && bookingPhoneInput.value) || "",
-      level: (bookingLevelInput && bookingLevelInput.value) || "",
-      slots: bookingSlotSelections
-        .slice()
-        .sort(bookingSortSelections)
-        .map(function (s) {
-          return bookingFormatSlot(s.dayIndex, s.hour);
-        }),
+      parentName: (bookingParentNameInput && bookingParentNameInput.value.trim()) || "",
+      studentName: (bookingStudentNameInput && bookingStudentNameInput.value.trim()) || "",
+      name:
+        ((bookingStudentNameInput && bookingStudentNameInput.value.trim()) || "") +
+        " (" +
+        (((bookingParentNameInput && bookingParentNameInput.value.trim()) || "") || "Parent") +
+        ")",
+      phone: (bookingPhoneInput && bookingPhoneInput.value.trim()) || "",
+      level: levelValue === "unknown" ? I18n.t("booking_level_unknown_badge") : levelValue,
+      slots: slotLabels,
       createdAt: new Date().toLocaleString(),
     };
     let cloudSaved = false;

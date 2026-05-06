@@ -302,9 +302,12 @@
           </p>
           <p class="booking-request-note" data-i18n-html="booking_request_note_html"></p>
         </div>
-        <form id="booking-form" class="booking-form">
-          <label for="booking-name" data-i18n="booking_name_label">Your name</label>
-          <input type="text" id="booking-name" name="name" required autocomplete="name" data-i18n-placeholder="booking_name_ph" />
+        <form id="booking-form" class="booking-form" novalidate>
+          <label for="booking-parent-name" data-i18n="booking_parent_name_label">Parent name</label>
+          <input type="text" id="booking-parent-name" name="parentName" required autocomplete="name" data-i18n-placeholder="booking_parent_name_ph" />
+
+          <label for="booking-student-name" data-i18n="booking_student_name_label">Student name</label>
+          <input type="text" id="booking-student-name" name="studentName" required autocomplete="name" data-i18n-placeholder="booking_student_name_ph" />
 
           <label for="booking-phone" data-i18n="booking_phone_label">Phone number</label>
           <input type="tel" id="booking-phone" name="phone" required autocomplete="tel" data-i18n-placeholder="booking_phone_ph" />
@@ -313,6 +316,7 @@
           <p class="field-hint field-hint--tight" data-i18n="booking_level_help">Choose the track that best matches school level or confidence.</p>
           <select id="booking-level" name="level" required>
             <option value="" data-i18n="booking_level_empty">Select level</option>
+            <option value="unknown" data-i18n="booking_level_unknown">I do not know yet</option>
             <option value="beginner" data-i18n="level_beginner">Beginner</option>
             <option value="intermediate" data-i18n="level_intermediate">Intermediate</option>
             <option value="advanced" data-i18n="level_advanced">Advanced</option>
@@ -324,7 +328,12 @@
               Pick a weekday, then tap the hours that work. Add more days if you like. I confirm by email.
             </p>
 
-            <div class="booking-calendar">
+            <label class="booking-times-unknown">
+              <input type="checkbox" id="booking-times-unknown" />
+              <span data-i18n="booking_times_unknown_label">I do not know yet</span>
+            </label>
+
+            <div id="booking-calendar" class="booking-calendar">
               <div class="booking-calendar__step">
                 <p class="booking-calendar__pick-label" data-i18n="booking_pick_day">1 · Choose a day</p>
                 <div id="booking-day-grid" class="booking-day-grid" role="group"></div>
