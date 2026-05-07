@@ -487,6 +487,8 @@
               <form id="admin-payment-form" class="inline-form inline-form--stack">
                 <label for="admin-payment-name" data-i18n="admin_payment_name_label">Parent or student name</label>
                 <input type="text" id="admin-payment-name" required />
+                <label for="admin-payment-owed" data-i18n="admin_payment_owed_label">Amount owed (EUR)</label>
+                <input type="number" id="admin-payment-owed" min="0" step="0.01" value="0" />
                 <button type="submit" class="btn-primary" data-i18n="admin_payment_add_btn">Add to checklist</button>
               </form>
               <ul id="admin-payment-list" class="resource-list"></ul>

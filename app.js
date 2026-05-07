@@ -65,6 +65,7 @@
   const adminPaymentsTab = document.getElementById("admin-payments-tab");
   const adminPaymentForm = document.getElementById("admin-payment-form");
   const adminPaymentNameInput = document.getElementById("admin-payment-name");
+  const adminPaymentOwedInput = document.getElementById("admin-payment-owed");
   const adminPaymentList = document.getElementById("admin-payment-list");
   const adminCornerBtn = document.getElementById("admin-corner-btn");
   const adminCloudStatus = document.getElementById("admin-cloud-status");
@@ -1070,7 +1071,17 @@
   function loadPayments() {
     try {
       const raw = localStorage.getItem(PAYMENTS_KEY);
-      paymentChecklist = raw ? JSON.parse(raw) : [];
+      const rows = raw ? JSON.parse(raw) : [];
+      paymentChecklist = rows.map(function (item) {
+        return {
+          id: item.id,
+          name: item.name || "",
+          paid: !!item.paid,
+          owedAmount: Number.isFinite(Number(item.owedAmount))
+            ? Math.max(0, Number(item.owedAmount))
+            : 0,
+        };
+      });
     } catch (e) {
       paymentChecklist = [];
     }
@@ -1168,6 +1179,9 @@
           id: row.id,
           name: row.name,
           paid: !!row.paid,
+          owedAmount: Number.isFinite(Number(row.owed_amount))
+            ? Math.max(0, Number(row.owed_amount))
+            : 0,
         };
       });
       if (adminCloudStatus) {
@@ -1412,6 +1426,43 @@
         name.textContent = item.name + (item.paid ? " (paid)" : " (not paid)");
         left.appendChild(cb);
         left.appendChild(name);
+        const owedWrap = document.createElement("label");
+        owedWrap.className = "admin-payment-owed";
+        const owedText = document.createElement("span");
+        owedText.textContent = I18n.t("admin_payment_owed_short");
+        const owedInput = document.createElement("input");
+        owedInput.type = "number";
+        owedInput.min = "0";
+        owedInput.step = "0.01";
+        owedInput.value = String(
+          Number.isFinite(Number(item.owedAmount)) ? Number(item.owedAmount).toFixed(2) : "0.00"
+        );
+        owedInput.addEventListener("change", async function () {
+          const nextAmount = Math.max(0, Number(owedInput.value || 0));
+          owedInput.value = nextAmount.toFixed(2);
+          if (isSupabaseConfigured() && hasAdminApiSecret() && item.id) {
+            const sb = getSupabaseClient();
+            if (!sb) return;
+            const { error } = await sb.rpc("admin_set_payment_owed", {
+              p_secret: getSupabaseConfig().adminApiSecret,
+              p_id: item.id,
+              p_owed_amount: nextAmount,
+            });
+            if (error) {
+              console.error(error);
+              owedInput.value = Number(item.owedAmount || 0).toFixed(2);
+              return;
+            }
+            item.owedAmount = nextAmount;
+          } else {
+            item.owedAmount = nextAmount;
+            savePayments();
+          }
+          renderAdminPanel();
+        });
+        owedWrap.appendChild(owedText);
+        owedWrap.appendChild(owedInput);
+        left.appendChild(owedWrap);
         const remove = document.createElement("button");
         remove.type = "button";
         remove.className = "flashcard-btn";
@@ -1673,25 +1724,51 @@
     adminPaymentForm.addEventListener("submit", async function (e) {
       e.preventDefault();
       const name = (adminPaymentNameInput.value || "").trim();
+      const owedAmount = Math.max(0, Number((adminPaymentOwedInput && adminPaymentOwedInput.value) || 0));
       if (!name) return;
       if (isSupabaseConfigured() && hasAdminApiSecret()) {
         const sb = getSupabaseClient();
         if (!sb) return;
-        const { error } = await sb.rpc("admin_add_payment", {
+        let addError = null;
+        const addWithAmount = await sb.rpc("admin_add_payment", {
           p_secret: getSupabaseConfig().adminApiSecret,
           p_name: name,
+          p_owed_amount: owedAmount,
         });
-        if (error) {
-          console.error(error);
+        addError = addWithAmount.error || null;
+        if (addError) {
+          const fallback = await sb.rpc("admin_add_payment", {
+            p_secret: getSupabaseConfig().adminApiSecret,
+            p_name: name,
+          });
+          addError = fallback.error || null;
+          if (!addError && owedAmount > 0 && fallback.data) {
+            const setRes = await sb.rpc("admin_set_payment_owed", {
+              p_secret: getSupabaseConfig().adminApiSecret,
+              p_id: fallback.data,
+              p_owed_amount: owedAmount,
+            });
+            if (setRes.error) addError = setRes.error;
+          }
+        }
+        if (addError) {
+          console.error(addError);
           return;
         }
         adminPaymentForm.reset();
+        if (adminPaymentOwedInput) adminPaymentOwedInput.value = "0";
         await refreshAdminCloudData();
         return;
       }
-      paymentChecklist.push({ id: Date.now() + Math.random(), name: name, paid: false });
+      paymentChecklist.push({
+        id: Date.now() + Math.random(),
+        name: name,
+        paid: false,
+        owedAmount: owedAmount,
+      });
       savePayments();
       adminPaymentForm.reset();
+      if (adminPaymentOwedInput) adminPaymentOwedInput.value = "0";
       renderAdminPanel();
     });
   }
