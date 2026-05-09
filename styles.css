@@ -1547,6 +1547,20 @@ html[data-theme="dark"] .booking-sync-warning {
   justify-content: space-between;
 }
 
+.flashcard-trainer__top--stack {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.55rem;
+}
+
+.flashcard-trainer__top-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
 .flashcard-trainer__top label {
   font-size: 0.85rem;
   color: var(--muted);

@@ -10,6 +10,35 @@
   I18n.initThemeSwitch(document);
 
   const learningToolsLangRefreshers = [];
+  const flashcardOrderRefreshers = [];
+
+  const FLASHCARD_FIRST_LANG_KEY = "andronicus_flashcard_first_lang";
+
+  function readFlashcardFirstLang() {
+    try {
+      return localStorage.getItem(FLASHCARD_FIRST_LANG_KEY) === "fr" ? "fr" : "en";
+    } catch (e) {
+      return "en";
+    }
+  }
+
+  function writeFlashcardFirstLang(v) {
+    const next = v === "fr" ? "fr" : "en";
+    try {
+      localStorage.setItem(FLASHCARD_FIRST_LANG_KEY, next);
+    } catch (e) {}
+    window.dispatchEvent(new CustomEvent("andronicus:flashcardorder"));
+  }
+
+  window.addEventListener("andronicus:flashcardorder", function () {
+    flashcardOrderRefreshers.forEach(function (fn) {
+      try {
+        fn();
+      } catch (e) {
+        console.error(e);
+      }
+    });
+  });
 
   const CONTENT_PASSWORD = "123";
 
@@ -3195,13 +3224,42 @@
       const stage = document.createElement("div");
       stage.className = "flashcard-stage";
       const top = document.createElement("div");
-      top.className = "flashcard-trainer__top";
+      top.className = "flashcard-trainer__top flashcard-trainer__top--stack";
+      const deckRow = document.createElement("div");
+      deckRow.className = "flashcard-trainer__top-row";
       const label = document.createElement("label");
+      label.setAttribute("for", "flashcard-topic-" + level);
       label.textContent = I18n.t("flashcard_deck_label");
       const topicSelect = document.createElement("select");
+      topicSelect.id = "flashcard-topic-" + level;
       topicSelect.className = "flashcard-topic";
-      top.appendChild(label);
-      top.appendChild(topicSelect);
+      deckRow.appendChild(label);
+      deckRow.appendChild(topicSelect);
+      const orderRow = document.createElement("div");
+      orderRow.className = "flashcard-trainer__top-row";
+      const orderLabel = document.createElement("label");
+      orderLabel.setAttribute("for", "flashcard-order-" + level);
+      orderLabel.textContent = I18n.t("flashcard_order_label");
+      const orderSelect = document.createElement("select");
+      orderSelect.id = "flashcard-order-" + level;
+      orderSelect.className = "flashcard-topic flashcard-order-select";
+      orderSelect.setAttribute("aria-label", I18n.t("flashcard_order_label"));
+      const orderOptEn = document.createElement("option");
+      orderOptEn.value = "en";
+      orderOptEn.textContent = I18n.t("flashcard_order_en_option");
+      const orderOptFr = document.createElement("option");
+      orderOptFr.value = "fr";
+      orderOptFr.textContent = I18n.t("flashcard_order_fr_option");
+      orderSelect.appendChild(orderOptEn);
+      orderSelect.appendChild(orderOptFr);
+      orderSelect.value = readFlashcardFirstLang();
+      orderSelect.addEventListener("change", function () {
+        writeFlashcardFirstLang(orderSelect.value);
+      });
+      orderRow.appendChild(orderLabel);
+      orderRow.appendChild(orderSelect);
+      top.appendChild(deckRow);
+      top.appendChild(orderRow);
       const sessionHint = document.createElement("p");
       sessionHint.className = "flashcard-session-hint";
       const flipBtn = document.createElement("button");
@@ -3431,8 +3489,15 @@
         const idx = sessionIndices[sessionPos];
         const card = deck[idx];
         if (!card) return;
-        front.textContent = I18n.t("flashcard_side_english") + card.front;
-        back.textContent = I18n.t("flashcard_side_french") + card.back;
+        const enLine = I18n.t("flashcard_side_english") + card.front;
+        const frLine = I18n.t("flashcard_side_french") + card.back;
+        if (readFlashcardFirstLang() === "fr") {
+          front.textContent = frLine;
+          back.textContent = enLine;
+        } else {
+          front.textContent = enLine;
+          back.textContent = frLine;
+        }
         progress.textContent =
           String(sessionPos + 1) + " / " + String(sessionIndices.length);
         const attempts = sessionCorrect + sessionWrong;
@@ -3508,6 +3573,12 @@
 
       startSession("full", null);
 
+      flashcardOrderRefreshers.push(function () {
+        orderSelect.value = readFlashcardFirstLang();
+        showingBack = false;
+        renderCard();
+      });
+
       learningToolsLangRefreshers.push(function () {
         quizTitle.textContent = I18n.t("learning_vocab_quiz_title");
         quizNext.textContent = I18n.t("learning_vocab_next");
@@ -3523,6 +3594,10 @@
           if (key) el.textContent = I18n.t(key);
         });
         label.textContent = I18n.t("flashcard_deck_label");
+        orderLabel.textContent = I18n.t("flashcard_order_label");
+        orderSelect.setAttribute("aria-label", I18n.t("flashcard_order_label"));
+        orderOptEn.textContent = I18n.t("flashcard_order_en_option");
+        orderOptFr.textContent = I18n.t("flashcard_order_fr_option");
         prevBtn.textContent = I18n.t("flashcard_prev");
         nextBtn.textContent = I18n.t("flashcard_next");
         againBtn.textContent = I18n.t("flashcard_again");
