@@ -9,6 +9,8 @@
   I18n.initLangSwitch(document);
   I18n.initThemeSwitch(document);
 
+  const learningToolsLangRefreshers = [];
+
   const CONTENT_PASSWORD = "123";
 
   const introOverlay = document.getElementById("intro-overlay");
@@ -2290,6 +2292,13 @@
     refreshPasswordHint();
     syncPasswordToggleAria();
     if (adminUnlocked) renderAdminPanel();
+    learningToolsLangRefreshers.forEach(function (fn) {
+      try {
+        fn();
+      } catch (err) {
+        console.error(err);
+      }
+    });
   });
 
   function setContentPanelOpen(on) {
@@ -2790,7 +2799,7 @@
       const quizWrap = document.createElement("div");
       quizWrap.className = "resource-item vocab-quiz";
       const quizTitle = document.createElement("h4");
-      quizTitle.textContent = "Vocab challenge (fill in the blank)";
+      quizTitle.textContent = I18n.t("learning_vocab_quiz_title");
       const quizQuestion = document.createElement("p");
       quizQuestion.className = "vocab-quiz__question";
       const quizOptions = document.createElement("div");
@@ -2800,7 +2809,7 @@
       const quizNext = document.createElement("button");
       quizNext.type = "button";
       quizNext.className = "flashcard-btn";
-      quizNext.textContent = "Next question";
+      quizNext.textContent = I18n.t("learning_vocab_next");
       quizNext.disabled = true;
       quizWrap.appendChild(quizTitle);
       quizWrap.appendChild(quizQuestion);
@@ -2815,7 +2824,7 @@
         const modeBtn = document.createElement("button");
         modeBtn.type = "button";
         modeBtn.className = "tool-menu__btn" + (idx === 0 ? " is-active" : "");
-        modeBtn.textContent = mode.charAt(0).toUpperCase() + mode.slice(1);
+        modeBtn.textContent = I18n.t("learning_vocab_mode_" + mode);
         modeBtn.setAttribute("data-mode", mode);
         quizModeWrap.appendChild(modeBtn);
       });
@@ -2830,7 +2839,7 @@
       const summaryRestart = document.createElement("button");
       summaryRestart.type = "button";
       summaryRestart.className = "flashcard-btn";
-      summaryRestart.textContent = "Restart session";
+      summaryRestart.textContent = I18n.t("learning_vocab_restart_session");
       summary.appendChild(summaryTitle);
       summary.appendChild(summaryText);
       summary.appendChild(summaryFocus);
@@ -2864,13 +2873,16 @@
         quizNext.classList.add("hidden");
         summary.classList.remove("hidden");
         const pct = totalCount ? Math.round((quizScore / totalCount) * 100) : 0;
-        summaryTitle.textContent =
-          "Session summary: you got " + String(quizScore) + "/" + String(totalCount) + " (" + String(pct) + "%)";
+        summaryTitle.textContent = I18n.t("learning_vocab_summary_title", {
+          score: String(quizScore),
+          total: String(totalCount),
+          pct: String(pct),
+        });
         if (!sessionRecorded) {
           recordQuizSummary(level, currentMode, quizScore, totalCount);
           sessionRecorded = true;
         }
-        summaryText.textContent = "Great work. Focus next on these topics:";
+        summaryText.textContent = I18n.t("learning_vocab_summary_focus");
         summaryFocus.innerHTML = "";
         const ranked = Object.keys(wrongByTopic).sort(function (a, b) {
           return wrongByTopic[b] - wrongByTopic[a];
@@ -2878,12 +2890,15 @@
         const focusTopics = ranked.slice(0, 3);
         if (!focusTopics.length) {
           const li = document.createElement("li");
-          li.textContent = "No weak topics this round - excellent consistency.";
+          li.textContent = I18n.t("learning_vocab_summary_no_misses");
           summaryFocus.appendChild(li);
         } else {
           focusTopics.forEach(function (topic) {
             const li = document.createElement("li");
-            li.textContent = topic + " (" + String(wrongByTopic[topic]) + " misses)";
+            li.textContent = I18n.t("learning_vocab_summary_miss", {
+              topic: topic,
+              misses: String(wrongByTopic[topic]),
+            });
             summaryFocus.appendChild(li);
           });
         }
@@ -2905,10 +2920,15 @@
         askedCount += 1;
         quizAnswered = false;
         quizNext.disabled = true;
-        quizQuestion.textContent =
-          "Q" + String(askedCount) + ": " + currentQuestion.question + " [" + currentMode + "]";
-        quizFeedback.textContent =
-          "Score: " + String(quizScore) + "/" + String(askedCount - 1) + " | Choose an option to continue.";
+        quizQuestion.textContent = I18n.t("learning_vocab_question_line", {
+          n: String(askedCount),
+          q: currentQuestion.question,
+          mode: currentMode,
+        });
+        quizFeedback.textContent = I18n.t("learning_vocab_choose_prompt", {
+          score: String(quizScore),
+          round: String(askedCount - 1),
+        });
         quizOptions.innerHTML = "";
         const shuffledOptions = currentQuestion.options.slice().sort(function () {
           return Math.random() - 0.5;
@@ -2925,17 +2945,18 @@
             if (correct) {
               quizScore += 1;
               btn.classList.add("is-correct");
-              quizFeedback.textContent = "Correct. Score: " + String(quizScore) + "/" + String(askedCount);
+              quizFeedback.textContent = I18n.t("learning_vocab_correct_feedback", {
+                score: String(quizScore),
+                round: String(askedCount),
+              });
             } else {
               btn.classList.add("is-wrong");
               wrongByTopic[currentQuestion.topic] = (wrongByTopic[currentQuestion.topic] || 0) + 1;
-              quizFeedback.textContent =
-                "Not quite. Correct answer: " +
-                currentQuestion.answer +
-                " | Score: " +
-                String(quizScore) +
-                "/" +
-                String(askedCount);
+              quizFeedback.textContent = I18n.t("learning_vocab_wrong_feedback", {
+                answer: currentQuestion.answer,
+                score: String(quizScore),
+                round: String(askedCount),
+              });
             }
             Array.from(quizOptions.querySelectorAll("button")).forEach(function (b) {
               if (b.textContent === currentQuestion.answer) b.classList.add("is-correct");
@@ -3019,14 +3040,16 @@
         const challengeBtn = document.createElement("button");
         challengeBtn.type = "button";
         challengeBtn.className = "flashcard-btn";
-        challengeBtn.textContent = "Give me a random challenge";
+        challengeBtn.setAttribute("data-learning-chrome", "learning_vocab_challenge_btn");
+        challengeBtn.textContent = I18n.t("learning_vocab_challenge_btn");
         const challengeText = document.createElement("p");
         challengeText.className = "exercise-complete-msg hidden";
 
         const doneBtn = document.createElement("button");
         doneBtn.type = "button";
         doneBtn.className = "flashcard-btn exercise-complete-btn";
-        doneBtn.textContent = "Mark vocab topic completed";
+        doneBtn.setAttribute("data-learning-chrome", "learning_vocab_done_btn");
+        doneBtn.textContent = I18n.t("learning_vocab_done_btn");
         const doneMsg = document.createElement("p");
         doneMsg.className = "exercise-complete-msg hidden";
 
@@ -3043,15 +3066,15 @@
 
         challengeBtn.addEventListener("click", function () {
           const rand = item.tasks[Math.floor(Math.random() * item.tasks.length)];
-          challengeText.textContent = "Challenge: " + rand + " Complete this in 8 minutes.";
+          challengeText.textContent = I18n.t("learning_vocab_challenge_line", { task: rand });
           challengeText.classList.remove("hidden");
         });
 
         doneBtn.addEventListener("click", function () {
           const res = recordExerciseCompletion(level, "Vocab: " + item.topic);
-          if (res.ok) doneMsg.textContent = "Saved to your account progress.";
-          else if (res.reason === "auth") doneMsg.textContent = "Log in in the Account section to track completion.";
-          else doneMsg.textContent = "Already marked as completed.";
+          if (res.ok) doneMsg.textContent = I18n.t("learning_exercise_saved_ok");
+          else if (res.reason === "auth") doneMsg.textContent = I18n.t("learning_exercise_saved_auth");
+          else doneMsg.textContent = I18n.t("learning_exercise_saved_exists");
           doneMsg.classList.remove("hidden");
         });
 
@@ -3070,7 +3093,7 @@
       const exerciseSelectWrap = document.createElement("div");
       exerciseSelectWrap.className = "flashcard-trainer__top";
       const exerciseLabel = document.createElement("label");
-      exerciseLabel.textContent = "Exercise topic";
+      exerciseLabel.textContent = I18n.t("learning_exercise_topic_label");
       const exerciseSelect = document.createElement("select");
       exerciseSelect.className = "exercise-topic";
       exerciseSelectWrap.appendChild(exerciseLabel);
@@ -3101,11 +3124,17 @@
           exList.appendChild(li);
         });
         const task = document.createElement("p");
-        task.textContent = "Practice task: " + ex.practice;
+        task.textContent = I18n.t("learning_exercise_practice") + " " + ex.practice;
         const extension = document.createElement("p");
-        extension.textContent = "Extension: " + (ex.extension || "Create 5 extra original examples.");
+        extension.textContent =
+          I18n.t("learning_exercise_extension") +
+          " " +
+          (ex.extension || I18n.t("learning_exercise_extension_default"));
         const homework = document.createElement("p");
-        homework.textContent = "Homework: " + (ex.homework || "Submit your final answers before next class.");
+        homework.textContent =
+          I18n.t("learning_exercise_homework") +
+          " " +
+          (ex.homework || I18n.t("learning_exercise_homework_default"));
         let checklistEl = null;
         if (Array.isArray(ex.checklist) && ex.checklist.length) {
           checklistEl = document.createElement("ul");
@@ -3119,17 +3148,18 @@
         const doneBtn = document.createElement("button");
         doneBtn.type = "button";
         doneBtn.className = "flashcard-btn exercise-complete-btn";
-        doneBtn.textContent = "Mark this exercise as completed";
+        doneBtn.setAttribute("data-learning-chrome", "learning_exercise_done_btn");
+        doneBtn.textContent = I18n.t("learning_exercise_done_btn");
         const doneMsg = document.createElement("p");
         doneMsg.className = "exercise-complete-msg hidden";
         doneBtn.addEventListener("click", function () {
           const res = recordExerciseCompletion(level, ex.topic);
           if (res.ok) {
-            doneMsg.textContent = "Saved to your account progress.";
+            doneMsg.textContent = I18n.t("learning_exercise_saved_ok");
           } else if (res.reason === "auth") {
-            doneMsg.textContent = "Log in in the Account section to track completion.";
+            doneMsg.textContent = I18n.t("learning_exercise_saved_auth");
           } else {
-            doneMsg.textContent = "Already marked as completed.";
+            doneMsg.textContent = I18n.t("learning_exercise_saved_exists");
           }
           doneMsg.classList.remove("hidden");
         });
@@ -3150,7 +3180,7 @@
 
       schedulePanel.innerHTML = "";
       const scheduleTitle = document.createElement("h4");
-      scheduleTitle.textContent = "Your upcoming class plan";
+      scheduleTitle.textContent = I18n.t("learning_schedule_title");
       const scheduleList = document.createElement("ul");
       scheduleList.className = "resource-list";
       data.schedule.forEach(function (week) {
@@ -3205,7 +3235,7 @@
       gotItBtn.textContent = I18n.t("flashcard_got_it");
       const score = document.createElement("span");
       score.className = "flashcard-progress";
-      score.textContent = "Score: 0/0";
+      score.textContent = I18n.t("flashcard_score_label", { correct: "0", attempts: "0" });
       controls.appendChild(prevBtn);
       controls.appendChild(progress);
       controls.appendChild(nextBtn);
@@ -3251,8 +3281,26 @@
       let wrongKeysThisSession = {};
       let lastSessionWrongKeys = null;
       let lastSessionMode = "full";
+      let lastCompleteStats = null;
       let showingBack = false;
       let sessionSummarySaved = false;
+
+      function applySessionHintFromState() {
+        const deck = fullDeck();
+        if (!deck.length || !sessionIndices.length) {
+          return;
+        }
+        const totalInDeck = deck.length;
+        const n = sessionIndices.length;
+        if (totalInDeck > FLASHCARD_SESSION_CAP) {
+          sessionHint.textContent = I18n.t("flashcard_session_sample_hint", {
+            n: String(n),
+            total: String(totalInDeck),
+          });
+        } else {
+          sessionHint.textContent = I18n.t("flashcard_session_full_hint", { n: String(n) });
+        }
+      }
 
       const flashMeta = function () {
         return { level: level, topic: activeTopic };
@@ -3271,6 +3319,7 @@
         showingBack = false;
         sessionSummarySaved = false;
         completeOverlay.classList.add("hidden");
+        lastCompleteStats = null;
         if (!deck.length) {
           sessionIndices = [];
           sessionPos = 0;
@@ -3299,16 +3348,7 @@
         }
         sessionPos = 0;
         lastSessionWrongKeys = null;
-        const totalInDeck = deck.length;
-        const n = sessionIndices.length;
-        if (totalInDeck > FLASHCARD_SESSION_CAP) {
-          sessionHint.textContent = I18n.t("flashcard_session_sample_hint", {
-            n: String(n),
-            total: String(totalInDeck),
-          });
-        } else {
-          sessionHint.textContent = I18n.t("flashcard_session_full_hint", { n: String(n) });
-        }
+        applySessionHintFromState();
         prevBtn.classList.add("hidden");
         nextBtn.classList.add("hidden");
         renderCard();
@@ -3324,6 +3364,11 @@
         Object.keys(wrongKeysThisSession).forEach(function (k) {
           lastSessionWrongKeys[k] = true;
         });
+        lastCompleteStats = {
+          correct: correctCount,
+          wrong: wrongCount,
+          total: total,
+        };
         recordFlashcardSessionComplete({
           level: level,
           topic: activeTopic,
@@ -3386,8 +3431,8 @@
         const idx = sessionIndices[sessionPos];
         const card = deck[idx];
         if (!card) return;
-        front.textContent = "English = " + card.front;
-        back.textContent = "French = " + card.back;
+        front.textContent = I18n.t("flashcard_side_english") + card.front;
+        back.textContent = I18n.t("flashcard_side_french") + card.back;
         progress.textContent =
           String(sessionPos + 1) + " / " + String(sessionIndices.length);
         const attempts = sessionCorrect + sessionWrong;
@@ -3462,6 +3507,67 @@
       });
 
       startSession("full", null);
+
+      learningToolsLangRefreshers.push(function () {
+        quizTitle.textContent = I18n.t("learning_vocab_quiz_title");
+        quizNext.textContent = I18n.t("learning_vocab_next");
+        summaryRestart.textContent = I18n.t("learning_vocab_restart_session");
+        Array.from(quizModeWrap.querySelectorAll("[data-mode]")).forEach(function (mb) {
+          const mode = mb.getAttribute("data-mode");
+          if (mode) mb.textContent = I18n.t("learning_vocab_mode_" + mode);
+        });
+        exerciseLabel.textContent = I18n.t("learning_exercise_topic_label");
+        scheduleTitle.textContent = I18n.t("learning_schedule_title");
+        root.querySelectorAll("[data-learning-chrome]").forEach(function (el) {
+          const key = el.getAttribute("data-learning-chrome");
+          if (key) el.textContent = I18n.t(key);
+        });
+        label.textContent = I18n.t("flashcard_deck_label");
+        prevBtn.textContent = I18n.t("flashcard_prev");
+        nextBtn.textContent = I18n.t("flashcard_next");
+        againBtn.textContent = I18n.t("flashcard_again");
+        gotItBtn.textContent = I18n.t("flashcard_got_it");
+        btnWrongOnly.textContent = I18n.t("flashcard_complete_wrong_only");
+        btnFullAgain.textContent = I18n.t("flashcard_complete_full_again");
+        applySessionHintFromState();
+        if (!completeOverlay.classList.contains("hidden") && lastCompleteStats) {
+          completeTitle.textContent = I18n.t("flashcard_complete_title");
+          completeSummary.textContent = I18n.t("flashcard_complete_summary", {
+            correct: String(lastCompleteStats.correct),
+            wrong: String(lastCompleteStats.wrong),
+            total: String(lastCompleteStats.total),
+          });
+        }
+        if (!summary.classList.contains("hidden")) {
+          const pct = askedCount ? Math.round((quizScore / askedCount) * 100) : 0;
+          summaryTitle.textContent = I18n.t("learning_vocab_summary_title", {
+            score: String(quizScore),
+            total: String(askedCount),
+            pct: String(pct),
+          });
+          summaryText.textContent = I18n.t("learning_vocab_summary_focus");
+          summaryFocus.innerHTML = "";
+          const ranked = Object.keys(wrongByTopic).sort(function (a, b) {
+            return wrongByTopic[b] - wrongByTopic[a];
+          });
+          const focusTopics = ranked.slice(0, 3);
+          if (!focusTopics.length) {
+            const li = document.createElement("li");
+            li.textContent = I18n.t("learning_vocab_summary_no_misses");
+            summaryFocus.appendChild(li);
+          } else {
+            focusTopics.forEach(function (topic) {
+              const li = document.createElement("li");
+              li.textContent = I18n.t("learning_vocab_summary_miss", {
+                topic: topic,
+                misses: String(wrongByTopic[topic]),
+              });
+              summaryFocus.appendChild(li);
+            });
+          }
+        }
+        renderCard();
+      });
     });
   }
 

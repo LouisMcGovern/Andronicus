@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta name="google-site-verification" content="_fWNw94h-DEt14rDbOEik__TLHg1wLhUFQRNtZI9cJk" />
   <meta charset="UTF-8" />
@@ -8,8 +8,11 @@
   <title>Andronicus · English Grinds</title>
   <script>
     try {
-      if (localStorage.getItem("andronicus_lang") === "fr") document.documentElement.lang = "fr";
-    } catch (e) {}
+      var _andronicusLang = localStorage.getItem("andronicus_lang");
+      document.documentElement.lang = _andronicusLang === "en" ? "en" : "fr";
+    } catch (e) {
+      document.documentElement.lang = "fr";
+    }
     try {
       document.documentElement.setAttribute(
         "data-theme",
@@ -31,8 +34,8 @@
     <button type="button" class="theme-switch__btn" data-theme-value="dark" data-i18n="theme_dark" aria-pressed="false">Dark</button>
   </div>
   <div class="lang-switch lang-switch--fixed" role="group" data-i18n-aria="lang_aria">
-    <button type="button" class="lang-switch__btn" data-lang="en" data-i18n="lang_en" aria-pressed="true">English</button>
-    <button type="button" class="lang-switch__btn" data-lang="fr" data-i18n="lang_fr" aria-pressed="false">Français</button>
+    <button type="button" class="lang-switch__btn" data-lang="en" data-i18n="lang_en" aria-pressed="false">English</button>
+    <button type="button" class="lang-switch__btn is-active" data-lang="fr" data-i18n="lang_fr" aria-pressed="true">Français</button>
   </div>
 
   <div id="intro-overlay" class="intro-overlay" aria-hidden="true">

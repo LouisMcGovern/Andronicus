@@ -1635,51 +1635,51 @@ html[data-theme="dark"] .booking-sync-warning {
 }
 
 .flashcard-btn--save-later {
-  background: #fde8ea;
-  border-color: #e8b4bc;
-  color: #7a1f2b;
+  background: #fecaca;
+  border-color: #dc2626;
+  color: #7f1d1d;
 }
 
 .flashcard-btn--save-later:hover {
-  background: #fad0d6;
-  border-color: #d996a0;
-  color: #5c1019;
+  background: #fca5a5;
+  border-color: #b91c1c;
+  color: #450a0a;
 }
 
 .flashcard-btn--got-it {
-  background: #e6f7ea;
-  border-color: #a8d4b4;
-  color: #1e4d2b;
+  background: #bbf7d0;
+  border-color: #16a34a;
+  color: #14532d;
 }
 
 .flashcard-btn--got-it:hover {
-  background: #d4f0dc;
-  border-color: #8fc49e;
-  color: #143820;
+  background: #86efac;
+  border-color: #15803d;
+  color: #052e16;
 }
 
 html[data-theme="dark"] .flashcard-btn--save-later {
-  background: rgba(220, 90, 110, 0.22);
-  border-color: rgba(255, 150, 165, 0.45);
-  color: #ffb3be;
+  background: rgba(220, 38, 38, 0.35);
+  border-color: #f87171;
+  color: #fecaca;
 }
 
 html[data-theme="dark"] .flashcard-btn--save-later:hover {
-  background: rgba(220, 90, 110, 0.32);
-  border-color: rgba(255, 170, 180, 0.55);
-  color: #ffd6dc;
+  background: rgba(220, 38, 38, 0.5);
+  border-color: #fca5a5;
+  color: #fff1f2;
 }
 
 html[data-theme="dark"] .flashcard-btn--got-it {
-  background: rgba(70, 170, 110, 0.22);
-  border-color: rgba(120, 210, 150, 0.45);
-  color: #b8f0c8;
+  background: rgba(22, 163, 74, 0.35);
+  border-color: #4ade80;
+  color: #bbf7d0;
 }
 
 html[data-theme="dark"] .flashcard-btn--got-it:hover {
-  background: rgba(70, 170, 110, 0.32);
-  border-color: rgba(140, 220, 165, 0.55);
-  color: #d8ffe4;
+  background: rgba(22, 163, 74, 0.5);
+  border-color: #86efac;
+  color: #ecfdf5;
 }
 
 .flashcard-progress {
