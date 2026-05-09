@@ -58,6 +58,10 @@
   const adminDashboard = document.getElementById("admin-dashboard");
   const adminLogoutBtn = document.getElementById("admin-logout-btn");
   const adminStudentsTableBody = document.querySelector("#admin-students-table tbody");
+  const adminStudentListWrap = document.getElementById("admin-student-list-wrap");
+  const adminStudentDetail = document.getElementById("admin-student-detail");
+  const adminStudentDetailInner = document.getElementById("admin-student-detail-inner");
+  const adminStudentBackBtn = document.getElementById("admin-student-back-btn");
   const adminBookingsTableBody = document.querySelector("#admin-bookings-table tbody");
   const adminTabs = document.querySelectorAll("#admin-dashboard [data-admin-tab]");
   const adminBookingsTab = document.getElementById("admin-bookings-tab");
@@ -93,6 +97,8 @@
   let bookingSlotSelections = [];
 
   const INTRO_MS = 1200;
+  /** Large decks use a random sample so one session can finish in a class period. */
+  const FLASHCARD_SESSION_CAP = 48;
   const USERS_KEY = "andronicus_users_v1";
   const ACTIVE_USER_KEY = "andronicus_active_user_v1";
   const BOOKINGS_KEY = "andronicus_bookings_v1";
@@ -103,6 +109,7 @@
   let users = {};
   let activeUsername = null;
   let adminUnlocked = false;
+  let adminViewingStudent = null;
   let bookings = [];
   let paymentChecklist = [];
   let supabaseClient = null;
@@ -140,6 +147,55 @@
           { front: "Expensive", back: "Cher" },
           { front: "Would like", back: "Voudrais" },
           { front: "How much is it?", back: "C'est combien ?" },
+        ],
+        "In the house": [
+          { front: "Living room", back: "Salon" },
+          { front: "Dining room", back: "Salle a manger" },
+          { front: "Bathroom", back: "Salle de bain" },
+          { front: "Toilet", back: "WC / toilettes" },
+          { front: "Hallway", back: "Couloir" },
+          { front: "Stairs", back: "Escalier" },
+          { front: "Ceiling", back: "Plafond" },
+          { front: "Floor", back: "Sol" },
+          { front: "Wall", back: "Mur" },
+          { front: "Window", back: "Fenetre" },
+          { front: "Door", back: "Porte" },
+          { front: "Light switch", back: "Interrupteur" },
+          { front: "Socket / plug", back: "Prise (electrique)" },
+          { front: "Radiator", back: "Radiateur" },
+          { front: "Sofa", back: "Canape" },
+          { front: "Armchair", back: "Fauteuil" },
+          { front: "Table", back: "Table" },
+          { front: "Chair", back: "Chaise" },
+          { front: "Fridge", back: "Refrigerateur" },
+          { front: "Oven", back: "Four" },
+          { front: "Sink", back: "Evier" },
+          { front: "Cupboard", back: "Placard" },
+          { front: "Wardrobe", back: "Armoire" },
+          { front: "Mirror", back: "Miroir" },
+          { front: "Towel", back: "Serviette" },
+        ],
+        "Sports and fitness": [
+          { front: "Team", back: "Equipe" },
+          { front: "Match", back: "Match" },
+          { front: "Training", back: "Entrainement" },
+          { front: "Coach", back: "Entraineur" },
+          { front: "Stadium", back: "Stade" },
+          { front: "Swimming pool", back: "Piscine" },
+          { front: "Tennis court", back: "Court de tennis" },
+          { front: "To win", back: "Gagner" },
+          { front: "To lose", back: "Perdre" },
+          { front: "Draw / tie", back: "Match nul" },
+          { front: "Referee", back: "Arbitre" },
+          { front: "Captain", back: "Capitaine" },
+          { front: "Warm up", back: "Echauffement" },
+          { front: "Tired", back: "Fatigue" },
+          { front: "Injury", back: "Blessure" },
+          { front: "Basketball", back: "Basket-ball" },
+          { front: "Rugby", back: "Rugby" },
+          { front: "Athletics", back: "Athletisme" },
+          { front: "Cycling", back: "Cyclisme" },
+          { front: "Skiing", back: "Ski" },
         ],
       },
       vocab: [
@@ -402,6 +458,32 @@
           { front: "It depends on...", back: "Cela dépend de..." },
           { front: "Overall, I would argue...", back: "Globalement, je dirais..." },
         ],
+        "Sports and competition": [
+          { front: "Tournament", back: "Tournoi" },
+          { front: "Semi-final", back: "Demi-finale" },
+          { front: "Knockout stage", back: "Phase eliminatoire" },
+          { front: "League table", back: "Classement" },
+          { front: "Home advantage", back: "Avantage du terrain" },
+          { front: "Under pressure", back: "Sous pression" },
+          { front: "Fair play", back: "Fair-play" },
+          { front: "Performance", back: "Performance" },
+          { front: "To qualify", back: "Se qualifier" },
+          { front: "To be eliminated", back: "Etre elimine" },
+          { front: "Sponsorship", back: "Sponsoring" },
+          { front: "Broadcast", back: "Diffusion" },
+        ],
+        "At home and routines": [
+          { front: "Household chores", back: "Taches menageres" },
+          { front: "To tidy up", back: "Ranger" },
+          { front: "To do the shopping", back: "Faire les courses" },
+          { front: "Neighbour", back: "Voisin / voisine" },
+          { front: "Landlord", back: "Proprietaire / bailleur" },
+          { front: "Tenant", back: "Locataire" },
+          { front: "Rent", back: "Loyer" },
+          { front: "Bills", back: "Factures" },
+          { front: "Remote working", back: "Teletravail" },
+          { front: "Commute", back: "Trajet domicile-travail" },
+        ],
       },
       vocab: [
         {
@@ -661,6 +743,26 @@
           { front: "To conclude this section...", back: "Pour conclure cette partie..." },
           { front: "In summary...", back: "En resume..." },
           { front: "I welcome your questions.", back: "Je suis ouvert a vos questions." },
+        ],
+        "Sport, ethics, and society": [
+          { front: "Doping scandal", back: "Affaire de dopage" },
+          { front: "Integrity", back: "Integrite" },
+          { front: "Grassroots sport", back: "Sport de base" },
+          { front: "Elite performance", back: "Haut niveau" },
+          { front: "Commercialisation", back: "Commercialisation" },
+          { front: "Public funding", back: "Financement public" },
+          { front: "Safeguarding", back: "Protection des mineurs / prevention" },
+          { front: "Inclusivity", back: "Inclusivite" },
+        ],
+        "Housing and urban life": [
+          { front: "Gentrification", back: "Embourgeoisement" },
+          { front: "Affordable housing", back: "Logement abordable" },
+          { front: "Urban sprawl", back: "Etalement urbain" },
+          { front: "Zoning regulations", back: "Reglementation d'urbanisme" },
+          { front: "Commuter belt", back: "Couronne periurbaine" },
+          { front: "High-density housing", back: "Logement a forte densite" },
+          { front: "Social housing", back: "Logement social" },
+          { front: "Carbon footprint of buildings", back: "Empreinte carbone du batiment" },
         ],
       },
       vocab: [
@@ -1215,11 +1317,58 @@
   function ensureStats(user) {
     if (!user.stats) user.stats = {};
     if (!user.stats.flashcards) user.stats.flashcards = { attempts: 0, correct: 0 };
+    if (!user.stats.flashcardsByDeck) user.stats.flashcardsByDeck = {};
+    if (!user.stats.flashcardSessions) user.stats.flashcardSessions = [];
     if (!user.stats.quizBest) user.stats.quizBest = {};
     if (!user.stats.quizSessions) user.stats.quizSessions = 0;
+    if (!user.stats.quizSessionLog) user.stats.quizSessionLog = [];
     if (!user.stats.completedExercises) user.stats.completedExercises = [];
     if (!user.fullName) user.fullName = "";
     return user.stats;
+  }
+
+  function buildFlashcardSessionIndices(deckLen) {
+    if (deckLen <= 0) return [];
+    if (deckLen <= FLASHCARD_SESSION_CAP) {
+      const arr = [];
+      for (let i = 0; i < deckLen; i += 1) arr.push(i);
+      return arr;
+    }
+    const picked = {};
+    const out = [];
+    while (out.length < FLASHCARD_SESSION_CAP) {
+      const r = Math.floor(Math.random() * deckLen);
+      if (!picked[r]) {
+        picked[r] = true;
+        out.push(r);
+      }
+    }
+    return out.sort(function (a, b) {
+      return a - b;
+    });
+  }
+
+  function flashcardCardKey(card) {
+    return String(card.front) + "\t" + String(card.back);
+  }
+
+  function recordFlashcardSessionComplete(payload) {
+    const user = getActiveUser();
+    if (!user) return;
+    const stats = ensureStats(user);
+    stats.flashcardSessions.push({
+      at: new Date().toISOString(),
+      level: payload.level,
+      topic: payload.topic,
+      correct: payload.correct,
+      wrong: payload.wrong,
+      total: payload.total,
+      mode: payload.mode || "full",
+    });
+    if (stats.flashcardSessions.length > 48) {
+      stats.flashcardSessions = stats.flashcardSessions.slice(-48);
+    }
+    saveUsers();
   }
 
   function setAuthFeedback(message, isError) {
@@ -1232,6 +1381,196 @@
   function formatPct(correct, attempts) {
     if (!attempts) return "0%";
     return String(Math.round((correct / attempts) * 100)) + "%";
+  }
+
+  function appendAdminBarRow(host, label, pct) {
+    const row = document.createElement("div");
+    row.className = "admin-chart-row";
+    const lab = document.createElement("div");
+    lab.className = "admin-chart-row__label";
+    lab.textContent = label;
+    const pctRounded = Math.round(Math.min(100, Math.max(0, pct)));
+    const track = document.createElement("div");
+    track.className = "admin-chart-row__track";
+    const fill = document.createElement("div");
+    fill.className = "admin-chart-row__fill";
+    fill.style.width = String(pctRounded) + "%";
+    track.appendChild(fill);
+    const pctEl = document.createElement("div");
+    pctEl.className = "admin-chart-row__pct";
+    pctEl.textContent = String(pctRounded) + "%";
+    row.appendChild(lab);
+    row.appendChild(track);
+    row.appendChild(pctEl);
+    host.appendChild(row);
+  }
+
+  function renderAdminStudentDetail(username) {
+    if (!adminStudentDetailInner) return;
+    const user = users[username];
+    if (!user) return;
+    const stats = ensureStats(user);
+    adminStudentDetailInner.innerHTML = "";
+
+    const header = document.createElement("div");
+    header.className = "admin-student-detail__header";
+    const h = document.createElement("h3");
+    h.textContent = I18n.t("admin_student_detail_title", {
+      name: user.fullName || username,
+    });
+    const sub = document.createElement("p");
+    sub.className = "admin-student-detail__sub";
+    sub.textContent = I18n.t("admin_student_detail_username", { user: username });
+    header.appendChild(h);
+    header.appendChild(sub);
+    adminStudentDetailInner.appendChild(header);
+
+    const secFlash = document.createElement("section");
+    secFlash.className = "admin-detail-section";
+    const hFlash = document.createElement("h4");
+    hFlash.textContent = I18n.t("admin_student_flash_overall");
+    secFlash.appendChild(hFlash);
+    const att = stats.flashcards.attempts || 0;
+    const cor = stats.flashcards.correct || 0;
+    const pct = att ? (cor / att) * 100 : 0;
+    appendAdminBarRow(secFlash, I18n.t("admin_student_lifetime_accuracy"), pct);
+    adminStudentDetailInner.appendChild(secFlash);
+
+    const secDeck = document.createElement("section");
+    secDeck.className = "admin-detail-section";
+    const hDeck = document.createElement("h4");
+    hDeck.textContent = I18n.t("admin_student_by_deck");
+    secDeck.appendChild(hDeck);
+    const deckKeys = Object.keys(stats.flashcardsByDeck || {}).sort();
+    if (!deckKeys.length) {
+      const p = document.createElement("p");
+      p.className = "admin-detail-empty";
+      p.textContent = I18n.t("admin_student_no_deck_stats");
+      secDeck.appendChild(p);
+    } else {
+      deckKeys.forEach(function (dk) {
+        const row = stats.flashcardsByDeck[dk];
+        const a = row.attempts || 0;
+        const c = row.correct || 0;
+        const p = a ? (c / a) * 100 : 0;
+        appendAdminBarRow(secDeck, dk.split("|").join(" → "), p);
+      });
+    }
+    adminStudentDetailInner.appendChild(secDeck);
+
+    const secSess = document.createElement("section");
+    secSess.className = "admin-detail-section";
+    const hSess = document.createElement("h4");
+    hSess.textContent = I18n.t("admin_student_flash_sessions");
+    secSess.appendChild(hSess);
+    const sessions = (stats.flashcardSessions || []).slice(-12);
+    if (!sessions.length) {
+      const p = document.createElement("p");
+      p.className = "admin-detail-empty";
+      p.textContent = I18n.t("admin_student_no_sessions");
+      secSess.appendChild(p);
+    } else {
+      const chart = document.createElement("div");
+      chart.className = "admin-column-chart";
+      sessions.forEach(function (s, idx) {
+        const col = document.createElement("div");
+        col.className = "admin-column-chart__col";
+        const total = s.total || 1;
+        const hPct = Math.round(((s.correct || 0) / total) * 100);
+        const bar = document.createElement("div");
+        bar.className = "admin-column-chart__bar";
+        const px = Math.round((hPct / 100) * 110);
+        bar.style.height = String(Math.max(4, px)) + "px";
+        bar.title =
+          (s.topic || "") +
+          " (" +
+          (s.level || "") +
+          "): " +
+          String(s.correct) +
+          "/" +
+          String(total) +
+          (s.mode === "wrong_retry" ? " · " + I18n.t("admin_student_mode_wrong_retry") : "");
+        const lab = document.createElement("span");
+        lab.className = "admin-column-chart__label";
+        lab.textContent = String(idx + 1);
+        col.appendChild(bar);
+        col.appendChild(lab);
+        chart.appendChild(col);
+      });
+      secSess.appendChild(chart);
+      const tb = document.createElement("p");
+      tb.className = "admin-session-legend";
+      tb.textContent = I18n.t("admin_student_session_chart_hint");
+      secSess.appendChild(tb);
+    }
+    adminStudentDetailInner.appendChild(secSess);
+
+    const secQuiz = document.createElement("section");
+    secQuiz.className = "admin-detail-section";
+    const hQuiz = document.createElement("h4");
+    hQuiz.textContent = I18n.t("admin_student_quiz_title");
+    secQuiz.appendChild(hQuiz);
+    const qlog = (stats.quizSessionLog || []).slice(-12).reverse();
+    if (!qlog.length) {
+      const p = document.createElement("p");
+      p.className = "admin-detail-empty";
+      p.textContent = I18n.t("admin_student_no_quiz_log");
+      secQuiz.appendChild(p);
+    } else {
+      const ul = document.createElement("ul");
+      ul.className = "admin-detail-list";
+      qlog.forEach(function (q) {
+        const li = document.createElement("li");
+        li.textContent =
+          (q.at ? new Date(q.at).toLocaleString() : "") +
+          " · " +
+          q.level +
+          " " +
+          q.mode +
+          " · " +
+          String(q.score) +
+          "/" +
+          String(q.total) +
+          " (" +
+          String(q.pct) +
+          "%)";
+        ul.appendChild(li);
+      });
+      secQuiz.appendChild(ul);
+    }
+    const bestKeys = Object.keys(stats.quizBest || {});
+    if (bestKeys.length) {
+      const hBest = document.createElement("h4");
+      hBest.textContent = I18n.t("admin_student_quiz_best");
+      hBest.className = "admin-detail-subheading";
+      secQuiz.appendChild(hBest);
+      bestKeys.sort().forEach(function (k) {
+        appendAdminBarRow(secQuiz, k, stats.quizBest[k]);
+      });
+    }
+    adminStudentDetailInner.appendChild(secQuiz);
+
+    const secEx = document.createElement("section");
+    secEx.className = "admin-detail-section";
+    const hEx = document.createElement("h4");
+    hEx.textContent = I18n.t("admin_student_exercises");
+    secEx.appendChild(hEx);
+    if (!stats.completedExercises.length) {
+      const p = document.createElement("p");
+      p.className = "admin-detail-empty";
+      p.textContent = I18n.t("account_no_exercises_done");
+      secEx.appendChild(p);
+    } else {
+      const ul = document.createElement("ul");
+      ul.className = "admin-detail-list";
+      stats.completedExercises.forEach(function (item) {
+        const li = document.createElement("li");
+        li.textContent = item;
+        ul.appendChild(li);
+      });
+      secEx.appendChild(ul);
+    }
+    adminStudentDetailInner.appendChild(secEx);
   }
 
   function renderAccountPanel() {
@@ -1336,59 +1675,85 @@
           adminBookingsTableBody.appendChild(tr);
         });
     }
-    adminStudentsTableBody.innerHTML = "";
-    Object.keys(users).forEach(function (username) {
-      const user = users[username];
-      const stats = ensureStats(user);
-      const tr = document.createElement("tr");
-      const nameTd = document.createElement("td");
-      nameTd.textContent = user.fullName || username;
-      const userTd = document.createElement("td");
-      userTd.textContent = username;
-      const flashTd = document.createElement("td");
-      flashTd.textContent =
-        String(stats.flashcards.correct) +
-        "/" +
-        String(stats.flashcards.attempts) +
-        " (" +
-        formatPct(stats.flashcards.correct, stats.flashcards.attempts) +
-        ")";
-      const quizTd = document.createElement("td");
-      quizTd.textContent = String(stats.quizSessions);
-      const doneTd = document.createElement("td");
-      doneTd.textContent = String(stats.completedExercises.length);
-      const actionTd = document.createElement("td");
-      const editNameBtn = document.createElement("button");
-      editNameBtn.type = "button";
-      editNameBtn.className = "flashcard-btn";
-      editNameBtn.textContent = I18n.t("admin_edit_name");
-      editNameBtn.addEventListener("click", function () {
-        const next = window.prompt("Update full name for " + username, user.fullName || username);
-        if (!next) return;
-        user.fullName = next.trim();
-        saveUsers();
-        renderAdminPanel();
+    const progressTabVisible = adminProgressTab && !adminProgressTab.classList.contains("hidden");
+    if (
+      progressTabVisible &&
+      adminViewingStudent &&
+      users[adminViewingStudent] &&
+      adminStudentListWrap &&
+      adminStudentDetail &&
+      adminStudentDetailInner
+    ) {
+      adminStudentListWrap.classList.add("hidden");
+      adminStudentDetail.classList.remove("hidden");
+      renderAdminStudentDetail(adminViewingStudent);
+    } else {
+      if (adminViewingStudent && !users[adminViewingStudent]) adminViewingStudent = null;
+      if (adminStudentListWrap) adminStudentListWrap.classList.remove("hidden");
+      if (adminStudentDetail) adminStudentDetail.classList.add("hidden");
+      adminStudentsTableBody.innerHTML = "";
+      Object.keys(users).forEach(function (username) {
+        const user = users[username];
+        const stats = ensureStats(user);
+        const tr = document.createElement("tr");
+        const nameTd = document.createElement("td");
+        nameTd.textContent = user.fullName || username;
+        const userTd = document.createElement("td");
+        userTd.textContent = username;
+        const flashTd = document.createElement("td");
+        flashTd.textContent =
+          String(stats.flashcards.correct) +
+          "/" +
+          String(stats.flashcards.attempts) +
+          " (" +
+          formatPct(stats.flashcards.correct, stats.flashcards.attempts) +
+          ")";
+        const quizTd = document.createElement("td");
+        quizTd.textContent = String(stats.quizSessions);
+        const doneTd = document.createElement("td");
+        doneTd.textContent = String(stats.completedExercises.length);
+        const actionTd = document.createElement("td");
+        const viewBtn = document.createElement("button");
+        viewBtn.type = "button";
+        viewBtn.className = "flashcard-btn";
+        viewBtn.textContent = I18n.t("admin_student_view");
+        viewBtn.addEventListener("click", function () {
+          adminViewingStudent = username;
+          renderAdminPanel();
+        });
+        const editNameBtn = document.createElement("button");
+        editNameBtn.type = "button";
+        editNameBtn.className = "flashcard-btn";
+        editNameBtn.textContent = I18n.t("admin_edit_name");
+        editNameBtn.addEventListener("click", function () {
+          const next = window.prompt("Update full name for " + username, user.fullName || username);
+          if (!next) return;
+          user.fullName = next.trim();
+          saveUsers();
+          renderAdminPanel();
+        });
+        const resetPassBtn = document.createElement("button");
+        resetPassBtn.type = "button";
+        resetPassBtn.className = "flashcard-btn";
+        resetPassBtn.textContent = I18n.t("admin_reset_password");
+        resetPassBtn.addEventListener("click", function () {
+          const next = window.prompt("Set new password for " + username);
+          if (!next) return;
+          user.password = next.trim();
+          saveUsers();
+        });
+        actionTd.appendChild(viewBtn);
+        actionTd.appendChild(editNameBtn);
+        actionTd.appendChild(resetPassBtn);
+        tr.appendChild(nameTd);
+        tr.appendChild(userTd);
+        tr.appendChild(flashTd);
+        tr.appendChild(quizTd);
+        tr.appendChild(doneTd);
+        tr.appendChild(actionTd);
+        adminStudentsTableBody.appendChild(tr);
       });
-      const resetPassBtn = document.createElement("button");
-      resetPassBtn.type = "button";
-      resetPassBtn.className = "flashcard-btn";
-      resetPassBtn.textContent = I18n.t("admin_reset_password");
-      resetPassBtn.addEventListener("click", function () {
-        const next = window.prompt("Set new password for " + username);
-        if (!next) return;
-        user.password = next.trim();
-        saveUsers();
-      });
-      actionTd.appendChild(editNameBtn);
-      actionTd.appendChild(resetPassBtn);
-      tr.appendChild(nameTd);
-      tr.appendChild(userTd);
-      tr.appendChild(flashTd);
-      tr.appendChild(quizTd);
-      tr.appendChild(doneTd);
-      tr.appendChild(actionTd);
-      adminStudentsTableBody.appendChild(tr);
-    });
+    }
 
     if (adminPaymentList) {
       adminPaymentList.innerHTML = "";
@@ -1501,6 +1866,13 @@
     }
   }
 
+  if (adminStudentBackBtn) {
+    adminStudentBackBtn.addEventListener("click", function () {
+      adminViewingStudent = null;
+      renderAdminPanel();
+    });
+  }
+
   function recordExerciseCompletion(level, topic) {
     const user = getActiveUser();
     if (!user) return { ok: false, reason: "auth" };
@@ -1513,12 +1885,20 @@
     return { ok: true };
   }
 
-  function recordFlashcardResult(wasCorrect) {
+  function recordFlashcardResult(wasCorrect, meta) {
     const user = getActiveUser();
     if (!user) return;
     const stats = ensureStats(user);
     stats.flashcards.attempts += 1;
     if (wasCorrect) stats.flashcards.correct += 1;
+    if (meta && meta.level && meta.topic) {
+      const dk = meta.level + "|" + meta.topic;
+      if (!stats.flashcardsByDeck[dk]) {
+        stats.flashcardsByDeck[dk] = { attempts: 0, correct: 0 };
+      }
+      stats.flashcardsByDeck[dk].attempts += 1;
+      if (wasCorrect) stats.flashcardsByDeck[dk].correct += 1;
+    }
     saveUsers();
   }
 
@@ -1530,6 +1910,17 @@
     const pct = total ? Math.round((score / total) * 100) : 0;
     const key = level + " " + mode;
     stats.quizBest[key] = Math.max(stats.quizBest[key] || 0, pct);
+    stats.quizSessionLog.push({
+      at: new Date().toISOString(),
+      level: level,
+      mode: mode,
+      score: score,
+      total: total,
+      pct: pct,
+    });
+    if (stats.quizSessionLog.length > 48) {
+      stats.quizSessionLog = stats.quizSessionLog.slice(-48);
+    }
     saveUsers();
     renderAccountPanel();
   }
@@ -1701,6 +2092,7 @@
   if (adminLogoutBtn) {
     adminLogoutBtn.addEventListener("click", function () {
       adminUnlocked = false;
+      adminViewingStudent = null;
       if (adminPasswordInput) adminPasswordInput.value = "";
       renderAdminPanel();
     });
@@ -1710,6 +2102,7 @@
     adminTabs.forEach(function (tabBtn) {
       tabBtn.addEventListener("click", function () {
         const tab = tabBtn.getAttribute("data-admin-tab");
+        if (tab !== "progress") adminViewingStudent = null;
         adminTabs.forEach(function (b) {
           b.classList.toggle("is-active", b === tabBtn);
         });
@@ -2414,11 +2807,13 @@
       const top = document.createElement("div");
       top.className = "flashcard-trainer__top";
       const label = document.createElement("label");
-      label.textContent = "Deck";
+      label.textContent = I18n.t("flashcard_deck_label");
       const topicSelect = document.createElement("select");
       topicSelect.className = "flashcard-topic";
       top.appendChild(label);
       top.appendChild(topicSelect);
+      const sessionHint = document.createElement("p");
+      sessionHint.className = "flashcard-session-hint";
       const flipBtn = document.createElement("button");
       flipBtn.type = "button";
       flipBtn.className = "flashcard";
@@ -2433,21 +2828,21 @@
       const prevBtn = document.createElement("button");
       prevBtn.type = "button";
       prevBtn.className = "flashcard-btn";
-      prevBtn.textContent = "Previous";
+      prevBtn.textContent = I18n.t("flashcard_prev");
       const progress = document.createElement("span");
       progress.className = "flashcard-progress";
       const nextBtn = document.createElement("button");
       nextBtn.type = "button";
       nextBtn.className = "flashcard-btn";
-      nextBtn.textContent = "Next";
+      nextBtn.textContent = I18n.t("flashcard_next");
       const againBtn = document.createElement("button");
       againBtn.type = "button";
       againBtn.className = "flashcard-btn";
-      againBtn.textContent = "Again";
+      againBtn.textContent = I18n.t("flashcard_again");
       const gotItBtn = document.createElement("button");
       gotItBtn.type = "button";
       gotItBtn.className = "flashcard-btn";
-      gotItBtn.textContent = "Got it";
+      gotItBtn.textContent = I18n.t("flashcard_got_it");
       const score = document.createElement("span");
       score.className = "flashcard-progress";
       score.textContent = "Score: 0/0";
@@ -2457,18 +2852,136 @@
       controls.appendChild(againBtn);
       controls.appendChild(gotItBtn);
       controls.appendChild(score);
+      const completeOverlay = document.createElement("div");
+      completeOverlay.className = "flashcard-complete-overlay hidden";
+      const completeInner = document.createElement("div");
+      completeInner.className = "flashcard-complete-overlay__inner";
+      const completeTitle = document.createElement("h4");
+      const completeSummary = document.createElement("p");
+      const completeActions = document.createElement("div");
+      completeActions.className = "flashcard-complete-actions";
+      const btnWrongOnly = document.createElement("button");
+      btnWrongOnly.type = "button";
+      btnWrongOnly.className = "btn-primary";
+      btnWrongOnly.textContent = I18n.t("flashcard_complete_wrong_only");
+      const btnFullAgain = document.createElement("button");
+      btnFullAgain.type = "button";
+      btnFullAgain.className = "flashcard-btn";
+      btnFullAgain.textContent = I18n.t("flashcard_complete_full_again");
+      completeActions.appendChild(btnWrongOnly);
+      completeActions.appendChild(btnFullAgain);
+      completeInner.appendChild(completeTitle);
+      completeInner.appendChild(completeSummary);
+      completeInner.appendChild(completeActions);
+      completeOverlay.appendChild(completeInner);
       stage.appendChild(top);
+      stage.appendChild(sessionHint);
       stage.appendChild(flipBtn);
       stage.appendChild(controls);
+      stage.appendChild(completeOverlay);
       flashcardsPanel.appendChild(stage);
 
       const decks = data.flashcards;
       const topicNames = Object.keys(decks);
       let activeTopic = decks["Master 1000"] ? "Master 1000" : topicNames[0];
-      let index = 0;
+      let sessionIndices = [];
+      let sessionPos = 0;
+      let sessionCorrect = 0;
+      let sessionWrong = 0;
+      let wrongKeysThisSession = {};
+      let lastSessionWrongKeys = null;
+      let lastSessionMode = "full";
       let showingBack = false;
-      let attempts = 0;
-      let correct = 0;
+      let sessionSummarySaved = false;
+
+      const flashMeta = function () {
+        return { level: level, topic: activeTopic };
+      };
+
+      function fullDeck() {
+        return decks[activeTopic] || [];
+      }
+
+      function startSession(mode, wrongKeyFilter) {
+        const deck = fullDeck();
+        lastSessionMode = mode || "full";
+        wrongKeysThisSession = {};
+        sessionCorrect = 0;
+        sessionWrong = 0;
+        showingBack = false;
+        sessionSummarySaved = false;
+        completeOverlay.classList.add("hidden");
+        if (!deck.length) {
+          sessionIndices = [];
+          sessionPos = 0;
+          lastSessionWrongKeys = null;
+          sessionHint.textContent = "";
+          renderCard();
+          return;
+        }
+        const useWrongFilter =
+          wrongKeyFilter &&
+          typeof wrongKeyFilter.has === "function" &&
+          wrongKeyFilter.size > 0;
+        if (useWrongFilter) {
+          sessionIndices = [];
+          for (let i = 0; i < deck.length; i += 1) {
+            if (wrongKeyFilter.has(flashcardCardKey(deck[i]))) sessionIndices.push(i);
+          }
+        } else {
+          sessionIndices = buildFlashcardSessionIndices(deck.length);
+        }
+        if (!sessionIndices.length) {
+          sessionPos = 0;
+          lastSessionWrongKeys = null;
+          renderCard();
+          return;
+        }
+        sessionPos = 0;
+        lastSessionWrongKeys = null;
+        const totalInDeck = deck.length;
+        const n = sessionIndices.length;
+        if (totalInDeck > FLASHCARD_SESSION_CAP) {
+          sessionHint.textContent = I18n.t("flashcard_session_sample_hint", {
+            n: String(n),
+            total: String(totalInDeck),
+          });
+        } else {
+          sessionHint.textContent = I18n.t("flashcard_session_full_hint", { n: String(n) });
+        }
+        prevBtn.classList.add("hidden");
+        nextBtn.classList.add("hidden");
+        renderCard();
+      }
+
+      function finishSession() {
+        if (sessionSummarySaved) return;
+        sessionSummarySaved = true;
+        const total = sessionIndices.length;
+        const wrongCount = sessionWrong;
+        const correctCount = sessionCorrect;
+        lastSessionWrongKeys = {};
+        Object.keys(wrongKeysThisSession).forEach(function (k) {
+          lastSessionWrongKeys[k] = true;
+        });
+        recordFlashcardSessionComplete({
+          level: level,
+          topic: activeTopic,
+          correct: correctCount,
+          wrong: wrongCount,
+          total: total,
+          mode: lastSessionMode,
+        });
+        completeTitle.textContent = I18n.t("flashcard_complete_title");
+        completeSummary.textContent = I18n.t("flashcard_complete_summary", {
+          correct: String(correctCount),
+          wrong: String(wrongCount),
+          total: String(total),
+        });
+        const wrongSetSize = Object.keys(lastSessionWrongKeys).length;
+        btnWrongOnly.classList.toggle("hidden", wrongSetSize === 0);
+        completeOverlay.classList.remove("hidden");
+      }
 
       topicNames.forEach(function (name) {
         const option = document.createElement("option");
@@ -2479,28 +2992,55 @@
       });
 
       function renderCard() {
-        const deck = decks[activeTopic] || [];
-        if (deck.length === 0) {
-          front.textContent = "No cards in this deck.";
-          back.textContent = "";
-          progress.textContent = "0 / 0";
+        const deck = fullDeck();
+        if (sessionIndices.length && sessionPos >= sessionIndices.length) {
+          if (!sessionSummarySaved) finishSession();
+          front.textContent = I18n.t("flashcard_session_done_face");
+          back.textContent = I18n.t("flashcard_session_done_back");
+          progress.textContent =
+            String(sessionIndices.length) + " / " + String(sessionIndices.length);
+          const attempts = sessionCorrect + sessionWrong;
+          score.textContent = I18n.t("flashcard_score_label", {
+            correct: String(sessionCorrect),
+            attempts: String(attempts),
+          });
+          flipBtn.classList.remove("is-flipped");
+          showingBack = false;
           return;
         }
-        const card = deck[index];
+        if (!deck.length) {
+          front.textContent = I18n.t("flashcard_empty_deck");
+          back.textContent = "";
+          progress.textContent = "0 / 0";
+          score.textContent = I18n.t("flashcard_score_label", { correct: "0", attempts: "0" });
+          sessionHint.textContent = "";
+          return;
+        }
+        if (!sessionIndices.length) {
+          front.textContent = I18n.t("flashcard_pick_deck");
+          back.textContent = "";
+          progress.textContent = "0 / 0";
+          score.textContent = I18n.t("flashcard_score_label", { correct: "0", attempts: "0" });
+          return;
+        }
+        const idx = sessionIndices[sessionPos];
+        const card = deck[idx];
+        if (!card) return;
         front.textContent = "English = " + card.front;
         back.textContent = "French = " + card.back;
-        progress.textContent = String(index + 1) + " / " + String(deck.length);
-        score.textContent = "Score: " + String(correct) + "/" + String(attempts);
+        progress.textContent =
+          String(sessionPos + 1) + " / " + String(sessionIndices.length);
+        const attempts = sessionCorrect + sessionWrong;
+        score.textContent = I18n.t("flashcard_score_label", {
+          correct: String(sessionCorrect),
+          attempts: String(attempts),
+        });
         flipBtn.classList.toggle("is-flipped", showingBack);
       }
 
       topicSelect.addEventListener("change", function () {
         activeTopic = topicSelect.value;
-        index = 0;
-        showingBack = false;
-        attempts = 0;
-        correct = 0;
-        renderCard();
+        startSession("full", null);
       });
 
       flipBtn.addEventListener("click", function () {
@@ -2509,47 +3049,59 @@
       });
 
       nextBtn.addEventListener("click", function () {
-        const deck = decks[activeTopic] || [];
-        if (!deck.length) return;
-        index = (index + 1) % deck.length;
+        if (!sessionIndices.length) return;
+        sessionPos = Math.min(sessionIndices.length - 1, sessionPos + 1);
         showingBack = false;
         renderCard();
       });
 
       prevBtn.addEventListener("click", function () {
-        const deck = decks[activeTopic] || [];
-        if (!deck.length) return;
-        index = (index - 1 + deck.length) % deck.length;
+        if (!sessionIndices.length) return;
+        sessionPos = Math.max(0, sessionPos - 1);
         showingBack = false;
         renderCard();
       });
 
       againBtn.addEventListener("click", function () {
+        if (!sessionIndices.length || sessionPos >= sessionIndices.length) return;
         if (!showingBack) showingBack = true;
-        attempts += 1;
-        recordFlashcardResult(false);
-        const deck = decks[activeTopic] || [];
-        if (deck.length) {
-          index = (index + 1) % deck.length;
-        }
+        const deck = fullDeck();
+        const idx = sessionIndices[sessionPos];
+        const card = deck[idx];
+        const key = flashcardCardKey(card);
+        wrongKeysThisSession[key] = true;
+        sessionWrong += 1;
+        recordFlashcardResult(false, flashMeta());
+        sessionPos += 1;
         showingBack = false;
-        renderCard();
+        if (sessionPos >= sessionIndices.length) {
+          renderCard();
+        } else {
+          renderCard();
+        }
       });
 
       gotItBtn.addEventListener("click", function () {
+        if (!sessionIndices.length || sessionPos >= sessionIndices.length) return;
         if (!showingBack) showingBack = true;
-        attempts += 1;
-        correct += 1;
-        recordFlashcardResult(true);
-        const deck = decks[activeTopic] || [];
-        if (deck.length) {
-          index = (index + 1) % deck.length;
-        }
+        sessionCorrect += 1;
+        recordFlashcardResult(true, flashMeta());
+        sessionPos += 1;
         showingBack = false;
         renderCard();
       });
 
-      renderCard();
+      btnWrongOnly.addEventListener("click", function () {
+        if (!lastSessionWrongKeys) return;
+        const filter = new Set(Object.keys(lastSessionWrongKeys));
+        startSession("wrong_retry", filter);
+      });
+
+      btnFullAgain.addEventListener("click", function () {
+        startSession("full", null);
+      });
+
+      startSession("full", null);
     });
   }
 

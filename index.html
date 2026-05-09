@@ -462,7 +462,7 @@
             </div>
           </div>
           <div id="admin-progress-tab" class="admin-tab hidden">
-          <div class="account-card account-card--admin">
+          <div id="admin-student-list-wrap" class="account-card account-card--admin">
             <h3 data-i18n="admin_progress_heading">Student progress</h3>
             <div class="table-scroll">
             <table id="admin-students-table" class="admin-table">
@@ -479,6 +479,12 @@
               <tbody></tbody>
             </table>
             </div>
+          </div>
+          <div id="admin-student-detail" class="account-card account-card--admin admin-student-detail hidden">
+            <div class="admin-student-detail__top">
+              <button type="button" id="admin-student-back-btn" class="btn-text" data-i18n="admin_student_back">Back to student list</button>
+            </div>
+            <div id="admin-student-detail-inner" class="admin-student-detail__inner"></div>
           </div>
           </div>
           <div id="admin-payments-tab" class="admin-tab hidden">
