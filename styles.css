@@ -1634,6 +1634,54 @@ html[data-theme="dark"] .booking-sync-warning {
   cursor: not-allowed;
 }
 
+.flashcard-btn--save-later {
+  background: #fde8ea;
+  border-color: #e8b4bc;
+  color: #7a1f2b;
+}
+
+.flashcard-btn--save-later:hover {
+  background: #fad0d6;
+  border-color: #d996a0;
+  color: #5c1019;
+}
+
+.flashcard-btn--got-it {
+  background: #e6f7ea;
+  border-color: #a8d4b4;
+  color: #1e4d2b;
+}
+
+.flashcard-btn--got-it:hover {
+  background: #d4f0dc;
+  border-color: #8fc49e;
+  color: #143820;
+}
+
+html[data-theme="dark"] .flashcard-btn--save-later {
+  background: rgba(220, 90, 110, 0.22);
+  border-color: rgba(255, 150, 165, 0.45);
+  color: #ffb3be;
+}
+
+html[data-theme="dark"] .flashcard-btn--save-later:hover {
+  background: rgba(220, 90, 110, 0.32);
+  border-color: rgba(255, 170, 180, 0.55);
+  color: #ffd6dc;
+}
+
+html[data-theme="dark"] .flashcard-btn--got-it {
+  background: rgba(70, 170, 110, 0.22);
+  border-color: rgba(120, 210, 150, 0.45);
+  color: #b8f0c8;
+}
+
+html[data-theme="dark"] .flashcard-btn--got-it:hover {
+  background: rgba(70, 170, 110, 0.32);
+  border-color: rgba(140, 220, 165, 0.55);
+  color: #d8ffe4;
+}
+
 .flashcard-progress {
   font-size: 0.84rem;
   color: var(--muted);

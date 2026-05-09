@@ -1397,6 +1397,30 @@
   learningData.intermediate.flashcards["Master 1000"] = buildMasterDeck(intermediateMasterSeeds, 1000);
   learningData.advanced.flashcards["Master 1000"] = buildMasterDeck(advancedMasterSeeds, 1000);
 
+  (function mergeClientFlashcardBulk() {
+    const src = typeof window !== "undefined" && window.ANDRONICUS_FLASHCARD_MERGE_PAIRS;
+    if (!src || typeof src !== "object") return;
+    Object.keys(src).forEach(function (key) {
+      const pipe = key.indexOf("|");
+      if (pipe < 1) return;
+      const level = key.slice(0, pipe);
+      const deckName = key.slice(pipe + 1);
+      const deck = learningData[level] && learningData[level].flashcards && learningData[level].flashcards[deckName];
+      if (!deck || !Array.isArray(src[key])) return;
+      const seen = {};
+      deck.forEach(function (c) {
+        seen[String(c.front) + "\t" + String(c.back)] = true;
+      });
+      src[key].forEach(function (row) {
+        if (!row || row.length < 2) return;
+        const k = String(row[0]) + "\t" + String(row[1]);
+        if (seen[k]) return;
+        seen[k] = true;
+        deck.push({ front: row[0], back: row[1] });
+      });
+    });
+  })();
+
   learningData.beginner.vocabQuiz = buildFiftyVocabQuestions(beginnerQuizSeeds);
   learningData.intermediate.vocabQuiz = buildFiftyVocabQuestions(intermediateQuizSeeds);
   learningData.advanced.vocabQuiz = buildFiftyVocabQuestions(advancedQuizSeeds);
@@ -3173,11 +3197,11 @@
       nextBtn.textContent = I18n.t("flashcard_next");
       const againBtn = document.createElement("button");
       againBtn.type = "button";
-      againBtn.className = "flashcard-btn";
+      againBtn.className = "flashcard-btn flashcard-btn--save-later";
       againBtn.textContent = I18n.t("flashcard_again");
       const gotItBtn = document.createElement("button");
       gotItBtn.type = "button";
-      gotItBtn.className = "flashcard-btn";
+      gotItBtn.className = "flashcard-btn flashcard-btn--got-it";
       gotItBtn.textContent = I18n.t("flashcard_got_it");
       const score = document.createElement("span");
       score.className = "flashcard-progress";
