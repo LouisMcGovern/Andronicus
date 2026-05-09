@@ -51,6 +51,8 @@
   const accountLogoutBtn = document.getElementById("account-logout-btn");
   const accountProgressCards = document.getElementById("account-progress-cards");
   const accountCompletedExercises = document.getElementById("account-completed-exercises");
+  const accountForgotDialog = document.getElementById("account-forgot-dialog");
+  const accountForgotOpen = document.getElementById("account-forgot-open");
   const adminLoginWrap = document.getElementById("admin-login-wrap");
   const adminPasswordInput = document.getElementById("admin-password");
   const adminLoginBtn = document.getElementById("admin-login-btn");
@@ -123,6 +125,22 @@
           { front: "Please", back: "S'il vous plait" },
           { front: "Thank you", back: "Merci" },
           { front: "See you tomorrow", back: "A demain" },
+          { front: "Good evening", back: "Bonsoir" },
+          { front: "Good night", back: "Bonne nuit" },
+          { front: "Goodbye", back: "Au revoir" },
+          { front: "Excuse me", back: "Excusez-moi" },
+          { front: "Sorry", back: "Desole" },
+          { front: "Yes / No", back: "Oui / Non" },
+          { front: "Maybe", back: "Peut-etre" },
+          { front: "I don't understand", back: "Je ne comprends pas" },
+          { front: "Can you repeat?", back: "Pouvez-vous repeter ?" },
+          { front: "How do you say...?", back: "Comment dit-on ... ?" },
+          { front: "What does that mean?", back: "Qu'est-ce que ca veut dire ?" },
+          { front: "I would like", back: "Je voudrais" },
+          { front: "I need help", back: "J'ai besoin d'aide" },
+          { front: "Where is...?", back: "Ou est ... ?" },
+          { front: "What time is it?", back: "Quelle heure est-il ?" },
+          { front: "Nice to meet you", back: "Enchanté" },
         ],
         "School and Study": [
           { front: "Homework", back: "Devoirs" },
@@ -131,6 +149,22 @@
           { front: "Exam", back: "Examen" },
           { front: "To learn", back: "Apprendre" },
           { front: "To improve", back: "Ameliorer" },
+          { front: "Teacher", back: "Professeur" },
+          { front: "Student", back: "Eleve" },
+          { front: "Lesson", back: "Lecon" },
+          { front: "Break time", back: "Recreation" },
+          { front: "Dictionary", back: "Dictionnaire" },
+          { front: "Pencil case", back: "Trousse" },
+          { front: "Ruler", back: "Regle" },
+          { front: "Eraser", back: "Gomme" },
+          { front: "Sharpener", back: "Taille-crayon" },
+          { front: "School bag", back: "Cartable" },
+          { front: "Timetable", back: "Emploi du temps" },
+          { front: "Mark / grade", back: "Note" },
+          { front: "Subject", back: "Matiere" },
+          { front: "Science lab", back: "Salle de sciences" },
+          { front: "Playground", back: "Cour de recreation" },
+          { front: "Head teacher", back: "Directeur / directrice" },
         ],
         "Home and Town": [
           { front: "Kitchen", back: "Cuisine" },
@@ -139,6 +173,22 @@
           { front: "Crossroad", back: "Carrefour" },
           { front: "Neighbourhood", back: "Quartier" },
           { front: "Traffic lights", back: "Feux de circulation" },
+          { front: "Bus stop", back: "Arret de bus" },
+          { front: "Train station", back: "Gare" },
+          { front: "Post office", back: "Bureau de poste" },
+          { front: "Pharmacy", back: "Pharmacie" },
+          { front: "Bakery", back: "Boulangerie" },
+          { front: "Supermarket", back: "Supermarche" },
+          { front: "Park", back: "Parc" },
+          { front: "Bridge", back: "Pont" },
+          { front: "River", back: "Riviere" },
+          { front: "Turn left", back: "Tournez a gauche" },
+          { front: "Turn right", back: "Tournez a droite" },
+          { front: "Go straight on", back: "Allez tout droit" },
+          { front: "Is it far?", back: "C'est loin ?" },
+          { front: "Near / far", back: "Pres / loin" },
+          { front: "City centre", back: "Centre-ville" },
+          { front: "Map", back: "Plan / carte" },
         ],
         "Food and Shopping": [
           { front: "Receipt", back: "Ticket de caisse" },
@@ -147,6 +197,22 @@
           { front: "Expensive", back: "Cher" },
           { front: "Would like", back: "Voudrais" },
           { front: "How much is it?", back: "C'est combien ?" },
+          { front: "Shopping basket", back: "Panier" },
+          { front: "Trolley", back: "Caddie" },
+          { front: "Cashier", back: "Caissier / caissiere" },
+          { front: "Credit card", back: "Carte bancaire" },
+          { front: "Cash", back: "Liquide" },
+          { front: "Change (money)", back: "Monnaie" },
+          { front: "Discount", back: "Reduction" },
+          { front: "Special offer", back: "Promotion" },
+          { front: "Fresh bread", back: "Pain frais" },
+          { front: "Dairy products", back: "Produits laitiers" },
+          { front: "Fruit and vegetables", back: "Fruits et legumes" },
+          { front: "Bottle of water", back: "Bouteille d'eau" },
+          { front: "Can I try it on?", back: "Est-ce que je peux l'essayer ?" },
+          { front: "It doesn't fit", back: "Ca ne va pas" },
+          { front: "Size", back: "Taille" },
+          { front: "Queue / line", back: "File d'attente" },
         ],
         "In the house": [
           { front: "Living room", back: "Salon" },
@@ -174,6 +240,17 @@
           { front: "Wardrobe", back: "Armoire" },
           { front: "Mirror", back: "Miroir" },
           { front: "Towel", back: "Serviette" },
+          { front: "Blanket", back: "Couverture" },
+          { front: "Pillow", back: "Oreiller" },
+          { front: "Sheet", back: "Drap" },
+          { front: "Basement", back: "Sous-sol" },
+          { front: "Attic", back: "Grenier" },
+          { front: "Garden", back: "Jardin" },
+          { front: "Gate", back: "Portail" },
+          { front: "Key", back: "Clef" },
+          { front: "Lock", back: "Serrure" },
+          { front: "Smoke alarm", back: "Detecteur de fumee" },
+          { front: "Bin / trash", back: "Poubelle" },
         ],
         "Sports and fitness": [
           { front: "Team", back: "Equipe" },
@@ -196,6 +273,20 @@
           { front: "Athletics", back: "Athletisme" },
           { front: "Cycling", back: "Cyclisme" },
           { front: "Skiing", back: "Ski" },
+          { front: "Hiking", back: "Randonnee" },
+          { front: "Jogging", back: "Footing" },
+          { front: "Yoga", back: "Yoga" },
+          { front: "Gym", back: "Salle de sport" },
+          { front: "Dumbbells", back: "Halteres" },
+          { front: "Treadmill", back: "Tapis de course" },
+          { front: "Helmet", back: "Casque" },
+          { front: "Whistle", back: "Sifflet" },
+          { front: "Half-time", back: "Mi-temps" },
+          { front: "Extra time", back: "Prolongations" },
+          { front: "Penalty", back: "Penalty" },
+          { front: "Goal", back: "But" },
+          { front: "Fans", back: "Supporters" },
+          { front: "Cheer", back: "Encourager" },
         ],
       },
       vocab: [
@@ -433,6 +524,22 @@
           { front: "Strong argument", back: "Argument solide" },
           { front: "Raise awareness", back: "Sensibiliser" },
           { front: "Meet expectations", back: "Repondre aux attentes" },
+          { front: "Reach a decision", back: "Prendre une decision" },
+          { front: "Pay attention", back: "Faire attention" },
+          { front: "Lose contact", back: "Perdre le contact" },
+          { front: "Keep in touch", back: "Rester en contact" },
+          { front: "Run a risk", back: "Courir un risque" },
+          { front: "Set a goal", back: "Se fixer un objectif" },
+          { front: "Gain experience", back: "Acquerir de l'experience" },
+          { front: "Miss an opportunity", back: "Manquer une occasion" },
+          { front: "Face a challenge", back: "Relever un defi" },
+          { front: "Solve a problem", back: "Resoudre un probleme" },
+          { front: "Break the law", back: "Enfreindre la loi" },
+          { front: "Catch a cold", back: "Attraper un rhume" },
+          { front: "Save time", back: "Gagner du temps" },
+          { front: "Waste money", back: "Gaspiller de l'argent" },
+          { front: "Tell the truth", back: "Dire la verite" },
+          { front: "Tell a lie", back: "Mentir" },
         ],
         "Phrasal Verbs": [
           { front: "Carry on", back: "Continuer" },
@@ -441,6 +548,22 @@
           { front: "Work out", back: "Resoudre / s'entrainer" },
           { front: "Look after", back: "S'occuper de" },
           { front: "Give up", back: "Abandonner" },
+          { front: "Turn up", back: "Arriver / monter le son" },
+          { front: "Turn down", back: "Refuser / baisser" },
+          { front: "Run out of", back: "Etre a court de" },
+          { front: "Come across", back: "Tomber sur" },
+          { front: "Get over", back: "Se remettre de" },
+          { front: "Put off", back: "Reporter" },
+          { front: "Bring up", back: "Soulever (un sujet)" },
+          { front: "Look into", back: "Examiner" },
+          { front: "Go on", back: "Continuer" },
+          { front: "Hold on", back: "Patienter" },
+          { front: "Catch up", back: "Rattraper" },
+          { front: "Calm down", back: "Se calmer" },
+          { front: "Fill in", back: "Remplir" },
+          { front: "Throw away", back: "Jeter" },
+          { front: "Pick up", back: "Ramasser / apprendre vite" },
+          { front: "Drop off", back: "Deposer quelqu'un" },
         ],
         "Education and Careers": [
           { front: "Qualification", back: "Diplome / qualification" },
@@ -449,6 +572,22 @@
           { front: "Skill set", back: "Ensemble de competences" },
           { front: "Application", back: "Candidature" },
           { front: "Work experience", back: "Experience professionnelle" },
+          { front: "Curriculum vitae (CV)", back: "CV" },
+          { front: "Cover letter", back: "Lettre de motivation" },
+          { front: "Interview", back: "Entretien" },
+          { front: "Reference", back: "Reference" },
+          { front: "Networking", back: "Creation de reseau" },
+          { front: "Mentor", back: "Mentor" },
+          { front: "Scholarship", back: "Bourse" },
+          { front: "Tuition fees", back: "Frais de scolarite" },
+          { front: "Seminar", back: "Seminaire" },
+          { front: "Lecture", back: "Cours magistral" },
+          { front: "Tutorial", back: "Travaux diriges" },
+          { front: "Dissertation", back: "Memoire" },
+          { front: "Plagiarism", back: "Plagiat" },
+          { front: "Peer review", back: "Evaluation par les pairs" },
+          { front: "Career fair", back: "Forum des metiers" },
+          { front: "Recruitment", back: "Recrutement" },
         ],
         "Debate Language": [
           { front: "From my perspective", back: "De mon point de vue" },
@@ -457,6 +596,22 @@
           { front: "To illustrate this point", back: "Pour illustrer ce point" },
           { front: "It depends on...", back: "Cela dépend de..." },
           { front: "Overall, I would argue...", back: "Globalement, je dirais..." },
+          { front: "On the one hand...", back: "D'une part..." },
+          { front: "On the other hand...", back: "D'autre part..." },
+          { front: "This raises the question of...", back: "Cela souleve la question de..." },
+          { front: "There is evidence to suggest...", back: "Des elements suggerent que..." },
+          { front: "A compelling case", back: "Un argument convaincant" },
+          { front: "To some extent", back: "Jusqu'a un certain point" },
+          { front: "By contrast", back: "En revanche" },
+          { front: "In contrast", back: "Par contraste" },
+          { front: "As a result", back: "En consequence" },
+          { front: "Consequently", back: "Par consequent" },
+          { front: "That being said", back: "Cela dit" },
+          { front: "To sum up", back: "Pour conclure" },
+          { front: "I remain unconvinced", back: "Je ne suis pas convaincu" },
+          { front: "I strongly disagree", back: "Je suis en desaccord total" },
+          { front: "I partially agree", back: "Je suis partiellement d'accord" },
+          { front: "The crux of the matter", back: "Le coeur du probleme" },
         ],
         "Sports and competition": [
           { front: "Tournament", back: "Tournoi" },
@@ -471,6 +626,15 @@
           { front: "To be eliminated", back: "Etre elimine" },
           { front: "Sponsorship", back: "Sponsoring" },
           { front: "Broadcast", back: "Diffusion" },
+          { front: "Season ticket", back: "Abonnement (stade)" },
+          { front: "Transfer window", back: "Mercato" },
+          { front: "Contract", back: "Contrat" },
+          { front: "Physiotherapist", back: "Kinesitherapeute" },
+          { front: "Offside", back: "Hors-jeu" },
+          { front: "Tackle", back: "Tacle" },
+          { front: "Pass", back: "Passe" },
+          { front: "Shoot", back: "Tirer au but" },
+          { front: "Defence", back: "Defense" },
         ],
         "At home and routines": [
           { front: "Household chores", back: "Taches menageres" },
@@ -483,6 +647,17 @@
           { front: "Bills", back: "Factures" },
           { front: "Remote working", back: "Teletravail" },
           { front: "Commute", back: "Trajet domicile-travail" },
+          { front: "Household bills", back: "Factures du foyer" },
+          { front: "Mortgage", back: "Pret immobilier" },
+          { front: "Estate agent", back: "Agent immobilier" },
+          { front: "Lease", back: "Bail" },
+          { front: "Housemate", back: "Colocataire" },
+          { front: "Rubbish collection", back: "Collecte des ordures" },
+          { front: "Recycling", back: "Tri selectif" },
+          { front: "DIY", back: "Bricolage" },
+          { front: "Ironing", back: "Repassage" },
+          { front: "Laundry", back: "Lessive" },
+          { front: "Alarm clock", back: "Reveil" },
         ],
       },
       vocab: [
@@ -719,6 +894,22 @@
           { front: "To assess", back: "Evaluer" },
           { front: "To justify", back: "Justifier" },
           { front: "To highlight", back: "Mettre en evidence" },
+          { front: "Consequently", back: "Par consequent" },
+          { front: "Hence", back: "D'ou" },
+          { front: "Accordingly", back: "En consequence" },
+          { front: "Prerequisite", back: "Prerequis" },
+          { front: "Implication", back: "Implication" },
+          { front: "Criterion", back: "Critere" },
+          { front: "Hypothesis", back: "Hypothese" },
+          { front: "Variable", back: "Variable" },
+          { front: "Correlation", back: "Correlation" },
+          { front: "Causation", back: "Relation de cause a effet" },
+          { front: "Paradigm", back: "Paradigme" },
+          { front: "Rationale", back: "Justification" },
+          { front: "Coherent", back: "Coherent" },
+          { front: "Ambiguous", back: "Ambigu" },
+          { front: "Prevalent", back: "Repandu" },
+          { front: "Robust", back: "Robuste" },
         ],
         "Essay Precision": [
           { front: "A key limitation", back: "Une limite majeure" },
@@ -727,6 +918,22 @@
           { front: "This suggests that", back: "Cela suggere que" },
           { front: "In practical terms", back: "En termes pratiques" },
           { front: "A nuanced view", back: "Une vision nuancee" },
+          { front: "By implication", back: "Par implication" },
+          { front: "To put it another way", back: "Autrement dit" },
+          { front: "For the sake of clarity", back: "Pour plus de clarte" },
+          { front: "Without oversimplifying", back: "Sans simplifier a l'exces" },
+          { front: "A salient point", back: "Un point saillant" },
+          { front: "The prevailing view", back: "L'opinion dominante" },
+          { front: "A contentious issue", back: "Une question controversee" },
+          { front: "To reiterate", back: "Pour le repeter" },
+          { front: "In essence", back: "Essentiellement" },
+          { front: "Prima facie", back: "A premiere vue" },
+          { front: "Mutatis mutandis", back: "Toutes choses egales par ailleurs" },
+          { front: "Extrapolation", back: "Extrapolation" },
+          { front: "Generalisation", back: "Generalisation" },
+          { front: "Tentative conclusion", back: "Conclusion provisoire" },
+          { front: "Further research is warranted", back: "Des recherches supplementaires s'imposent" },
+          { front: "The burden of proof", back: "La charge de la preuve" },
         ],
         "Critical Analysis": [
           { front: "Underlying assumption", back: "Hypothese sous-jacente" },
@@ -735,6 +942,22 @@
           { front: "Counterargument", back: "Contre-argument" },
           { front: "To substantiate", back: "Etayer / corroborer" },
           { front: "Bias", back: "Biais" },
+          { front: "Confounding factor", back: "Facteur de confusion" },
+          { front: "Internal validity", back: "Validite interne" },
+          { front: "External validity", back: "Validite externe" },
+          { front: "Sampling error", back: "Erreur d'echantillonnage" },
+          { front: "Statistical significance", back: "Signification statistique" },
+          { front: "Effect size", back: "Taille d'effet" },
+          { front: "Replication", back: "Replication" },
+          { front: "Anomaly", back: "Anomalie" },
+          { front: "Outlier", back: "Valeur aberrante" },
+          { front: "Cherry-picking", back: "Selection biaisee des donnees" },
+          { front: "Straw man fallacy", back: "Homme de paille (sophisme)" },
+          { front: "Circular reasoning", back: "Raisonnement circulaire" },
+          { front: "Hasty generalisation", back: "Generalisation hative" },
+          { front: "Red herring", back: "Diversion / fausse piste" },
+          { front: "Appeal to authority", back: "Argument d'autorite" },
+          { front: "Occam's razor", back: "Rasoir d'Ockham" },
         ],
         "Presentation Language": [
           { front: "Today I will address...", back: "Aujourd'hui, je vais aborder..." },
@@ -743,6 +966,22 @@
           { front: "To conclude this section...", back: "Pour conclure cette partie..." },
           { front: "In summary...", back: "En resume..." },
           { front: "I welcome your questions.", back: "Je suis ouvert a vos questions." },
+          { front: "Let me begin by outlining...", back: "Permettez-moi de commencer par esquisser..." },
+          { front: "This slide shows...", back: "Cette diapositive montre..." },
+          { front: "If we zoom in on...", back: "Si nous zoomons sur..." },
+          { front: "The key takeaway is...", back: "L'essentiel a retenir est..." },
+          { front: "I will now hand over to...", back: "Je cede maintenant la parole a..." },
+          { front: "Thank you for your attention.", back: "Merci pour votre attention." },
+          { front: "I am happy to elaborate.", back: "Je suis ravi d'approfondir." },
+          { front: "Does that answer your question?", back: "Est-ce que cela repond a votre question ?" },
+          { front: "Let me clarify that point.", back: "Permettez-moi de clarifier ce point." },
+          { front: "Moving on to the next topic...", back: "Passons au sujet suivant..." },
+          { front: "To put this into context...", back: "Pour situer le contexte..." },
+          { front: "Time permitting, I will...", back: "Si le temps le permet, je..." },
+          { front: "I will keep this brief.", back: "Je serai bref / breve." },
+          { front: "Any questions so far?", back: "Des questions jusqu'ici ?" },
+          { front: "I look forward to your feedback.", back: "J'attends vos retours avec interet." },
+          { front: "This brings me to my final point.", back: "Cela m'amene a mon dernier point." },
         ],
         "Sport, ethics, and society": [
           { front: "Doping scandal", back: "Affaire de dopage" },
@@ -753,6 +992,17 @@
           { front: "Public funding", back: "Financement public" },
           { front: "Safeguarding", back: "Protection des mineurs / prevention" },
           { front: "Inclusivity", back: "Inclusivite" },
+          { front: "Match fixing", back: "Trucage de match" },
+          { front: "Anti-doping agency", back: "Agence antidopage" },
+          { front: "Spectator violence", back: "Violence des supporters" },
+          { front: "Ticket scalping", back: "Revente de billets" },
+          { front: "Youth academy", back: "Centre de formation" },
+          { front: "Transfer fee", back: "Indemnite de transfert" },
+          { front: "Sports governance", back: "Gouvernance sportive" },
+          { front: "Gender equality in sport", back: "Egalite des genres dans le sport" },
+          { front: "Paralympic movement", back: "Mouvement paralympique" },
+          { front: "Olympic charter", back: "Charte olympique" },
+          { front: "National anthem", back: "Hymne national" },
         ],
         "Housing and urban life": [
           { front: "Gentrification", back: "Embourgeoisement" },
@@ -763,6 +1013,17 @@
           { front: "High-density housing", back: "Logement a forte densite" },
           { front: "Social housing", back: "Logement social" },
           { front: "Carbon footprint of buildings", back: "Empreinte carbone du batiment" },
+          { front: "Green belt", back: "Ceinture verte" },
+          { front: "Brownfield site", back: "Friche industrielle" },
+          { front: "Gentrification pressure", back: "Pression d'embourgeoisement" },
+          { front: "Eviction", back: "Expulsion" },
+          { front: "Housing shortage", back: "Penurie de logements" },
+          { front: "Rent control", back: "Encadrement des loyers" },
+          { front: "Co-housing", back: "Habitat participatif" },
+          { front: "Urban renewal", back: "Renouvellement urbain" },
+          { front: "Pedestrian zone", back: "Zone pietonne" },
+          { front: "Public transport hub", back: "Pole d'echanges multimodal" },
+          { front: "Air quality index", back: "Indice de qualite de l'air" },
         ],
       },
       vocab: [
@@ -1378,6 +1639,73 @@
     accountAuthFeedback.style.color = isError ? "#b74848" : "";
   }
 
+  function wirePasswordToggle(button, input) {
+    if (!button || !input || button.dataset.wired === "1") return;
+    button.dataset.wired = "1";
+    const iconMasked = button.querySelector(".account-password-toggle__icon--masked");
+    const iconShown = button.querySelector(".account-password-toggle__icon--shown");
+    function sync() {
+      const hidden = input.type === "password";
+      button.setAttribute("aria-pressed", hidden ? "false" : "true");
+      button.setAttribute(
+        "aria-label",
+        hidden ? I18n.t("account_password_show") : I18n.t("account_password_hide")
+      );
+      if (iconMasked) iconMasked.classList.toggle("hidden", !hidden);
+      if (iconShown) iconShown.classList.toggle("hidden", hidden);
+    }
+    button.addEventListener("click", function () {
+      input.type = input.type === "password" ? "text" : "password";
+      sync();
+    });
+    sync();
+  }
+
+  function syncPasswordToggleAria() {
+    [
+      ["account-register-password-toggle", "account-register-password"],
+      ["account-register-password-confirm-toggle", "account-register-password-confirm"],
+      ["account-login-password-toggle", "account-login-password"],
+    ].forEach(function (ids) {
+      const btn = document.getElementById(ids[0]);
+      const inp = document.getElementById(ids[1]);
+      if (!btn || !inp) return;
+      const hidden = inp.type === "password";
+      btn.setAttribute(
+        "aria-label",
+        hidden ? I18n.t("account_password_show") : I18n.t("account_password_hide")
+      );
+      btn.setAttribute("aria-pressed", hidden ? "false" : "true");
+      const iconMasked = btn.querySelector(".account-password-toggle__icon--masked");
+      const iconShown = btn.querySelector(".account-password-toggle__icon--shown");
+      if (iconMasked) iconMasked.classList.toggle("hidden", !hidden);
+      if (iconShown) iconShown.classList.toggle("hidden", hidden);
+    });
+  }
+
+  function initAccountPasswordUi() {
+    wirePasswordToggle(
+      document.getElementById("account-register-password-toggle"),
+      document.getElementById("account-register-password")
+    );
+    wirePasswordToggle(
+      document.getElementById("account-register-password-confirm-toggle"),
+      document.getElementById("account-register-password-confirm")
+    );
+    wirePasswordToggle(
+      document.getElementById("account-login-password-toggle"),
+      document.getElementById("account-login-password")
+    );
+    if (accountForgotOpen && accountForgotDialog && !accountForgotOpen.dataset.wired) {
+      accountForgotOpen.dataset.wired = "1";
+      accountForgotOpen.addEventListener("click", function () {
+        if (typeof accountForgotDialog.showModal === "function") {
+          accountForgotDialog.showModal();
+        }
+      });
+    }
+  }
+
   function formatPct(correct, attempts) {
     if (!attempts) return "0%";
     return String(Math.round((correct / attempts) * 100)) + "%";
@@ -1936,6 +2264,7 @@
   window.addEventListener("andronicus:langchange", function () {
     buildBookingCalendar();
     refreshPasswordHint();
+    syncPasswordToggleAria();
     if (adminUnlocked) renderAdminPanel();
   });
 
@@ -2031,8 +2360,13 @@
       const name = (document.getElementById("account-register-name").value || "").trim();
       const fullName = (document.getElementById("account-register-fullname").value || "").trim();
       const pass = (document.getElementById("account-register-password").value || "").trim();
-      if (!name || !pass || !fullName) {
+      const passConfirm = (document.getElementById("account-register-password-confirm").value || "").trim();
+      if (!name || !pass || !fullName || !passConfirm) {
         setAuthFeedback(I18n.t("account_err_register_fields"), true);
+        return;
+      }
+      if (pass !== passConfirm) {
+        setAuthFeedback(I18n.t("account_err_password_mismatch"), true);
         return;
       }
       if (users[name]) {
@@ -2046,6 +2380,7 @@
       setAuthFeedback(I18n.t("account_ok_register"), false);
       renderAccountPanel();
       accountRegisterForm.reset();
+      syncPasswordToggleAria();
     });
   }
 
@@ -2063,6 +2398,7 @@
       setAuthFeedback(I18n.t("account_ok_login"), false);
       renderAccountPanel();
       accountLoginForm.reset();
+      syncPasswordToggleAria();
     });
   }
 
@@ -3217,6 +3553,7 @@
   });
 
   loadUsers();
+  initAccountPasswordUi();
   loadBookings();
   loadPayments();
   try {

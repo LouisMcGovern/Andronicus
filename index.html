@@ -389,7 +389,69 @@
             <label for="account-register-name" data-i18n="account_label_username">Account name</label>
             <input type="text" id="account-register-name" autocomplete="username" required />
             <label for="account-register-password" data-i18n="account_label_password">Password</label>
-            <input type="password" id="account-register-password" autocomplete="new-password" required />
+            <div class="account-password-row">
+              <input
+                type="password"
+                id="account-register-password"
+                class="account-password-row__input"
+                autocomplete="new-password"
+                required
+                minlength="4"
+              />
+              <button
+                type="button"
+                class="account-password-toggle"
+                id="account-register-password-toggle"
+                aria-pressed="false"
+                aria-label="Show password"
+              >
+                <span class="account-password-toggle__icon account-password-toggle__icon--masked" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12Z" />
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="m3 3 18 18" />
+                  </svg>
+                </span>
+                <span class="account-password-toggle__icon account-password-toggle__icon--shown hidden" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12Z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </span>
+              </button>
+            </div>
+            <label for="account-register-password-confirm" data-i18n="account_label_password_confirm">Confirm password</label>
+            <div class="account-password-row">
+              <input
+                type="password"
+                id="account-register-password-confirm"
+                class="account-password-row__input"
+                autocomplete="new-password"
+                required
+                minlength="4"
+              />
+              <button
+                type="button"
+                class="account-password-toggle"
+                id="account-register-password-confirm-toggle"
+                aria-pressed="false"
+                aria-label="Show password"
+              >
+                <span class="account-password-toggle__icon account-password-toggle__icon--masked" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12Z" />
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="m3 3 18 18" />
+                  </svg>
+                </span>
+                <span class="account-password-toggle__icon account-password-toggle__icon--shown hidden" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12Z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </span>
+              </button>
+            </div>
             <button type="submit" class="btn-primary" data-i18n="account_btn_register">Create account</button>
           </form>
           <form id="account-login-form" class="account-card">
@@ -397,9 +459,50 @@
             <label for="account-login-name" data-i18n="account_label_username">Account name</label>
             <input type="text" id="account-login-name" autocomplete="username" required />
             <label for="account-login-password" data-i18n="account_label_password">Password</label>
-            <input type="password" id="account-login-password" autocomplete="current-password" required />
+            <div class="account-password-row">
+              <input
+                type="password"
+                id="account-login-password"
+                class="account-password-row__input"
+                autocomplete="current-password"
+                required
+              />
+              <button
+                type="button"
+                class="account-password-toggle"
+                id="account-login-password-toggle"
+                aria-pressed="false"
+                aria-label="Show password"
+              >
+                <span class="account-password-toggle__icon account-password-toggle__icon--masked" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12Z" />
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="m3 3 18 18" />
+                  </svg>
+                </span>
+                <span class="account-password-toggle__icon account-password-toggle__icon--shown hidden" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12Z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </span>
+              </button>
+            </div>
             <button type="submit" class="btn-primary" data-i18n="account_btn_login">Log in</button>
+            <p class="account-forgot-wrap">
+              <button type="button" id="account-forgot-open" class="btn-text account-forgot-link" data-i18n="account_forgot_link">
+                Forgot password?
+              </button>
+            </p>
           </form>
+          <dialog id="account-forgot-dialog" class="account-dialog">
+            <form method="dialog" class="account-dialog__inner">
+              <h3 data-i18n="account_forgot_heading">Forgot your password?</h3>
+              <p class="account-dialog__body" data-i18n-html="account_forgot_body_html"></p>
+              <button type="submit" class="btn-primary" data-i18n="account_forgot_close_btn">Close</button>
+            </form>
+          </dialog>
           <p id="account-auth-feedback" class="form-error hidden" role="alert"></p>
         </div>
         <div id="account-dashboard" class="account-dashboard hidden">

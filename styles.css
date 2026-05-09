@@ -1784,6 +1784,96 @@ html[data-theme="dark"] .booking-sync-warning {
   color: var(--text);
 }
 
+.account-password-row {
+  display: flex;
+  align-items: stretch;
+  margin-top: 0.3rem;
+  border: 1px solid var(--border);
+  border-radius: 0.35rem;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.account-password-row__input {
+  flex: 1;
+  min-width: 0;
+  margin-top: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0.55rem 0.65rem !important;
+  background: transparent;
+}
+
+.account-password-toggle {
+  flex-shrink: 0;
+  width: 2.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-left: 1px solid var(--border);
+  background: var(--surface-elevated);
+  color: var(--muted);
+  cursor: pointer;
+  padding: 0;
+}
+
+.account-password-toggle:hover {
+  color: var(--text);
+}
+
+.account-password-toggle__icon.hidden {
+  display: none;
+}
+
+.account-password-toggle__icon svg {
+  display: block;
+}
+
+.account-forgot-wrap {
+  margin: 0.75rem 0 0;
+  text-align: center;
+}
+
+.account-forgot-link {
+  font-size: 0.9rem;
+}
+
+.account-dialog {
+  max-width: 26rem;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 0.45rem;
+  background: var(--surface-elevated);
+  color: var(--text);
+  box-shadow: var(--shadow-soft);
+}
+
+.account-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.account-dialog__inner {
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.account-dialog__inner h3 {
+  margin: 0;
+}
+
+.account-dialog__body {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.account-dialog__body a {
+  color: var(--accent);
+}
+
 .admin-table {
   width: 100%;
   border-collapse: collapse;
