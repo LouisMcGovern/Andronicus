@@ -1566,6 +1566,13 @@ html[data-theme="dark"] .booking-sync-warning {
   color: var(--muted);
 }
 
+.flashcard-deck-count {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin: 0;
+  padding: 0 0.1rem;
+}
+
 .flashcard-topic,
 .exercise-topic {
   width: 100%;

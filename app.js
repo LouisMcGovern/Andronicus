@@ -1452,6 +1452,21 @@
     });
   })();
 
+  (function snapThemedFlashcardDeckSizes() {
+    const STEP = 25;
+    ["beginner", "intermediate", "advanced"].forEach(function (lvl) {
+      const fc = learningData[lvl] && learningData[lvl].flashcards;
+      if (!fc) return;
+      Object.keys(fc).forEach(function (deckName) {
+        if (deckName === "Master 1000") return;
+        const deck = fc[deckName];
+        if (!Array.isArray(deck) || deck.length < STEP) return;
+        const target = Math.floor(deck.length / STEP) * STEP;
+        if (target > 0 && target < deck.length) deck.length = target;
+      });
+    });
+  })();
+
   learningData.beginner.vocabQuiz = buildFiftyVocabQuestions(beginnerQuizSeeds);
   learningData.intermediate.vocabQuiz = buildFiftyVocabQuestions(intermediateQuizSeeds);
   learningData.advanced.vocabQuiz = buildFiftyVocabQuestions(advancedQuizSeeds);
@@ -3260,6 +3275,9 @@
       orderRow.appendChild(orderSelect);
       top.appendChild(deckRow);
       top.appendChild(orderRow);
+      const deckCountHint = document.createElement("p");
+      deckCountHint.className = "flashcard-deck-count";
+      deckCountHint.setAttribute("aria-live", "polite");
       const sessionHint = document.createElement("p");
       sessionHint.className = "flashcard-session-hint";
       const flipBtn = document.createElement("button");
@@ -3323,6 +3341,7 @@
       completeInner.appendChild(completeActions);
       completeOverlay.appendChild(completeInner);
       stage.appendChild(top);
+      stage.appendChild(deckCountHint);
       stage.appendChild(sessionHint);
       stage.appendChild(flipBtn);
       stage.appendChild(controls);
@@ -3446,13 +3465,20 @@
         completeOverlay.classList.remove("hidden");
       }
 
+      function updateDeckCountHint() {
+        const n = (decks[activeTopic] || []).length;
+        deckCountHint.textContent =
+          n === 1 ? I18n.t("flashcard_deck_card_count_one") : I18n.t("flashcard_deck_card_count", { n: String(n) });
+      }
+
       topicNames.forEach(function (name) {
         const option = document.createElement("option");
         option.value = name;
-        option.textContent = name + " (" + String((decks[name] || []).length) + ")";
+        option.textContent = name;
         if (name === activeTopic) option.selected = true;
         topicSelect.appendChild(option);
       });
+      updateDeckCountHint();
 
       function renderCard() {
         const deck = fullDeck();
@@ -3510,6 +3536,7 @@
 
       topicSelect.addEventListener("change", function () {
         activeTopic = topicSelect.value;
+        updateDeckCountHint();
         startSession("full", null);
       });
 
@@ -3598,6 +3625,7 @@
         orderSelect.setAttribute("aria-label", I18n.t("flashcard_order_label"));
         orderOptEn.textContent = I18n.t("flashcard_order_en_option");
         orderOptFr.textContent = I18n.t("flashcard_order_fr_option");
+        updateDeckCountHint();
         prevBtn.textContent = I18n.t("flashcard_prev");
         nextBtn.textContent = I18n.t("flashcard_next");
         againBtn.textContent = I18n.t("flashcard_again");
