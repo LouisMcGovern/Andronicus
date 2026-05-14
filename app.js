@@ -146,6 +146,9 @@
   let bookings = [];
   let paymentChecklist = [];
   let supabaseClient = null;
+  let userCloudSyncTimer = null;
+  let userCloudSyncInFlight = false;
+  let userCloudSyncQueued = false;
   const learningData = {
     beginner: {
       flashcards: {
@@ -1484,6 +1487,7 @@
     try {
       localStorage.setItem(USERS_KEY, JSON.stringify(users));
     } catch (e) {}
+    scheduleActiveUserCloudSync();
   }
 
   function loadBookings() {
@@ -1551,6 +1555,80 @@
       supabaseClient = window.supabase.createClient(c.supabaseUrl, c.supabaseAnonKey);
     }
     return supabaseClient;
+  }
+
+  function normalizeCloudUserRow(row) {
+    if (!row || !row.username) return null;
+    return {
+      fullName: String(row.full_name || ""),
+      password: String(row.password || ""),
+      stats: row.stats && typeof row.stats === "object" ? row.stats : {},
+    };
+  }
+
+  async function fetchCloudUser(username, password) {
+    if (!isSupabaseConfigured()) return null;
+    const sb = getSupabaseClient();
+    if (!sb || !username || !password) return null;
+    try {
+      const { data, error } = await sb.rpc("student_get_account", {
+        p_username: username,
+        p_password: password,
+      });
+      if (error) throw error;
+      const row = Array.isArray(data) ? data[0] : data;
+      return normalizeCloudUserRow(row);
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
+  }
+
+  async function upsertCloudUser(username, user) {
+    if (!isSupabaseConfigured()) return false;
+    const sb = getSupabaseClient();
+    if (!sb || !username || !user || !user.password) return false;
+    try {
+      const { error } = await sb.rpc("student_upsert_account", {
+        p_username: username,
+        p_password: String(user.password || ""),
+        p_full_name: String(user.fullName || ""),
+        p_stats: user.stats && typeof user.stats === "object" ? user.stats : {},
+      });
+      if (error) throw error;
+      return true;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
+  }
+
+  function scheduleActiveUserCloudSync() {
+    if (!isSupabaseConfigured()) return;
+    const user = getActiveUser();
+    if (!user || !activeUsername) return;
+    if (userCloudSyncTimer) clearTimeout(userCloudSyncTimer);
+    userCloudSyncTimer = setTimeout(function () {
+      void flushActiveUserCloudSync();
+    }, 1200);
+  }
+
+  async function flushActiveUserCloudSync() {
+    if (!isSupabaseConfigured()) return;
+    const user = getActiveUser();
+    if (!user || !activeUsername) return;
+    if (userCloudSyncInFlight) {
+      userCloudSyncQueued = true;
+      return;
+    }
+    userCloudSyncInFlight = true;
+    userCloudSyncQueued = false;
+    await upsertCloudUser(activeUsername, user);
+    userCloudSyncInFlight = false;
+    if (userCloudSyncQueued) {
+      userCloudSyncQueued = false;
+      await flushActiveUserCloudSync();
+    }
   }
 
   async function refreshAdminCloudData() {
@@ -2432,7 +2510,7 @@
   }
 
   if (accountRegisterForm) {
-    accountRegisterForm.addEventListener("submit", function (e) {
+    accountRegisterForm.addEventListener("submit", async function (e) {
       e.preventDefault();
       const name = (document.getElementById("account-register-name").value || "").trim();
       const fullName = (document.getElementById("account-register-fullname").value || "").trim();
@@ -2452,6 +2530,7 @@
       }
       users[name] = { fullName: fullName, password: pass, stats: {} };
       saveUsers();
+      await upsertCloudUser(name, users[name]);
       activeUsername = name;
       persistActiveUser();
       setAuthFeedback(I18n.t("account_ok_register"), false);
@@ -2462,16 +2541,32 @@
   }
 
   if (accountLoginForm) {
-    accountLoginForm.addEventListener("submit", function (e) {
+    accountLoginForm.addEventListener("submit", async function (e) {
       e.preventDefault();
       const name = (document.getElementById("account-login-name").value || "").trim();
       const pass = (document.getElementById("account-login-password").value || "").trim();
-      if (!users[name] || users[name].password !== pass) {
+      let localUser = users[name];
+      if (!localUser || localUser.password !== pass) {
+        const cloudUser = await fetchCloudUser(name, pass);
+        if (cloudUser) {
+          users[name] = cloudUser;
+          localUser = cloudUser;
+          saveUsers();
+        }
+      }
+      if (!localUser || localUser.password !== pass) {
         setAuthFeedback(I18n.t("account_err_login"), true);
         return;
       }
       activeUsername = name;
       persistActiveUser();
+      const latestCloudUser = await fetchCloudUser(name, pass);
+      if (latestCloudUser) {
+        users[name] = latestCloudUser;
+        saveUsers();
+      } else {
+        scheduleActiveUserCloudSync();
+      }
       setAuthFeedback(I18n.t("account_ok_login"), false);
       renderAccountPanel();
       accountLoginForm.reset();
@@ -3789,20 +3884,31 @@
   initAccountPasswordUi();
   loadBookings();
   loadPayments();
-  try {
-    activeUsername = localStorage.getItem(ACTIVE_USER_KEY);
-  } catch (e) {
-    activeUsername = null;
-  }
-  if (!users[activeUsername]) activeUsername = null;
-  renderAccountPanel();
-  buildBookingCalendar();
-  initLearningTools();
-  forceInitialHomeView();
+  (async function bootstrapApp() {
+    try {
+      activeUsername = localStorage.getItem(ACTIVE_USER_KEY);
+    } catch (e) {
+      activeUsername = null;
+    }
+    if (!users[activeUsername]) activeUsername = null;
+    if (activeUsername && users[activeUsername] && users[activeUsername].password) {
+      const cloudUser = await fetchCloudUser(activeUsername, users[activeUsername].password);
+      if (cloudUser) {
+        users[activeUsername] = cloudUser;
+        saveUsers();
+      } else {
+        scheduleActiveUserCloudSync();
+      }
+    }
+    renderAccountPanel();
+    buildBookingCalendar();
+    initLearningTools();
+    forceInitialHomeView();
 
-  setTimeout(() => {
-    introOverlay.classList.add("is-done");
-    app.classList.remove("hidden-until-intro");
-    app.classList.add("intro-visible");
-  }, INTRO_MS);
+    setTimeout(() => {
+      introOverlay.classList.add("is-done");
+      app.classList.remove("hidden-until-intro");
+      app.classList.add("intro-visible");
+    }, INTRO_MS);
+  })();
 })();
