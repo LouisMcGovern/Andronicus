@@ -35,17 +35,19 @@
       hero_cta_book: "Book a lesson",
       why_section_title: "Why Choose Andronicus?",
       why_1_title: "Small Groups",
-      why_1_body: "Four students at most, so you get speaking time and feedback every week.",
+      why_1_body:
+        "Maximum four students per class. That's small enough that you can't disappear, that every answer gets a response, and that the lesson can shift if a topic isn't landing. Big classes save money for the teacher; small classes work for the student.",
       why_2_title: "You Can See Progress",
-      why_2_body: "Simple graphs over time, alongside short checks and how you take part in class.",
+      why_2_body:
+        "Every student has a tracking page with real graphs, test results, and notes on class performance. You're not guessing whether you're improving — you can look. Parents see the same view, so there are no surprises at the end of the term.",
       why_3_title: "I'm a Student Too",
       why_3_body:
-        "I'm still at university myself, so I know what learning a new language is like: new grammar, keeping momentum, and wanting room to speak without feeling judged.",
+        "I'm at Trinity College Dublin right now, so I know what it's like to be inside the work, not above it. That changes how I teach — I remember exactly which bits felt hard, which explanations finally clicked, and how to find ten extra minutes when the week is already full.",
       home_trust_line: "Most students who start stay for the year. Message or call if you want to talk before booking.",
       faq_section_title: "Frequently Asked Questions",
       faq_q1: "Who are the lessons for?",
       faq_a1:
-        "Mostly teens who speak French at home and need English for school, an exam, or everyday confidence. Groups stay small.",
+        "Mostly French-speaking students from collège through lycée and into early university — but anyone whose first language is French and who wants to improve their English is welcome. There are beginner, intermediate, and advanced tracks, and we'll place you sensibly once we talk.",
       faq_q2: "Where do lessons happen?",
       faq_a2:
         "Lessons are online in small groups. After we agree a slot, I send the join link and what you need. I will be on Zoom Plus so I can use premium features: that helps keep things reliable and simple for students every time they join.",
@@ -55,9 +57,9 @@
       faq_q4: "What level do I need?",
       faq_a4:
         "Beginner, intermediate, or advanced tracks. If you are not sure, say so in the form and I will place you sensibly.",
-      faq_q5: "When is it really confirmed?",
+      faq_q5: "How will I know my booking is confirmed?",
       faq_a5:
-        "When I have answered you with a time and the practical details. Until then, assume nothing is fixed.",
+        "I confirm every booking personally by email or message — usually within 24 hours. Until you've heard back from me with a confirmed time slot, your booking is a request, not a confirmation. That way nothing gets double-booked and you always know where you stand.",
       faq_q6: "What do I need for a lesson?",
       faq_a6:
         "Somewhere you can focus, decent Wi-Fi, and the Zoom link I send. Pen and paper help. Headphones help if it is noisy at home.",
@@ -401,17 +403,19 @@
       hero_cta_book: "Réserver un cours",
       why_section_title: "Pourquoi choisir Andronicus ?",
       why_1_title: "Petits groupes",
-      why_1_body: "Quatre élèves au plus : chacun parle et reçoit des retours chaque semaine.",
+      why_1_body:
+        "Quatre étudiants maximum par classe. C'est assez petit pour qu'on ne puisse pas s'effacer, pour que chaque réponse reçoive une réaction, et pour que le cours puisse s'adapter si un sujet ne passe pas. Les grandes classes font gagner du temps à l'enseignant ; les petites classes font progresser l'étudiant.",
       why_2_title: "Des progrès visibles",
-      why_2_body: "Graphiques simples dans le temps, avec les petits contrôles et votre participation en cours.",
+      why_2_body:
+        "Chaque étudiant dispose d'une page de suivi avec de vrais graphiques, des résultats de tests, et des notes sur la participation en classe. Pas besoin de deviner si vous progressez — il suffit de regarder. Les parents voient la même page, donc aucune surprise à la fin du trimestre.",
       why_3_title: "Je suis aussi étudiant",
       why_3_body:
-        "Je suis encore à l’université, donc je sais ce que c’est qu’apprendre une langue : la grammaire nouvelle, tenir le rythme, et avoir envie qu’on vous écoute sans vous juger.",
+        "Je suis actuellement étudiant à Trinity College Dublin, donc je sais ce que c'est que d'être dans le travail, pas au-dessus. Cela change ma façon d'enseigner — je me souviens précisément des passages qui m'ont paru difficiles, des explications qui ont fini par déclencher quelque chose, et de la manière de trouver dix minutes supplémentaires quand la semaine est déjà chargée.",
       home_trust_line: "La plupart des élèves qui commencent restent l’année. Écrivez ou appelez si vous voulez en parler avant de réserver.",
       faq_section_title: "Questions fréquentes",
       faq_q1: "À qui s’adressent les cours ?",
       faq_a1:
-        "Surtout à des lycéens francophones qui veulent renforcer l’anglais pour l’école, un examen ou le quotidien. Les groupes restent petits.",
+        "Principalement des élèves francophones, du collège au lycée et jusqu'au début des études supérieures — mais toute personne dont la langue maternelle est le français et qui souhaite progresser en anglais est la bienvenue. Il existe des parcours débutant, intermédiaire et avancé, et nous vous placerons correctement après en avoir discuté.",
       faq_q2: "Où ont lieu les cours ?",
       faq_a2:
         "Les cours sont en ligne, en petits groupes. Une fois le créneau convenu, j’envoie le lien de connexion et le nécessaire. Je passerai à Zoom Plus pour accéder aux fonctions premium : cela renforce la fiabilité et simplifie la connexion pour les élèves à chaque cours.",
@@ -421,9 +425,9 @@
       faq_q4: "Quel niveau il faut ?",
       faq_a4:
         "Parcours débutant, intermédiaire ou avancé. Si vous doutez, écrivez-le dans le formulaire et je vous oriente.",
-      faq_q5: "Quand c’est vraiment confirmé ?",
+      faq_q5: "Comment saurai-je que ma réservation est confirmée ?",
       faq_a5:
-        "Quand je vous ai répondu avec un créneau et les infos pratiques. Avant ça, ne partez pas du principe que c’est acté.",
+        "Je confirme chaque réservation personnellement par email ou message — généralement sous 24 heures. Tant que vous n'avez pas reçu une confirmation avec un créneau précis, votre réservation est une demande, pas une confirmation. Ainsi, rien n'est doublement réservé et vous savez toujours où vous en êtes.",
       faq_q6: "De quoi j’ai besoin pour le cours ?",
       faq_a6:
         "Un endroit où vous pouvez vous concentrer, une connexion correcte, et le lien Zoom que j’envoie. Papier-crayon utile, casque utile si c’est bruyant chez vous.",
