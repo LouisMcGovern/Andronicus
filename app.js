@@ -1733,7 +1733,62 @@
     if (!user.stats.quizSessionLog) user.stats.quizSessionLog = [];
     if (!user.stats.completedExercises) user.stats.completedExercises = [];
     if (!user.fullName) user.fullName = "";
+    ensureLearningHub(user.stats);
     return user.stats;
+  }
+
+  function ensureLearningHub(stats) {
+    if (!stats.learningHub) {
+      stats.learningHub = {
+        xp: 0,
+        streak: 0,
+        lastActiveDay: "",
+        vocabTopic: {},
+        savedWords: [],
+        homeworkTasks: {},
+        activityByDay: {},
+      };
+    }
+    const lh = stats.learningHub;
+    if (!lh.vocabTopic) lh.vocabTopic = {};
+    if (!lh.savedWords) lh.savedWords = [];
+    if (!lh.homeworkTasks) lh.homeworkTasks = {};
+    if (!lh.activityByDay) lh.activityByDay = {};
+    return lh;
+  }
+
+  function isoDay(d) {
+    return d.toISOString().slice(0, 10);
+  }
+
+  function bumpLearningActivity(xpDelta) {
+    const user = getActiveUser();
+    if (!user) return;
+    const stats = ensureStats(user);
+    const lh = ensureLearningHub(stats);
+    const today = isoDay(new Date());
+    if (typeof xpDelta === "number" && xpDelta > 0) {
+      lh.xp = (lh.xp || 0) + xpDelta;
+    }
+    if (lh.lastActiveDay !== today) {
+      const y = new Date();
+      y.setDate(y.getDate() - 1);
+      const ystr = isoDay(y);
+      if (lh.lastActiveDay === ystr) lh.streak = (lh.streak || 0) + 1;
+      else lh.streak = lh.lastActiveDay ? 1 : Math.max(1, lh.streak || 1);
+      lh.lastActiveDay = today;
+    }
+    lh.activityByDay[today] = (lh.activityByDay[today] || 0) + 1;
+    saveUsers();
+  }
+
+  function vocabMasteryLabel(correct, wrong) {
+    const c = correct || 0;
+    const w = wrong || 0;
+    const t = c + w;
+    if (t < 4) return "learning";
+    if (t < 12 || c / t < 0.65) return "practicing";
+    return "mastered";
   }
 
   function buildFlashcardSessionIndices(deckLen) {
@@ -1777,6 +1832,8 @@
     if (stats.flashcardSessions.length > 48) {
       stats.flashcardSessions = stats.flashcardSessions.slice(-48);
     }
+    const bonus = Math.min(18, 6 + Math.max(0, Number(payload.correct) || 0));
+    bumpLearningActivity(bonus);
     saveUsers();
   }
 
@@ -2356,6 +2413,7 @@
     const key = level + " - " + topic;
     if (stats.completedExercises.includes(key)) return { ok: false, reason: "exists" };
     stats.completedExercises.push(key);
+    bumpLearningActivity(22);
     saveUsers();
     renderAccountPanel();
     return { ok: true };
@@ -2375,6 +2433,7 @@
       stats.flashcardsByDeck[dk].attempts += 1;
       if (wasCorrect) stats.flashcardsByDeck[dk].correct += 1;
     }
+    bumpLearningActivity(wasCorrect ? 4 : 1);
     saveUsers();
   }
 
@@ -2397,6 +2456,7 @@
     if (stats.quizSessionLog.length > 48) {
       stats.quizSessionLog = stats.quizSessionLog.slice(-48);
     }
+    bumpLearningActivity(Math.min(20, 8 + Math.round(pct / 5)));
     saveUsers();
     renderAccountPanel();
   }
@@ -2911,54 +2971,395 @@
   }
 
   function initLearningTools() {
-    document.querySelectorAll(".learning-tools").forEach(function (root) {
+    document.querySelectorAll(".learning-tools").forEach(initLearningHubForRoot);
+  }
+
+  function initLearningHubForRoot(root) {
       const level = root.getAttribute("data-learning-level");
       const data = learningData[level];
       if (!data) return;
-      const menuButtons = root.querySelectorAll(".tool-menu__btn");
+      const menuButtons = root.querySelectorAll(".tool-menu__btn[data-tool]");
       const panels = root.querySelectorAll(".tool-panel");
       const flashcardsPanel = root.querySelector('[data-tool-panel="flashcards"]');
       const vocabPanel = root.querySelector('[data-tool-panel="vocab"]');
       const exercisesPanel = root.querySelector('[data-tool-panel="exercises"]');
-      const schedulePanel = root.querySelector('[data-tool-panel="schedule"]');
+      const homeworkPanel = root.querySelector('[data-tool-panel="homework"]');
+      const progressPanel = root.querySelector('[data-tool-panel="progress"]');
 
+      function activateTab(name) {
+        menuButtons.forEach(function (b) {
+          const on = b.getAttribute("data-tool") === name;
+          b.classList.toggle("is-active", on);
+          b.setAttribute("aria-selected", on ? "true" : "false");
+        });
+        panels.forEach(function (panel) {
+          panel.classList.toggle("hidden", panel.getAttribute("data-tool-panel") !== name);
+        });
+        if (name === "progress") renderProgressPanel();
+      }
       menuButtons.forEach(function (btn) {
         btn.addEventListener("click", function () {
-          const tool = btn.getAttribute("data-tool");
-          menuButtons.forEach(function (b) {
-            b.classList.toggle("is-active", b === btn);
-          });
-          panels.forEach(function (panel) {
-            panel.classList.toggle("hidden", panel.getAttribute("data-tool-panel") !== tool);
-          });
+          activateTab(btn.getAttribute("data-tool"));
         });
       });
 
+      function refreshGamificationHeader() {
+        const user = getActiveUser();
+        const xpEl = root.querySelector(".lh-vocab__xp-val");
+        const stEl = root.querySelector(".lh-vocab__streak-val");
+        if (!xpEl || !stEl) return;
+        if (!user) {
+          xpEl.textContent = "0";
+          stEl.textContent = "0";
+          return;
+        }
+        const lh = ensureLearningHub(ensureStats(user));
+        xpEl.textContent = String(lh.xp || 0);
+        stEl.textContent = String(lh.streak || 0);
+      }
+
+      function renderProgressPanel() {
+        progressPanel.innerHTML = "";
+        const wrap = document.createElement("div");
+        wrap.className = "lh-progress";
+        const user = getActiveUser();
+        if (!user) {
+          const p = document.createElement("p");
+          p.className = "lh-muted";
+          p.textContent = I18n.t("learning_progress_no_user");
+          wrap.appendChild(p);
+          progressPanel.appendChild(wrap);
+          return;
+        }
+        const stats = ensureStats(user);
+        const lh = ensureLearningHub(stats);
+        const grid = document.createElement("div");
+        grid.className = "lh-stat-grid";
+        function statCard(label, val) {
+          const c = document.createElement("div");
+          c.className = "lh-stat-card";
+          const lab = document.createElement("div");
+          lab.className = "lh-stat-card__label";
+          lab.textContent = label;
+          const v = document.createElement("div");
+          v.className = "lh-stat-card__value";
+          v.textContent = val;
+          c.appendChild(lab);
+          c.appendChild(v);
+          grid.appendChild(c);
+        }
+        statCard(I18n.t("learning_progress_xp"), String(lh.xp || 0));
+        statCard(I18n.t("learning_progress_streak"), String(lh.streak || 0));
+        const fa = stats.flashcards.attempts || 0;
+        const fc = stats.flashcards.correct || 0;
+        statCard(
+          I18n.t("learning_progress_flash_accuracy"),
+          fa ? String(Math.round((fc / fa) * 100)) + "%" : "—"
+        );
+        statCard(I18n.t("learning_progress_quiz_sessions"), String(stats.quizSessions || 0));
+        statCard(I18n.t("learning_progress_exercises_done"), String((stats.completedExercises || []).length));
+        wrap.appendChild(grid);
+
+        const weekTitle = document.createElement("h4");
+        weekTitle.className = "lh-subheading";
+        weekTitle.textContent = I18n.t("learning_progress_week_activity");
+        wrap.appendChild(weekTitle);
+        const chart = document.createElement("div");
+        chart.className = "lh-week-chart";
+        const dayCounts = {};
+        function bumpDay(iso) {
+          if (!iso) return;
+          const d = String(iso).slice(0, 10);
+          dayCounts[d] = (dayCounts[d] || 0) + 1;
+        }
+        (stats.flashcardSessions || []).forEach(function (s) {
+          bumpDay(s.at);
+        });
+        (stats.quizSessionLog || []).forEach(function (s) {
+          bumpDay(s.at);
+        });
+        for (let i = 6; i >= 0; i -= 1) {
+          const d = new Date();
+          d.setDate(d.getDate() - i);
+          const key = isoDay(d);
+          const col = document.createElement("div");
+          col.className = "lh-week-chart__col";
+          const n = dayCounts[key] || 0;
+          const bar = document.createElement("div");
+          bar.className = "lh-week-chart__bar";
+          bar.style.height = String(Math.min(72, 8 + n * 10)) + "px";
+          bar.title = key + ": " + String(n);
+          const lab = document.createElement("span");
+          lab.className = "lh-week-chart__lab";
+          lab.textContent = String(d.getDate());
+          col.appendChild(bar);
+          col.appendChild(lab);
+          chart.appendChild(col);
+        }
+        wrap.appendChild(chart);
+
+        const planTitle = document.createElement("h4");
+        planTitle.className = "lh-subheading";
+        planTitle.textContent = I18n.t("learning_progress_plan");
+        wrap.appendChild(planTitle);
+        const planList = document.createElement("ul");
+        planList.className = "resource-list lh-plan-list";
+        (data.schedule || []).forEach(function (week) {
+          const li = document.createElement("li");
+          li.textContent = week;
+          planList.appendChild(li);
+        });
+        wrap.appendChild(planList);
+
+        const badgeTitle = document.createElement("h4");
+        badgeTitle.className = "lh-subheading";
+        badgeTitle.textContent = I18n.t("learning_progress_badges");
+        wrap.appendChild(badgeTitle);
+        const badges = document.createElement("div");
+        badges.className = "lh-badges";
+        const b1 = document.createElement("span");
+        b1.className = "lh-badge";
+        b1.textContent =
+          ((lh.xp || 0) >= 50 ? "★ " : "○ ") + I18n.t("learning_progress_badge_xp50");
+        const b2 = document.createElement("span");
+        b2.className = "lh-badge";
+        b2.textContent =
+          ((lh.streak || 0) >= 3 ? "★ " : "○ ") + I18n.t("learning_progress_badge_streak3");
+        badges.appendChild(b1);
+        badges.appendChild(b2);
+        wrap.appendChild(badges);
+
+        progressPanel.appendChild(wrap);
+      }
+
+      function homeworkKey(topic) {
+        return level + "|hw|" + topic;
+      }
+
+      function renderHomeworkPanel() {
+        homeworkPanel.innerHTML = "";
+        const wrap = document.createElement("div");
+        wrap.className = "lh-homework";
+        const user = getActiveUser();
+        const stats = user ? ensureStats(user) : null;
+        const lh = user ? ensureLearningHub(stats) : null;
+
+        const sections = [
+          { key: "today", title: I18n.t("learning_homework_today") },
+          { key: "upcoming", title: I18n.t("learning_homework_upcoming") },
+          { key: "done", title: I18n.t("learning_homework_done") },
+        ];
+        const buckets = { today: [], upcoming: [], done: [] };
+        (data.vocab || []).forEach(function (mission, mi) {
+          const topic = mission.topic;
+          const doneKey = level + " - Vocab: " + topic;
+          const taskArr =
+            lh && lh.homeworkTasks && lh.homeworkTasks[homeworkKey(topic)]
+              ? lh.homeworkTasks[homeworkKey(topic)].slice()
+              : Array(mission.tasks.length).fill(false);
+          const allChecked = taskArr.every(Boolean);
+          const completedFlag = allChecked || (stats && stats.completedExercises.includes(doneKey));
+          const card = document.createElement("article");
+          card.className = "lh-hw-card";
+          const head = document.createElement("div");
+          head.className = "lh-hw-card__head";
+          const h = document.createElement("h4");
+          h.textContent = topic;
+          const meta = document.createElement("span");
+          meta.className = "lh-hw-card__meta";
+          meta.textContent = I18n.t("learning_homework_tasks_count", {
+            n: String(mission.tasks.length),
+          });
+          head.appendChild(h);
+          head.appendChild(meta);
+          card.appendChild(head);
+          const ul = document.createElement("ul");
+          ul.className = "lh-hw-tasks";
+          mission.tasks.forEach(function (task, ti) {
+            const li = document.createElement("li");
+            const lab = document.createElement("label");
+            lab.className = "lh-hw-task";
+            const cb = document.createElement("input");
+            cb.type = "checkbox";
+            cb.checked = !!taskArr[ti];
+            cb.disabled = !user;
+            cb.addEventListener("change", function () {
+              if (!user) return;
+              const st = ensureStats(user);
+              const hub = ensureLearningHub(st);
+              const key = homeworkKey(topic);
+              const prev = Array.isArray(hub.homeworkTasks[key])
+                ? hub.homeworkTasks[key].slice()
+                : Array(mission.tasks.length).fill(false);
+              while (prev.length < mission.tasks.length) prev.push(false);
+              prev[ti] = cb.checked;
+              hub.homeworkTasks[key] = prev.slice(0, mission.tasks.length);
+              saveUsers();
+              bumpLearningActivity(cb.checked ? 2 : 0);
+              renderHomeworkPanel();
+            });
+            const span = document.createElement("span");
+            span.textContent = task;
+            lab.appendChild(cb);
+            lab.appendChild(span);
+            li.appendChild(lab);
+            ul.appendChild(li);
+          });
+          card.appendChild(ul);
+          const foot = document.createElement("div");
+          foot.className = "lh-hw-card__foot";
+          const markBtn = document.createElement("button");
+          markBtn.type = "button";
+          markBtn.className = "flashcard-btn";
+          markBtn.textContent = I18n.t("learning_vocab_done_btn");
+          markBtn.disabled = !user;
+          markBtn.addEventListener("click", function () {
+            const res = recordExerciseCompletion(level, "Vocab: " + topic);
+            if (res.ok) bumpLearningActivity(18);
+            renderHomeworkPanel();
+          });
+          foot.appendChild(markBtn);
+          card.appendChild(foot);
+
+          if (completedFlag) buckets.done.push(card);
+          else if (buckets.today.length < 2) buckets.today.push(card);
+          else buckets.upcoming.push(card);
+        });
+
+        sections.forEach(function (sec) {
+          const list = buckets[sec.key];
+          if (!list.length && sec.key !== "done") return;
+          const block = document.createElement("section");
+          block.className = "lh-hw-section";
+          const ht = document.createElement("h3");
+          ht.className = "lh-hw-section__title";
+          ht.textContent = sec.title;
+          block.appendChild(ht);
+          if (!list.length) {
+            const empty = document.createElement("p");
+            empty.className = "lh-muted";
+            empty.textContent = I18n.t("learning_homework_empty");
+            block.appendChild(empty);
+          } else {
+            const grid = document.createElement("div");
+            grid.className = "lh-hw-grid";
+            list.forEach(function (c) {
+              grid.appendChild(c);
+            });
+            block.appendChild(grid);
+          }
+          wrap.appendChild(block);
+        });
+
+        const weekNote = document.createElement("p");
+        weekNote.className = "lh-muted lh-hw-footnote";
+        weekNote.textContent = I18n.t("learning_homework_week_hint");
+        wrap.appendChild(weekNote);
+
+        homeworkPanel.appendChild(wrap);
+      }
+      renderHomeworkPanel();
+
       vocabPanel.innerHTML = "";
+      const vocShell = document.createElement("div");
+      vocShell.className = "lh-vocab";
+      const vocHeader = document.createElement("div");
+      vocHeader.className = "lh-vocab__header";
+      const xpBox = document.createElement("div");
+      xpBox.className = "lh-chip lh-chip--xp";
+      xpBox.innerHTML =
+        '<span class="lh-chip__lab">' +
+        I18n.t("learning_hub_xp") +
+        '</span> <span class="lh-vocab__xp-val">0</span>';
+      const stBox = document.createElement("div");
+      stBox.className = "lh-chip lh-chip--streak";
+      stBox.innerHTML =
+        '<span class="lh-chip__lab">' +
+        I18n.t("learning_hub_streak") +
+        '</span> <span class="lh-vocab__streak-val">0</span>';
+      vocHeader.appendChild(xpBox);
+      vocHeader.appendChild(stBox);
+      vocShell.appendChild(vocHeader);
+
+      const topicRow = document.createElement("div");
+      topicRow.className = "lh-pill-row";
+      let activeTopicFilter = "all";
+      const topicSet = {};
+      (data.vocabQuiz || []).forEach(function (q) {
+        if (q.topic) topicSet[q.topic] = true;
+      });
+      function makePill(label, value) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "lh-pill" + (value === activeTopicFilter ? " is-active" : "");
+        if (value === "all") b.setAttribute("data-lh-all-topic", "1");
+        b.textContent = label;
+        b.addEventListener("click", function () {
+          activeTopicFilter = value;
+          Array.from(topicRow.querySelectorAll(".lh-pill")).forEach(function (p) {
+            p.classList.remove("is-active");
+          });
+          b.classList.add("is-active");
+          startQuiz(currentMode);
+        });
+        return b;
+      }
+      topicRow.appendChild(makePill(I18n.t("learning_hub_topic_all"), "all"));
+      Object.keys(topicSet)
+        .sort()
+        .forEach(function (t) {
+          topicRow.appendChild(makePill(t, t));
+        });
+      vocShell.appendChild(topicRow);
+
       const quizWrap = document.createElement("div");
-      quizWrap.className = "resource-item vocab-quiz";
+      quizWrap.className = "lh-vocab-quiz resource-item";
       const quizTitle = document.createElement("h4");
       quizTitle.textContent = I18n.t("learning_vocab_quiz_title");
+      const variantRow = document.createElement("div");
+      variantRow.className = "lh-variant-row";
+      let activeVariant = "mc";
+      ["mc", "match", "speed"].forEach(function (vk) {
+        const vb = document.createElement("button");
+        vb.type = "button";
+        vb.setAttribute("data-variant", vk);
+        vb.className = "lh-variant-btn" + (vk === activeVariant ? " is-active" : "");
+        vb.textContent = I18n.t("learning_vocab_variant_" + vk);
+        vb.addEventListener("click", function () {
+          activeVariant = vk;
+          Array.from(variantRow.querySelectorAll(".lh-variant-btn")).forEach(function (x, j) {
+            x.classList.toggle("is-active", ["mc", "match", "speed"][j] === vk);
+          });
+          if (remainingQuestions.length) renderQuiz();
+        });
+        variantRow.appendChild(vb);
+      });
       const quizQuestion = document.createElement("p");
-      quizQuestion.className = "vocab-quiz__question";
+      quizQuestion.className = "vocab-quiz__question lh-vocab-q";
       const quizOptions = document.createElement("div");
-      quizOptions.className = "vocab-quiz__options";
+      quizOptions.className = "vocab-quiz__options lh-vocab-options";
       const quizFeedback = document.createElement("p");
       quizFeedback.className = "vocab-quiz__feedback";
+      const saveWordBtn = document.createElement("button");
+      saveWordBtn.type = "button";
+      saveWordBtn.className = "flashcard-btn lh-save-word hidden";
+      saveWordBtn.textContent = I18n.t("learning_vocab_save_word");
       const quizNext = document.createElement("button");
       quizNext.type = "button";
-      quizNext.className = "flashcard-btn";
+      quizNext.className = "flashcard-btn lh-primary-btn";
       quizNext.textContent = I18n.t("learning_vocab_next");
       quizNext.disabled = true;
       quizWrap.appendChild(quizTitle);
+      quizWrap.appendChild(variantRow);
       quizWrap.appendChild(quizQuestion);
       quizWrap.appendChild(quizOptions);
       quizWrap.appendChild(quizFeedback);
+      quizWrap.appendChild(saveWordBtn);
       quizWrap.appendChild(quizNext);
-      vocabPanel.appendChild(quizWrap);
+      vocShell.appendChild(quizWrap);
 
       const quizModeWrap = document.createElement("div");
-      quizModeWrap.className = "tool-menu";
+      quizModeWrap.className = "tool-menu lh-difficulty";
       ["easy", "medium", "hard"].forEach(function (mode, idx) {
         const modeBtn = document.createElement("button");
         modeBtn.type = "button";
@@ -2970,7 +3371,7 @@
       quizWrap.insertBefore(quizModeWrap, quizQuestion);
 
       const summary = document.createElement("div");
-      summary.className = "vocab-summary hidden";
+      summary.className = "vocab-summary lh-vocab-summary hidden";
       const summaryTitle = document.createElement("h4");
       const summaryText = document.createElement("p");
       const summaryFocus = document.createElement("ul");
@@ -2995,9 +3396,10 @@
       const wrongByTopic = {};
 
       function questionsForMode(mode) {
-        const all = data.vocabQuiz || [];
-        return all.filter(function (q) {
-          return q.difficulty === mode;
+        return (data.vocabQuiz || []).filter(function (q) {
+          if (q.difficulty !== mode) return false;
+          if (activeTopicFilter !== "all" && q.topic !== activeTopicFilter) return false;
+          return true;
         });
       }
 
@@ -3005,11 +3407,23 @@
         return Math.floor(Math.random() * listLength);
       }
 
+      function trackVocabAnswer(topic, wasCorrect) {
+        const user = getActiveUser();
+        if (!user || !topic) return;
+        const stats = ensureStats(user);
+        const lh = ensureLearningHub(stats);
+        if (!lh.vocabTopic[topic]) lh.vocabTopic[topic] = { c: 0, w: 0 };
+        if (wasCorrect) lh.vocabTopic[topic].c += 1;
+        else lh.vocabTopic[topic].w += 1;
+        saveUsers();
+      }
+
       function showSummary(totalCount) {
         quizQuestion.classList.add("hidden");
         quizOptions.classList.add("hidden");
         quizFeedback.classList.add("hidden");
         quizNext.classList.add("hidden");
+        saveWordBtn.classList.add("hidden");
         summary.classList.remove("hidden");
         const pct = totalCount ? Math.round((quizScore / totalCount) * 100) : 0;
         summaryTitle.textContent = I18n.t("learning_vocab_summary_title", {
@@ -3041,9 +3455,11 @@
             summaryFocus.appendChild(li);
           });
         }
+        refreshGamificationHeader();
       }
 
       function renderQuiz() {
+        saveWordBtn.classList.add("hidden");
         if (!remainingQuestions.length) {
           showSummary(askedCount);
           return;
@@ -3059,11 +3475,19 @@
         askedCount += 1;
         quizAnswered = false;
         quizNext.disabled = true;
-        quizQuestion.textContent = I18n.t("learning_vocab_question_line", {
-          n: String(askedCount),
-          q: currentQuestion.question,
-          mode: currentMode,
-        });
+        const vLabel =
+          activeVariant === "match"
+            ? I18n.t("learning_vocab_variant_match_prompt")
+            : activeVariant === "speed"
+              ? I18n.t("learning_vocab_variant_speed_prompt")
+              : "";
+        quizQuestion.textContent =
+          vLabel +
+          I18n.t("learning_vocab_question_line", {
+            n: String(askedCount),
+            q: currentQuestion.question,
+            mode: currentMode,
+          });
         quizFeedback.textContent = I18n.t("learning_vocab_choose_prompt", {
           score: String(quizScore),
           round: String(askedCount - 1),
@@ -3075,12 +3499,13 @@
         shuffledOptions.forEach(function (opt) {
           const btn = document.createElement("button");
           btn.type = "button";
-          btn.className = "flashcard-btn vocab-quiz__option";
+          btn.className = "flashcard-btn vocab-quiz__option lh-option-btn";
           btn.textContent = opt;
           btn.addEventListener("click", function () {
             if (quizAnswered) return;
             quizAnswered = true;
             const correct = opt === currentQuestion.answer;
+            trackVocabAnswer(currentQuestion.topic, correct);
             if (correct) {
               quizScore += 1;
               btn.classList.add("is-correct");
@@ -3088,6 +3513,7 @@
                 score: String(quizScore),
                 round: String(askedCount),
               });
+              bumpLearningActivity(5);
             } else {
               btn.classList.add("is-wrong");
               wrongByTopic[currentQuestion.topic] = (wrongByTopic[currentQuestion.topic] || 0) + 1;
@@ -3096,11 +3522,27 @@
                 score: String(quizScore),
                 round: String(askedCount),
               });
+              bumpLearningActivity(1);
+              const user = getActiveUser();
+              if (user) {
+                const lh = ensureLearningHub(ensureStats(user));
+                lh.savedWords = lh.savedWords || [];
+                lh.savedWords.push({
+                  q: currentQuestion.question,
+                  a: currentQuestion.answer,
+                  topic: currentQuestion.topic,
+                  at: new Date().toISOString(),
+                });
+                if (lh.savedWords.length > 24) lh.savedWords = lh.savedWords.slice(-24);
+                saveUsers();
+              }
+              saveWordBtn.classList.remove("hidden");
             }
             Array.from(quizOptions.querySelectorAll("button")).forEach(function (b) {
               if (b.textContent === currentQuestion.answer) b.classList.add("is-correct");
             });
             quizNext.disabled = false;
+            refreshGamificationHeader();
           });
           quizOptions.appendChild(btn);
         });
@@ -3138,155 +3580,105 @@
         startQuiz(currentMode);
       });
 
-      startQuiz("easy");
-
-      data.vocab.forEach(function (item, idx) {
-        const block = document.createElement("div");
-        block.className = "resource-item vocab-mission";
-        const head = document.createElement("div");
-        head.className = "vocab-mission__head";
-        const headTitle = document.createElement("span");
-        headTitle.textContent = item.topic;
-        const headProgress = document.createElement("span");
-        headProgress.className = "vocab-mission__progress";
-        headProgress.textContent = "0/" + String(item.tasks.length) + " tasks";
-        head.appendChild(headTitle);
-        head.appendChild(headProgress);
-
-        const body = document.createElement("div");
-        body.className = "vocab-mission__body";
-        const focus = document.createElement("p");
-        focus.textContent = item.focus;
-        const ul = document.createElement("ul");
-        ul.className = "resource-list";
-        const taskChecks = [];
-        item.tasks.forEach(function (task, taskIndex) {
-          const li = document.createElement("li");
-          const label = document.createElement("label");
-          label.className = "vocab-task-check";
-          const checkbox = document.createElement("input");
-          checkbox.type = "checkbox";
-          checkbox.setAttribute("data-task-index", String(taskIndex));
-          const txt = document.createElement("span");
-          txt.textContent = task;
-          label.appendChild(checkbox);
-          label.appendChild(txt);
-          li.appendChild(label);
-          ul.appendChild(li);
-          taskChecks.push(checkbox);
-        });
-
-        const challengeBtn = document.createElement("button");
-        challengeBtn.type = "button";
-        challengeBtn.className = "flashcard-btn";
-        challengeBtn.setAttribute("data-learning-chrome", "learning_vocab_challenge_btn");
-        challengeBtn.textContent = I18n.t("learning_vocab_challenge_btn");
-        const challengeText = document.createElement("p");
-        challengeText.className = "exercise-complete-msg hidden";
-
-        const doneBtn = document.createElement("button");
-        doneBtn.type = "button";
-        doneBtn.className = "flashcard-btn exercise-complete-btn";
-        doneBtn.setAttribute("data-learning-chrome", "learning_vocab_done_btn");
-        doneBtn.textContent = I18n.t("learning_vocab_done_btn");
-        const doneMsg = document.createElement("p");
-        doneMsg.className = "exercise-complete-msg hidden";
-
-        function updateTaskProgress() {
-          const doneCount = taskChecks.filter(function (cb) {
-            return cb.checked;
-          }).length;
-          headProgress.textContent = String(doneCount) + "/" + String(item.tasks.length) + " tasks";
-        }
-
-        taskChecks.forEach(function (cb) {
-          cb.addEventListener("change", updateTaskProgress);
-        });
-
-        challengeBtn.addEventListener("click", function () {
-          const rand = item.tasks[Math.floor(Math.random() * item.tasks.length)];
-          challengeText.textContent = I18n.t("learning_vocab_challenge_line", { task: rand });
-          challengeText.classList.remove("hidden");
-        });
-
-        doneBtn.addEventListener("click", function () {
-          const res = recordExerciseCompletion(level, "Vocab: " + item.topic);
-          if (res.ok) doneMsg.textContent = I18n.t("learning_exercise_saved_ok");
-          else if (res.reason === "auth") doneMsg.textContent = I18n.t("learning_exercise_saved_auth");
-          else doneMsg.textContent = I18n.t("learning_exercise_saved_exists");
-          doneMsg.classList.remove("hidden");
-        });
-
-        body.appendChild(focus);
-        body.appendChild(ul);
-        body.appendChild(challengeBtn);
-        body.appendChild(challengeText);
-        body.appendChild(doneBtn);
-        body.appendChild(doneMsg);
-        block.appendChild(head);
-        block.appendChild(body);
-        vocabPanel.appendChild(block);
+      saveWordBtn.addEventListener("click", function () {
+        saveWordBtn.classList.add("hidden");
       });
+
+      vocabPanel.appendChild(vocShell);
+      startQuiz("easy");
+      refreshGamificationHeader();
 
       exercisesPanel.innerHTML = "";
-      const exerciseSelectWrap = document.createElement("div");
-      exerciseSelectWrap.className = "flashcard-trainer__top";
-      const exerciseLabel = document.createElement("label");
-      exerciseLabel.textContent = I18n.t("learning_exercise_topic_label");
-      const exerciseSelect = document.createElement("select");
-      exerciseSelect.className = "exercise-topic";
-      exerciseSelectWrap.appendChild(exerciseLabel);
-      exerciseSelectWrap.appendChild(exerciseSelect);
-      const exerciseBody = document.createElement("div");
-      exerciseBody.className = "resource-item";
-      exercisesPanel.appendChild(exerciseSelectWrap);
-      exercisesPanel.appendChild(exerciseBody);
+      const exShell = document.createElement("div");
+      exShell.className = "lh-ex";
+      const exNav = document.createElement("div");
+      exNav.className = "lh-ex__nav";
+      const exMain = document.createElement("div");
+      exMain.className = "lh-ex__main";
+      exShell.appendChild(exNav);
+      exShell.appendChild(exMain);
+      exercisesPanel.appendChild(exShell);
 
-      data.exercises.forEach(function (item, i) {
-        const option = document.createElement("option");
-        option.value = String(i);
-        option.textContent = item.topic;
-        exerciseSelect.appendChild(option);
+      function parseGapLine(line) {
+        if (!line || line.indexOf("___") < 0) return null;
+        const arrow = line.lastIndexOf("->");
+        if (arrow < 0) return null;
+        const answer = line.slice(arrow + 2).trim();
+        const head = line.slice(0, arrow).trim();
+        const parts = head.split("___");
+        if (parts.length < 2) return null;
+        return { before: parts[0], after: parts.slice(1).join("___"), answer: answer };
+      }
+
+      let activeExIdx = 0;
+      let exGapPool = [];
+      let exGapStep = 0;
+      let exGapScore = 0;
+      let exGapAnswered = false;
+
+      data.exercises.forEach(function (ex, i) {
+        const pill = document.createElement("button");
+        pill.type = "button";
+        pill.className = "lh-ex-pill" + (i === 0 ? " is-active" : "");
+        pill.textContent = ex.topic;
+        pill.addEventListener("click", function () {
+          activeExIdx = i;
+          Array.from(exNav.querySelectorAll(".lh-ex-pill")).forEach(function (p) {
+            p.classList.remove("is-active");
+          });
+          pill.classList.add("is-active");
+          renderExerciseLesson(i);
+        });
+        exNav.appendChild(pill);
       });
 
-      function renderExercise(idx) {
+      const exLesson = document.createElement("div");
+      exLesson.className = "lh-ex-lesson";
+      const exPlay = document.createElement("div");
+      exPlay.className = "lh-ex-play";
+      exMain.appendChild(exLesson);
+      exMain.appendChild(exPlay);
+
+      function renderExerciseLesson(idx) {
         const ex = data.exercises[idx];
         if (!ex) return;
-        exerciseBody.innerHTML = "";
-        const title = document.createElement("h4");
-        title.textContent = ex.topic;
+        exLesson.innerHTML = "";
+        exPlay.innerHTML = "";
+        const card = document.createElement("article");
+        card.className = "lh-lesson-card";
+        const h = document.createElement("h3");
+        h.className = "lh-lesson-card__title";
+        h.textContent = ex.topic;
+        card.appendChild(h);
+        const details = document.createElement("details");
+        details.className = "lh-details";
+        details.open = true;
+        const sum = document.createElement("summary");
+        sum.textContent = I18n.t("learning_exercise_examples_toggle");
+        details.appendChild(sum);
         const exList = document.createElement("ul");
-        exList.className = "resource-list";
+        exList.className = "resource-list lh-tight-list";
         ex.examples.forEach(function (line) {
           const li = document.createElement("li");
           li.textContent = line;
           exList.appendChild(li);
         });
+        details.appendChild(exList);
+        card.appendChild(details);
         const task = document.createElement("p");
+        task.className = "lh-lesson-practice";
         task.textContent = I18n.t("learning_exercise_practice") + " " + ex.practice;
-        const extension = document.createElement("p");
-        extension.textContent =
+        card.appendChild(task);
+        const ext = document.createElement("p");
+        ext.className = "lh-muted";
+        ext.textContent =
           I18n.t("learning_exercise_extension") +
           " " +
           (ex.extension || I18n.t("learning_exercise_extension_default"));
-        const homework = document.createElement("p");
-        homework.textContent =
-          I18n.t("learning_exercise_homework") +
-          " " +
-          (ex.homework || I18n.t("learning_exercise_homework_default"));
-        let checklistEl = null;
-        if (Array.isArray(ex.checklist) && ex.checklist.length) {
-          checklistEl = document.createElement("ul");
-          checklistEl.className = "resource-list";
-          ex.checklist.forEach(function (item) {
-            const li = document.createElement("li");
-            li.textContent = item;
-            checklistEl.appendChild(li);
-          });
-        }
+        card.appendChild(ext);
         const doneBtn = document.createElement("button");
         doneBtn.type = "button";
-        doneBtn.className = "flashcard-btn exercise-complete-btn";
+        doneBtn.className = "flashcard-btn lh-primary-btn";
         doneBtn.setAttribute("data-learning-chrome", "learning_exercise_done_btn");
         doneBtn.textContent = I18n.t("learning_exercise_done_btn");
         const doneMsg = document.createElement("p");
@@ -3302,33 +3694,96 @@
           }
           doneMsg.classList.remove("hidden");
         });
-        exerciseBody.appendChild(title);
-        exerciseBody.appendChild(exList);
-        exerciseBody.appendChild(task);
-        exerciseBody.appendChild(extension);
-        exerciseBody.appendChild(homework);
-        if (checklistEl) exerciseBody.appendChild(checklistEl);
-        exerciseBody.appendChild(doneBtn);
-        exerciseBody.appendChild(doneMsg);
+        card.appendChild(doneBtn);
+        card.appendChild(doneMsg);
+        exLesson.appendChild(card);
+
+        exGapPool = [];
+        (ex.examples || []).forEach(function (line) {
+          const g = parseGapLine(line);
+          if (g) exGapPool.push(g);
+        });
+        exGapStep = 0;
+        exGapScore = 0;
+        exGapAnswered = false;
+        if (!exGapPool.length) {
+          const p = document.createElement("p");
+          p.className = "lh-muted";
+          p.textContent = I18n.t("learning_exercise_no_inline");
+          exPlay.appendChild(p);
+          return;
+        }
+        function renderGap() {
+          exPlay.innerHTML = "";
+          if (exGapStep >= 5 || exGapStep >= exGapPool.length) {
+            const done = document.createElement("div");
+            done.className = "lh-celebrate";
+            done.textContent = I18n.t("learning_exercise_gap_complete", {
+              score: String(exGapScore),
+            });
+            exPlay.appendChild(done);
+            bumpLearningActivity(6 + exGapScore * 2);
+            return;
+          }
+          const item = exGapPool[exGapStep % exGapPool.length];
+          const q = document.createElement("p");
+          q.className = "lh-gap-q";
+          q.textContent = item.before + " _____ " + item.after;
+          exPlay.appendChild(q);
+          const opts = [item.answer];
+          const seenAns = Object.create(null);
+          seenAns[item.answer] = true;
+          for (let gi = 0; gi < exGapPool.length * 2 && opts.length < 4; gi += 1) {
+            const o = exGapPool[(exGapStep + 1 + gi) % exGapPool.length].answer;
+            if (!seenAns[o]) {
+              seenAns[o] = true;
+              opts.push(o);
+            }
+          }
+          const pad = ["…", "—", "?"];
+          let pi = 0;
+          while (opts.length < 4 && pi < pad.length) {
+            if (!seenAns[pad[pi]]) {
+              seenAns[pad[pi]] = true;
+              opts.push(pad[pi]);
+            }
+            pi += 1;
+          }
+          opts.sort(function () {
+            return Math.random() - 0.5;
+          });
+          const row = document.createElement("div");
+          row.className = "lh-vocab-options";
+          exGapAnswered = false;
+          opts.forEach(function (o) {
+            const b = document.createElement("button");
+            b.type = "button";
+            b.className = "flashcard-btn lh-option-btn";
+            b.textContent = o;
+            b.addEventListener("click", function () {
+              if (exGapAnswered) return;
+              exGapAnswered = true;
+              const ok = o === item.answer;
+              if (ok) {
+                b.classList.add("is-correct");
+                exGapScore += 1;
+                bumpLearningActivity(4);
+              } else {
+                b.classList.add("is-wrong");
+                bumpLearningActivity(1);
+              }
+              setTimeout(function () {
+                exGapStep += 1;
+                renderGap();
+              }, 420);
+            });
+            row.appendChild(b);
+          });
+          exPlay.appendChild(row);
+        }
+        renderGap();
       }
-
-      exerciseSelect.addEventListener("change", function () {
-        renderExercise(Number(exerciseSelect.value));
-      });
-      renderExercise(0);
-
-      schedulePanel.innerHTML = "";
-      const scheduleTitle = document.createElement("h4");
-      scheduleTitle.textContent = I18n.t("learning_schedule_title");
-      const scheduleList = document.createElement("ul");
-      scheduleList.className = "resource-list";
-      data.schedule.forEach(function (week) {
-        const li = document.createElement("li");
-        li.textContent = week;
-        scheduleList.appendChild(li);
-      });
-      schedulePanel.appendChild(scheduleTitle);
-      schedulePanel.appendChild(scheduleList);
+      renderExerciseLesson(0);
 
       flashcardsPanel.innerHTML = "";
       const stage = document.createElement("div");
@@ -3709,8 +4164,17 @@
           const mode = mb.getAttribute("data-mode");
           if (mode) mb.textContent = I18n.t("learning_vocab_mode_" + mode);
         });
-        exerciseLabel.textContent = I18n.t("learning_exercise_topic_label");
-        scheduleTitle.textContent = I18n.t("learning_schedule_title");
+        const allTopicPill = topicRow.querySelector('[data-lh-all-topic="1"]');
+        if (allTopicPill) allTopicPill.textContent = I18n.t("learning_hub_topic_all");
+        variantRow.querySelectorAll("[data-variant]").forEach(function (vb) {
+          const vk = vb.getAttribute("data-variant");
+          if (vk) vb.textContent = I18n.t("learning_vocab_variant_" + vk);
+        });
+        saveWordBtn.textContent = I18n.t("learning_vocab_save_word");
+        const xpLab = xpBox.querySelector(".lh-chip__lab");
+        const stLab = stBox.querySelector(".lh-chip__lab");
+        if (xpLab) xpLab.textContent = I18n.t("learning_hub_xp");
+        if (stLab) stLab.textContent = I18n.t("learning_hub_streak");
         root.querySelectorAll("[data-learning-chrome]").forEach(function (el) {
           const key = el.getAttribute("data-learning-chrome");
           if (key) el.textContent = I18n.t(key);
@@ -3764,9 +4228,11 @@
             });
           }
         }
+        renderExerciseLesson(activeExIdx);
+        renderHomeworkPanel();
+        renderProgressPanel();
         renderCard();
       });
-    });
   }
 
   if (bookingTimesUnknownInput) {

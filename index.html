@@ -241,17 +241,23 @@
               <button type="button" class="btn-level-close btn-icon-close" data-i18n-aria="content_close_aria" aria-label="Close and return to levels">×</button>
             </div>
             <h3 data-i18n="level_beginner">Beginner</h3>
-            <div class="learning-tools" data-learning-level="beginner">
-              <div class="tool-menu">
-                <button type="button" class="tool-menu__btn is-active" data-tool="flashcards">Flashcards</button>
-                <button type="button" class="tool-menu__btn" data-tool="vocab">Vocabulary</button>
-                <button type="button" class="tool-menu__btn" data-tool="exercises">Exercises</button>
-                <button type="button" class="tool-menu__btn" data-tool="schedule">Weekly Schedule</button>
+            <div class="learning-tools learning-hub" data-learning-level="beginner">
+              <div class="learning-hub__toolbar">
+                <div class="tool-menu tool-menu--learning" role="tablist" aria-label="Learning tools">
+                  <button type="button" class="tool-menu__btn is-active learning-hub__tab" data-tool="flashcards" data-i18n="learning_tab_flashcards" aria-selected="true">Flashcards</button>
+                  <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="vocab" data-i18n="learning_tab_vocab" aria-selected="false">Vocabulary</button>
+                  <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="exercises" data-i18n="learning_tab_exercises" aria-selected="false">Exercises</button>
+                  <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="homework" data-i18n="learning_tab_homework" aria-selected="false">Homework</button>
+                  <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="progress" data-i18n="learning_tab_progress" aria-selected="false">Progress</button>
+                </div>
               </div>
-              <section class="tool-panel" data-tool-panel="flashcards"></section>
-              <section class="tool-panel hidden" data-tool-panel="vocab"></section>
-              <section class="tool-panel hidden" data-tool-panel="exercises"></section>
-              <section class="tool-panel hidden" data-tool-panel="schedule"></section>
+              <div class="learning-hub__body">
+                <section class="tool-panel learning-hub__panel" data-tool-panel="flashcards"></section>
+                <section class="tool-panel learning-hub__panel hidden" data-tool-panel="vocab"></section>
+                <section class="tool-panel learning-hub__panel hidden" data-tool-panel="exercises"></section>
+                <section class="tool-panel learning-hub__panel hidden" data-tool-panel="homework"></section>
+                <section class="tool-panel learning-hub__panel hidden" data-tool-panel="progress"></section>
+              </div>
             </div>
           </article>
           <article id="content-intermediate" class="level-article hidden">
@@ -260,17 +266,23 @@
               <button type="button" class="btn-level-close btn-icon-close" data-i18n-aria="content_close_aria" aria-label="Close and return to levels">×</button>
             </div>
             <h3 data-i18n="level_intermediate">Intermediate</h3>
-            <div class="learning-tools" data-learning-level="intermediate">
-              <div class="tool-menu">
-                <button type="button" class="tool-menu__btn is-active" data-tool="flashcards">Flashcards</button>
-                <button type="button" class="tool-menu__btn" data-tool="vocab">Vocabulary</button>
-                <button type="button" class="tool-menu__btn" data-tool="exercises">Exercises</button>
-                <button type="button" class="tool-menu__btn" data-tool="schedule">Weekly Schedule</button>
+            <div class="learning-tools learning-hub" data-learning-level="intermediate">
+              <div class="learning-hub__toolbar">
+                <div class="tool-menu tool-menu--learning" role="tablist" aria-label="Learning tools">
+                  <button type="button" class="tool-menu__btn is-active learning-hub__tab" data-tool="flashcards" data-i18n="learning_tab_flashcards" aria-selected="true">Flashcards</button>
+                  <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="vocab" data-i18n="learning_tab_vocab" aria-selected="false">Vocabulary</button>
+                  <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="exercises" data-i18n="learning_tab_exercises" aria-selected="false">Exercises</button>
+                  <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="homework" data-i18n="learning_tab_homework" aria-selected="false">Homework</button>
+                  <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="progress" data-i18n="learning_tab_progress" aria-selected="false">Progress</button>
+                </div>
               </div>
-              <section class="tool-panel" data-tool-panel="flashcards"></section>
-              <section class="tool-panel hidden" data-tool-panel="vocab"></section>
-              <section class="tool-panel hidden" data-tool-panel="exercises"></section>
-              <section class="tool-panel hidden" data-tool-panel="schedule"></section>
+              <div class="learning-hub__body">
+                <section class="tool-panel learning-hub__panel" data-tool-panel="flashcards"></section>
+                <section class="tool-panel learning-hub__panel hidden" data-tool-panel="vocab"></section>
+                <section class="tool-panel learning-hub__panel hidden" data-tool-panel="exercises"></section>
+                <section class="tool-panel learning-hub__panel hidden" data-tool-panel="homework"></section>
+                <section class="tool-panel learning-hub__panel hidden" data-tool-panel="progress"></section>
+              </div>
             </div>
           </article>
           <article id="content-advanced" class="level-article hidden">
@@ -279,17 +291,23 @@
               <button type="button" class="btn-level-close btn-icon-close" data-i18n-aria="content_close_aria" aria-label="Close and return to levels">×</button>
             </div>
             <h3 data-i18n="level_advanced">Advanced</h3>
-            <div class="learning-tools" data-learning-level="advanced">
-              <div class="tool-menu">
-                <button type="button" class="tool-menu__btn is-active" data-tool="flashcards">Flashcards</button>
-                <button type="button" class="tool-menu__btn" data-tool="vocab">Vocabulary</button>
-                <button type="button" class="tool-menu__btn" data-tool="exercises">Exercises</button>
-                <button type="button" class="tool-menu__btn" data-tool="schedule">Weekly Schedule</button>
+            <div class="learning-tools learning-hub" data-learning-level="advanced">
+              <div class="learning-hub__toolbar">
+                <div class="tool-menu tool-menu--learning" role="tablist" aria-label="Learning tools">
+                  <button type="button" class="tool-menu__btn is-active learning-hub__tab" data-tool="flashcards" data-i18n="learning_tab_flashcards" aria-selected="true">Flashcards</button>
+                  <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="vocab" data-i18n="learning_tab_vocab" aria-selected="false">Vocabulary</button>
+                  <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="exercises" data-i18n="learning_tab_exercises" aria-selected="false">Exercises</button>
+                  <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="homework" data-i18n="learning_tab_homework" aria-selected="false">Homework</button>
+                  <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="progress" data-i18n="learning_tab_progress" aria-selected="false">Progress</button>
+                </div>
               </div>
-              <section class="tool-panel" data-tool-panel="flashcards"></section>
-              <section class="tool-panel hidden" data-tool-panel="vocab"></section>
-              <section class="tool-panel hidden" data-tool-panel="exercises"></section>
-              <section class="tool-panel hidden" data-tool-panel="schedule"></section>
+              <div class="learning-hub__body">
+                <section class="tool-panel learning-hub__panel" data-tool-panel="flashcards"></section>
+                <section class="tool-panel learning-hub__panel hidden" data-tool-panel="vocab"></section>
+                <section class="tool-panel learning-hub__panel hidden" data-tool-panel="exercises"></section>
+                <section class="tool-panel learning-hub__panel hidden" data-tool-panel="homework"></section>
+                <section class="tool-panel learning-hub__panel hidden" data-tool-panel="progress"></section>
+              </div>
             </div>
           </article>
         </div>
