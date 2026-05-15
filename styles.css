@@ -1740,6 +1740,16 @@ html[data-theme="dark"] .booking-sync-warning {
   line-height: 1.45;
 }
 
+.lh-lesson-intro {
+  margin: 0 0 0.65rem;
+  padding: 0.55rem 0.75rem;
+  border-left: 3px solid var(--accent, var(--ink-heading));
+  background: var(--surface-subtle, transparent);
+  color: var(--ink-body, var(--ink-heading));
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
 .lh-gap-q {
   font-size: 1.02rem;
   font-weight: 600;

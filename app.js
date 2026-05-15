@@ -322,6 +322,26 @@
           { front: "Fans", back: "Supporters" },
           { front: "Cheer", back: "Encourager" },
         ],
+        "Action verbs (daily life)": [
+          { front: "Eat", back: "Manger" },
+          { front: "Drink", back: "Boire" },
+          { front: "Sleep", back: "Dormir" },
+          { front: "Play", back: "Jouer" },
+          { front: "Watch", back: "Regarder" },
+          { front: "Listen", back: "Écouter" },
+          { front: "Read", back: "Lire" },
+          { front: "Study", back: "Étudier" },
+          { front: "Write", back: "Écrire" },
+          { front: "Speak", back: "Parler" },
+          { front: "Go (to school)", back: "Aller (à l'école)" },
+          { front: "Come (home)", back: "Rentrer (à la maison)" },
+          { front: "Work", back: "Travailler" },
+          { front: "Run", back: "Courir" },
+          { front: "Walk", back: "Marcher" },
+          { front: "Sing", back: "Chanter" },
+          { front: "Dance", back: "Danser" },
+          { front: "Cook", back: "Cuisiner" },
+        ],
       },
       vocab: [
         {
@@ -383,13 +403,33 @@
         },
         {
           topic: "Present simple vs present continuous",
+          introEn:
+            "French has one present tense; English has two. Use the Present Simple for routines and facts: \"I eat lunch at 1pm.\" Use the Present Continuous for actions happening right now: \"I'm eating lunch.\" The giveaway is am/is/are + verb-ing — that pattern always means \"now.\"",
+          introFr:
+            "En français il y a un seul présent ; en anglais il y en a deux. On utilise le Present Simple pour les routines et les faits : « I eat lunch at 1pm » (je mange à 13h, en général). On utilise le Present Continuous pour ce qui se passe maintenant : « I'm eating lunch » (je suis en train de manger). La formule am/is/are + verbe-ing veut toujours dire « maintenant ».",
           examples: [
-            "1) I usually ___ at 7. (wake up)",
-            "2) Right now she ___ English. (study)",
-            "3) We ___ football every Saturday. (play)",
+            "1) I usually ___ at 7. (wake up) -> wake up",
+            "2) Right now she ___ English. (study) -> is studying",
+            "3) We ___ football every Saturday. (play) -> play",
+            "4) Look! Marie ___ a sandwich. (eat) -> is eating",
+            "5) My dad ___ in Paris every day. (work) -> works",
+            "6) Quiet — the baby ___ now. (sleep) -> is sleeping",
+            "7) I can't talk, I ___ my homework. (do) -> am doing",
+            "8) Cats ___ milk. (drink) -> drink",
+            "9) Listen — they ___ a song. (sing) -> are singing",
+            "10) He always ___ his keys. (forget) -> forgets",
           ],
           practice:
-            "Make two columns: routine actions and actions happening now. Write 8 examples in each column.",
+            "Make two columns on a page: routine actions and actions happening now. Write 8 sentences in each. In every continuous sentence, circle the am/is/are.",
+          extension:
+            "Pick three of your routine sentences and rewrite them as if they're happening right now. Read both versions aloud — notice how your voice changes when the action shifts to the moment.",
+          homework:
+            "Write 5 sentences about today: three at Present Simple (things you do every day or every week) and two at Present Continuous (what's happening while you write).",
+          checklist: [
+            "Used am/is/are correctly in continuous forms",
+            "Spotted the trigger words (every / always / now / right now / listen / look)",
+            "Spelled -ing forms correctly (eating not eatting, writing not writting)",
+          ],
         },
         {
           topic: "There is / there are",
@@ -1399,6 +1439,18 @@
     { q: "She is sitting ___ the table.", correct: "at", topic: "Prepositions" },
     { q: "I ___ like coffee.", correct: "don't", topic: "Present simple negatives" },
     { q: "How ___ are you?", correct: "old", topic: "Question phrases" },
+    { q: "Right now Marie ___ a sandwich.", correct: "is eating", topic: "Present simple vs continuous" },
+    { q: "We ___ English every Wednesday.", correct: "have", topic: "Present simple vs continuous" },
+    { q: "I can't talk, I ___ my homework now.", correct: "am doing", topic: "Present simple vs continuous" },
+    { q: "Quiet! The baby ___.", correct: "is sleeping", topic: "Present simple vs continuous" },
+    { q: "My sister ___ chocolate.", correct: "loves", topic: "Present simple vs continuous" },
+    { q: "Listen — they ___ a song.", correct: "are singing", topic: "Present simple vs continuous" },
+    { q: "He always ___ his keys.", correct: "forgets", topic: "Present simple vs continuous" },
+    { q: "Look! She ___ a new dress.", correct: "is wearing", topic: "Present simple vs continuous" },
+    { q: "Cats ___ milk.", correct: "drink", topic: "Present simple vs continuous" },
+    { q: "Right now we ___ English.", correct: "are studying", topic: "Present simple vs continuous" },
+    { q: "She ___ to school by bus every day.", correct: "goes", topic: "Present simple vs continuous" },
+    { q: "Look at the sky — it ___.", correct: "is raining", topic: "Present simple vs continuous" },
   ];
 
   const intermediateQuizSeeds = [
@@ -3650,6 +3702,14 @@
         h.className = "lh-lesson-card__title";
         h.textContent = ex.topic;
         card.appendChild(h);
+        // Optional bilingual intro paragraph (uses introEn / introFr if present)
+        if (ex.introEn || ex.introFr) {
+          const intro = document.createElement("p");
+          intro.className = "lh-lesson-intro";
+          const lang = I18n.getLang();
+          intro.textContent = lang === "fr" && ex.introFr ? ex.introFr : ex.introEn || ex.introFr || "";
+          card.appendChild(intro);
+        }
         const details = document.createElement("details");
         details.className = "lh-details";
         details.open = true;
