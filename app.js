@@ -401,7 +401,7 @@
         { id: "hw-b-08", category: "Vocab", en: "Learn the days of the week and the months of the year in English. Write them out from memory.", fr: "Apprends les jours de la semaine et les mois de l'année en anglais, puis écris-les de mémoire." },
         { id: "hw-b-09", category: "Writing", en: "Write 5 sentences about what you do every morning. Use Present Simple.", fr: "Écris 5 phrases sur ce que tu fais tous les matins. Utilise le Present Simple." },
         { id: "hw-b-10", category: "Grammar", en: "Conjugate the verb \"to be\" in Present Simple for all six pronouns (I am, you are…). Write it out.", fr: "Conjugue le verbe « to be » au Present Simple pour les six pronoms (I am, you are…). Écris-les." },
-        { id: "hw-b-11", category: "Reading", en: "Read a short children's book or comic strip in English. Don't translate — just understand what's happening.", fr: "Lis un petit livre pour enfants ou une bande dessinée en anglais. Ne traduis pas — essaie juste de comprendre l'histoire." },
+        { id: "hw-b-11", category: "Reading", en: "Read a short children's book or comic strip in English. Don't translate. Just understand what's happening.", fr: "Lis un petit livre pour enfants ou une bande dessinée en anglais. Ne traduis pas. Essaie juste de comprendre l'histoire." },
         { id: "hw-b-12", category: "Listening", en: "Watch one Disney or Pixar clip in English with French subtitles. Write down 3 phrases you heard.", fr: "Regarde un extrait Disney ou Pixar en anglais avec les sous-titres français. Note 3 phrases que tu as entendues." },
         { id: "hw-b-13", category: "Speaking", en: "Record yourself saying 10 sentences about your family. Play it back and listen for mistakes.", fr: "Enregistre-toi en disant 10 phrases sur ta famille. Réécoute-toi et repère tes erreurs." },
         { id: "hw-b-14", category: "Writing", en: "Write 5 sentences about what you are doing right now. Use Present Continuous (am/is/are + verb-ing).", fr: "Écris 5 phrases sur ce que tu es en train de faire maintenant. Utilise le Present Continuous (am/is/are + verbe-ing)." },
@@ -441,7 +441,7 @@
         {
           topic: "Present simple vs present continuous",
           introEn:
-            "French has one present tense; English has two. Use the Present Simple for routines and facts: \"I eat lunch at 1pm.\" Use the Present Continuous for actions happening right now: \"I'm eating lunch.\" The giveaway is am/is/are + verb-ing — that pattern always means \"now.\"",
+            "French has one present tense; English has two. Use the Present Simple for routines and facts: \"I eat lunch at 1pm.\" Use the Present Continuous for actions happening right now: \"I'm eating lunch.\" The giveaway is am/is/are + verb-ing. That pattern always means \"now.\"",
           introFr:
             "En français il y a un seul présent ; en anglais il y en a deux. On utilise le Present Simple pour les routines et les faits : « I eat lunch at 1pm » (je mange à 13h, en général). On utilise le Present Continuous pour ce qui se passe maintenant : « I'm eating lunch » (je suis en train de manger). La formule am/is/are + verbe-ing veut toujours dire « maintenant ».",
           examples: [
@@ -450,16 +450,16 @@
             "3) We ___ football every Saturday. (play) -> play",
             "4) Look! Marie ___ a sandwich. (eat) -> is eating",
             "5) My dad ___ in Paris every day. (work) -> works",
-            "6) Quiet — the baby ___ now. (sleep) -> is sleeping",
+            "6) Quiet, the baby ___ now. (sleep) -> is sleeping",
             "7) I can't talk, I ___ my homework. (do) -> am doing",
             "8) Cats ___ milk. (drink) -> drink",
-            "9) Listen — they ___ a song. (sing) -> are singing",
+            "9) Listen, they ___ a song. (sing) -> are singing",
             "10) He always ___ his keys. (forget) -> forgets",
           ],
           practice:
             "Make two columns on a page: routine actions and actions happening now. Write 8 sentences in each. In every continuous sentence, circle the am/is/are.",
           extension:
-            "Pick three of your routine sentences and rewrite them as if they're happening right now. Read both versions aloud — notice how your voice changes when the action shifts to the moment.",
+            "Pick three of your routine sentences and rewrite them as if they're happening right now. Read both versions aloud and notice how your voice changes when the action shifts to the moment.",
           homework:
             "Write 5 sentences about today: three at Present Simple (things you do every day or every week) and two at Present Continuous (what's happening while you write).",
           checklist: [
@@ -1518,13 +1518,13 @@
     { q: "I can't talk, I ___ my homework now.", correct: "am doing", topic: "Present simple vs continuous" },
     { q: "Quiet! The baby ___.", correct: "is sleeping", topic: "Present simple vs continuous" },
     { q: "My sister ___ chocolate.", correct: "loves", topic: "Present simple vs continuous" },
-    { q: "Listen — they ___ a song.", correct: "are singing", topic: "Present simple vs continuous" },
+    { q: "Listen, they ___ a song.", correct: "are singing", topic: "Present simple vs continuous" },
     { q: "He always ___ his keys.", correct: "forgets", topic: "Present simple vs continuous" },
     { q: "Look! She ___ a new dress.", correct: "is wearing", topic: "Present simple vs continuous" },
     { q: "Cats ___ milk.", correct: "drink", topic: "Present simple vs continuous" },
     { q: "Right now we ___ English.", correct: "are studying", topic: "Present simple vs continuous" },
     { q: "She ___ to school by bus every day.", correct: "goes", topic: "Present simple vs continuous" },
-    { q: "Look at the sky — it ___.", correct: "is raining", topic: "Present simple vs continuous" },
+    { q: "Look at the sky, it ___.", correct: "is raining", topic: "Present simple vs continuous" },
   ];
 
   const intermediateQuizSeeds = [
@@ -1867,6 +1867,7 @@
     if (!stats.learningHub) {
       stats.learningHub = {
         xp: 0,
+        xpByLevel: {},
         streak: 0,
         lastActiveDay: "",
         vocabTopic: {},
@@ -1877,6 +1878,7 @@
       };
     }
     const lh = stats.learningHub;
+    if (!lh.xpByLevel) lh.xpByLevel = {};
     if (!lh.vocabTopic) lh.vocabTopic = {};
     if (!lh.savedWords) lh.savedWords = [];
     if (!lh.homeworkTasks) lh.homeworkTasks = {};
@@ -1889,6 +1891,8 @@
     return d.toISOString().slice(0, 10);
   }
 
+  let _activeLevelForXp = null;
+
   function bumpLearningActivity(xpDelta) {
     const user = getActiveUser();
     if (!user) return;
@@ -1897,6 +1901,10 @@
     const today = isoDay(new Date());
     if (typeof xpDelta === "number" && xpDelta > 0) {
       lh.xp = (lh.xp || 0) + xpDelta;
+      if (_activeLevelForXp) {
+        if (!lh.xpByLevel) lh.xpByLevel = {};
+        lh.xpByLevel[_activeLevelForXp] = (lh.xpByLevel[_activeLevelForXp] || 0) + xpDelta;
+      }
     }
     if (lh.lastActiveDay !== today) {
       const y = new Date();
@@ -2623,6 +2631,56 @@
     contentPasswordError.classList.add("hidden");
     document.querySelectorAll(".level-article").forEach((el) => el.classList.add("hidden"));
     document.querySelectorAll(".btn-level").forEach((b) => b.classList.remove("is-active"));
+
+    const XP_GOAL = 1000;
+    const LEVEL_ORDER = ["beginner", "intermediate", "advanced"];
+
+    function getLevelXp(level) {
+      const user = getActiveUser();
+      if (!user) return 0;
+      const lh = ensureLearningHub(ensureStats(user));
+      return Number(lh.xpByLevel && lh.xpByLevel[level]) || 0;
+    }
+
+    function isLevelUnlocked(level) {
+      if (level === "beginner") return true;
+      const idx = LEVEL_ORDER.indexOf(level);
+      if (idx <= 0) return true;
+      const prevLevel = LEVEL_ORDER[idx - 1];
+      return getLevelXp(prevLevel) >= XP_GOAL;
+    }
+
+    document.querySelectorAll(".btn-level").forEach((btn) => {
+      const level = btn.getAttribute("data-level");
+      if (!level) return;
+
+      const existing = btn.querySelector(".btn-level__xp");
+      if (existing) existing.remove();
+
+      const unlocked = isLevelUnlocked(level);
+      const displayXp = unlocked ? getLevelXp(level) : getLevelXp(LEVEL_ORDER[Math.max(0, LEVEL_ORDER.indexOf(level) - 1)]);
+      const pct = Math.max(0, Math.min(100, Math.round((displayXp / XP_GOAL) * 100)));
+
+      const wrap = document.createElement("span");
+      wrap.className = "btn-level__xp";
+
+      const label = document.createElement("span");
+      label.className = "btn-level__xp-label";
+      label.textContent = unlocked
+        ? String(Math.min(XP_GOAL, displayXp)) + " / " + String(XP_GOAL) + " XP"
+        : "🔒 Reach 1000 XP in previous level";
+
+      const track = document.createElement("span");
+      track.className = "btn-level__xp-track";
+      const fill = document.createElement("span");
+      fill.className = "btn-level__xp-fill";
+      fill.style.width = String(pct) + "%";
+      track.appendChild(fill);
+
+      wrap.appendChild(label);
+      wrap.appendChild(track);
+      btn.appendChild(wrap);
+    });
   }
 
   function showHome() {
@@ -3104,6 +3162,7 @@
 
   function initLearningHubForRoot(root) {
       const level = root.getAttribute("data-learning-level");
+      _activeLevelForXp = level;
       const data = learningData[level];
       if (!data) return;
       const menuButtons = root.querySelectorAll(".tool-menu__btn[data-tool]");
@@ -3180,10 +3239,7 @@
         statCard(I18n.t("learning_progress_streak"), String(lh.streak || 0));
         const fa = stats.flashcards.attempts || 0;
         const fc = stats.flashcards.correct || 0;
-        statCard(
-          I18n.t("learning_progress_flash_accuracy"),
-          fa ? String(Math.round((fc / fa) * 100)) + "%" : "—"
-        );
+        statCard(I18n.t("learning_progress_flash_accuracy"), fa ? String(Math.round((fc / fa) * 100)) + "%" : "N/A");
         statCard(I18n.t("learning_progress_quiz_sessions"), String(stats.quizSessions || 0));
         statCard(I18n.t("learning_progress_exercises_done"), String((stats.completedExercises || []).length));
         wrap.appendChild(grid);
@@ -3958,7 +4014,7 @@
               opts.push(o);
             }
           }
-          const pad = ["…", "—", "?"];
+          const pad = ["…", "-", "?"];
           let pi = 0;
           while (opts.length < 4 && pi < pad.length) {
             if (!seenAns[pad[pi]]) {

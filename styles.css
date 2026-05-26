@@ -3190,3 +3190,39 @@ html[data-theme="dark"] .flashcard-btn--got-it:hover {
 .site-footer p {
   margin: 0;
 }
+
+.btn-level {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.45rem;
+}
+
+.btn-level__xp {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.btn-level__xp-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.btn-level__xp-track {
+  width: 100%;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.btn-level__xp-fill {
+  display: block;
+  height: 100%;
+  width: 0%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+  transition: width 0.35s ease;
+}
