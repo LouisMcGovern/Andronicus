@@ -3992,13 +3992,13 @@
       if (topicsPanel) {
       topicsPanel.innerHTML = "";
       const topicsFlow = document.createElement("div");
-      topicsFlow.className = "lh-slide-flow lh-topics-flow";
+      topicsFlow.className = "lh-topics-flow";
       const topicsStageGrid = document.createElement("div");
-      topicsStageGrid.className = "lh-slide-stage lh-slide-stage--grid";
+      topicsStageGrid.className = "lh-topics-grid-wrap";
       const topicsTopicGrid = document.createElement("div");
       topicsTopicGrid.className = "lh-topic-grid";
       const topicsStageLesson = document.createElement("div");
-      topicsStageLesson.className = "lh-slide-stage lh-slide-stage--lesson lh-lesson-view";
+      topicsStageLesson.className = "lh-topics-lesson-panel lh-lesson-view";
       topicsFlow.appendChild(topicsStageGrid);
       topicsFlow.appendChild(topicsStageLesson);
       topicsStageGrid.appendChild(topicsTopicGrid);
@@ -4007,11 +4007,16 @@
       let topicsLessonOpen = false;
       let activeTopicIdx = -1;
 
+      function syncTopicsView() {
+        topicsStageGrid.classList.toggle("lh-topics-grid-wrap--hidden", topicsLessonOpen);
+        topicsStageLesson.classList.toggle("lh-topics-lesson-panel--visible", topicsLessonOpen);
+      }
+
       function closeTopicsLesson() {
         topicsLessonOpen = false;
         activeTopicIdx = -1;
-        topicsFlow.classList.remove("is-lesson-open");
         topicsStageLesson.innerHTML = "";
+        syncTopicsView();
       }
 
       function renderTopicsGrid() {
@@ -4037,7 +4042,7 @@
           card.addEventListener("click", function () {
             activeTopicIdx = mi;
             topicsLessonOpen = true;
-            topicsFlow.classList.add("is-lesson-open");
+            syncTopicsView();
             renderTopicsLesson(mi);
           });
           topicsTopicGrid.appendChild(card);
@@ -4174,8 +4179,10 @@
       refreshTopicsPanel = function () {
         if (topicsLessonOpen && activeTopicIdx >= 0) renderTopicsLesson(activeTopicIdx);
         else renderTopicsGrid();
+        syncTopicsView();
       };
       renderTopicsGrid();
+      syncTopicsView();
       }
 
       exercisesPanel.innerHTML = "";

@@ -3227,7 +3227,47 @@ html[data-theme="dark"] .flashcard-btn--got-it:hover {
   transition: width 0.35s ease;
 }
 
-/* Topic grid, lesson views, slide transitions */
+/* Topic grid and lesson views (Topics tab: in-flow show/hide) */
+.lh-topics-flow {
+  display: block;
+  min-height: 12rem;
+}
+
+.lh-topics-grid-wrap {
+  display: block;
+}
+
+.lh-topics-grid-wrap--hidden {
+  display: none;
+}
+
+.lh-topics-lesson-panel {
+  display: none;
+  flex-direction: column;
+  gap: 0.85rem;
+  width: 100%;
+  padding: 0.85rem 1rem 1.25rem;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-sizing: border-box;
+}
+
+.lh-topics-lesson-panel--visible {
+  display: flex;
+}
+
+.lh-topics-lesson-panel .lh-lesson-view__back {
+  position: static;
+  z-index: auto;
+  align-self: flex-start;
+  margin: 0 0 0.25rem;
+  padding: 0.35rem 0;
+  background: transparent;
+  backdrop-filter: none;
+}
+
+/* Exercises tab: slide transitions (overlay-style) */
 .lh-slide-flow {
   position: relative;
   overflow: hidden;
@@ -3314,8 +3354,13 @@ html[data-theme="dark"] .flashcard-btn--got-it:hover {
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
-  padding: 0.15rem 0.1rem 1.25rem;
+  padding: 0;
+  max-height: none;
+}
+
+.lh-topics-lesson-panel.lh-lesson-view {
   max-height: min(72vh, 42rem);
+  overflow-y: auto;
 }
 
 .lh-lesson-view__back {
