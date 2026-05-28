@@ -1894,39 +1894,50 @@
   const LEVEL_XP_ORDER = ["beginner", "intermediate", "advanced"];
   const LEVEL_XP_GOAL = 1000;
 
-  function xpByLevelHasStored(lh) {
-    if (!lh || !lh.xpByLevel) return false;
-    return LEVEL_XP_ORDER.some(function (lv) {
-      return (Number(lh.xpByLevel[lv]) || 0) > 0;
-    });
+  function getLevelXp(lh, lvl) {
+    if (!lh || !lvl) return 0;
+    return Number(lh.xpByLevel && lh.xpByLevel[lvl]) || 0;
   }
 
-  function getDisplayLevelXp(lh, lvl) {
-    if (!lh) return 0;
-    if (xpByLevelHasStored(lh)) {
-      return Math.min(LEVEL_XP_GOAL, Number(lh.xpByLevel[lvl]) || 0);
+  function setXpElementAnimated(el, target) {
+    if (!el) return;
+    const next = Math.max(0, Number(target) || 0);
+    const prev = parseInt(el.getAttribute("data-xp-val") || el.textContent, 10) || 0;
+    el.setAttribute("data-xp-val", String(next));
+    el.textContent = String(next);
+    if (prev !== next) {
+      el.classList.remove("lh-xp-tick");
+      void el.offsetWidth;
+      el.classList.add("lh-xp-tick");
     }
-    const total = Number(lh.xp) || 0;
-    const idx = LEVEL_XP_ORDER.indexOf(lvl);
-    if (idx < 0) return 0;
-    const per = Math.floor(total / LEVEL_XP_ORDER.length);
-    const rem = total - per * LEVEL_XP_ORDER.length;
-    return Math.min(LEVEL_XP_GOAL, per + (idx === 0 ? rem : 0));
+  }
+
+  function resetHubToLanding(hub) {
+    if (!hub) return;
+    const landing = hub.querySelector("[data-level-landing]");
+    const workspace = hub.querySelector("[data-hub-workspace]");
+    if (landing) landing.classList.remove("hidden");
+    if (workspace) workspace.classList.add("hidden");
+  }
+
+  function resetAllLearningHubsToLanding() {
+    document.querySelectorAll(".learning-hub").forEach(resetHubToLanding);
   }
 
   let _activeLevelForXp = null;
 
-  function bumpLearningActivity(xpDelta) {
+  function bumpLearningActivity(xpDelta, levelKey) {
     const user = getActiveUser();
     if (!user) return;
     const stats = ensureStats(user);
     const lh = ensureLearningHub(stats);
+    const lvl = levelKey || _activeLevelForXp;
     const today = isoDay(new Date());
     if (typeof xpDelta === "number" && xpDelta > 0) {
       lh.xp = (lh.xp || 0) + xpDelta;
-      if (_activeLevelForXp) {
+      if (lvl) {
         if (!lh.xpByLevel) lh.xpByLevel = {};
-        lh.xpByLevel[_activeLevelForXp] = (lh.xpByLevel[_activeLevelForXp] || 0) + xpDelta;
+        lh.xpByLevel[lvl] = (lh.xpByLevel[lvl] || 0) + xpDelta;
       }
     }
     if (lh.lastActiveDay !== today) {
@@ -1939,6 +1950,13 @@
     }
     lh.activityByDay[today] = (lh.activityByDay[today] || 0) + 1;
     saveUsers();
+    if (typeof window !== "undefined" && lvl) {
+      window.dispatchEvent(
+        new CustomEvent("andronicus:xpchange", {
+          detail: { level: lvl, delta: xpDelta },
+        })
+      );
+    }
   }
 
   function vocabMasteryLabel(correct, wrong) {
@@ -1992,7 +2010,7 @@
       stats.flashcardSessions = stats.flashcardSessions.slice(-48);
     }
     const bonus = Math.min(18, 6 + Math.max(0, Number(payload.correct) || 0));
-    bumpLearningActivity(bonus);
+    bumpLearningActivity(bonus, payload.level);
     saveUsers();
   }
 
@@ -2572,7 +2590,7 @@
     const key = level + " - " + topic;
     if (stats.completedExercises.includes(key)) return { ok: false, reason: "exists" };
     stats.completedExercises.push(key);
-    bumpLearningActivity(22);
+    bumpLearningActivity(22, level);
     saveUsers();
     renderAccountPanel();
     return { ok: true };
@@ -2592,7 +2610,7 @@
       stats.flashcardsByDeck[dk].attempts += 1;
       if (wasCorrect) stats.flashcardsByDeck[dk].correct += 1;
     }
-    bumpLearningActivity(wasCorrect ? 4 : 1);
+    bumpLearningActivity(wasCorrect ? 4 : 1, meta && meta.level ? meta.level : null);
     saveUsers();
   }
 
@@ -2615,7 +2633,7 @@
     if (stats.quizSessionLog.length > 48) {
       stats.quizSessionLog = stats.quizSessionLog.slice(-48);
     }
-    bumpLearningActivity(Math.min(20, 8 + Math.round(pct / 5)));
+    bumpLearningActivity(Math.min(20, 8 + Math.round(pct / 5)), level);
     saveUsers();
     renderAccountPanel();
   }
@@ -2664,7 +2682,7 @@
 
       const user = getActiveUser();
       const lh = user ? ensureLearningHub(ensureStats(user)) : null;
-      const displayXp = getDisplayLevelXp(lh, lvl);
+      const displayXp = getLevelXp(lh, lvl);
       const pct = Math.max(0, Math.min(100, Math.round((displayXp / LEVEL_XP_GOAL) * 100)));
 
       const wrap = document.createElement("span");
@@ -2685,6 +2703,7 @@
       wrap.appendChild(track);
       btn.appendChild(wrap);
     });
+    resetAllLearningHubsToLanding();
   }
 
   function showHome() {
@@ -2953,7 +2972,10 @@
       const btn = document.querySelector('.btn-level[data-level="' + pendingLevel + '"]');
       if (btn) btn.classList.add("is-active");
       const article = document.getElementById("content-" + pendingLevel);
-      if (article) article.classList.remove("hidden");
+      if (article) {
+        article.classList.remove("hidden");
+        resetHubToLanding(article.querySelector(".learning-hub"));
+      }
       pendingLevel = null;
     } else {
       contentPasswordError.classList.remove("hidden");
@@ -3174,30 +3196,64 @@
         return level + "|hw|" + topic;
       }
 
-      const menuButtons = root.querySelectorAll(".tool-menu__btn[data-tool]");
+      function bumpXp(delta) {
+        bumpLearningActivity(delta, level);
+      }
+
+      const levelLanding = root.querySelector("[data-level-landing]");
+      const hubWorkspace = root.querySelector("[data-hub-workspace]");
+      const hubHomeBtn = root.querySelector("[data-hub-home]");
+      const toolButtons = root.querySelectorAll(".tool-menu__btn[data-tool]");
       const panels = root.querySelectorAll(".tool-panel");
       const flashcardsPanel = root.querySelector('[data-tool-panel="flashcards"]');
       const vocabPanel = root.querySelector('[data-tool-panel="vocab"]');
-      const topicsPanel = root.querySelector('[data-tool-panel="topics"]');
-      const exercisesPanel = root.querySelector('[data-tool-panel="exercises"]');
+      const grammarPanel = root.querySelector('[data-tool-panel="grammar"]');
       const homeworkPanel = root.querySelector('[data-tool-panel="homework"]');
       const progressPanel = root.querySelector('[data-tool-panel="progress"]');
 
       function activateTab(name) {
-        menuButtons.forEach(function (b) {
+        _activeLevelForXp = level;
+        toolButtons.forEach(function (b) {
           const on = b.getAttribute("data-tool") === name;
           b.classList.toggle("is-active", on);
-          b.setAttribute("aria-selected", on ? "true" : "false");
+          if (b.classList.contains("learning-hub__tab")) {
+            b.setAttribute("aria-selected", on ? "true" : "false");
+          }
         });
         panels.forEach(function (panel) {
           panel.classList.toggle("hidden", panel.getAttribute("data-tool-panel") !== name);
         });
         if (name === "progress") renderProgressPanel();
+        refreshGamificationHeader();
       }
-      menuButtons.forEach(function (btn) {
+
+      function enterWorkspace(tabName) {
+        _activeLevelForXp = level;
+        if (levelLanding) levelLanding.classList.add("hidden");
+        if (hubWorkspace) hubWorkspace.classList.remove("hidden");
+        activateTab(tabName || "flashcards");
+      }
+
+      toolButtons.forEach(function (btn) {
         btn.addEventListener("click", function () {
-          activateTab(btn.getAttribute("data-tool"));
+          const tool = btn.getAttribute("data-tool");
+          if (!tool) return;
+          if (levelLanding && !levelLanding.classList.contains("hidden")) {
+            enterWorkspace(tool);
+          } else {
+            activateTab(tool);
+          }
         });
+      });
+
+      if (hubHomeBtn) {
+        hubHomeBtn.addEventListener("click", function () {
+          resetHubToLanding(root);
+        });
+      }
+
+      window.addEventListener("andronicus:xpchange", function (ev) {
+        if (ev.detail && ev.detail.level === level) refreshGamificationHeader();
       });
 
       function refreshGamificationHeader() {
@@ -3206,12 +3262,12 @@
         const stEl = root.querySelector(".lh-vocab__streak-val");
         if (!xpEl || !stEl) return;
         if (!user) {
-          xpEl.textContent = "0";
+          setXpElementAnimated(xpEl, 0);
           stEl.textContent = "0";
           return;
         }
         const lh = ensureLearningHub(ensureStats(user));
-        xpEl.textContent = String(getDisplayLevelXp(lh, level));
+        setXpElementAnimated(xpEl, getLevelXp(lh, level));
         stEl.textContent = String(lh.streak || 0);
       }
 
@@ -3245,7 +3301,7 @@
           c.appendChild(v);
           grid.appendChild(c);
         }
-        statCard(I18n.t("learning_progress_xp"), String(getDisplayLevelXp(lh, level)));
+        statCard(I18n.t("learning_progress_xp"), String(getLevelXp(lh, level)));
         statCard(I18n.t("learning_progress_streak"), String(lh.streak || 0));
         const fa = stats.flashcards.attempts || 0;
         const fc = stats.flashcards.correct || 0;
@@ -3292,19 +3348,6 @@
         }
         wrap.appendChild(chart);
 
-        const planTitle = document.createElement("h4");
-        planTitle.className = "lh-subheading";
-        planTitle.textContent = I18n.t("learning_progress_plan");
-        wrap.appendChild(planTitle);
-        const planList = document.createElement("ul");
-        planList.className = "resource-list lh-plan-list";
-        (data.schedule || []).forEach(function (week) {
-          const li = document.createElement("li");
-          li.textContent = week;
-          planList.appendChild(li);
-        });
-        wrap.appendChild(planList);
-
         const badgeTitle = document.createElement("h4");
         badgeTitle.className = "lh-subheading";
         badgeTitle.textContent = I18n.t("learning_progress_badges");
@@ -3314,7 +3357,7 @@
         const b1 = document.createElement("span");
         b1.className = "lh-badge";
         b1.textContent =
-          ((lh.xp || 0) >= 50 ? "★ " : "○ ") + I18n.t("learning_progress_badge_xp50");
+          (getLevelXp(lh, level) >= 50 ? "★ " : "○ ") + I18n.t("learning_progress_badge_xp50");
         const b2 = document.createElement("span");
         b2.className = "lh-badge";
         b2.textContent =
@@ -3382,7 +3425,7 @@
               if (cb.checked) hub.homeworkChecklist[level][item.id] = true;
               else delete hub.homeworkChecklist[level][item.id];
               saveUsers();
-              bumpLearningActivity(cb.checked ? 3 : 0);
+              bumpXp(cb.checked ? 3 : 0);
               renderHomeworkPanel();
             });
             const tag = document.createElement("span");
@@ -3467,7 +3510,7 @@
               prev[ti] = cb.checked;
               hub.homeworkTasks[key] = prev.slice(0, mission.tasks.length);
               saveUsers();
-              bumpLearningActivity(cb.checked ? 2 : 0);
+              bumpXp(cb.checked ? 2 : 0);
               renderHomeworkPanel();
             });
             const span = document.createElement("span");
@@ -3487,7 +3530,7 @@
           markBtn.disabled = !user;
           markBtn.addEventListener("click", function () {
             const res = recordExerciseCompletion(level, "Vocab: " + topic);
-            if (res.ok) bumpLearningActivity(18);
+            if (res.ok) bumpXp(18);
             renderHomeworkPanel();
           });
           foot.appendChild(markBtn);
@@ -3785,7 +3828,7 @@
                 score: String(quizScore),
                 round: String(askedCount),
               });
-              bumpLearningActivity(5);
+              bumpXp(5);
             } else {
               btn.classList.add("is-wrong");
               wrongByTopic[currentQuestion.topic] = (wrongByTopic[currentQuestion.topic] || 0) + 1;
@@ -3794,7 +3837,7 @@
                 score: String(quizScore),
                 round: String(askedCount),
               });
-              bumpLearningActivity(1);
+              bumpXp(1);
               const user = getActiveUser();
               if (user) {
                 const lh = ensureLearningHub(ensureStats(user));
@@ -3955,237 +3998,7 @@
         return wrap;
       }
 
-      function topicWords(s) {
-        return String(s || "")
-          .toLowerCase()
-          .replace(/[^a-z0-9\s]/g, " ")
-          .split(/\s+/)
-          .filter(function (w) {
-            return w.length > 3;
-          });
-      }
-
-      function deckMatchesTopic(deckName, topicName) {
-        const d = deckName.toLowerCase();
-        const t = topicName.toLowerCase();
-        if (d.indexOf(t) >= 0 || t.indexOf(d) >= 0) return true;
-        const words = topicWords(topicName);
-        return words.some(function (w) {
-          return d.indexOf(w) >= 0;
-        });
-      }
-
-      function flashcardsForVocabTopic(topicName) {
-        const out = [];
-        const decks = data.flashcards || {};
-        Object.keys(decks).forEach(function (deckName) {
-          if (!deckMatchesTopic(deckName, topicName)) return;
-          (decks[deckName] || []).slice(0, 12).forEach(function (card) {
-            out.push({ deck: deckName, card: card });
-          });
-        });
-        return out.slice(0, 24);
-      }
-
-      let refreshTopicsPanel = function () {};
-
-      if (topicsPanel) {
-      topicsPanel.innerHTML = "";
-      const topicsFlow = document.createElement("div");
-      topicsFlow.className = "lh-topics-flow";
-      const topicsStageGrid = document.createElement("div");
-      topicsStageGrid.className = "lh-topics-grid-wrap";
-      const topicsTopicGrid = document.createElement("div");
-      topicsTopicGrid.className = "lh-topic-grid";
-      const topicsStageLesson = document.createElement("div");
-      topicsStageLesson.className = "lh-topics-lesson-panel lh-lesson-view";
-      topicsFlow.appendChild(topicsStageGrid);
-      topicsFlow.appendChild(topicsStageLesson);
-      topicsStageGrid.appendChild(topicsTopicGrid);
-      topicsPanel.appendChild(topicsFlow);
-
-      let topicsLessonOpen = false;
-      let activeTopicIdx = -1;
-
-      function syncTopicsView() {
-        topicsStageGrid.classList.toggle("lh-topics-grid-wrap--hidden", topicsLessonOpen);
-        topicsStageLesson.classList.toggle("lh-topics-lesson-panel--visible", topicsLessonOpen);
-      }
-
-      function closeTopicsLesson() {
-        topicsLessonOpen = false;
-        activeTopicIdx = -1;
-        topicsStageLesson.innerHTML = "";
-        syncTopicsView();
-      }
-
-      function renderTopicsGrid() {
-        topicsTopicGrid.innerHTML = "";
-        (data.vocab || []).forEach(function (mission, mi) {
-          const card = document.createElement("button");
-          card.type = "button";
-          card.className = "lh-topic-card";
-          const h = document.createElement("span");
-          h.className = "lh-topic-card__title";
-          h.textContent = mission.topic;
-          const focus = document.createElement("span");
-          focus.className = "lh-topic-card__focus";
-          focus.textContent = mission.focus || "";
-          const meta = document.createElement("span");
-          meta.className = "lh-topic-card__meta";
-          meta.textContent = I18n.t("learning_homework_tasks_count", {
-            n: String((mission.tasks || []).length),
-          });
-          card.appendChild(h);
-          card.appendChild(focus);
-          card.appendChild(meta);
-          card.addEventListener("click", function () {
-            activeTopicIdx = mi;
-            topicsLessonOpen = true;
-            syncTopicsView();
-            renderTopicsLesson(mi);
-          });
-          topicsTopicGrid.appendChild(card);
-        });
-      }
-
-      function renderTopicsLesson(mi) {
-        const mission = data.vocab && data.vocab[mi];
-        if (!mission) return;
-        topicsStageLesson.innerHTML = "";
-
-        const backBtn = document.createElement("button");
-        backBtn.type = "button";
-        backBtn.className = "btn-text lh-lesson-view__back";
-        backBtn.setAttribute("data-learning-chrome", "learning_topics_back");
-        backBtn.textContent = I18n.t("learning_topics_back");
-        backBtn.addEventListener("click", closeTopicsLesson);
-
-        const head = document.createElement("h3");
-        head.className = "lh-lesson-view__title";
-        head.textContent = mission.topic;
-
-        const introSec = document.createElement("section");
-        introSec.className = "lh-lesson-block";
-        const introH = document.createElement("h4");
-        introH.className = "lh-lesson-block__title";
-        introH.setAttribute("data-learning-chrome", "learning_topics_what_learn");
-        introH.textContent = I18n.t("learning_topics_what_learn");
-        const introCols = document.createElement("div");
-        introCols.className = "lh-bilingual";
-        const introEn = document.createElement("div");
-        introEn.className = "lh-bilingual__col";
-        introEn.innerHTML = "<strong>EN</strong><p>" + (mission.focus || "") + "</p>";
-        const introFr = document.createElement("div");
-        introFr.className = "lh-bilingual__col";
-        introFr.innerHTML =
-          "<strong>FR</strong><p>" + (mission.focusFr || mission.focus || "") + "</p>";
-        introCols.appendChild(introEn);
-        introCols.appendChild(introFr);
-        introSec.appendChild(introH);
-        introSec.appendChild(introCols);
-
-        const contentSec = document.createElement("section");
-        contentSec.className = "lh-lesson-block lh-lesson-block--scroll";
-        const contentH = document.createElement("h4");
-        contentH.className = "lh-lesson-block__title";
-        contentH.setAttribute("data-learning-chrome", "learning_topics_content");
-        contentH.textContent = I18n.t("learning_topics_content");
-        contentSec.appendChild(contentH);
-        const contentBody = document.createElement("div");
-        contentBody.className = "lh-lesson-block__body";
-        const focusP = document.createElement("p");
-        focusP.textContent = mission.focus || "";
-        contentBody.appendChild(focusP);
-        const fc = flashcardsForVocabTopic(mission.topic);
-        if (fc.length) {
-          const vocabH = document.createElement("h5");
-          vocabH.className = "lh-lesson-subhead";
-          vocabH.textContent = I18n.t("learning_topics_key_vocab");
-          contentBody.appendChild(vocabH);
-          const vocabList = document.createElement("ul");
-          vocabList.className = "resource-list lh-tight-list";
-          fc.forEach(function (row) {
-            const li = document.createElement("li");
-            li.textContent = row.card.front + " · " + row.card.back;
-            vocabList.appendChild(li);
-          });
-          contentBody.appendChild(vocabList);
-        } else {
-          const empty = document.createElement("p");
-          empty.className = "lh-muted";
-          empty.textContent = I18n.t("learning_topics_no_vocab");
-          contentBody.appendChild(empty);
-        }
-        contentSec.appendChild(contentBody);
-
-        const tasksSec = document.createElement("section");
-        tasksSec.className = "lh-lesson-block";
-        const tasksH = document.createElement("h4");
-        tasksH.className = "lh-lesson-block__title";
-        tasksH.setAttribute("data-learning-chrome", "learning_topics_tasks");
-        tasksH.textContent = I18n.t("learning_topics_tasks");
-        tasksSec.appendChild(tasksH);
-        const taskList = document.createElement("ul");
-        taskList.className = "lh-hw-tasks";
-        const user = getActiveUser();
-        const stats = user ? ensureStats(user) : null;
-        const lh = user ? ensureLearningHub(stats) : null;
-        const taskArr =
-          lh && lh.homeworkTasks && lh.homeworkTasks[homeworkKey(mission.topic)]
-            ? lh.homeworkTasks[homeworkKey(mission.topic)].slice()
-            : Array((mission.tasks || []).length).fill(false);
-        (mission.tasks || []).forEach(function (task, ti) {
-          const li = document.createElement("li");
-          const lab = document.createElement("label");
-          lab.className = "lh-hw-task";
-          const cb = document.createElement("input");
-          cb.type = "checkbox";
-          cb.checked = !!taskArr[ti];
-          cb.disabled = !user;
-          cb.addEventListener("change", function () {
-            if (!user) return;
-            const st = ensureStats(user);
-            const hub = ensureLearningHub(st);
-            const key = homeworkKey(mission.topic);
-            const prev = Array.isArray(hub.homeworkTasks[key])
-              ? hub.homeworkTasks[key].slice()
-              : Array(mission.tasks.length).fill(false);
-            while (prev.length < mission.tasks.length) prev.push(false);
-            const was = !!prev[ti];
-            prev[ti] = cb.checked;
-            hub.homeworkTasks[key] = prev.slice(0, mission.tasks.length);
-            saveUsers();
-            if (cb.checked && !was) bumpLearningActivity(6);
-            refreshGamificationHeader();
-            showLevelPicker();
-          });
-          const span = document.createElement("span");
-          span.textContent = task;
-          lab.appendChild(cb);
-          lab.appendChild(span);
-          li.appendChild(lab);
-          taskList.appendChild(li);
-        });
-        tasksSec.appendChild(taskList);
-
-        topicsStageLesson.appendChild(backBtn);
-        topicsStageLesson.appendChild(head);
-        topicsStageLesson.appendChild(introSec);
-        topicsStageLesson.appendChild(contentSec);
-        topicsStageLesson.appendChild(tasksSec);
-      }
-
-      refreshTopicsPanel = function () {
-        if (topicsLessonOpen && activeTopicIdx >= 0) renderTopicsLesson(activeTopicIdx);
-        else renderTopicsGrid();
-        syncTopicsView();
-      };
-      renderTopicsGrid();
-      syncTopicsView();
-      }
-
-      exercisesPanel.innerHTML = "";
+      grammarPanel.innerHTML = "";
       const exFlow = document.createElement("div");
       exFlow.className = "lh-slide-flow lh-ex-flow";
       const exStageList = document.createElement("div");
@@ -4197,7 +4010,7 @@
       exFlow.appendChild(exStageList);
       exFlow.appendChild(exStageLesson);
       exStageList.appendChild(exTopicGrid);
-      exercisesPanel.appendChild(exFlow);
+      grammarPanel.appendChild(exFlow);
 
       let exLessonOpen = false;
       let activeExIdx = -1;
@@ -4302,17 +4115,16 @@
               score: String(exGapScore),
             });
             examplesPlay.appendChild(done);
-            bumpLearningActivity(4 + exGapScore * 2);
+            bumpXp(4 + exGapScore * 2);
             refreshGamificationHeader();
-            showLevelPicker();
             return;
           }
           const item = exGapPool[exGapStep];
           const card = buildGapMcRow(item, exGapPool, exGapStep, function (ok) {
             if (ok) {
               exGapScore += 1;
-              bumpLearningActivity(4);
-            } else bumpLearningActivity(1);
+              bumpXp(4);
+            } else bumpXp(1);
             setTimeout(function () {
               exGapStep += 1;
               renderExampleStep();
@@ -4344,9 +4156,8 @@
         const practiceMsg = document.createElement("p");
         practiceMsg.className = "exercise-complete-msg hidden";
         selfMarkBtn.addEventListener("click", function () {
-          bumpLearningActivity(12);
+          bumpXp(12);
           refreshGamificationHeader();
-          showLevelPicker();
           const res = recordExerciseCompletion(level, ex.topic);
           if (res.ok) practiceMsg.textContent = I18n.t("learning_exercise_saved_ok");
           else if (res.reason === "auth") practiceMsg.textContent = I18n.t("learning_exercise_saved_auth");
@@ -4766,6 +4577,11 @@
           const key = el.getAttribute("data-learning-chrome");
           if (key) el.textContent = I18n.t(key);
         });
+        if (hubHomeBtn) hubHomeBtn.textContent = I18n.t("learning_hub_home");
+        const landingDesc = root.querySelector(".lh-level-landing__desc");
+        if (landingDesc) landingDesc.textContent = I18n.t("learning_level_desc_" + level);
+        const landingTitle = root.querySelector(".lh-level-landing__title");
+        if (landingTitle) landingTitle.textContent = I18n.t("level_" + level);
         label.textContent = I18n.t("flashcard_deck_label");
         orderLabel.textContent = I18n.t("flashcard_order_label");
         orderSelect.setAttribute("aria-label", I18n.t("flashcard_order_label"));
@@ -4816,11 +4632,9 @@
           }
         }
         refreshExercisesPanel();
-        refreshTopicsPanel();
         renderHomeworkPanel();
         renderProgressPanel();
         refreshGamificationHeader();
-        showLevelPicker();
         renderCard();
       });
   }

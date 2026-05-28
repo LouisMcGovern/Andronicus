@@ -306,9 +306,15 @@
       flashcard_deck_card_count_one: "1 card in this deck",
       learning_tab_flashcards: "Flashcards",
       learning_tab_vocab: "Vocabulary",
-      learning_tab_topics: "Topics",
-      learning_tab_exercises: "Exercises",
+      learning_tab_grammar: "Grammar",
       learning_tab_homework: "Homework",
+      learning_hub_home: "← Choose activity",
+      learning_level_desc_beginner:
+        "Core vocabulary, everyday grammar, and short practice tasks to build confidence step by step.",
+      learning_level_desc_intermediate:
+        "Stronger grammar, wider vocabulary, and longer tasks for students who already handle everyday English.",
+      learning_level_desc_advanced:
+        "Nuanced grammar, academic vocabulary, and exam-style practice for confident, precise English.",
       learning_tab_progress: "Progress",
       learning_progress_no_user:
         "Log in under Account to track XP, streaks, and your activity on this device.",
@@ -694,9 +700,15 @@
       flashcard_deck_card_count_one: "1 carte dans ce paquet",
       learning_tab_flashcards: "Cartes mémoire",
       learning_tab_vocab: "Vocabulaire",
-      learning_tab_topics: "Thèmes",
-      learning_tab_exercises: "Exercices",
+      learning_tab_grammar: "Grammaire",
       learning_tab_homework: "Devoirs",
+      learning_hub_home: "← Choisir une activité",
+      learning_level_desc_beginner:
+        "Vocabulaire de base, grammaire du quotidien et exercices courts pour progresser pas à pas.",
+      learning_level_desc_intermediate:
+        "Grammaire plus solide, vocabulaire élargi et tâches plus longues si tu maîtrises déjà l'anglais courant.",
+      learning_level_desc_advanced:
+        "Grammaire nuancée, vocabulaire académique et pratique type examen pour un anglais précis et assuré.",
       learning_tab_progress: "Progrès",
       learning_progress_no_user:
         "Connecte-toi dans Compte pour suivre les XP, les séries et ton activité sur cet appareil.",

@@ -240,25 +240,38 @@
               <button type="button" class="btn-level-back" data-i18n="content_back_levels">← Back to levels</button>
               <button type="button" class="btn-level-close btn-icon-close" data-i18n-aria="content_close_aria" aria-label="Close and return to levels">×</button>
             </div>
-            <h3 data-i18n="level_beginner">Beginner</h3>
             <div class="learning-tools learning-hub" data-learning-level="beginner">
-              <div class="learning-hub__toolbar">
-                <div class="tool-menu tool-menu--learning" role="tablist" aria-label="Learning tools">
-                  <button type="button" class="tool-menu__btn is-active learning-hub__tab" data-tool="flashcards" data-i18n="learning_tab_flashcards" aria-selected="true">Flashcards</button>
-                  <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="vocab" data-i18n="learning_tab_vocab" aria-selected="false">Vocabulary</button>
-                  <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="topics" data-i18n="learning_tab_topics" aria-selected="false">Topics</button>
-                  <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="exercises" data-i18n="learning_tab_exercises" aria-selected="false">Exercises</button>
-                  <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="homework" data-i18n="learning_tab_homework" aria-selected="false">Homework</button>
-                  <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="progress" data-i18n="learning_tab_progress" aria-selected="false">Progress</button>
+              <section class="lh-level-landing" data-level-landing>
+                <div class="lh-level-landing__card">
+                  <h2 class="lh-level-landing__title" data-i18n="level_beginner">Beginner</h2>
+                  <p class="lh-level-landing__desc" data-i18n="learning_level_desc_beginner">Core vocabulary, everyday grammar, and short practice tasks to build confidence step by step.</p>
+                  <div class="lh-level-landing__nav tool-menu tool-menu--learning tool-menu--landing" role="navigation" aria-label="Choose activity">
+                    <button type="button" class="tool-menu__btn lh-landing-tab" data-tool="flashcards" data-i18n="learning_tab_flashcards">Flashcards</button>
+                    <button type="button" class="tool-menu__btn lh-landing-tab" data-tool="vocab" data-i18n="learning_tab_vocab">Vocabulary</button>
+                    <button type="button" class="tool-menu__btn lh-landing-tab" data-tool="grammar" data-i18n="learning_tab_grammar">Grammar</button>
+                    <button type="button" class="tool-menu__btn lh-landing-tab" data-tool="homework" data-i18n="learning_tab_homework">Homework</button>
+                    <button type="button" class="tool-menu__btn lh-landing-tab" data-tool="progress" data-i18n="learning_tab_progress">Progress</button>
+                  </div>
                 </div>
-              </div>
-              <div class="learning-hub__body">
-                <section class="tool-panel learning-hub__panel" data-tool-panel="flashcards"></section>
-                <section class="tool-panel learning-hub__panel hidden" data-tool-panel="vocab"></section>
-                <section class="tool-panel learning-hub__panel hidden" data-tool-panel="topics"></section>
-                <section class="tool-panel learning-hub__panel hidden" data-tool-panel="exercises"></section>
-                <section class="tool-panel learning-hub__panel hidden" data-tool-panel="homework"></section>
-                <section class="tool-panel learning-hub__panel hidden" data-tool-panel="progress"></section>
+              </section>
+              <div class="learning-hub__workspace hidden" data-hub-workspace>
+                <div class="learning-hub__toolbar">
+                  <button type="button" class="btn-text lh-hub-home" data-hub-home data-i18n="learning_hub_home">← Choose activity</button>
+                  <div class="tool-menu tool-menu--learning" role="tablist" aria-label="Learning tools">
+                    <button type="button" class="tool-menu__btn is-active learning-hub__tab" data-tool="flashcards" data-i18n="learning_tab_flashcards" aria-selected="true">Flashcards</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="vocab" data-i18n="learning_tab_vocab" aria-selected="false">Vocabulary</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="grammar" data-i18n="learning_tab_grammar" aria-selected="false">Grammar</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="homework" data-i18n="learning_tab_homework" aria-selected="false">Homework</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="progress" data-i18n="learning_tab_progress" aria-selected="false">Progress</button>
+                  </div>
+                </div>
+                <div class="learning-hub__body">
+                  <section class="tool-panel learning-hub__panel" data-tool-panel="flashcards"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="vocab"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="grammar"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="homework"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="progress"></section>
+                </div>
               </div>
             </div>
           </article>
@@ -267,25 +280,38 @@
               <button type="button" class="btn-level-back" data-i18n="content_back_levels">← Back to levels</button>
               <button type="button" class="btn-level-close btn-icon-close" data-i18n-aria="content_close_aria" aria-label="Close and return to levels">×</button>
             </div>
-            <h3 data-i18n="level_intermediate">Intermediate</h3>
             <div class="learning-tools learning-hub" data-learning-level="intermediate">
-              <div class="learning-hub__toolbar">
-                <div class="tool-menu tool-menu--learning" role="tablist" aria-label="Learning tools">
-                  <button type="button" class="tool-menu__btn is-active learning-hub__tab" data-tool="flashcards" data-i18n="learning_tab_flashcards" aria-selected="true">Flashcards</button>
-                  <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="vocab" data-i18n="learning_tab_vocab" aria-selected="false">Vocabulary</button>
-                  <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="topics" data-i18n="learning_tab_topics" aria-selected="false">Topics</button>
-                  <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="exercises" data-i18n="learning_tab_exercises" aria-selected="false">Exercises</button>
-                  <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="homework" data-i18n="learning_tab_homework" aria-selected="false">Homework</button>
-                  <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="progress" data-i18n="learning_tab_progress" aria-selected="false">Progress</button>
+              <section class="lh-level-landing" data-level-landing>
+                <div class="lh-level-landing__card">
+                  <h2 class="lh-level-landing__title" data-i18n="level_intermediate">Intermediate</h2>
+                  <p class="lh-level-landing__desc" data-i18n="learning_level_desc_intermediate">Stronger grammar, wider vocabulary, and longer tasks for students who already handle everyday English.</p>
+                  <div class="lh-level-landing__nav tool-menu tool-menu--learning tool-menu--landing" role="navigation" aria-label="Choose activity">
+                    <button type="button" class="tool-menu__btn lh-landing-tab" data-tool="flashcards" data-i18n="learning_tab_flashcards">Flashcards</button>
+                    <button type="button" class="tool-menu__btn lh-landing-tab" data-tool="vocab" data-i18n="learning_tab_vocab">Vocabulary</button>
+                    <button type="button" class="tool-menu__btn lh-landing-tab" data-tool="grammar" data-i18n="learning_tab_grammar">Grammar</button>
+                    <button type="button" class="tool-menu__btn lh-landing-tab" data-tool="homework" data-i18n="learning_tab_homework">Homework</button>
+                    <button type="button" class="tool-menu__btn lh-landing-tab" data-tool="progress" data-i18n="learning_tab_progress">Progress</button>
+                  </div>
                 </div>
-              </div>
-              <div class="learning-hub__body">
-                <section class="tool-panel learning-hub__panel" data-tool-panel="flashcards"></section>
-                <section class="tool-panel learning-hub__panel hidden" data-tool-panel="vocab"></section>
-                <section class="tool-panel learning-hub__panel hidden" data-tool-panel="topics"></section>
-                <section class="tool-panel learning-hub__panel hidden" data-tool-panel="exercises"></section>
-                <section class="tool-panel learning-hub__panel hidden" data-tool-panel="homework"></section>
-                <section class="tool-panel learning-hub__panel hidden" data-tool-panel="progress"></section>
+              </section>
+              <div class="learning-hub__workspace hidden" data-hub-workspace>
+                <div class="learning-hub__toolbar">
+                  <button type="button" class="btn-text lh-hub-home" data-hub-home data-i18n="learning_hub_home">← Choose activity</button>
+                  <div class="tool-menu tool-menu--learning" role="tablist" aria-label="Learning tools">
+                    <button type="button" class="tool-menu__btn is-active learning-hub__tab" data-tool="flashcards" data-i18n="learning_tab_flashcards" aria-selected="true">Flashcards</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="vocab" data-i18n="learning_tab_vocab" aria-selected="false">Vocabulary</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="grammar" data-i18n="learning_tab_grammar" aria-selected="false">Grammar</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="homework" data-i18n="learning_tab_homework" aria-selected="false">Homework</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="progress" data-i18n="learning_tab_progress" aria-selected="false">Progress</button>
+                  </div>
+                </div>
+                <div class="learning-hub__body">
+                  <section class="tool-panel learning-hub__panel" data-tool-panel="flashcards"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="vocab"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="grammar"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="homework"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="progress"></section>
+                </div>
               </div>
             </div>
           </article>
@@ -294,25 +320,38 @@
               <button type="button" class="btn-level-back" data-i18n="content_back_levels">← Back to levels</button>
               <button type="button" class="btn-level-close btn-icon-close" data-i18n-aria="content_close_aria" aria-label="Close and return to levels">×</button>
             </div>
-            <h3 data-i18n="level_advanced">Advanced</h3>
             <div class="learning-tools learning-hub" data-learning-level="advanced">
-              <div class="learning-hub__toolbar">
-                <div class="tool-menu tool-menu--learning" role="tablist" aria-label="Learning tools">
-                  <button type="button" class="tool-menu__btn is-active learning-hub__tab" data-tool="flashcards" data-i18n="learning_tab_flashcards" aria-selected="true">Flashcards</button>
-                  <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="vocab" data-i18n="learning_tab_vocab" aria-selected="false">Vocabulary</button>
-                  <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="topics" data-i18n="learning_tab_topics" aria-selected="false">Topics</button>
-                  <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="exercises" data-i18n="learning_tab_exercises" aria-selected="false">Exercises</button>
-                  <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="homework" data-i18n="learning_tab_homework" aria-selected="false">Homework</button>
-                  <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="progress" data-i18n="learning_tab_progress" aria-selected="false">Progress</button>
+              <section class="lh-level-landing" data-level-landing>
+                <div class="lh-level-landing__card">
+                  <h2 class="lh-level-landing__title" data-i18n="level_advanced">Advanced</h2>
+                  <p class="lh-level-landing__desc" data-i18n="learning_level_desc_advanced">Nuanced grammar, academic vocabulary, and exam-style practice for confident, precise English.</p>
+                  <div class="lh-level-landing__nav tool-menu tool-menu--learning tool-menu--landing" role="navigation" aria-label="Choose activity">
+                    <button type="button" class="tool-menu__btn lh-landing-tab" data-tool="flashcards" data-i18n="learning_tab_flashcards">Flashcards</button>
+                    <button type="button" class="tool-menu__btn lh-landing-tab" data-tool="vocab" data-i18n="learning_tab_vocab">Vocabulary</button>
+                    <button type="button" class="tool-menu__btn lh-landing-tab" data-tool="grammar" data-i18n="learning_tab_grammar">Grammar</button>
+                    <button type="button" class="tool-menu__btn lh-landing-tab" data-tool="homework" data-i18n="learning_tab_homework">Homework</button>
+                    <button type="button" class="tool-menu__btn lh-landing-tab" data-tool="progress" data-i18n="learning_tab_progress">Progress</button>
+                  </div>
                 </div>
-              </div>
-              <div class="learning-hub__body">
-                <section class="tool-panel learning-hub__panel" data-tool-panel="flashcards"></section>
-                <section class="tool-panel learning-hub__panel hidden" data-tool-panel="vocab"></section>
-                <section class="tool-panel learning-hub__panel hidden" data-tool-panel="topics"></section>
-                <section class="tool-panel learning-hub__panel hidden" data-tool-panel="exercises"></section>
-                <section class="tool-panel learning-hub__panel hidden" data-tool-panel="homework"></section>
-                <section class="tool-panel learning-hub__panel hidden" data-tool-panel="progress"></section>
+              </section>
+              <div class="learning-hub__workspace hidden" data-hub-workspace>
+                <div class="learning-hub__toolbar">
+                  <button type="button" class="btn-text lh-hub-home" data-hub-home data-i18n="learning_hub_home">← Choose activity</button>
+                  <div class="tool-menu tool-menu--learning" role="tablist" aria-label="Learning tools">
+                    <button type="button" class="tool-menu__btn is-active learning-hub__tab" data-tool="flashcards" data-i18n="learning_tab_flashcards" aria-selected="true">Flashcards</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="vocab" data-i18n="learning_tab_vocab" aria-selected="false">Vocabulary</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="grammar" data-i18n="learning_tab_grammar" aria-selected="false">Grammar</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="homework" data-i18n="learning_tab_homework" aria-selected="false">Homework</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="progress" data-i18n="learning_tab_progress" aria-selected="false">Progress</button>
+                  </div>
+                </div>
+                <div class="learning-hub__body">
+                  <section class="tool-panel learning-hub__panel" data-tool-panel="flashcards"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="vocab"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="grammar"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="homework"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="progress"></section>
+                </div>
               </div>
             </div>
           </article>
