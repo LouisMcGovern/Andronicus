@@ -1891,6 +1891,29 @@
     return d.toISOString().slice(0, 10);
   }
 
+  const LEVEL_XP_ORDER = ["beginner", "intermediate", "advanced"];
+  const LEVEL_XP_GOAL = 1000;
+
+  function xpByLevelHasStored(lh) {
+    if (!lh || !lh.xpByLevel) return false;
+    return LEVEL_XP_ORDER.some(function (lv) {
+      return (Number(lh.xpByLevel[lv]) || 0) > 0;
+    });
+  }
+
+  function getDisplayLevelXp(lh, lvl) {
+    if (!lh) return 0;
+    if (xpByLevelHasStored(lh)) {
+      return Math.min(LEVEL_XP_GOAL, Number(lh.xpByLevel[lvl]) || 0);
+    }
+    const total = Number(lh.xp) || 0;
+    const idx = LEVEL_XP_ORDER.indexOf(lvl);
+    if (idx < 0) return 0;
+    const per = Math.floor(total / LEVEL_XP_ORDER.length);
+    const rem = total - per * LEVEL_XP_ORDER.length;
+    return Math.min(LEVEL_XP_GOAL, per + (idx === 0 ? rem : 0));
+  }
+
   let _activeLevelForXp = null;
 
   function bumpLearningActivity(xpDelta) {
@@ -2632,43 +2655,24 @@
     document.querySelectorAll(".level-article").forEach((el) => el.classList.add("hidden"));
     document.querySelectorAll(".btn-level").forEach((b) => b.classList.remove("is-active"));
 
-    const XP_GOAL = 1000;
-    const LEVEL_ORDER = ["beginner", "intermediate", "advanced"];
-
-    function getLevelXp(level) {
-      const user = getActiveUser();
-      if (!user) return 0;
-      const lh = ensureLearningHub(ensureStats(user));
-      return Number(lh.xpByLevel && lh.xpByLevel[level]) || 0;
-    }
-
-    function isLevelUnlocked(level) {
-      if (level === "beginner") return true;
-      const idx = LEVEL_ORDER.indexOf(level);
-      if (idx <= 0) return true;
-      const prevLevel = LEVEL_ORDER[idx - 1];
-      return getLevelXp(prevLevel) >= XP_GOAL;
-    }
-
     document.querySelectorAll(".btn-level").forEach((btn) => {
-      const level = btn.getAttribute("data-level");
-      if (!level) return;
+      const lvl = btn.getAttribute("data-level");
+      if (!lvl) return;
 
       const existing = btn.querySelector(".btn-level__xp");
       if (existing) existing.remove();
 
-      const unlocked = isLevelUnlocked(level);
-      const displayXp = unlocked ? getLevelXp(level) : getLevelXp(LEVEL_ORDER[Math.max(0, LEVEL_ORDER.indexOf(level) - 1)]);
-      const pct = Math.max(0, Math.min(100, Math.round((displayXp / XP_GOAL) * 100)));
+      const user = getActiveUser();
+      const lh = user ? ensureLearningHub(ensureStats(user)) : null;
+      const displayXp = getDisplayLevelXp(lh, lvl);
+      const pct = Math.max(0, Math.min(100, Math.round((displayXp / LEVEL_XP_GOAL) * 100)));
 
       const wrap = document.createElement("span");
       wrap.className = "btn-level__xp";
 
       const label = document.createElement("span");
       label.className = "btn-level__xp-label";
-      label.textContent = unlocked
-        ? String(Math.min(XP_GOAL, displayXp)) + " / " + String(XP_GOAL) + " XP"
-        : "🔒 Reach 1000 XP in previous level";
+      label.textContent = String(displayXp) + " / " + String(LEVEL_XP_GOAL) + " XP";
 
       const track = document.createElement("span");
       track.className = "btn-level__xp-track";
@@ -3165,10 +3169,16 @@
       _activeLevelForXp = level;
       const data = learningData[level];
       if (!data) return;
+
+      function homeworkKey(topic) {
+        return level + "|hw|" + topic;
+      }
+
       const menuButtons = root.querySelectorAll(".tool-menu__btn[data-tool]");
       const panels = root.querySelectorAll(".tool-panel");
       const flashcardsPanel = root.querySelector('[data-tool-panel="flashcards"]');
       const vocabPanel = root.querySelector('[data-tool-panel="vocab"]');
+      const topicsPanel = root.querySelector('[data-tool-panel="topics"]');
       const exercisesPanel = root.querySelector('[data-tool-panel="exercises"]');
       const homeworkPanel = root.querySelector('[data-tool-panel="homework"]');
       const progressPanel = root.querySelector('[data-tool-panel="progress"]');
@@ -3201,7 +3211,7 @@
           return;
         }
         const lh = ensureLearningHub(ensureStats(user));
-        xpEl.textContent = String(lh.xp || 0);
+        xpEl.textContent = String(getDisplayLevelXp(lh, level));
         stEl.textContent = String(lh.streak || 0);
       }
 
@@ -3235,7 +3245,7 @@
           c.appendChild(v);
           grid.appendChild(c);
         }
-        statCard(I18n.t("learning_progress_xp"), String(lh.xp || 0));
+        statCard(I18n.t("learning_progress_xp"), String(getDisplayLevelXp(lh, level)));
         statCard(I18n.t("learning_progress_streak"), String(lh.streak || 0));
         const fa = stats.flashcards.attempts || 0;
         const fc = stats.flashcards.correct || 0;
@@ -3314,10 +3324,6 @@
         wrap.appendChild(badges);
 
         progressPanel.appendChild(wrap);
-      }
-
-      function homeworkKey(topic) {
-        return level + "|hw|" + topic;
       }
 
       function renderHomeworkPanel() {
@@ -3854,17 +3860,6 @@
       startQuiz("easy");
       refreshGamificationHeader();
 
-      exercisesPanel.innerHTML = "";
-      const exShell = document.createElement("div");
-      exShell.className = "lh-ex";
-      const exNav = document.createElement("div");
-      exNav.className = "lh-ex__nav";
-      const exMain = document.createElement("div");
-      exMain.className = "lh-ex__main";
-      exShell.appendChild(exNav);
-      exShell.appendChild(exMain);
-      exercisesPanel.appendChild(exShell);
-
       function parseGapLine(line) {
         if (!line || line.indexOf("___") < 0) return null;
         const arrow = line.lastIndexOf("->");
@@ -3876,188 +3871,499 @@
         return { before: parts[0], after: parts.slice(1).join("___"), answer: answer };
       }
 
-      let activeExIdx = 0;
-      let exGapPool = [];
-      let exGapStep = 0;
-      let exGapScore = 0;
-      let exGapAnswered = false;
+      function exerciseTopicBlurb(ex) {
+        if (ex.summary) return ex.summary;
+        if (ex.introEn) {
+          const bit = ex.introEn.split(/[.!?]/)[0].trim();
+          if (bit) return bit + ".";
+        }
+        if (ex.practice) {
+          return ex.practice.length > 100 ? ex.practice.slice(0, 97) + "..." : ex.practice;
+        }
+        return I18n.t("learning_exercise_topic_fallback", { topic: ex.topic });
+      }
 
-      data.exercises.forEach(function (ex, i) {
-        const pill = document.createElement("button");
-        pill.type = "button";
-        pill.className = "lh-ex-pill" + (i === 0 ? " is-active" : "");
-        pill.textContent = ex.topic;
-        pill.addEventListener("click", function () {
-          activeExIdx = i;
-          Array.from(exNav.querySelectorAll(".lh-ex-pill")).forEach(function (p) {
-            p.classList.remove("is-active");
-          });
-          pill.classList.add("is-active");
-          renderExerciseLesson(i);
+      function exerciseIntroEn(ex) {
+        if (ex.introEn) return ex.introEn;
+        return (
+          "This lesson covers " +
+          ex.topic +
+          ". Read the explanation in both languages, work through each example, then complete the practice task in your notebook."
+        );
+      }
+
+      function exerciseIntroFr(ex) {
+        if (ex.introFr) return ex.introFr;
+        return (
+          "Cette leçon porte sur : " +
+          ex.topic +
+          ". Lis l'explication dans les deux langues, fais tous les exemples, puis termine la tâche d'entraînement dans ton cahier."
+        );
+      }
+
+      function buildGapMcRow(item, pool, step, onAnswered) {
+        const wrap = document.createElement("div");
+        wrap.className = "lh-gap-card";
+        const q = document.createElement("p");
+        q.className = "lh-gap-q";
+        q.textContent = item.before + " _____ " + item.after;
+        wrap.appendChild(q);
+        const opts = [item.answer];
+        const seenAns = Object.create(null);
+        seenAns[item.answer] = true;
+        for (let gi = 0; gi < pool.length * 2 && opts.length < 4; gi += 1) {
+          const o = pool[(step + 1 + gi) % pool.length].answer;
+          if (!seenAns[o]) {
+            seenAns[o] = true;
+            opts.push(o);
+          }
+        }
+        const pad = ["…", "-", "?"];
+        let pi = 0;
+        while (opts.length < 4 && pi < pad.length) {
+          if (!seenAns[pad[pi]]) {
+            seenAns[pad[pi]] = true;
+            opts.push(pad[pi]);
+          }
+          pi += 1;
+        }
+        opts.sort(function () {
+          return Math.random() - 0.5;
         });
-        exNav.appendChild(pill);
-      });
+        const row = document.createElement("div");
+        row.className = "lh-vocab-options lh-gap-card__options";
+        let answered = false;
+        opts.forEach(function (o) {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.className = "flashcard-btn lh-option-btn";
+          b.textContent = o;
+          b.addEventListener("click", function () {
+            if (answered) return;
+            answered = true;
+            const ok = o === item.answer;
+            if (ok) b.classList.add("is-correct");
+            else b.classList.add("is-wrong");
+            Array.from(row.querySelectorAll("button")).forEach(function (btn) {
+              if (btn.textContent === item.answer) btn.classList.add("is-correct");
+            });
+            onAnswered(ok);
+          });
+          row.appendChild(b);
+        });
+        wrap.appendChild(row);
+        return wrap;
+      }
 
-      const exLesson = document.createElement("div");
-      exLesson.className = "lh-ex-lesson";
-      const exPlay = document.createElement("div");
-      exPlay.className = "lh-ex-play";
-      exMain.appendChild(exLesson);
-      exMain.appendChild(exPlay);
+      function topicWords(s) {
+        return String(s || "")
+          .toLowerCase()
+          .replace(/[^a-z0-9\s]/g, " ")
+          .split(/\s+/)
+          .filter(function (w) {
+            return w.length > 3;
+          });
+      }
 
-      function renderExerciseLesson(idx) {
+      function deckMatchesTopic(deckName, topicName) {
+        const d = deckName.toLowerCase();
+        const t = topicName.toLowerCase();
+        if (d.indexOf(t) >= 0 || t.indexOf(d) >= 0) return true;
+        const words = topicWords(topicName);
+        return words.some(function (w) {
+          return d.indexOf(w) >= 0;
+        });
+      }
+
+      function flashcardsForVocabTopic(topicName) {
+        const out = [];
+        const decks = data.flashcards || {};
+        Object.keys(decks).forEach(function (deckName) {
+          if (!deckMatchesTopic(deckName, topicName)) return;
+          (decks[deckName] || []).slice(0, 12).forEach(function (card) {
+            out.push({ deck: deckName, card: card });
+          });
+        });
+        return out.slice(0, 24);
+      }
+
+      let refreshTopicsPanel = function () {};
+
+      if (topicsPanel) {
+      topicsPanel.innerHTML = "";
+      const topicsFlow = document.createElement("div");
+      topicsFlow.className = "lh-slide-flow lh-topics-flow";
+      const topicsStageGrid = document.createElement("div");
+      topicsStageGrid.className = "lh-slide-stage lh-slide-stage--grid";
+      const topicsTopicGrid = document.createElement("div");
+      topicsTopicGrid.className = "lh-topic-grid";
+      const topicsStageLesson = document.createElement("div");
+      topicsStageLesson.className = "lh-slide-stage lh-slide-stage--lesson lh-lesson-view";
+      topicsFlow.appendChild(topicsStageGrid);
+      topicsFlow.appendChild(topicsStageLesson);
+      topicsStageGrid.appendChild(topicsTopicGrid);
+      topicsPanel.appendChild(topicsFlow);
+
+      let topicsLessonOpen = false;
+      let activeTopicIdx = -1;
+
+      function closeTopicsLesson() {
+        topicsLessonOpen = false;
+        activeTopicIdx = -1;
+        topicsFlow.classList.remove("is-lesson-open");
+        topicsStageLesson.innerHTML = "";
+      }
+
+      function renderTopicsGrid() {
+        topicsTopicGrid.innerHTML = "";
+        (data.vocab || []).forEach(function (mission, mi) {
+          const card = document.createElement("button");
+          card.type = "button";
+          card.className = "lh-topic-card";
+          const h = document.createElement("span");
+          h.className = "lh-topic-card__title";
+          h.textContent = mission.topic;
+          const focus = document.createElement("span");
+          focus.className = "lh-topic-card__focus";
+          focus.textContent = mission.focus || "";
+          const meta = document.createElement("span");
+          meta.className = "lh-topic-card__meta";
+          meta.textContent = I18n.t("learning_homework_tasks_count", {
+            n: String((mission.tasks || []).length),
+          });
+          card.appendChild(h);
+          card.appendChild(focus);
+          card.appendChild(meta);
+          card.addEventListener("click", function () {
+            activeTopicIdx = mi;
+            topicsLessonOpen = true;
+            topicsFlow.classList.add("is-lesson-open");
+            renderTopicsLesson(mi);
+          });
+          topicsTopicGrid.appendChild(card);
+        });
+      }
+
+      function renderTopicsLesson(mi) {
+        const mission = data.vocab && data.vocab[mi];
+        if (!mission) return;
+        topicsStageLesson.innerHTML = "";
+
+        const backBtn = document.createElement("button");
+        backBtn.type = "button";
+        backBtn.className = "btn-text lh-lesson-view__back";
+        backBtn.setAttribute("data-learning-chrome", "learning_topics_back");
+        backBtn.textContent = I18n.t("learning_topics_back");
+        backBtn.addEventListener("click", closeTopicsLesson);
+
+        const head = document.createElement("h3");
+        head.className = "lh-lesson-view__title";
+        head.textContent = mission.topic;
+
+        const introSec = document.createElement("section");
+        introSec.className = "lh-lesson-block";
+        const introH = document.createElement("h4");
+        introH.className = "lh-lesson-block__title";
+        introH.setAttribute("data-learning-chrome", "learning_topics_what_learn");
+        introH.textContent = I18n.t("learning_topics_what_learn");
+        const introCols = document.createElement("div");
+        introCols.className = "lh-bilingual";
+        const introEn = document.createElement("div");
+        introEn.className = "lh-bilingual__col";
+        introEn.innerHTML = "<strong>EN</strong><p>" + (mission.focus || "") + "</p>";
+        const introFr = document.createElement("div");
+        introFr.className = "lh-bilingual__col";
+        introFr.innerHTML =
+          "<strong>FR</strong><p>" + (mission.focusFr || mission.focus || "") + "</p>";
+        introCols.appendChild(introEn);
+        introCols.appendChild(introFr);
+        introSec.appendChild(introH);
+        introSec.appendChild(introCols);
+
+        const contentSec = document.createElement("section");
+        contentSec.className = "lh-lesson-block lh-lesson-block--scroll";
+        const contentH = document.createElement("h4");
+        contentH.className = "lh-lesson-block__title";
+        contentH.setAttribute("data-learning-chrome", "learning_topics_content");
+        contentH.textContent = I18n.t("learning_topics_content");
+        contentSec.appendChild(contentH);
+        const contentBody = document.createElement("div");
+        contentBody.className = "lh-lesson-block__body";
+        const focusP = document.createElement("p");
+        focusP.textContent = mission.focus || "";
+        contentBody.appendChild(focusP);
+        const fc = flashcardsForVocabTopic(mission.topic);
+        if (fc.length) {
+          const vocabH = document.createElement("h5");
+          vocabH.className = "lh-lesson-subhead";
+          vocabH.textContent = I18n.t("learning_topics_key_vocab");
+          contentBody.appendChild(vocabH);
+          const vocabList = document.createElement("ul");
+          vocabList.className = "resource-list lh-tight-list";
+          fc.forEach(function (row) {
+            const li = document.createElement("li");
+            li.textContent = row.card.front + " · " + row.card.back;
+            vocabList.appendChild(li);
+          });
+          contentBody.appendChild(vocabList);
+        } else {
+          const empty = document.createElement("p");
+          empty.className = "lh-muted";
+          empty.textContent = I18n.t("learning_topics_no_vocab");
+          contentBody.appendChild(empty);
+        }
+        contentSec.appendChild(contentBody);
+
+        const tasksSec = document.createElement("section");
+        tasksSec.className = "lh-lesson-block";
+        const tasksH = document.createElement("h4");
+        tasksH.className = "lh-lesson-block__title";
+        tasksH.setAttribute("data-learning-chrome", "learning_topics_tasks");
+        tasksH.textContent = I18n.t("learning_topics_tasks");
+        tasksSec.appendChild(tasksH);
+        const taskList = document.createElement("ul");
+        taskList.className = "lh-hw-tasks";
+        const user = getActiveUser();
+        const stats = user ? ensureStats(user) : null;
+        const lh = user ? ensureLearningHub(stats) : null;
+        const taskArr =
+          lh && lh.homeworkTasks && lh.homeworkTasks[homeworkKey(mission.topic)]
+            ? lh.homeworkTasks[homeworkKey(mission.topic)].slice()
+            : Array((mission.tasks || []).length).fill(false);
+        (mission.tasks || []).forEach(function (task, ti) {
+          const li = document.createElement("li");
+          const lab = document.createElement("label");
+          lab.className = "lh-hw-task";
+          const cb = document.createElement("input");
+          cb.type = "checkbox";
+          cb.checked = !!taskArr[ti];
+          cb.disabled = !user;
+          cb.addEventListener("change", function () {
+            if (!user) return;
+            const st = ensureStats(user);
+            const hub = ensureLearningHub(st);
+            const key = homeworkKey(mission.topic);
+            const prev = Array.isArray(hub.homeworkTasks[key])
+              ? hub.homeworkTasks[key].slice()
+              : Array(mission.tasks.length).fill(false);
+            while (prev.length < mission.tasks.length) prev.push(false);
+            const was = !!prev[ti];
+            prev[ti] = cb.checked;
+            hub.homeworkTasks[key] = prev.slice(0, mission.tasks.length);
+            saveUsers();
+            if (cb.checked && !was) bumpLearningActivity(6);
+            refreshGamificationHeader();
+            showLevelPicker();
+          });
+          const span = document.createElement("span");
+          span.textContent = task;
+          lab.appendChild(cb);
+          lab.appendChild(span);
+          li.appendChild(lab);
+          taskList.appendChild(li);
+        });
+        tasksSec.appendChild(taskList);
+
+        topicsStageLesson.appendChild(backBtn);
+        topicsStageLesson.appendChild(head);
+        topicsStageLesson.appendChild(introSec);
+        topicsStageLesson.appendChild(contentSec);
+        topicsStageLesson.appendChild(tasksSec);
+      }
+
+      refreshTopicsPanel = function () {
+        if (topicsLessonOpen && activeTopicIdx >= 0) renderTopicsLesson(activeTopicIdx);
+        else renderTopicsGrid();
+      };
+      renderTopicsGrid();
+      }
+
+      exercisesPanel.innerHTML = "";
+      const exFlow = document.createElement("div");
+      exFlow.className = "lh-slide-flow lh-ex-flow";
+      const exStageList = document.createElement("div");
+      exStageList.className = "lh-slide-stage lh-slide-stage--grid";
+      const exTopicGrid = document.createElement("div");
+      exTopicGrid.className = "lh-topic-grid lh-ex-topic-grid";
+      const exStageLesson = document.createElement("div");
+      exStageLesson.className = "lh-slide-stage lh-slide-stage--lesson lh-lesson-view lh-ex-lesson-view";
+      exFlow.appendChild(exStageList);
+      exFlow.appendChild(exStageLesson);
+      exStageList.appendChild(exTopicGrid);
+      exercisesPanel.appendChild(exFlow);
+
+      let exLessonOpen = false;
+      let activeExIdx = -1;
+
+      function closeExLesson() {
+        exLessonOpen = false;
+        activeExIdx = -1;
+        exFlow.classList.remove("is-lesson-open");
+        exStageLesson.innerHTML = "";
+      }
+
+      function renderExTopicList() {
+        exTopicGrid.innerHTML = "";
+        (data.exercises || []).forEach(function (ex, i) {
+          const card = document.createElement("button");
+          card.type = "button";
+          card.className = "lh-topic-card lh-ex-topic-card";
+          const h = document.createElement("span");
+          h.className = "lh-topic-card__title";
+          h.textContent = ex.topic;
+          const blurb = document.createElement("span");
+          blurb.className = "lh-topic-card__focus";
+          blurb.textContent = exerciseTopicBlurb(ex);
+          card.appendChild(h);
+          card.appendChild(blurb);
+          card.addEventListener("click", function () {
+            activeExIdx = i;
+            exLessonOpen = true;
+            exFlow.classList.add("is-lesson-open");
+            renderExLesson(i);
+          });
+          exTopicGrid.appendChild(card);
+        });
+      }
+
+      function renderExLesson(idx) {
         const ex = data.exercises[idx];
         if (!ex) return;
-        exLesson.innerHTML = "";
-        exPlay.innerHTML = "";
-        const card = document.createElement("article");
-        card.className = "lh-lesson-card";
-        const h = document.createElement("h3");
-        h.className = "lh-lesson-card__title";
-        h.textContent = ex.topic;
-        card.appendChild(h);
-        // Optional bilingual intro paragraph (uses introEn / introFr if present)
-        if (ex.introEn || ex.introFr) {
-          const intro = document.createElement("p");
-          intro.className = "lh-lesson-intro";
-          const lang = I18n.getLang();
-          intro.textContent = lang === "fr" && ex.introFr ? ex.introFr : ex.introEn || ex.introFr || "";
-          card.appendChild(intro);
-        }
-        const details = document.createElement("details");
-        details.className = "lh-details";
-        details.open = true;
-        const sum = document.createElement("summary");
-        sum.textContent = I18n.t("learning_exercise_examples_toggle");
-        details.appendChild(sum);
-        const exList = document.createElement("ul");
-        exList.className = "resource-list lh-tight-list";
-        ex.examples.forEach(function (line) {
-          const li = document.createElement("li");
-          li.textContent = line;
-          exList.appendChild(li);
-        });
-        details.appendChild(exList);
-        card.appendChild(details);
-        const task = document.createElement("p");
-        task.className = "lh-lesson-practice";
-        task.textContent = I18n.t("learning_exercise_practice") + " " + ex.practice;
-        card.appendChild(task);
-        const ext = document.createElement("p");
-        ext.className = "lh-muted";
-        ext.textContent =
-          I18n.t("learning_exercise_extension") +
-          " " +
-          (ex.extension || I18n.t("learning_exercise_extension_default"));
-        card.appendChild(ext);
-        const doneBtn = document.createElement("button");
-        doneBtn.type = "button";
-        doneBtn.className = "flashcard-btn lh-primary-btn";
-        doneBtn.setAttribute("data-learning-chrome", "learning_exercise_done_btn");
-        doneBtn.textContent = I18n.t("learning_exercise_done_btn");
-        const doneMsg = document.createElement("p");
-        doneMsg.className = "exercise-complete-msg hidden";
-        doneBtn.addEventListener("click", function () {
-          const res = recordExerciseCompletion(level, ex.topic);
-          if (res.ok) {
-            doneMsg.textContent = I18n.t("learning_exercise_saved_ok");
-          } else if (res.reason === "auth") {
-            doneMsg.textContent = I18n.t("learning_exercise_saved_auth");
-          } else {
-            doneMsg.textContent = I18n.t("learning_exercise_saved_exists");
-          }
-          doneMsg.classList.remove("hidden");
-        });
-        card.appendChild(doneBtn);
-        card.appendChild(doneMsg);
-        exLesson.appendChild(card);
+        exStageLesson.innerHTML = "";
 
-        exGapPool = [];
+        const backBtn = document.createElement("button");
+        backBtn.type = "button";
+        backBtn.className = "btn-text lh-lesson-view__back";
+        backBtn.setAttribute("data-learning-chrome", "learning_ex_back");
+        backBtn.textContent = I18n.t("learning_ex_back");
+        backBtn.addEventListener("click", closeExLesson);
+
+        const title = document.createElement("h3");
+        title.className = "lh-lesson-view__title";
+        title.textContent = ex.topic;
+
+        const learnSec = document.createElement("section");
+        learnSec.className = "lh-lesson-block";
+        const learnH = document.createElement("h4");
+        learnH.className = "lh-lesson-block__title";
+        learnH.setAttribute("data-learning-chrome", "learning_ex_learn");
+        learnH.textContent = I18n.t("learning_ex_learn");
+        const learnCols = document.createElement("div");
+        learnCols.className = "lh-bilingual";
+        const colEn = document.createElement("div");
+        colEn.className = "lh-bilingual__col";
+        colEn.innerHTML = "<strong>EN</strong><p>" + exerciseIntroEn(ex) + "</p>";
+        const colFr = document.createElement("div");
+        colFr.className = "lh-bilingual__col";
+        colFr.innerHTML = "<strong>FR</strong><p>" + exerciseIntroFr(ex) + "</p>";
+        learnCols.appendChild(colEn);
+        learnCols.appendChild(colFr);
+        learnSec.appendChild(learnH);
+        learnSec.appendChild(learnCols);
+
+        const examplesSec = document.createElement("section");
+        examplesSec.className = "lh-lesson-block";
+        const examplesH = document.createElement("h4");
+        examplesH.className = "lh-lesson-block__title";
+        examplesH.setAttribute("data-learning-chrome", "learning_ex_examples");
+        examplesH.textContent = I18n.t("learning_ex_examples");
+        examplesSec.appendChild(examplesH);
+        const examplesPlay = document.createElement("div");
+        examplesPlay.className = "lh-ex-examples-play";
+
+        const exGapPool = [];
         (ex.examples || []).forEach(function (line) {
           const g = parseGapLine(line);
           if (g) exGapPool.push(g);
         });
-        exGapStep = 0;
-        exGapScore = 0;
-        exGapAnswered = false;
-        if (!exGapPool.length) {
-          const p = document.createElement("p");
-          p.className = "lh-muted";
-          p.textContent = I18n.t("learning_exercise_no_inline");
-          exPlay.appendChild(p);
-          return;
-        }
-        function renderGap() {
-          exPlay.innerHTML = "";
-          if (exGapStep >= 5 || exGapStep >= exGapPool.length) {
+        let exGapStep = 0;
+        let exGapScore = 0;
+
+        function renderExampleStep() {
+          examplesPlay.innerHTML = "";
+          if (!exGapPool.length) {
+            const p = document.createElement("p");
+            p.className = "lh-muted";
+            p.textContent = I18n.t("learning_exercise_no_inline");
+            examplesPlay.appendChild(p);
+            return;
+          }
+          if (exGapStep >= exGapPool.length) {
             const done = document.createElement("div");
             done.className = "lh-celebrate";
             done.textContent = I18n.t("learning_exercise_gap_complete", {
               score: String(exGapScore),
             });
-            exPlay.appendChild(done);
-            bumpLearningActivity(6 + exGapScore * 2);
+            examplesPlay.appendChild(done);
+            bumpLearningActivity(4 + exGapScore * 2);
+            refreshGamificationHeader();
+            showLevelPicker();
             return;
           }
-          const item = exGapPool[exGapStep % exGapPool.length];
-          const q = document.createElement("p");
-          q.className = "lh-gap-q";
-          q.textContent = item.before + " _____ " + item.after;
-          exPlay.appendChild(q);
-          const opts = [item.answer];
-          const seenAns = Object.create(null);
-          seenAns[item.answer] = true;
-          for (let gi = 0; gi < exGapPool.length * 2 && opts.length < 4; gi += 1) {
-            const o = exGapPool[(exGapStep + 1 + gi) % exGapPool.length].answer;
-            if (!seenAns[o]) {
-              seenAns[o] = true;
-              opts.push(o);
-            }
-          }
-          const pad = ["…", "-", "?"];
-          let pi = 0;
-          while (opts.length < 4 && pi < pad.length) {
-            if (!seenAns[pad[pi]]) {
-              seenAns[pad[pi]] = true;
-              opts.push(pad[pi]);
-            }
-            pi += 1;
-          }
-          opts.sort(function () {
-            return Math.random() - 0.5;
+          const item = exGapPool[exGapStep];
+          const card = buildGapMcRow(item, exGapPool, exGapStep, function (ok) {
+            if (ok) {
+              exGapScore += 1;
+              bumpLearningActivity(4);
+            } else bumpLearningActivity(1);
+            setTimeout(function () {
+              exGapStep += 1;
+              renderExampleStep();
+            }, 480);
           });
-          const row = document.createElement("div");
-          row.className = "lh-vocab-options";
-          exGapAnswered = false;
-          opts.forEach(function (o) {
-            const b = document.createElement("button");
-            b.type = "button";
-            b.className = "flashcard-btn lh-option-btn";
-            b.textContent = o;
-            b.addEventListener("click", function () {
-              if (exGapAnswered) return;
-              exGapAnswered = true;
-              const ok = o === item.answer;
-              if (ok) {
-                b.classList.add("is-correct");
-                exGapScore += 1;
-                bumpLearningActivity(4);
-              } else {
-                b.classList.add("is-wrong");
-                bumpLearningActivity(1);
-              }
-              setTimeout(function () {
-                exGapStep += 1;
-                renderGap();
-              }, 420);
-            });
-            row.appendChild(b);
-          });
-          exPlay.appendChild(row);
+          const prog = document.createElement("p");
+          prog.className = "lh-muted lh-ex-example-prog";
+          prog.textContent =
+            String(exGapStep + 1) + " / " + String(exGapPool.length);
+          examplesPlay.appendChild(prog);
+          examplesPlay.appendChild(card);
         }
-        renderGap();
+        examplesSec.appendChild(examplesPlay);
+
+        const practiceSec = document.createElement("section");
+        practiceSec.className = "lh-lesson-block";
+        const practiceH = document.createElement("h4");
+        practiceH.className = "lh-lesson-block__title";
+        practiceH.setAttribute("data-learning-chrome", "learning_ex_practice");
+        practiceH.textContent = I18n.t("learning_ex_practice");
+        const practiceP = document.createElement("p");
+        practiceP.className = "lh-lesson-practice";
+        practiceP.textContent = ex.practice || I18n.t("learning_exercise_extension_default");
+        const selfMarkBtn = document.createElement("button");
+        selfMarkBtn.type = "button";
+        selfMarkBtn.className = "flashcard-btn lh-primary-btn";
+        selfMarkBtn.setAttribute("data-learning-chrome", "learning_ex_mark_done");
+        selfMarkBtn.textContent = I18n.t("learning_ex_mark_done");
+        const practiceMsg = document.createElement("p");
+        practiceMsg.className = "exercise-complete-msg hidden";
+        selfMarkBtn.addEventListener("click", function () {
+          bumpLearningActivity(12);
+          refreshGamificationHeader();
+          showLevelPicker();
+          const res = recordExerciseCompletion(level, ex.topic);
+          if (res.ok) practiceMsg.textContent = I18n.t("learning_exercise_saved_ok");
+          else if (res.reason === "auth") practiceMsg.textContent = I18n.t("learning_exercise_saved_auth");
+          else practiceMsg.textContent = I18n.t("learning_exercise_saved_exists");
+          practiceMsg.classList.remove("hidden");
+        });
+        practiceSec.appendChild(practiceH);
+        practiceSec.appendChild(practiceP);
+        practiceSec.appendChild(selfMarkBtn);
+        practiceSec.appendChild(practiceMsg);
+
+        exStageLesson.appendChild(backBtn);
+        exStageLesson.appendChild(title);
+        exStageLesson.appendChild(learnSec);
+        exStageLesson.appendChild(examplesSec);
+        exStageLesson.appendChild(practiceSec);
+        renderExampleStep();
       }
-      renderExerciseLesson(0);
+
+      function refreshExercisesPanel() {
+        if (exLessonOpen && activeExIdx >= 0) renderExLesson(activeExIdx);
+        else renderExTopicList();
+      }
+      renderExTopicList();
 
       flashcardsPanel.innerHTML = "";
       const stage = document.createElement("div");
@@ -4502,9 +4808,12 @@
             });
           }
         }
-        renderExerciseLesson(activeExIdx);
+        refreshExercisesPanel();
+        refreshTopicsPanel();
         renderHomeworkPanel();
         renderProgressPanel();
+        refreshGamificationHeader();
+        showLevelPicker();
         renderCard();
       });
   }
