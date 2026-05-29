@@ -315,6 +315,11 @@
         "Stronger grammar, wider vocabulary, and longer tasks for students who already handle everyday English.",
       learning_level_desc_advanced:
         "Nuanced grammar, academic vocabulary, and exam-style practice for confident, precise English.",
+      learning_landing_flashcards: "Practice words with flip cards",
+      learning_landing_vocab: "Quiz yourself on grammar and topics",
+      learning_landing_grammar: "Interactive exercises with instant feedback",
+      learning_landing_homework: "Your task list and progress checklist",
+      learning_landing_progress: "Your XP, streak, and activity",
       learning_tab_progress: "Progress",
       learning_progress_no_user:
         "Log in under Account to track XP, streaks, and your activity on this device.",
@@ -709,6 +714,11 @@
         "Grammaire plus solide, vocabulaire élargi et tâches plus longues si tu maîtrises déjà l'anglais courant.",
       learning_level_desc_advanced:
         "Grammaire nuancée, vocabulaire académique et pratique type examen pour un anglais précis et assuré.",
+      learning_landing_flashcards: "Entraîne-toi avec des cartes à retourner",
+      learning_landing_vocab: "Teste-toi sur la grammaire et les thèmes",
+      learning_landing_grammar: "Exercices interactifs avec retour immédiat",
+      learning_landing_homework: "Ta liste de tâches et ta checklist de progrès",
+      learning_landing_progress: "Tes XP, ta série et ton activité",
       learning_tab_progress: "Progrès",
       learning_progress_no_user:
         "Connecte-toi dans Compte pour suivre les XP, les séries et ton activité sur cet appareil.",

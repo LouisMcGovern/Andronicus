@@ -3202,8 +3202,9 @@
 
       const levelLanding = root.querySelector("[data-level-landing]");
       const hubWorkspace = root.querySelector("[data-hub-workspace]");
-      const hubHomeBtn = root.querySelector("[data-hub-home]");
-      const toolButtons = root.querySelectorAll(".tool-menu__btn[data-tool]");
+      const hubLevelLink = root.querySelector("[data-hub-level-link]");
+      const landingCards = root.querySelectorAll(".level-landing__card[data-tool]");
+      const workspaceTabs = root.querySelectorAll(".learning-hub__tab[data-tool]");
       const panels = root.querySelectorAll(".tool-panel");
       const flashcardsPanel = root.querySelector('[data-tool-panel="flashcards"]');
       const vocabPanel = root.querySelector('[data-tool-panel="vocab"]');
@@ -3213,12 +3214,10 @@
 
       function activateTab(name) {
         _activeLevelForXp = level;
-        toolButtons.forEach(function (b) {
+        workspaceTabs.forEach(function (b) {
           const on = b.getAttribute("data-tool") === name;
           b.classList.toggle("is-active", on);
-          if (b.classList.contains("learning-hub__tab")) {
-            b.setAttribute("aria-selected", on ? "true" : "false");
-          }
+          b.setAttribute("aria-selected", on ? "true" : "false");
         });
         panels.forEach(function (panel) {
           panel.classList.toggle("hidden", panel.getAttribute("data-tool-panel") !== name);
@@ -3234,20 +3233,22 @@
         activateTab(tabName || "flashcards");
       }
 
-      toolButtons.forEach(function (btn) {
+      landingCards.forEach(function (btn) {
         btn.addEventListener("click", function () {
           const tool = btn.getAttribute("data-tool");
-          if (!tool) return;
-          if (levelLanding && !levelLanding.classList.contains("hidden")) {
-            enterWorkspace(tool);
-          } else {
-            activateTab(tool);
-          }
+          if (tool) enterWorkspace(tool);
         });
       });
 
-      if (hubHomeBtn) {
-        hubHomeBtn.addEventListener("click", function () {
+      workspaceTabs.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          const tool = btn.getAttribute("data-tool");
+          if (tool) activateTab(tool);
+        });
+      });
+
+      if (hubLevelLink) {
+        hubLevelLink.addEventListener("click", function () {
           resetHubToLanding(root);
         });
       }
@@ -4577,11 +4578,11 @@
           const key = el.getAttribute("data-learning-chrome");
           if (key) el.textContent = I18n.t(key);
         });
-        if (hubHomeBtn) hubHomeBtn.textContent = I18n.t("learning_hub_home");
-        const landingDesc = root.querySelector(".lh-level-landing__desc");
-        if (landingDesc) landingDesc.textContent = I18n.t("learning_level_desc_" + level);
-        const landingTitle = root.querySelector(".lh-level-landing__title");
-        if (landingTitle) landingTitle.textContent = I18n.t("level_" + level);
+        if (hubLevelLink) hubLevelLink.textContent = I18n.t("level_" + level);
+        const landingIntro = root.querySelector(".level-landing__intro");
+        const landingHeading = root.querySelector(".level-landing__heading");
+        if (landingIntro) landingIntro.textContent = I18n.t("learning_level_desc_" + level);
+        if (landingHeading) landingHeading.textContent = I18n.t("level_" + level);
         label.textContent = I18n.t("flashcard_deck_label");
         orderLabel.textContent = I18n.t("flashcard_order_label");
         orderSelect.setAttribute("aria-label", I18n.t("flashcard_order_label"));
