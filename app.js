@@ -4246,11 +4246,6 @@
       startQuiz("easy");
       refreshGamificationHeader();
 
-      function stripParentheticalHints(text) {
-        if (!text) return "";
-        return text.replace(/\s*\([^)]*\)/g, "").trim();
-      }
-
       function parseGapLine(line) {
         if (!line || line.indexOf("___") < 0) return null;
         const arrow = line.lastIndexOf("->");
@@ -4269,11 +4264,11 @@
       }
 
       function gapQuestionText(item) {
-        return (
-          stripParentheticalHints(item.before) +
-          " _____ " +
-          stripParentheticalHints(item.after)
-        );
+        let text = item.before + " _____ " + item.after;
+        while (/\([^)]*\)\s*$/.test(text)) {
+          text = text.replace(/\s*\([^)]*\)\s*$/, "").trim();
+        }
+        return text;
       }
 
       function parseLearnIntro(introFr) {
@@ -4405,7 +4400,13 @@
         });
         const row = document.createElement("div");
         row.className = "lh-vocab-options lh-gap-card__options";
+        const continueBtn = document.createElement("button");
+        continueBtn.type = "button";
+        continueBtn.className = "btn-primary lh-gap-continue";
+        continueBtn.textContent = "Continue";
+        continueBtn.hidden = true;
         let locked = false;
+        let pendingOk = false;
         opts.forEach(function (o) {
           const b = document.createElement("button");
           b.type = "button";
@@ -4414,30 +4415,32 @@
           b.addEventListener("click", function () {
             if (locked) return;
             locked = true;
-            const ok = o === item.answer;
+            pendingOk = o === item.answer;
             Array.from(row.querySelectorAll("button")).forEach(function (btn) {
               btn.disabled = true;
             });
-            if (ok) {
+            if (pendingOk) {
               b.classList.add("is-correct");
-              setTimeout(function () {
-                onAnswered(ok);
-              }, 800);
             } else {
               b.classList.add("is-wrong");
-              setTimeout(function () {
-                Array.from(row.querySelectorAll("button")).forEach(function (btn) {
-                  if (btn.textContent === item.answer) btn.classList.add("is-correct");
-                });
-                setTimeout(function () {
-                  onAnswered(ok);
-                }, 1500);
-              }, 300);
+              Array.from(row.querySelectorAll("button")).forEach(function (btn) {
+                if (btn.textContent === item.answer) btn.classList.add("is-correct");
+              });
             }
+            continueBtn.hidden = false;
           });
           row.appendChild(b);
         });
+        continueBtn.addEventListener("click", function () {
+          if (continueBtn.hidden) return;
+          Array.from(row.querySelectorAll("button")).forEach(function (btn) {
+            btn.classList.remove("is-correct", "is-wrong");
+          });
+          continueBtn.hidden = true;
+          onAnswered(pendingOk);
+        });
         wrap.appendChild(row);
+        wrap.appendChild(continueBtn);
         return wrap;
       }
 
