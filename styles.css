@@ -1603,6 +1603,42 @@ html[data-theme="dark"] .booking-sync-warning {
   width: 100%;
 }
 
+.learning-tools.learning-hub.is-locked .tool-menu--learning {
+  display: none !important;
+}
+
+.learning-tools.learning-hub.is-locked .learning-hub__toolbar {
+  display: none !important;
+}
+
+.lh-back-to-menu {
+  margin: 0 0 1rem;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-elevated);
+  font-family: var(--font-tagline);
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--accent);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.lh-back-to-menu:hover {
+  color: var(--ink-heading);
+  background: var(--surface);
+}
+
+.lh-back-to-menu:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.lh-back-to-menu.hidden {
+  display: none;
+}
+
 .learning-hub__toolbar--sticky {
   position: sticky;
   top: 0;

@@ -1914,10 +1914,16 @@
 
   function resetHubToLanding(hub) {
     if (!hub) return;
+    hub.classList.remove("is-locked");
     const landing = hub.querySelector("[data-level-landing]");
     const workspace = hub.querySelector("[data-hub-workspace]");
+    const backBtn = hub.querySelector(".lh-back-to-menu");
     if (landing) landing.classList.remove("hidden");
     if (workspace) workspace.classList.add("hidden");
+    if (backBtn) backBtn.classList.add("hidden");
+    hub.querySelectorAll(".tool-panel").forEach(function (panel) {
+      panel.classList.add("hidden");
+    });
   }
 
   function resetAllLearningHubsToLanding() {
@@ -3202,7 +3208,7 @@
 
       const levelLanding = root.querySelector("[data-level-landing]");
       const hubWorkspace = root.querySelector("[data-hub-workspace]");
-      const hubLevelLink = root.querySelector("[data-hub-level-link]");
+      const hubBody = root.querySelector(".learning-hub__body");
       const landingCards = root.querySelectorAll(".level-landing__card[data-tool]");
       const workspaceTabs = root.querySelectorAll(".learning-hub__tab[data-tool]");
       const panels = root.querySelectorAll(".tool-panel");
@@ -3226,32 +3232,38 @@
         refreshGamificationHeader();
       }
 
-      function enterWorkspace(tabName) {
+      function enterSection(tabName) {
         _activeLevelForXp = level;
+        root.classList.add("is-locked");
         if (levelLanding) levelLanding.classList.add("hidden");
         if (hubWorkspace) hubWorkspace.classList.remove("hidden");
         activateTab(tabName || "flashcards");
+        if (backToMenuBtn) backToMenuBtn.classList.remove("hidden");
+      }
+
+      let backToMenuBtn = hubWorkspace && hubWorkspace.querySelector(".lh-back-to-menu");
+      if (hubWorkspace && !backToMenuBtn) {
+        backToMenuBtn = document.createElement("button");
+        backToMenuBtn.type = "button";
+        backToMenuBtn.className = "lh-back-to-menu hidden";
+        backToMenuBtn.setAttribute("data-learning-chrome", "learning_back_to_menu");
+        backToMenuBtn.textContent = I18n.t("learning_back_to_menu");
+        if (hubBody) {
+          hubBody.insertBefore(backToMenuBtn, hubBody.firstChild);
+        } else if (hubWorkspace) {
+          hubWorkspace.appendChild(backToMenuBtn);
+        }
+        backToMenuBtn.addEventListener("click", function () {
+          resetHubToLanding(root);
+        });
       }
 
       landingCards.forEach(function (btn) {
         btn.addEventListener("click", function () {
           const tool = btn.getAttribute("data-tool");
-          if (tool) enterWorkspace(tool);
+          if (tool) enterSection(tool);
         });
       });
-
-      workspaceTabs.forEach(function (btn) {
-        btn.addEventListener("click", function () {
-          const tool = btn.getAttribute("data-tool");
-          if (tool) activateTab(tool);
-        });
-      });
-
-      if (hubLevelLink) {
-        hubLevelLink.addEventListener("click", function () {
-          resetHubToLanding(root);
-        });
-      }
 
       window.addEventListener("andronicus:xpchange", function (ev) {
         if (ev.detail && ev.detail.level === level) refreshGamificationHeader();
@@ -4578,7 +4590,10 @@
           const key = el.getAttribute("data-learning-chrome");
           if (key) el.textContent = I18n.t(key);
         });
+        const hubLevelLink = root.querySelector("[data-hub-level-link]");
         if (hubLevelLink) hubLevelLink.textContent = I18n.t("level_" + level);
+        const backMenuBtn = root.querySelector(".lh-back-to-menu");
+        if (backMenuBtn) backMenuBtn.textContent = I18n.t("learning_back_to_menu");
         const landingIntro = root.querySelector(".level-landing__intro");
         const landingHeading = root.querySelector(".level-landing__heading");
         if (landingIntro) landingIntro.textContent = I18n.t("learning_level_desc_" + level);

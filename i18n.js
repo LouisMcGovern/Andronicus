@@ -320,6 +320,7 @@
       learning_landing_grammar: "Interactive exercises with instant feedback",
       learning_landing_homework: "Your task list and progress checklist",
       learning_landing_progress: "Your XP, streak, and activity",
+      learning_back_to_menu: "← Back to menu",
       learning_tab_progress: "Progress",
       learning_progress_no_user:
         "Log in under Account to track XP, streaks, and your activity on this device.",
@@ -719,6 +720,7 @@
       learning_landing_grammar: "Exercices interactifs avec retour immédiat",
       learning_landing_homework: "Ta liste de tâches et ta checklist de progrès",
       learning_landing_progress: "Tes XP, ta série et ton activité",
+      learning_back_to_menu: "← Retour au menu",
       learning_tab_progress: "Progrès",
       learning_progress_no_user:
         "Connecte-toi dans Compte pour suivre les XP, les séries et ton activité sur cet appareil.",
