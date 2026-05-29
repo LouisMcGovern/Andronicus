@@ -3608,6 +3608,35 @@ html[data-theme="dark"] .flashcard-btn--got-it:hover {
   color: var(--ink-heading);
 }
 
+.lh-learn-panel {
+  background: var(--surface-elevated);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius-md);
+  padding: 1.1rem 1.25rem;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--readable-body);
+}
+
+.lh-learn-panel__prose {
+  margin: 0;
+  white-space: pre-line;
+}
+
+.lh-learn-panel__examples {
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lh-learn-panel__examples li {
+  margin: 0.35rem 0 0;
+  padding-left: 0.85rem;
+  color: var(--ink-heading);
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
 .lh-bilingual {
   display: grid;
   grid-template-columns: 1fr;
