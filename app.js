@@ -431,13 +431,20 @@
         {
           topic: "Possessive adjectives (my/your/his/her/our/their)",
           introEn:
-            "Possessive adjectives show who something belongs to: my, your, his, her, its, our, their. They always come directly before a noun and never change form in English, unlike French where the adjective agrees. Use his for a male owner, her for a female owner, and their for plural owners or when gender is unknown.",
+            "In English, possessive adjectives go directly before a noun to show who something belongs to: my book, your phone, his bag, her coat, our class, their house. Unlike French, they never change for gender or number — we say her brother and her sister, not sa and sa. The word matches the owner, not the object. For example: This is my pen (it belongs to me). That is their car (it belongs to them).",
           introFr:
-            "Les adjectifs possessifs anglais indiquent à qui appartient quelque chose : my, your, his, her, its, our, their. Ils se placent toujours juste devant le nom et ne changent jamais de forme en anglais, contrairement au français où l'adjectif s'accorde. On utilise his pour un possesseur masculin, her pour un possesseur féminin, et their au pluriel ou quand le genre n'est pas précisé.",
+            "En anglais, les adjectifs possessifs se placent juste devant le nom pour indiquer à qui appartient quelque chose : my book, your phone, his bag, her coat, our class, their house. Contrairement au français, ils ne s'accordent ni en genre ni en nombre : on dit her brother et her sister, pas « sa » et « sa ». Le mot correspond au possesseur, pas à l'objet possédé. Par exemple : This is my pen (c'est mon stylo). That is their car (c'est leur voiture).",
           examples: [
             "1) This is ___ book. (I) -> my",
-            "2) We like ___ teacher. (we) -> our",
-            "3) They forgot ___ homework. (they) -> their",
+            "2) Is that ___ phone? (you) -> your",
+            "3) He forgot ___ keys. (he) -> his",
+            "4) She loves ___ dog. (she) -> her",
+            "5) We cleaned ___ classroom. (we) -> our",
+            "6) They sold ___ old bike. (they) -> their",
+            "7) The cat washed ___ paws. (it) -> its",
+            "8) I met ___ parents yesterday. (she) -> her",
+            "9) ___ teacher is very kind. (we) -> Our",
+            "10) ___ house is near the park. (they) -> Their",
           ],
           practice:
             "Write 10 sentences about your school and home using possessive adjectives. Then swap sentences with a classmate and correct each other.",
@@ -475,13 +482,20 @@
         {
           topic: "There is / there are",
           introEn:
-            "Use there is with singular nouns and there are with plural nouns to say that something exists in a place. The structure is fixed: there + be + noun + place. In questions, invert to Is there…? or Are there…? This is very different from French, where we often start with a noun rather than an empty subject.",
+            "Use there is for one thing and there are for multiple things. The pattern is: there + is/are + noun + place — There is a lamp on the desk. There are three chairs in the kitchen. In questions, the verb comes first: Is there any milk? Are there two exits? We use this structure to describe what exists in a place, not to say where something is moving.",
           introFr:
-            "On utilise there is avec un nom singulier et there are avec un nom pluriel pour dire que quelque chose existe quelque part. La structure est fixe : there + be + nom + lieu. Aux questions, on inverse : Is there… ? ou Are there… ? C'est très différent du français, où on commence souvent directement par le nom.",
+            "On utilise there is pour une seule chose et there are pour plusieurs. La structure est : there + is/are + nom + lieu — There is a lamp on the desk (il y a une lampe sur le bureau). There are three chairs in the kitchen (il y a trois chaises dans la cuisine). Aux questions, le verbe passe devant : Is there any milk? Are there two exits? On emploie cette tournure pour dire ce qui existe quelque part.",
           examples: [
-            "1) ___ a book on the table. (There is)",
-            "2) ___ two windows in my room. (There are)",
-            "3) ___ any milk in the fridge? (Is there)",
+            "1) ___ a book on the table. (There is) -> There is",
+            "2) ___ two windows in my room. (There are) -> There are",
+            "3) ___ any milk in the fridge? (Is there) -> Is there",
+            "4) ___ a good café near here. (There is) -> There is",
+            "5) ___ many students in the hall. (There are) -> There are",
+            "6) ___ a problem with my phone. (There is) -> There is",
+            "7) ___ no buses after midnight. (There are) -> There are",
+            "8) ___ an exam tomorrow? (Is there) -> Is there",
+            "9) ___ some apples in the bowl. (There are) -> There are",
+            "10) ___ a cat under the bed. (There is) -> There is",
           ],
           practice:
             "Describe your bedroom in 10 sentences using there is/there are and at least 4 prepositions.",
@@ -489,13 +503,20 @@
         {
           topic: "Question forms (do/does/is/are)",
           introEn:
-            "English questions often need an auxiliary verb at the start. Use Do/Does + subject + base verb for most present simple questions, and Am/Is/Are + subject for the verb to be. Wh- questions keep the same word order but start with who, what, where, when, why, or how. Remember: does he/she/it takes the base verb without -s.",
+            "In English, most questions need an auxiliary verb at the start. For Present Simple, use Do with I/you/we/they and Does with he/she/it, then the subject, then the base verb: Do you like pizza? Does she play tennis? For the verb to be or Present Continuous, use Am/Is/Are: Is he tired? Are they studying? The structure is always: auxiliary + subject + main verb (base form after does).",
           introFr:
-            "Les questions en anglais ont souvent besoin d'un auxiliaire au début. On utilise Do/Does + sujet + verbe de base pour la plupart des questions au present simple, et Am/Is/Are + sujet pour le verbe to be. Les questions avec un mot interrogatif (who, what, where…) gardent le même ordre mais commencent par ce mot. Attention : après does, le verbe reste à la base, sans -s.",
+            "En anglais, la plupart des questions commencent par un auxiliaire. Au Present Simple, on utilise Do avec I/you/we/they et Does avec he/she/it, puis le sujet, puis le verbe de base : Do you like pizza? Does she play tennis? Pour le verbe to be ou le Present Continuous, on utilise Am/Is/Are : Is he tired? Are they studying? La structure est toujours : auxiliaire + sujet + verbe principal (à la base après does, sans -s).",
           examples: [
-            "1) ___ you like English? (Do)",
-            "2) Where ___ she live? (does)",
-            "3) ___ they in class now? (Are)",
+            "1) ___ you like English? (Do) -> Do",
+            "2) Where ___ she live? (does) -> does",
+            "3) ___ they in class now? (Are) -> Are",
+            "4) ___ he watch TV every evening? (Does) -> Does",
+            "5) ___ you doing your homework? (Are) -> Are",
+            "6) What ___ they want? (do) -> do",
+            "7) ___ I late? (Am) -> Am",
+            "8) ___ your brother play guitar? (Does) -> Does",
+            "9) Why ___ we waiting here? (are) -> are",
+            "10) ___ there a shop nearby? (Is) -> Is",
           ],
           practice:
             "Write 12 interview questions to ask a new classmate. Then answer them in full sentences.",
@@ -503,13 +524,20 @@
         {
           topic: "Articles (a / an / the)",
           introEn:
-            "Use a before consonant sounds and an before vowel sounds for non-specific singular nouns. Use the when the listener knows exactly which thing you mean. French speakers often drop articles in English or use the too often — remember that English uses the with unique things (the sun, the president) and with things already mentioned.",
+            "Use a before a consonant sound and an before a vowel sound when you mention something for the first time or something general: a dog, an apple, a university (sounds like \"y\"). Use the when the listener knows which one you mean, or for unique things: the sun, the president, the book I told you about. Unlike French, English articles do not agree with gender — only with sound (a/an) and specificity (the).",
           introFr:
-            "On utilise a devant un son consonne et an devant un son voyelle pour parler d'un nom singulier non précis. On utilise the quand l'interlocuteur sait exactement de quoi on parle. Les francophones oublient souvent les articles en anglais ou surutilisent the — pense à the pour les choses uniques (the sun, the president) et pour ce qui a déjà été mentionné.",
+            "On utilise a devant un son consonne et an devant un son voyelle quand on mentionne quelque chose pour la première fois ou de façon générale : a dog, an apple, a university (son « y »). On utilise the quand l'interlocuteur sait de quoi on parle, ou pour les choses uniques : the sun, the president, the book I told you about. Contrairement au français, les articles anglais ne s'accordent pas en genre — seulement en son (a/an) et en précision (the).",
           examples: [
-            "1) I have ___ orange and ___ banana. (an, a)",
-            "2) ___ sun is bright today. (The)",
-            "3) She is ___ teacher in my school. (a)",
+            "1) I ate ___ apple for lunch. (an) -> an",
+            "2) She is ___ teacher at our school. (a) -> a",
+            "3) ___ sun is very bright today. (The) -> The",
+            "4) He wants ___ hour to finish. (an) -> an",
+            "5) We visited ___ Eiffel Tower last summer. (the) -> the",
+            "6) There is ___ cat on the roof. (a) -> a",
+            "7) I need ___ umbrella, it is raining. (an) -> an",
+            "8) ___ book you lent me is excellent. (The) -> The",
+            "9) She plays ___ piano every day. (the) -> the",
+            "10) He bought ___ new phone yesterday. (a) -> a",
           ],
           practice:
             "Write 14 sentences about your school day and underline every article you use.",
@@ -517,13 +545,20 @@
         {
           topic: "Prepositions of place",
           introEn:
-            "Prepositions of place describe where something is: in (inside), on (surface), under, behind, between, next to, in front of. English prepositions rarely match French one-to-one — être sur une photo but on the wall, in the kitchen not dans la cuisine as a direct rule. Learn them in chunks with common nouns rather than translating from French.",
+            "Prepositions of place describe where something is: in for enclosed spaces (in the kitchen, in the box), on for surfaces (on the table, on the wall), at for specific points or addresses (at the door, at school), under, behind, between, next to, and in front of. French prepositions do not match one-to-one — être sur une photo but on the wall, at the station not in the station. Learn each preposition with common nouns, not by translating from French.",
           introFr:
-            "Les prépositions de lieu décrivent où se trouve quelque chose : in (dedans), on (sur une surface), under, behind, between, next to, in front of. Elles ne correspondent presque jamais mot à mot avec le français — on dit on the wall et in the kitchen sans traduction directe. Apprends-les par groupes avec des noms fréquents plutôt qu'en traduisant depuis le français.",
+            "Les prépositions de lieu indiquent où se trouve quelque chose : in pour un espace fermé (in the kitchen, in the box), on pour une surface (on the table, on the wall), at pour un point précis ou une adresse (at the door, at school), plus under, behind, between, next to et in front of. En français, les prépositions ne correspondent pas mot à mot — on dit on the wall et at the station, pas « in the station ». Apprends chaque préposition avec des noms fréquents, sans traduire mot à mot.",
           examples: [
-            "1) The bag is ___ the chair. (under)",
-            "2) The clock is ___ the wall. (on)",
-            "3) The keys are ___ the table and the lamp. (between)",
+            "1) The bag is ___ the chair. (under) -> under",
+            "2) The clock is ___ the wall. (on) -> on",
+            "3) The keys are ___ the table and the lamp. (between) -> between",
+            "4) She waits ___ the bus stop. (at) -> at",
+            "5) The cat is ___ the sofa. (on) -> on",
+            "6) We live ___ Dublin. (in) -> in",
+            "7) The dog hid ___ the bed. (under) -> under",
+            "8) He stood ___ front of the class. (in) -> in",
+            "9) The shop is ___ the bank and the café. (between) -> between",
+            "10) There is a picture ___ the door. (next to) -> next to",
           ],
           practice:
             "Describe one room in your house using at least 12 preposition phrases.",
@@ -531,13 +566,20 @@
         {
           topic: "Countable and uncountable nouns",
           introEn:
-            "Countable nouns have a plural form and use many/a few/number + noun. Uncountable nouns (water, money, information) have no plural and use much/a little/some. Some nouns change meaning: a coffee (one cup) vs coffee (the drink in general). French treats many nouns as countable that English treats as uncountable, so check each word carefully.",
+            "Countable nouns can be singular or plural and use a/an or numbers: an apple, three apples. Uncountable nouns have no plural and never use a/an: water, money, information, advice. Some works for both. Many only works with countable nouns (many books). Much only works with uncountable nouns (much time). A lot of works with both. French often treats words like information as countable — in English, never say an information.",
           introFr:
-            "Les noms dénombrables ont un pluriel et s'emploient avec many, a few ou un chiffre. Les noms indénombrables (water, money, information) n'ont pas de pluriel et s'emploient avec much, a little ou some. Certains mots changent de sens : a coffee (un café, une tasse) vs coffee (la boisson en général). En français, beaucoup de mots sont dénombrables alors qu'en anglais ils ne le sont pas — vérifie chaque mot.",
+            "Les noms dénombrables peuvent être singuliers ou pluriels et s'emploient avec a/an ou un chiffre : an apple, three apples. Les noms indénombrables n'ont pas de pluriel et n'utilisent jamais a/an : water, money, information, advice. Some convient aux deux. Many s'utilise seulement avec les dénombrables (many books). Much seulement avec les indénombrables (much time). A lot of convient aux deux. En français, on dit souvent « une information » — en anglais, jamais an information.",
           examples: [
-            "1) We need ___ apples. (some)",
-            "2) There isn't ___ sugar left. (much)",
-            "3) How ___ bottles do we need? (many)",
+            "1) We need ___ apples for the recipe. (some) -> some",
+            "2) There isn't ___ sugar left. (much) -> much",
+            "3) How ___ bottles do we need? (many) -> many",
+            "4) Can I have ___ water, please? (some) -> some",
+            "5) She gave me ___ good advice. (some) -> some",
+            "6) How ___ students are in your class? (many) -> many",
+            "7) I don't have ___ money today. (much) -> much",
+            "8) We bought ___ bread from the bakery. (some) -> some",
+            "9) There are ___ chairs in the room. (a lot of) -> a lot of",
+            "10) He drank ___ juice at breakfast. (some) -> some",
           ],
           practice:
             "Write a shopping list with 20 items and classify each as countable or uncountable.",
@@ -545,13 +587,20 @@
         {
           topic: "Can / can't for ability",
           introEn:
-            "Use can + base verb to talk about ability or possibility now: I can swim, She can't drive. Can never changes form — no -s in the third person. For questions, put can first: Can you help me? To talk about past ability, use could. Do not add to after can (not can to swim).",
+            "Can expresses ability or possibility and stays the same for every subject: I can swim, she can swim, they can swim. There is no conjugation change — no -s in the third person. The negative is cannot or can't. Questions simply invert can and the subject: Can you drive? Can she speak French? Can is always followed by the base verb without to.",
           introFr:
-            "On utilise can + verbe de base pour parler d'une capacité ou d'une possibilité : I can swim, She can't drive. Can ne change jamais de forme — pas de -s à la troisième personne. Aux questions, can passe devant : Can you help me ? Pour le passé, on utilise could. N'ajoute pas to après can (pas can to swim).",
+            "Can exprime une capacité ou une possibilité et ne change jamais selon le sujet : I can swim, she can swim, they can swim. Pas de conjugaison — pas de -s à la troisième personne. Le négatif est cannot ou can't. Aux questions, on inverse can et le sujet : Can you drive? Can she speak French? Can est toujours suivi du verbe de base, sans to.",
           examples: [
-            "1) I ___ swim very well. (can)",
-            "2) She ___ drive yet. (can't)",
-            "3) ___ you speak English and French? (Can)",
+            "1) I ___ swim very well. (can) -> can",
+            "2) She ___ drive yet. (can't) -> can't",
+            "3) ___ you speak English and French? (Can) -> Can",
+            "4) He ___ play the guitar. (can) -> can",
+            "5) We ___ come to the party tonight. (can't) -> can't",
+            "6) ___ they help us tomorrow? (Can) -> Can",
+            "7) My little brother ___ read yet. (can't) -> can't",
+            "8) I ___ cook pasta. (can) -> can",
+            "9) ___ she run fast? (Can) -> Can",
+            "10) You ___ use my phone if you need it. (can) -> can",
           ],
           practice:
             "Write 12 sentences about what you can and can't do, then ask 6 partner questions.",
@@ -559,13 +608,20 @@
         {
           topic: "Past simple regular/irregular verbs",
           introEn:
-            "The past simple describes finished actions at a specific time in the past. Regular verbs add -ed (walk → walked). Irregular verbs have special forms you must memorise (go → went, see → saw). Use did + base verb in questions and negatives — never double the past form (not did went). Time words like yesterday and last week signal past simple.",
+            "Regular verbs form the past by adding -ed: walk → walked, clean → cleaned. Irregular verbs must be memorised — go → went, see → saw, eat → ate, make → made. The negative always uses did not (didn't) + base verb: I didn't go, she didn't see. This is true for both regular and irregular verbs — never say didn't went. Time words like yesterday and last week signal past simple.",
           introFr:
-            "Le past simple décrit des actions terminées à un moment précis du passé. Les verbes réguliers ajoutent -ed (walk → walked). Les verbes irréguliers ont des formes spéciales à apprendre par cœur (go → went, see → saw). Aux questions et à la forme négative, on utilise did + verbe de base — jamais did went. Des mots comme yesterday et last week indiquent le past simple.",
+            "Les verbes réguliers forment le passé avec -ed : walk → walked, clean → cleaned. Les verbes irréguliers se apprennent par cœur — go → went, see → saw, eat → ate, make → made. Le négatif utilise toujours did not (didn't) + verbe de base : I didn't go, she didn't see. C'est vrai pour les verbes réguliers et irréguliers — on ne dit jamais didn't went. Des mots comme yesterday et last week indiquent le past simple.",
           examples: [
-            "1) Yesterday I ___ to school. (went)",
-            "2) We ___ football after class. (played)",
-            "3) She ___ a great film. (saw)",
+            "1) Yesterday I ___ to school on foot. (went) -> went",
+            "2) We ___ football after class. (played) -> played",
+            "3) She ___ a great film on Saturday. (saw) -> saw",
+            "4) He ___ pizza for dinner. (ate) -> ate",
+            "5) They ___ a cake for my birthday. (made) -> made",
+            "6) I ___ my room before lunch. (cleaned) -> cleaned",
+            "7) We ___ home late last night. (arrived) -> arrived",
+            "8) She ___ me a message. (sent) -> sent",
+            "9) He ___ TV for two hours. (watched) -> watched",
+            "10) I ___ tired after the match. (felt) -> felt",
           ],
           practice:
             "Write a short story (120 words) about last weekend using at least 10 past simple verbs.",
@@ -577,13 +633,20 @@
         {
           topic: "Object pronouns (me/you/him/her/us/them)",
           introEn:
-            "Object pronouns replace the person or thing receiving the action: me, you, him, her, it, us, them. They come after the verb or preposition: She called me, Give it to them. Do not confuse subject pronouns (I, he) with object forms (me, him). After prepositions like to and for, always use object pronouns.",
+            "Subject pronouns (I, he, she, we, they) are the doer of the action: She calls me every day. Object pronouns (me, you, him, her, us, them) replace the receiver and come after the verb or a preposition: I saw him, Give it to her, They helped us. French speakers often say I saw he or She told to me — in English, always use the object form after verbs and prepositions like to and for.",
           introFr:
-            "Les pronoms compléments remplacent la personne ou la chose qui reçoit l'action : me, you, him, her, it, us, them. Ils viennent après le verbe ou une préposition : She called me, Give it to them. Ne confonds pas les pronoms sujets (I, he) avec les formes complément (me, him). Après to ou for, utilise toujours le pronom complément.",
+            "Les pronoms sujets (I, he, she, we, they) désignent celui qui fait l'action : She calls me every day. Les pronoms compléments (me, you, him, her, us, them) remplacent le receveur et viennent après le verbe ou une préposition : I saw him, Give it to her, They helped us. Les francophones disent parfois I saw he ou She told to me — en anglais, utilise toujours la forme complément après les verbes et les prépositions comme to et for.",
           examples: [
-            "1) My teacher helped ___. (me)",
-            "2) I called ___ yesterday. (him)",
-            "3) They invited ___ to the event. (us)",
+            "1) My teacher helped ___. (me) -> me",
+            "2) I called ___ yesterday. (him) -> him",
+            "3) They invited ___ to the event. (us) -> us",
+            "4) Can you tell ___ the answer? (her) -> her",
+            "5) She gave ___ a present. (them) -> them",
+            "6) He asked ___ a question. (me) -> me",
+            "7) We saw ___ at the cinema. (you) -> you",
+            "8) I sent ___ an email. (him) -> him",
+            "9) The coach praised ___ after the match. (us) -> us",
+            "10) Please wait for ___. (them) -> them",
           ],
           practice: "Rewrite 12 sentences by replacing names with object pronouns correctly.",
           extension: "Write a dialogue with 8 object pronouns and perform it in pairs.",
@@ -593,13 +656,20 @@
         {
           topic: "Future forms (going to / will)",
           introEn:
-            "Use going to + base verb for plans and evidence-based predictions: I'm going to study tonight, Look — it's going to rain. Use will + base verb for instant decisions, offers, and general predictions: I'll help you, I think it will be fine. Both forms use the base verb without to after will/going to.",
+            "Use going to + verb for planned intentions or predictions based on evidence: I'm going to visit my grandparents this weekend. Look at those clouds — it's going to rain. Use will + base verb for spontaneous decisions, promises, or predictions based on opinion: I'll answer the phone! I think France will win. After will, use the base verb without to. After going to, use am/is/are going to + base verb.",
           introFr:
-            "On utilise going to + verbe de base pour les projets et les prédictions basées sur des indices : I'm going to study tonight, Look — it's going to rain. On utilise will + verbe de base pour les décisions spontanées, les offres et les prédictions générales : I'll help you, I think it will be fine. Dans les deux cas, le verbe reste à la base, sans to.",
+            "On utilise going to + verbe pour un projet ou une prédiction basée sur un indice visible : I'm going to visit my grandparents this weekend. Regarde ces nuages — it's going to rain. On utilise will + verbe de base pour une décision spontanée, une promesse ou une prédiction d'opinion : I'll answer the phone! I think France will win. Après will, le verbe reste à la base, sans to. Avec going to, on emploie am/is/are going to + verbe de base.",
           examples: [
-            "1) I ___ study tonight. (am going to)",
-            "2) I think it ___ rain later. (will)",
-            "3) We ___ visit Cork this weekend. (are going to)",
+            "1) I ___ study tonight after dinner. (am going to) -> am going to",
+            "2) I think it ___ rain later. (will) -> will",
+            "3) We ___ visit Cork this weekend. (are going to) -> are going to",
+            "4) Don't worry, I ___ help you. (will) -> will",
+            "5) She ___ start a new job in September. (is going to) -> is going to",
+            "6) I promise I ___ be on time. (will) -> will",
+            "7) Look! The bus ___ arrive. (is going to) -> is going to",
+            "8) They ___ probably pass the exam. (will) -> will",
+            "9) He ___ buy a new laptop next month. (is going to) -> is going to",
+            "10) I ___ call you when I arrive. (will) -> will",
           ],
           practice: "Write 10 predictions and 10 plans using the correct future form.",
           extension: "Create a one-week personal plan using both forms naturally.",
@@ -899,13 +969,20 @@
         {
           topic: "Possessive adjectives in context",
           introEn:
-            "At intermediate level, possessive adjectives must match the owner, not the object: their research, its impact, our results. Watch for reference chains in writing — if you mention a team, use their consistently. Avoid mixing a name and a possessive for the same person in one sentence.",
+            "At intermediate level, possessive adjectives still match the owner, not the object: their research, its impact, our results. In longer writing, keep reference consistent — if you mention a team, use their throughout. Use its for things and organisations (the company raised its prices). Avoid repeating a name and a possessive for the same person in one sentence.",
           introFr:
-            "Au niveau intermédiaire, l'adjectif possessif doit correspondre au possesseur, pas à l'objet : their research, its impact, our results. Attention aux chaînes de référence dans un texte — si tu parles d'une équipe, utilise their de façon cohérente. Évite de mélanger un nom propre et un possessif pour la même personne dans une phrase.",
+            "Au niveau intermédiaire, l'adjectif possessif correspond toujours au possesseur, pas à l'objet : their research, its impact, our results. Dans un texte plus long, garde la même référence — si tu parles d'une équipe, utilise their partout. Utilise its pour les choses et les organisations (the company raised its prices). Évite de répéter un nom propre et un possessif pour la même personne dans une phrase.",
           examples: [
-            "1) The students presented ___ projects. (their)",
-            "2) She forgot ___ charger at home. (her)",
-            "3) We improved ___ pronunciation this month. (our)",
+            "1) The students presented ___ projects. (their) -> their",
+            "2) She forgot ___ charger at home. (her) -> her",
+            "3) We improved ___ pronunciation this month. (our) -> our",
+            "4) The company changed ___ logo last year. (its) -> its",
+            "5) Each student must bring ___ own notebook. (his/her/their) -> their",
+            "6) I respect ___ opinion, even when we disagree. (your) -> your",
+            "7) The team celebrated ___ victory. (its) -> its",
+            "8) They lost ___ tickets before the concert. (their) -> their",
+            "9) He borrowed ___ friend's bike. (his) -> his",
+            "10) We finished ___ homework on time. (our) -> our",
           ],
           practice:
             "Rewrite a short paragraph by replacing names with pronouns and correct possessive adjectives.",
@@ -913,13 +990,20 @@
         {
           topic: "Present perfect vs past simple",
           introEn:
-            "Use the past simple for finished time (yesterday, in 2020, last week). Use the present perfect for life experience or a past action linked to now, often with ever, never, already, yet, since, for. French uses passé composé where English may need present perfect — if you can name when it happened, past simple is usually correct.",
+            "Use the past simple when you name a finished time: yesterday, in 2020, last week, when I was ten. Use the present perfect for life experience or a past action with a link to now, often with ever, never, already, yet, since, for: I have visited Paris (experience). I visited Paris in 2020 (specific time). French passé composé often maps to past simple when the moment is clear.",
           introFr:
-            "Utilise le past simple pour une date ou un moment terminé (yesterday, in 2020, last week). Utilise le present perfect pour une expérience de vie ou une action passée liée au présent, souvent avec ever, never, already, yet, since, for. Le français emploie le passé composé là où l'anglais peut exiger le present perfect — si tu peux nommer le moment précis, le past simple convient en général.",
+            "Utilise le past simple quand tu nommes un moment terminé : yesterday, in 2020, last week, when I was ten. Utilise le present perfect pour une expérience de vie ou une action passée liée au présent, souvent avec ever, never, already, yet, since, for : I have visited Paris (expérience). I visited Paris in 2020 (moment précis). Le passé composé français correspond souvent au past simple quand le moment est clair.",
           examples: [
-            "1) I ___ that film last week. (watched)",
-            "2) We ___ three units this month. (have completed)",
-            "3) She ___ to London in 2024. (went)",
+            "1) I ___ that film last week. (watched) -> watched",
+            "2) We ___ three units this month. (have completed) -> have completed",
+            "3) She ___ to London in 2024. (went) -> went",
+            "4) Have you ever ___ sushi? (tried) -> tried",
+            "5) They ___ here since 2021. (have lived) -> have lived",
+            "6) He ___ his keys yesterday. (lost) -> lost",
+            "7) I have never ___ such a good lesson. (had) -> had",
+            "8) We ___ the project yet. (haven't finished) -> haven't finished",
+            "9) She ___ two books this year. (has read) -> has read",
+            "10) When did you ___ learning French? (start) -> start",
           ],
           practice:
             "Create 12 sentence pairs: one life experience sentence and one specific past-time sentence.",
@@ -927,13 +1011,20 @@
         {
           topic: "Relative clauses (who/which/that)",
           introEn:
-            "Relative clauses add information about a noun. Use who for people, which for things, and that for either in defining clauses. Omit the relative pronoun when it is the object: The book (that) I read. Non-defining clauses use who/which with commas and never that. Keep one clear idea per clause to avoid long, confusing sentences.",
+            "Relative clauses add extra information about a noun. Use who for people, which for things, and that for either in defining clauses: The teacher who helped me, The app that I use. You can omit who/that/which when it is the object: The book (that) I read. Non-defining clauses use who or which with commas and never that: My brother, who lives in Lyon, …",
           introFr:
-            "Les propositions relatives ajoutent une information sur un nom. On utilise who pour les personnes, which pour les choses, et that pour les deux dans les propositions définissantes. On peut omettre le pronom relatif quand il est complément : The book (that) I read. Les propositions non définissantes prennent who/which avec des virgules, jamais that. Garde une idée claire par proposition pour éviter les phrases trop longues.",
+            "Les propositions relatives ajoutent une information sur un nom. On utilise who pour les personnes, which pour les choses, et that pour les deux dans les propositions définissantes : The teacher who helped me, The app that I use. On peut omettre who/that/which quand c'est le complément : The book (that) I read. Les propositions non définissantes prennent who ou which avec des virgules, jamais that : My brother, who lives in Lyon, …",
           examples: [
-            "1) The teacher ___ helped me was excellent. (who)",
-            "2) This is the app ___ I use every day. (that/which)",
-            "3) Students ___ revise regularly improve faster. (who)",
+            "1) The teacher ___ helped me was excellent. (who) -> who",
+            "2) This is the app ___ I use every day. (that) -> that",
+            "3) Students ___ revise regularly improve faster. (who) -> who",
+            "4) The film ___ we saw was brilliant. (that) -> that",
+            "5) I know a girl ___ speaks four languages. (who) -> who",
+            "6) The phone ___ he bought is expensive. (that) -> that",
+            "7) People ___ exercise often feel healthier. (who) -> who",
+            "8) The reason ___ I called is important. (why) -> why",
+            "9) This is the house ___ I grew up. (where) -> where",
+            "10) The student ___ essay won got a prize. (whose) -> whose",
           ],
           practice:
             "Combine 10 short sentence pairs into one sentence using relative clauses.",
@@ -941,13 +1032,20 @@
         {
           topic: "Modal verbs for advice and obligation",
           introEn:
-            "Modal verbs (should, must, mustn't, have to, don't have to) express advice, rules, and obligation without changing form. Must is strong obligation; should is advice; mustn't means forbidden; don't have to means no obligation. They are followed by the base verb. French learners often confuse must and have to — both express obligation but must feels more personal or urgent.",
+            "Modal verbs express advice, obligation, and permission without changing form: should (advice), must (strong obligation), mustn't (forbidden), have to (external obligation), don't have to (no obligation). They are always followed by the base verb. Must feels personal or urgent; have to often describes a rule from outside: You must try harder vs You have to wear a uniform.",
           introFr:
-            "Les modaux (should, must, mustn't, have to, don't have to) expriment le conseil, l'obligation et l'interdiction sans changer de forme. Must = obligation forte ; should = conseil ; mustn't = interdit ; don't have to = pas d'obligation. Ils sont suivis du verbe de base. Les francophones confondent souvent must et have to — les deux marquent l'obligation, mais must sonne plus personnel ou urgent.",
+            "Les modaux expriment le conseil, l'obligation et l'interdiction sans changer de forme : should (conseil), must (obligation forte), mustn't (interdit), have to (obligation extérieure), don't have to (pas d'obligation). Ils sont toujours suivis du verbe de base. Must sonne personnel ou urgent ; have to décrit souvent une règle extérieure : You must try harder vs You have to wear a uniform.",
           examples: [
-            "1) You ___ revise every day. (should)",
-            "2) Students ___ wear a uniform. (must)",
-            "3) You ___ use your phone in the exam. (mustn't)",
+            "1) You ___ revise every day. (should) -> should",
+            "2) Students ___ wear a uniform. (must) -> must",
+            "3) You ___ use your phone in the exam. (mustn't) -> mustn't",
+            "4) We ___ leave early tomorrow. (have to) -> have to",
+            "5) You ___ pay to use the library. (don't have to) -> don't have to",
+            "6) She ___ speak more slowly in class. (should) -> should",
+            "7) Visitors ___ sign in at reception. (must) -> must",
+            "8) You ___ smoke inside the building. (mustn't) -> mustn't",
+            "9) I ___ work on Saturday this week. (have to) -> have to",
+            "10) You ___ bring food; lunch is provided. (don't have to) -> don't have to",
           ],
           practice:
             "Write a class rule guide with 8 rules and 6 advice sentences using should/must/mustn't.",
@@ -955,13 +1053,20 @@
         {
           topic: "Conditionals (0, 1st, 2nd)",
           introEn:
-            "Zero conditional states general truths: If you heat water, it boils. First conditional predicts real future results: If I study, I will pass. Second conditional imagines unreal present situations: If I had more time, I would travel. Do not use would in the if-clause. French si clauses map differently — learn each pattern as a fixed frame.",
+            "Zero conditional states general truths: If you heat water, it boils. First conditional predicts a real future result: If I study, I will pass. Second conditional imagines an unreal present situation: If I had more time, I would travel. Never use would in the if-clause. French si + present/future or si + imperfect + conditional map differently — learn each English pattern as a fixed frame.",
           introFr:
-            "Le zero conditional exprime une vérité générale : If you heat water, it boils. Le first conditional prévoit un résultat futur réaliste : If I study, I will pass. Le second conditional imagine une situation irréelle au présent : If I had more time, I would travel. N'utilise jamais would dans la proposition avec if. Les tournures avec si en français ne se traduisent pas toujours une à une — apprends chaque structure comme un modèle fixe.",
+            "Le zero conditional exprime une vérité générale : If you heat water, it boils. Le first conditional prévoit un résultat futur réaliste : If I study, I will pass. Le second conditional imagine une situation irréelle au présent : If I had more time, I would travel. N'utilise jamais would dans la proposition avec if. En français, si + présent/futur ou si + imparfait + conditionnel ne se traduisent pas toujours pareil — apprends chaque structure anglaise comme un modèle fixe.",
           examples: [
-            "1) If you heat ice, it ___. (melts)",
-            "2) If I study hard, I ___ the test. (will pass)",
-            "3) If I had more time, I ___ more books. (would read)",
+            "1) If you heat ice, it ___. (melts) -> melts",
+            "2) If I study hard, I ___ the test. (will pass) -> will pass",
+            "3) If I had more time, I ___ more books. (would read) -> would read",
+            "4) If it rains, we ___ at home. (will stay) -> will stay",
+            "5) If she ___ harder, she would succeed. (worked) -> worked",
+            "6) If you mix red and blue, you ___ purple. (get) -> get",
+            "7) If they invite me, I ___ go. (will) -> will",
+            "8) If I were rich, I ___ travel the world. (would) -> would",
+            "9) If he doesn't hurry, he ___ the bus. (will miss) -> will miss",
+            "10) If we had a car, we ___ drive to the coast. (would) -> would",
           ],
           practice:
             "Write 12 conditional sentences: 4 zero, 4 first, and 4 second conditional.",
@@ -969,13 +1074,20 @@
         {
           topic: "Reported speech",
           introEn:
-            "Reported speech shifts the tense back when the reporting verb is past: She said, \"I am tired\" → She said (that) she was tired. Pronouns and time words also change (today → that day). With modal will, use would; with can, use could. Keep the sentence natural — you are reporting meaning, not translating word for word.",
+            "Reported speech reports what someone said without quoting their exact words. When the reporting verb is past (said, told), tenses usually shift back: \"I am tired\" → She said (that) she was tired. Pronouns and time words change too (today → that day, now → then). Will becomes would, can becomes could. You are reporting meaning, not translating word for word.",
           introFr:
-            "Le discours indirect recule d'un temps quand le verbe introducteur est au passé : She said, « I am tired » → She said (that) she was tired. Les pronoms et les repères temporels changent aussi (today → that day). Will devient would, can devient could. Vise le sens naturel — tu rapportes l'idée, tu ne traduis pas mot à mot.",
+            "Le discours indirect rapporte ce que quelqu'un a dit sans citer ses mots exacts. Quand le verbe introducteur est au passé (said, told), les temps reculent en général : « I am tired » → She said (that) she was tired. Les pronoms et les repères temporels changent aussi (today → that day, now → then). Will devient would, can devient could. Tu rapportes le sens, tu ne traduis pas mot à mot.",
           examples: [
-            "1) She said, 'I am tired.' -> She said she ___ tired. (was)",
-            "2) He said, 'I will call you.' -> He said he ___ call me. (would)",
-            "3) They said, 'We have finished.' -> They said they ___ finished. (had)",
+            "1) She said, 'I am tired.' -> She said she ___ tired. (was) -> was",
+            "2) He said, 'I will call you.' -> He said he ___ call me. (would) -> would",
+            "3) They said, 'We have finished.' -> They said they ___ finished. (had) -> had",
+            "4) She said, 'I can help.' -> She said she ___ help. (could) -> could",
+            "5) He said, 'I live in Dublin.' -> He said he ___ in Dublin. (lived) -> lived",
+            "6) They said, 'We are leaving.' -> They said they ___ leaving. (were) -> were",
+            "7) She said, 'I saw the film.' -> She said she ___ the film. (had seen) -> had seen",
+            "8) He said, 'I will not come.' -> He said he ___ not come. (would) -> would",
+            "9) She asked, 'Are you ready?' -> She asked if I ___ ready. (was) -> was",
+            "10) He said, 'I must go now.' -> He said he ___ to go then. (had) -> had",
           ],
           practice:
             "Convert 10 direct quotes into reported speech and explain each tense change.",
@@ -983,13 +1095,20 @@
         {
           topic: "Passive voice in context",
           introEn:
-            "The passive focuses on the action or result, not who did it: English is spoken worldwide. Form it with be + past participle. Use by + agent when the doer matters. Choose passive in formal writing and when the actor is unknown or unimportant. Active voice is usually clearer for short, direct sentences.",
+            "The passive voice focuses on the action or result, not who did it: English is spoken worldwide. Form it with be + past participle in the correct tense: is made, was built, has been stolen. Add by + agent when the doer matters. Use passive in formal writing and when the actor is unknown. Active voice is clearer for short everyday sentences.",
           introFr:
-            "La voix passive met l'accent sur l'action ou le résultat, pas sur l'auteur : English is spoken worldwide. On la forme avec be + participe passé. On ajoute by + agent quand l'auteur compte. Utilise la passive dans l'écriture formelle ou quand l'auteur est inconnu. La voix active reste plus claire pour des phrases courtes et directes.",
+            "La voix passive met l'accent sur l'action ou le résultat, pas sur l'auteur : English is spoken worldwide. On la forme avec be + participe passé au temps voulu : is made, was built, has been stolen. On ajoute by + agent quand l'auteur compte. Utilise la passive dans l'écriture formelle ou quand l'auteur est inconnu. La voix active reste plus claire pour les phrases courtes du quotidien.",
           examples: [
-            "1) People speak English worldwide. -> English ___ worldwide. (is spoken)",
-            "2) They built the bridge in 1998. -> The bridge ___ in 1998. (was built)",
-            "3) Someone has stolen my bike. -> My bike ___ . (has been stolen)",
+            "1) People speak English worldwide. -> English ___ worldwide. (is spoken) -> is spoken",
+            "2) They built the bridge in 1998. -> The bridge ___ in 1998. (was built) -> was built",
+            "3) Someone has stolen my bike. -> My bike ___. (has been stolen) -> has been stolen",
+            "4) The chef cooks the meals. -> The meals ___ by the chef. (are cooked) -> are cooked",
+            "5) They will announce the results. -> The results ___ tomorrow. (will be announced) -> will be announced",
+            "6) Someone broke the window. -> The window ___. (was broken) -> was broken",
+            "7) They are repairing the road. -> The road ___. (is being repaired) -> is being repaired",
+            "8) People use this app daily. -> This app ___ daily. (is used) -> is used",
+            "9) They had finished the work. -> The work ___. (had been finished) -> had been finished",
+            "10) Someone must sign the form. -> The form ___. (must be signed) -> must be signed",
           ],
           practice:
             "Rewrite 14 active sentences into passive voice and identify the tense used each time.",
@@ -997,13 +1116,20 @@
         {
           topic: "Comparatives and superlatives for argument writing",
           introEn:
-            "Short adjectives take -er / -est (cheap → cheaper → cheapest). Long adjectives use more/most (more effective → most effective). Use than after comparatives and the before superlatives. In arguments, comparatives show contrast between options; superlatives highlight the strongest claim. Irregular forms include good → better → best and bad → worse → worst.",
+            "Short adjectives take -er for comparatives and -est for superlatives: cheap → cheaper → cheapest. Long adjectives use more and most: more effective → most effective. Use than after comparatives and the before superlatives. Irregular forms: good → better → best, bad → worse → worst. In arguments, comparatives contrast two options; superlatives make the strongest claim.",
           introFr:
-            "Les adjectifs courts prennent -er / -est (cheap → cheaper → cheapest). Les adjectifs longs utilisent more/most (more effective → most effective). On met than après le comparatif et the devant le superlatif. Dans un argument, le comparatif oppose deux options ; le superlatif souligne le point le plus fort. Formes irrégulières : good → better → best et bad → worse → worst.",
+            "Les adjectifs courts prennent -er au comparatif et -est au superlatif : cheap → cheaper → cheapest. Les adjectifs longs utilisent more et most : more effective → most effective. On met than après le comparatif et the devant le superlatif. Formes irrégulières : good → better → best, bad → worse → worst. Dans un argument, le comparatif oppose deux options ; le superlatif affirme le point le plus fort.",
           examples: [
-            "1) This plan is ___ than the last one. (more effective)",
-            "2) It is the ___ option for students. (best)",
-            "3) Public transport is often ___ than driving. (cheaper)",
+            "1) This plan is ___ than the last one. (more effective) -> more effective",
+            "2) It is the ___ option for students. (best) -> best",
+            "3) Public transport is often ___ than driving. (cheaper) -> cheaper",
+            "4) She is ___ than her sister. (taller) -> taller",
+            "5) That was the ___ film I have ever seen. (worst) -> worst",
+            "6) This exercise is ___ than the previous one. (harder) -> harder",
+            "7) He is the ___ player on the team. (most experienced) -> most experienced",
+            "8) Today is ___ than yesterday. (warmer) -> warmer",
+            "9) Maths is ___ for me than history. (easier) -> easier",
+            "10) It was the ___ day of my life. (happiest) -> happiest",
           ],
           practice:
             "Write a comparison paragraph (150 words) about two study methods using 10 comparison forms.",
@@ -1011,13 +1137,20 @@
         {
           topic: "Essay paragraph structure (PEEL)",
           introEn:
-            "PEEL structures a paragraph: Point (your main idea), Evidence (a fact or example), Explain (why it matters), Link (back to the question). Each paragraph should prove one clear point. French essays often build slowly toward the idea — in English academic writing, state the point in the first sentence so the reader follows your logic immediately.",
+            "PEEL structures a strong paragraph: Point (state your main idea first), Evidence (give a fact, quote, or example), Explain (show why the evidence supports your point), Link (connect back to the essay question). Each paragraph should prove one clear idea. In French essays you often build slowly to the point — in English academic writing, put the point in the first sentence so the reader follows your logic immediately.",
           introFr:
-            "PEEL structure un paragraphe : Point (idée principale), Evidence (fait ou exemple), Explain (pourquoi c'est important), Link (retour à la question). Chaque paragraphe doit défendre une seule idée claire. En français, on arrive parfois lentement à l'idée — en anglais, annonce ton point dès la première phrase pour guider le lecteur.",
+            "PEEL structure un paragraphe solide : Point (annonce ton idée principale dès le début), Evidence (donne un fait, une citation ou un exemple), Explain (montre pourquoi cette preuve soutient ton idée), Link (reviens à la question du devoir). Chaque paragraphe doit défendre une seule idée claire. En français, on arrive parfois lentement à l'idée — en anglais, mets le point dès la première phrase pour guider le lecteur.",
           examples: [
-            "Point: School uniforms improve focus.",
-            "Evidence: Survey data from 200 students.",
-            "Explain: Reduced social pressure improves concentration.",
+            "1) The ___ sentence should state your main idea. (opening) -> opening",
+            "2) Good evidence includes a ___ or a real example. (fact) -> fact",
+            "3) After evidence, you must ___ why it matters. (explain) -> explain",
+            "4) The final sentence should ___ back to the question. (link) -> link",
+            "5) Each PEEL paragraph covers one ___. (point) -> point",
+            "6) Strong essays use ___ data, not vague opinions. (specific) -> specific",
+            "7) The Explain section connects evidence to your ___. (argument) -> argument",
+            "8) A good Link shows how the paragraph answers the ___. (question) -> question",
+            "9) PEEL helps you avoid ___ that wander off topic. (paragraphs) -> paragraphs",
+            "10) In English essays, put the Point ___ in the paragraph. (first) -> first",
           ],
           practice:
             "Write two PEEL paragraphs on one education topic and self-check each section.",
@@ -1028,13 +1161,20 @@
         {
           topic: "Linkers for cohesion (however, therefore, moreover)",
           introEn:
-            "Linkers connect ideas and show logic: however (contrast), therefore (result), moreover (addition), although (concession). Place them carefully — however often starts a new sentence or follows a semicolon. Overusing basic linkers (and, but, so) weakens formal writing. Match the linker to the relationship between your ideas, not just to fill space.",
+            "Linkers show the logical relationship between ideas: however (contrast), therefore (result), moreover (addition), although (concession), furthermore (extra point). However often starts a new sentence or follows a semicolon. Overusing and, but, so weakens formal writing. Choose the linker that matches the relationship between your ideas — not just to fill space.",
           introFr:
-            "Les connecteurs relient les idées et montrent la logique : however (contraste), therefore (conséquence), moreover (ajout), although (concession). Place-les avec soin — however commence souvent une nouvelle phrase ou suit un point-virgule. Trop de and, but, so affaiblissent un texte formel. Choisis le connecteur qui correspond au lien entre tes idées, pas pour remplir la page.",
+            "Les connecteurs montrent le lien logique entre les idées : however (contraste), therefore (conséquence), moreover (ajout), although (concession), furthermore (point supplémentaire). However commence souvent une nouvelle phrase ou suit un point-virgule. Trop de and, but, so affaiblissent un texte formel. Choisis le connecteur qui correspond au lien entre tes idées — pas pour remplir la page.",
           examples: [
-            "1) The plan is expensive; ___, it is effective. (however)",
-            "2) We practised daily; ___, we improved. (therefore)",
-            "3) The class is small; ___, everyone participates. (moreover)",
+            "1) The plan is expensive; ___, it is effective. (however) -> however",
+            "2) We practised daily; ___, we improved. (therefore) -> therefore",
+            "3) The class is small; ___, everyone participates. (moreover) -> moreover",
+            "4) ___ the weather was bad, we went out. (Although) -> Although",
+            "5) She studied hard; ___, she passed easily. (therefore) -> therefore",
+            "6) The idea is new. ___, it needs more testing. (However) -> However",
+            "7) He is talented. ___, he works very hard. (Furthermore) -> Furthermore",
+            "8) I wanted to go; ___, I was too tired. (however) -> however",
+            "9) ___ it was late, they continued working. (Even though) -> Even though",
+            "10) Costs rose. ___, profits increased. (Nevertheless) -> Nevertheless",
           ],
           practice: "Write a 160-word argument text using at least 10 linkers accurately.",
           extension: "Replace basic linkers with higher-level alternatives.",
@@ -1044,13 +1184,20 @@
         {
           topic: "Error correction and redrafting",
           introEn:
-            "Common learner errors include wrong verb forms, false friends, and word order in questions. Read your draft aloud — if it sounds wrong, it probably is. Compare each sentence to a simple model: subject + verb + object. Redrafting is not just fixing spelling; upgrade vocabulary and cut repeated words. Keep a personal error log to spot your own patterns.",
+            "Common errors for French speakers include wrong verb forms (He go → goes), false friends (I am agree → I agree), and word order in questions. Read your draft aloud — if it sounds wrong, it probably is. Redrafting means fixing grammar and upgrading vocabulary, not just spelling. Keep a personal error log to spot your own patterns and avoid repeating them.",
           introFr:
-            "Les erreurs fréquentes concernent les formes verbales, les faux amis et l'ordre des mots dans les questions. Lis ton brouillon à voix haute — si ça sonne faux, c'est souvent le cas. Compare chaque phrase à un modèle simple : sujet + verbe + complément. Relire, ce n'est pas seulement corriger l'orthographe ; améliore le vocabulaire et évite les répétitions. Tiens une liste de tes erreurs typiques.",
+            "Les erreurs fréquentes des francophones : mauvaises formes verbales (He go → goes), faux amis (I am agree → I agree), ordre des mots dans les questions. Lis ton brouillon à voix haute — si ça sonne faux, c'est souvent le cas. Relire, c'est corriger la grammaire et améliorer le vocabulaire, pas seulement l'orthographe. Tiens une liste de tes erreurs typiques pour ne pas les répéter.",
           examples: [
-            "1) He go to school every day. -> goes",
-            "2) I am agree with you. -> I agree with you.",
-            "3) She said me to come. -> She told me to come.",
+            "1) He ___ to school every day. (goes) -> goes",
+            "2) I ___ with you on this point. (agree) -> agree",
+            "3) She ___ me to come earlier. (told) -> told",
+            "4) They ___ finished their homework yet. (haven't) -> haven't",
+            "5) He is ___ intelligent than his brother. (more) -> more",
+            "6) I have ___ to Paris three times. (been) -> been",
+            "7) She ___ me a text message. (sent) -> sent",
+            "8) We ___ a lot of fun at the party. (had) -> had",
+            "9) He doesn't ___ like spicy food. (really) -> really",
+            "10) She explained the rules ___ us clearly. (to) -> to",
           ],
           practice: "Correct 20 common learner errors and rewrite the final paragraph cleanly.",
           extension: "Explain why each correction is needed in simple grammar language.",
@@ -1309,13 +1456,20 @@
         {
           topic: "Possessive adjectives in advanced writing",
           introEn:
-            "In formal writing, possessives must keep reference crystal clear across sentences. Use its for organisations and countries, not their, unless you treat them as groups of people. Avoid stacking too many possessives in one noun phrase. When precision matters, repeat the noun instead of using a vague their or its.",
+            "In advanced formal writing, possessives must keep reference clear across sentences. Use its for organisations, countries, and abstract entities when treated as single units: the government changed its policy. Use their when referring to groups of people. Avoid stacking multiple possessives in one phrase. When precision matters, repeat the noun rather than using a vague their or its.",
           introFr:
-            "Dans un texte formel, les possessifs doivent garder une référence limpide d'une phrase à l'autre. Utilise its pour une organisation ou un pays, pas their, sauf si tu les vois comme un groupe de personnes. Évite d'enchaîner trop de possessifs dans une même expression. Quand la précision compte, répète le nom plutôt qu'un their ou its vague.",
+            "Dans un texte formel avancé, les possessifs doivent garder une référence limpide d'une phrase à l'autre. Utilise its pour les organisations, les pays et les entités abstraites vues comme un tout : the government changed its policy. Utilise their pour un groupe de personnes. Évite d'enchaîner plusieurs possessifs dans une même expression. Quand la précision compte, répète le nom plutôt qu'un their ou its vague.",
           examples: [
-            "1) Each candidate must justify ___ methodology. (his/her/their)",
-            "2) The committee reviewed ___ final draft. (its)",
-            "3) Students should evaluate ___ assumptions. (their)",
+            "1) Each candidate must justify ___ methodology. (their) -> their",
+            "2) The committee reviewed ___ final draft. (its) -> its",
+            "3) Students should evaluate ___ assumptions. (their) -> their",
+            "4) The university published ___ annual report. (its) -> its",
+            "5) The researchers defended ___ conclusions. (their) -> their",
+            "6) France raised ___ minimum wage last year. (its) -> its",
+            "7) The board announced ___ decision yesterday. (its) -> its",
+            "8) Both authors revised ___ chapters. (their) -> their",
+            "9) The company improved ___ online service. (its) -> its",
+            "10) Every participant signed ___ consent form. (their) -> their",
           ],
           practice:
             "Edit a 180-word text to improve reference clarity, possessives, and cohesion.",
@@ -1323,13 +1477,20 @@
         {
           topic: "Cleft and inversion practice",
           introEn:
-            "Cleft sentences (It was John who called) and inversion (Rarely do we see…) add emphasis in advanced English. Use them sparingly for focus, not in every sentence. Inversion often follows negative adverbs at the start: Never have I seen…, Not only did she win… Master the basic word order first, then use these structures to highlight one element.",
+            "Cleft sentences split a sentence to emphasise one element: It was John who called (not someone else). Inversion front-loads an adverb or negative for emphasis: Rarely do we see such progress; Never have I heard that. Use these structures sparingly in essays and formal speaking. Master normal word order first, then use clefts and inversion to highlight what matters most.",
           introFr:
-            "Les phrases clivées (It was John who called) et l'inversion (Rarely do we see…) mettent l'accent en anglais avancé. Utilise-les avec parcimonie, pas dans chaque phrase. L'inversion suit souvent un adverbe négatif en tête : Never have I seen…, Not only did she win… Maîtrise d'abord l'ordre des mots standard, puis emploie ces structures pour souligner un élément.",
+            "Les phrases clivées mettent l'accent sur un élément : It was John who called (pas quelqu'un d'autre). L'inversion place un adverbe ou une négation en tête pour insister : Rarely do we see such progress ; Never have I heard that. Utilise ces structures avec parcimonie dans les essais et à l'oral formel. Maîtrise d'abord l'ordre des mots standard, puis emploie clivées et inversion pour souligner l'essentiel.",
           examples: [
-            "1) It was only later that we ___ the issue. (understood)",
-            "2) Rarely ___ students receive such feedback. (do)",
-            "3) What the essay lacks is ___. (clear evidence)",
+            "1) It was only later that we ___ the issue. (understood) -> understood",
+            "2) Rarely ___ students receive such feedback. (do) -> do",
+            "3) What the essay lacks is ___ evidence. (clear) -> clear",
+            "4) It was Maria ___ solved the problem. (who) -> who",
+            "5) Never ___ I seen such dedication. (have) -> have",
+            "6) Not only ___ she win, but she broke the record. (did) -> did",
+            "7) It is flexibility ___ employers value most. (that) -> that",
+            "8) Little ___ they know about the surprise. (did) -> did",
+            "9) What we need is ___ better planning. (more) -> more",
+            "10) Only then ___ we realise the mistake. (did) -> did",
           ],
           practice:
             "Rewrite 8 neutral sentences into advanced structures with clefts or inversion.",
@@ -1337,13 +1498,20 @@
         {
           topic: "Hedging and academic caution",
           introEn:
-            "Hedging softens claims so they sound academic and careful: may, might, appears to, tends to, it could be argued. Avoid absolute words (always, proves, definitely) unless evidence is strong. French academic style can sound more direct — in English, qualified language shows you understand complexity and counterarguments.",
+            "Hedging softens claims so they sound academic and careful rather than absolute. Use may, might, appears to, tends to, it could be argued that, and is likely to. Avoid proves, always, and definitely unless your evidence is very strong. French academic French can sound more direct — in English, qualified language shows you understand complexity and possible counterarguments.",
           introFr:
-            "Le hedging atténue une affirmation pour un ton académique prudent : may, might, appears to, tends to, it could be argued. Évite les mots absolus (always, proves, definitely) sans preuve solide. Le style académique français peut paraître plus direct — en anglais, nuancer montre que tu comprends la complexité et les contre-arguments.",
+            "Le hedging atténue une affirmation pour un ton académique prudent plutôt qu'absolu. Utilise may, might, appears to, tends to, it could be argued that et is likely to. Évite proves, always et definitely sauf si tes preuves sont très solides. Le français académique peut paraître plus direct — en anglais, nuancer montre que tu comprends la complexité et les contre-arguments possibles.",
           examples: [
-            "1) This result ___ indicate a wider trend. (may)",
-            "2) It ___ be argued that policy changes are needed. (can)",
-            "3) The evidence ___ to suggest a link. (appears)",
+            "1) This result ___ indicate a wider trend. (may) -> may",
+            "2) It ___ be argued that policy changes are needed. (can) -> can",
+            "3) The evidence ___ to suggest a link. (appears) -> appears",
+            "4) The data ___ support this conclusion. (seem to) -> seem to",
+            "5) This ___ be the main cause of the problem. (might) -> might",
+            "6) It is ___ that costs will rise. (probable) -> probable",
+            "7) The study ___ to show a small effect. (tends) -> tends",
+            "8) One could ___ that the sample is too small. (argue) -> argue",
+            "9) These findings ___ not apply to all groups. (may) -> may",
+            "10) It ___ reasonable to expect improvement. (is) -> is",
           ],
           practice:
             "Rewrite a strong opinion paragraph using at least 8 hedging expressions.",
@@ -1351,13 +1519,20 @@
         {
           topic: "Nominalisation for formal writing",
           introEn:
-            "Nominalisation turns verbs or adjectives into nouns: analyse → analysis, decide → decision. It makes writing denser and more formal. Use it in essays and reports, but balance with clear verbs so the reader still knows who did what. Too much nominalisation creates heavy, passive sentences that are hard to follow.",
+            "Nominalisation turns verbs or adjectives into nouns to make writing denser and more formal: analyse → analysis, decide → decision, improve → improvement. It is common in academic essays and reports. Balance nominalisation with clear verbs so the reader still knows who did what. Too much nominalisation creates heavy sentences that are hard to follow.",
           introFr:
-            "La nominalisation transforme un verbe ou un adjectif en nom : analyse → analysis, decide → decision. Le style devient plus dense et plus formel. Utilise-la dans les essais et rapports, mais garde des verbes clairs pour que le lecteur sache qui fait quoi. Trop de nominalisations produit des phrases lourdes et difficiles à suivre.",
+            "La nominalisation transforme un verbe ou un adjectif en nom pour un style plus dense et formel : analyse → analysis, decide → decision, improve → improvement. C'est courant dans les essais et rapports académiques. Équilibre nominalisation et verbes clairs pour que le lecteur sache qui fait quoi. Trop de nominalisations produit des phrases lourdes et difficiles à suivre.",
           examples: [
-            "1) We analysed the data. -> The ___ of the data... (analysis)",
-            "2) The government decided quickly. -> The quick ___ ... (decision)",
-            "3) Students improved rapidly. -> Rapid ___ was observed. (improvement)",
+            "1) We analysed the data. -> The ___ of the data was thorough. (analysis) -> analysis",
+            "2) The government decided quickly. -> The quick ___ surprised many. (decision) -> decision",
+            "3) Students improved rapidly. -> Rapid ___ was observed. (improvement) -> improvement",
+            "4) They discussed the issue. -> The ___ lasted two hours. (discussion) -> discussion",
+            "5) The team failed to communicate. -> Poor ___ caused delays. (communication) -> communication",
+            "6) We evaluated the results. -> Our ___ was positive. (evaluation) -> evaluation",
+            "7) The policy changed society. -> The ___ of the policy was significant. (impact) -> impact",
+            "8) Scientists discovered a new method. -> The ___ was published last year. (discovery) -> discovery",
+            "9) He argued convincingly. -> His ___ was persuasive. (argument) -> argument",
+            "10) They implemented the plan. -> The ___ took six months. (implementation) -> implementation",
           ],
           practice:
             "Transform 12 verb-based sentences into formal nominalised structures.",
@@ -1365,13 +1540,20 @@
         {
           topic: "Paraphrasing and synonym control",
           introEn:
-            "Paraphrasing restates an idea in new words without changing the meaning. Use synonyms carefully — similar does not mean identical (event vs incident). Change both vocabulary and structure. In exams, paraphrase the question in your introduction to show understanding. Avoid copying long chunks from a source; that is not paraphrase.",
+            "Paraphrasing restates an idea in new words without changing the meaning — essential in essays and exams. Choose synonyms carefully: similar does not mean identical (event vs incident, big vs enormous). Change both vocabulary and sentence structure. Paraphrase the question in your introduction to show understanding. Copying long chunks from a source is not paraphrase.",
           introFr:
-            "Paraphraser, c'est reformuler une idée avec d'autres mots sans changer le sens. Choisis les synonymes avec prudence — proche ne veut pas dire identique (event vs incident). Modifie le vocabulaire et la structure. À l'examen, paraphrase la question dans l'introduction pour montrer que tu l'as comprise. Ne recopie pas de longs passages ; ce n'est pas de la paraphrase.",
+            "Paraphraser, c'est reformuler une idée avec d'autres mots sans changer le sens — essentiel aux devoirs et aux examens. Choisis les synonymes avec prudence : proche ne veut pas dire identique (event vs incident, big vs enormous). Modifie le vocabulaire et la structure. Paraphrase la question dans l'introduction pour montrer que tu l'as comprise. Recopier de longs passages n'est pas de la paraphrase.",
           examples: [
-            "1) Important -> significant / crucial",
-            "2) Show -> demonstrate / indicate",
-            "3) Problem -> issue / challenge / limitation",
+            "1) Important can become ___ in formal writing. (significant) -> significant",
+            "2) Show can become ___ in academic texts. (demonstrate) -> demonstrate",
+            "3) Problem can become ___ or challenge. (issue) -> issue",
+            "4) Get can become ___ or obtain. (receive) -> receive",
+            "5) Bad can become ___ or inadequate. (poor) -> poor",
+            "6) Think can become ___ or believe. (consider) -> consider",
+            "7) Use can become ___ or employ. (utilise) -> utilise",
+            "8) Help can become ___ or support. (assist) -> assist",
+            "9) Big can become ___ or substantial. (major) -> major",
+            "10) Say can become ___ or state. (argue) -> argue",
           ],
           practice:
             "Paraphrase a 160-word paragraph without changing meaning while improving register.",
@@ -1379,13 +1561,20 @@
         {
           topic: "Complex sentence cohesion",
           introEn:
-            "Complex sentences join ideas with subordination (although, while, whereas) and coordination (not only…but also). Each clause must connect logically to the next. Start with one main idea per sentence, then add a dependent clause that explains, contrasts, or qualifies. Long sentences are fine only if every part earns its place.",
+            "Complex sentences join ideas using subordination (although, while, whereas, because) and coordination (not only…but also, both…and). Each clause must connect logically. Start with one main idea, then add a dependent clause that explains, contrasts, or qualifies. Long sentences work only when every part earns its place — if you lose the thread, split the sentence.",
           introFr:
-            "Les phrases complexes relient les idées par subordination (although, while, whereas) et coordination (not only…but also). Chaque proposition doit avoir un lien logique avec la suivante. Commence par une idée principale, puis ajoute une proposition qui explique, oppose ou nuance. Les longues phrases ne fonctionnent que si chaque partie est utile.",
+            "Les phrases complexes relient les idées par subordination (although, while, whereas, because) et coordination (not only…but also, both…and). Chaque proposition doit avoir un lien logique. Commence par une idée principale, puis ajoute une proposition qui explique, oppose ou nuance. Les longues phrases ne fonctionnent que si chaque partie est utile — si tu perds le fil, coupe la phrase.",
           examples: [
-            "1) Although X, Y ...",
-            "2) While it is true that X, ...",
-            "3) Not only X, but also Y ...",
+            "1) ___ the exam was hard, she passed. (Although) -> Although",
+            "2) He studied hard, ___ he still felt nervous. (yet) -> yet",
+            "3) ___ it was raining, we went out. (Even though) -> Even though",
+            "4) She speaks French, ___ her brother speaks English. (whereas) -> whereas",
+            "5) ___ you practise regularly, you will improve. (If) -> If",
+            "6) The plan failed, ___ it taught us valuable lessons. (but) -> but",
+            "7) ___ the evidence is limited, the trend is clear. (While) -> While",
+            "8) Not only ___ she write well, but she speaks fluently. (does) -> does",
+            "9) ___ the cost is high, the benefits are greater. (Although) -> Although",
+            "10) He left early ___ he could catch the train. (so that) -> so that",
           ],
           practice:
             "Write one cohesive paragraph using at least 8 advanced linkers and 3 complex sentence frames.",
@@ -1393,13 +1582,20 @@
         {
           topic: "Advanced punctuation and clarity",
           introEn:
-            "Semicolons link closely related independent clauses. Colons introduce lists or explanations. Commas set off non-essential clauses and items in a list. A comma splice joins two full sentences with only a comma — fix it with a full stop, semicolon, or conjunction. Clear punctuation guides the reader through your argument.",
+            "Semicolons link two closely related independent clauses: The results were mixed; however, the trend was positive. Colons introduce lists or explanations: One thing is clear: action is needed. Commas set off non-essential clauses and separate items in a list. A comma splice joins two full sentences with only a comma — fix it with a full stop, semicolon, or conjunction. Clear punctuation guides the reader through your argument.",
           introFr:
-            "Le point-virgule relie deux propositions indépendantes proches. Les deux-points introduisent une liste ou une explication. Les virgules isolent une proposition non essentielle ou séparent les éléments d'une liste. La comma splice unit deux phrases complètes avec seulement une virgule — corrige avec un point, un point-virgule ou une conjonction. Une ponctuation claire guide le lecteur.",
+            "Le point-virgule relie deux propositions indépendantes proches : The results were mixed; however, the trend was positive. Les deux-points introduisent une liste ou une explication : One thing is clear: action is needed. Les virgules isolent une proposition non essentielle ou séparent les éléments d'une liste. La comma splice unit deux phrases avec seulement une virgule — corrige avec un point, un point-virgule ou une conjonction. Une ponctuation claire guide le lecteur.",
           examples: [
-            "1) Use semicolons to connect related clauses.",
-            "2) Use colons to introduce explanation or lists.",
-            "3) Control comma splices in long sentences.",
+            "1) Use a ___ to join two related full sentences. (semicolon) -> semicolon",
+            "2) Use a ___ before a list or explanation. (colon) -> colon",
+            "3) A ___ splice joins two sentences with only a comma. (comma) -> comma",
+            "4) Non-essential clauses are set off with ___. (commas) -> commas",
+            "5) However at the start of a clause often follows a ___. (semicolon) -> semicolon",
+            "6) Items in a series are separated by ___. (commas) -> commas",
+            "7) A full ___ ends a complete sentence. (stop) -> stop",
+            "8) Question marks end ___ sentences. (interrogative) -> interrogative",
+            "9) Apostrophes show ___ in contractions and possession. (omission) -> omission",
+            "10) Dashes can add a ___ comment mid-sentence. (brief) -> brief",
           ],
           practice:
             "Edit a 220-word text for punctuation accuracy and sentence clarity, then justify each correction.",
@@ -1407,13 +1603,20 @@
         {
           topic: "Synthesis writing from two sources",
           introEn:
-            "Synthesis combines ideas from two or more sources into one coherent argument. Do not summarise each source separately — weave them together with compare/contrast language. Attribute clearly (Source A argues…, while Source B suggests…). Your thesis should show how the sources relate, not just repeat what each one says.",
+            "Synthesis combines ideas from two or more sources into one coherent argument — a key exam skill. Do not summarise each source in separate paragraphs; weave them together with compare/contrast language. Attribute clearly: Source A argues…, while Source B suggests… Your thesis should show how the sources relate, not just repeat what each one says.",
           introFr:
-            "La synthèse combine des idées de plusieurs sources en un argument cohérent. Ne résume pas chaque source à part — entrelace-les avec des connecteurs de comparaison. Indique clairement l'origine (Source A argues…, while Source B suggests…). Ta thèse doit montrer le lien entre les sources, pas seulement les répéter.",
+            "La synthèse combine des idées de plusieurs sources en un argument cohérent — une compétence clé à l'examen. Ne résume pas chaque source dans un paragraphe séparé ; entrelace-les avec des connecteurs de comparaison. Indique clairement l'origine : Source A argues…, while Source B suggests… Ta thèse doit montrer le lien entre les sources, pas seulement les répéter.",
           examples: [
-            "1) Source A argues that remote learning increases access.",
-            "2) Source B claims quality depends on teacher training.",
-            "3) Synthesis: balanced thesis combining both findings.",
+            "1) Source A argues that remote learning ___ access. (increases) -> increases",
+            "2) Source B claims quality depends on ___ training. (teacher) -> teacher",
+            "3) A balanced thesis must ___ both viewpoints. (address) -> address",
+            "4) Use ___ language to compare the two sources. (contrast) -> contrast",
+            "5) Attribution phrases include 'according to' and '___ suggests'. (research) -> research",
+            "6) Synthesis requires ___ sources, not separate summaries. (integrating) -> integrating",
+            "7) A strong thesis shows how the sources ___ or conflict. (agree) -> agree",
+            "8) Link words like 'however' show ___ between sources. (contrast) -> contrast",
+            "9) Your conclusion should ___ the combined argument. (summarise) -> summarise",
+            "10) Cite evidence using clear ___ to each source. (references) -> references",
           ],
           practice:
             "Write a 250-word synthesis paragraph integrating two short sources with clear attribution.",
@@ -1421,13 +1624,20 @@
         {
           topic: "Timed high-level speaking response",
           introEn:
-            "In timed speaking, plan briefly then deliver a clear structure: claim, support, counterpoint, conclusion. Use signposting phrases (First, However, To sum up). Fluency matters, but so does accuracy — short correct sentences beat long broken ones. Practice with a timer until two minutes feels natural, not rushed.",
+            "In timed speaking, plan for 30 seconds then deliver a clear structure: claim, support, counterpoint, conclusion. Use signposting phrases: First, However, To sum up. Fluency matters, but accuracy matters too — short correct sentences beat long broken ones. Practice with a timer until two minutes feels controlled, not rushed. This mirrors oral exam conditions.",
           introFr:
-            "À l'oral chronométré, planifie brièvement puis suis une structure claire : affirmation, argument, contrepoint, conclusion. Utilise des marqueurs (First, However, To sum up). La fluidité compte, mais aussi la justesse — des phrases courtes correctes valent mieux que de longues phrases cassées. Entraîne-toi avec un minuteur jusqu'à ce que deux minutes paraissent naturelles.",
+            "À l'oral chronométré, planifie 30 secondes puis suis une structure claire : affirmation, argument, contrepoint, conclusion. Utilise des marqueurs : First, However, To sum up. La fluidité compte, mais la justesse aussi — des phrases courtes correctes valent mieux que de longues phrases cassées. Entraîne-toi avec un minuteur jusqu'à ce que deux minutes paraissent maîtrisées, pas précipitées. C'est proche des conditions d'examen oral.",
           examples: [
-            "1) 30s plan -> 2min response",
-            "2) Include claim, support, counterpoint, conclusion",
-            "3) Use at least 6 advanced linkers",
+            "1) Start with a clear ___ statement. (opening) -> opening",
+            "2) Support your claim with a concrete ___. (example) -> example",
+            "3) Include at least one ___ to show balance. (counterpoint) -> counterpoint",
+            "4) Use '___' to introduce your first argument. (First) -> First",
+            "5) Use '___' to signal a contrast. (However) -> However",
+            "6) End with a strong ___ sentence. (concluding) -> concluding",
+            "7) Advanced linkers improve ___ between ideas. (cohesion) -> cohesion",
+            "8) A timed response usually lasts about ___ minutes. (two) -> two",
+            "9) Planning time is often about ___ seconds. (thirty) -> thirty",
+            "10) Signposting helps the listener follow your ___. (structure) -> structure",
           ],
           practice:
             "Record three timed responses and self-score accuracy, coherence, and lexical range.",
@@ -1438,13 +1648,20 @@
         {
           topic: "Abstract topic essay planning",
           introEn:
-            "Abstract prompts (technology, ethics, identity) need a clear thesis before you write. Brainstorm two supporting points and one counterargument you can answer. Each body paragraph should map to one part of your plan. Under time pressure, a strong plan prevents vague, repetitive essays that never land a clear position.",
+            "Abstract prompts (technology, ethics, identity, climate) need a clear thesis before you write a word. Brainstorm two supporting points and one counterargument you can answer. Each body paragraph should map to one part of your plan. Under time pressure, a strong plan prevents vague, repetitive essays that never land a clear position — plan first, write second.",
           introFr:
-            "Les sujets abstraits (technologie, éthique, identité) exigent une thèse claire avant d'écrire. Trouve deux arguments et un contre-argument que tu peux réfuter. Chaque paragraphe du corps doit correspondre à une partie du plan. Sous pression du temps, un bon plan évite les essais vagues qui n'aboutissent à aucune position nette.",
+            "Les sujets abstraits (technologie, éthique, identité, climat) exigent une thèse claire avant d'écrire. Trouve deux arguments et un contre-argument que tu peux réfuter. Chaque paragraphe du corps doit correspondre à une partie du plan. Sous pression du temps, un bon plan évite les essais vagues et répétitifs qui n'aboutissent à aucune position nette — planifie d'abord, écris ensuite.",
           examples: [
-            "1) Prompt: Is technology making attention spans weaker?",
-            "2) Build thesis + 2 balanced body points + counterargument.",
-            "3) Add one real-world example per paragraph.",
+            "1) Every essay plan needs a clear ___. (thesis) -> thesis",
+            "2) Include at least two supporting ___ in your plan. (points) -> points",
+            "3) A strong plan includes a ___ you can answer. (counterargument) -> counterargument",
+            "4) Each body paragraph maps to one ___ in the plan. (section) -> section",
+            "5) Abstract topics need ___ examples, not vague generalities. (concrete) -> concrete",
+            "6) Your introduction should state the ___ directly. (thesis) -> thesis",
+            "7) Planning time saves time during ___. (writing) -> writing",
+            "8) A balanced essay considers more than one ___. (viewpoint) -> viewpoint",
+            "9) The conclusion should ___ the thesis without repeating every detail. (restate) -> restate",
+            "10) Under exam conditions, spend the first minutes on ___. (planning) -> planning",
           ],
           practice: "Create 3 full essay plans in 20 minutes each.",
           extension: "Write one complete essay from your strongest plan.",
@@ -1454,13 +1671,20 @@
         {
           topic: "Source comparison and reliability",
           introEn:
-            "When comparing sources, examine purpose, audience, evidence, and bias — not just whether you agree. A reliable source cites evidence, acknowledges limits, and matches its goal (inform vs persuade). Distinguish fact from interpretation. Your judgment should explain why one source is stronger, not simply which one you prefer.",
+            "When comparing sources, examine purpose, audience, evidence quality, and bias — not just whether you agree. A reliable source cites evidence, acknowledges limits, and matches its goal (inform vs persuade). Distinguish fact from interpretation. Your judgment should explain why one source is stronger, with specific reasons, not simply which one you prefer.",
           introFr:
-            "Pour comparer des sources, examine l'objectif, le public visé, les preuves et les biais — pas seulement si tu es d'accord. Une source fiable cite des éléments, reconnaît ses limites et correspond à son but (informer vs convaincre). Distingue le fait de l'interprétation. Ton jugement doit expliquer pourquoi une source est plus solide, pas seulement laquelle tu préfères.",
+            "Pour comparer des sources, examine l'objectif, le public visé, la qualité des preuves et les biais — pas seulement si tu es d'accord. Une source fiable cite des éléments, reconnaît ses limites et correspond à son but (informer vs convaincre). Distingue le fait de l'interprétation. Ton jugement doit expliquer pourquoi une source est plus solide, avec des raisons précises, pas seulement laquelle tu préfères.",
           examples: [
-            "1) Compare purpose, audience, and evidence quality.",
-            "2) Distinguish claim from data.",
-            "3) Identify bias and missing context.",
+            "1) Compare each source's ___ and intended audience. (purpose) -> purpose",
+            "2) Distinguish a claim from supporting ___. (data) -> data",
+            "3) Identify ___ and missing context in each source. (bias) -> bias",
+            "4) A reliable source acknowledges its ___. (limitations) -> limitations",
+            "5) Check whether the evidence is ___ and verifiable. (specific) -> specific",
+            "6) Persuasive sources may omit ___ viewpoints. (opposing) -> opposing",
+            "7) Academic sources usually cite their ___. (references) -> references",
+            "8) News articles should separate fact from ___. (opinion) -> opinion",
+            "9) Your judgment must explain ___ one source is stronger. (why) -> why",
+            "10) Compare sources using a ___ tone, not personal preference. (analytical) -> analytical",
           ],
           practice: "Compare two short sources in a 220-word critical response.",
           extension: "Add one paragraph evaluating which source is more reliable and why.",
