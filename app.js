@@ -4246,6 +4246,11 @@
       startQuiz("easy");
       refreshGamificationHeader();
 
+      function stripParentheticalHints(text) {
+        if (!text) return "";
+        return text.replace(/\s*\([^)]*\)/g, "").trim();
+      }
+
       function parseGapLine(line) {
         if (!line || line.indexOf("___") < 0) return null;
         const arrow = line.lastIndexOf("->");
@@ -4254,7 +4259,21 @@
         const head = line.slice(0, arrow).trim();
         const parts = head.split("___");
         if (parts.length < 2) return null;
-        return { before: parts[0], after: parts.slice(1).join("___"), answer: answer };
+        const before = parts[0];
+        const after = parts.slice(1).join("___");
+        return {
+          before: before,
+          after: after,
+          answer: answer,
+        };
+      }
+
+      function gapQuestionText(item) {
+        return (
+          stripParentheticalHints(item.before) +
+          " _____ " +
+          stripParentheticalHints(item.after)
+        );
       }
 
       function parseLearnIntro(introFr) {
@@ -4360,7 +4379,7 @@
         wrap.className = "lh-gap-card";
         const q = document.createElement("p");
         q.className = "lh-gap-q";
-        q.textContent = item.before + " _____ " + item.after;
+        q.textContent = gapQuestionText(item);
         wrap.appendChild(q);
         const opts = [item.answer];
         const seenAns = Object.create(null);
@@ -4386,9 +4405,6 @@
         });
         const row = document.createElement("div");
         row.className = "lh-vocab-options lh-gap-card__options";
-        const feedback = document.createElement("p");
-        feedback.className = "lh-gap-feedback";
-        feedback.setAttribute("aria-live", "polite");
         let locked = false;
         opts.forEach(function (o) {
           const b = document.createElement("button");
@@ -4404,27 +4420,24 @@
             });
             if (ok) {
               b.classList.add("is-correct");
-              feedback.textContent = I18n.t("learning_gap_correct");
-              feedback.classList.add("lh-gap-feedback--ok");
               setTimeout(function () {
                 onAnswered(ok);
-              }, 1000);
+              }, 800);
             } else {
               b.classList.add("is-wrong");
-              Array.from(row.querySelectorAll("button")).forEach(function (btn) {
-                if (btn.textContent === item.answer) btn.classList.add("is-correct");
-              });
-              feedback.textContent = I18n.t("learning_gap_incorrect", { answer: item.answer });
-              feedback.classList.add("lh-gap-feedback--bad");
               setTimeout(function () {
-                onAnswered(ok);
-              }, 1800);
+                Array.from(row.querySelectorAll("button")).forEach(function (btn) {
+                  if (btn.textContent === item.answer) btn.classList.add("is-correct");
+                });
+                setTimeout(function () {
+                  onAnswered(ok);
+                }, 1500);
+              }, 300);
             }
           });
           row.appendChild(b);
         });
         wrap.appendChild(row);
-        wrap.appendChild(feedback);
         return wrap;
       }
 
@@ -4527,58 +4540,37 @@
           const g = parseGapLine(line);
           if (g) exGapAllItems.push(g);
         });
-        let exGapActiveQueue = shuffleGapItems(exGapAllItems);
-        let exGapWrongPool = [];
-        let exGapStep = 0;
-        let exGapPhase = "main";
+        const exGapOriginalLength = exGapAllItems.length;
+        let exGapQueue = shuffleGapItems(exGapAllItems);
         let exGapFirstPassCorrect = 0;
-        let exGapFirstPassAnswered = 0;
-        const exGapAttemptCounts = Object.create(null);
-
-        function pushToWrongPool(item) {
-          const key = gapItemKey(item);
-          let i = 0;
-          for (; i < exGapWrongPool.length; i += 1) {
-            if (gapItemKey(exGapWrongPool[i]) === key) return;
-          }
-          exGapWrongPool.push(copyGapItem(item));
-        }
+        const exGapFirstSeen = Object.create(null);
+        let exGapPosition = 0;
+        let exGapWrongAdds = 0;
 
         function resetGapSession() {
-          exGapActiveQueue = shuffleGapItems(exGapAllItems);
-          exGapWrongPool = [];
-          exGapStep = 0;
-          exGapPhase = "main";
+          exGapQueue = shuffleGapItems(exGapAllItems);
           exGapFirstPassCorrect = 0;
-          exGapFirstPassAnswered = 0;
-          Object.keys(exGapAttemptCounts).forEach(function (k) {
-            delete exGapAttemptCounts[k];
+          exGapPosition = 0;
+          exGapWrongAdds = 0;
+          Object.keys(exGapFirstSeen).forEach(function (k) {
+            delete exGapFirstSeen[k];
           });
           renderExampleStep();
         }
 
         function renderGapComplete() {
           examplesPlay.innerHTML = "";
-          const total = exGapAllItems.length;
-          const correct = exGapFirstPassCorrect;
-          const pct = total ? (correct / total) * 100 : 0;
-          let msgKey = "learning_gap_complete_review";
-          if (pct > 80) msgKey = "learning_gap_complete_excellent";
-          else if (pct >= 60) msgKey = "learning_gap_complete_good";
-
           const card = document.createElement("div");
           card.className = "lh-gap-results";
 
-          const scoreP = document.createElement("p");
-          scoreP.className = "lh-gap-results__score";
-          scoreP.textContent = I18n.t("learning_gap_complete_score", {
-            correct: String(correct),
-            total: String(total),
-          });
+          const emoji = document.createElement("p");
+          emoji.className = "lh-gap-results__emoji";
+          emoji.textContent = "🎉";
 
-          const msg = document.createElement("p");
-          msg.className = "lh-gap-results__message";
-          msg.textContent = I18n.t(msgKey);
+          const fraction = document.createElement("p");
+          fraction.className = "lh-gap-results__fraction";
+          fraction.textContent =
+            String(exGapFirstPassCorrect) + "/" + String(exGapOriginalLength);
 
           const restartBtn = document.createElement("button");
           restartBtn.type = "button";
@@ -4586,88 +4578,57 @@
           restartBtn.textContent = I18n.t("learning_gap_restart");
           restartBtn.addEventListener("click", resetGapSession);
 
-          card.appendChild(scoreP);
-          card.appendChild(msg);
+          card.appendChild(emoji);
+          card.appendChild(fraction);
           card.appendChild(restartBtn);
           examplesPlay.appendChild(card);
           bumpXp(4 + exGapFirstPassCorrect * 2);
           refreshGamificationHeader();
         }
 
-        function renderRetryIntro() {
-          examplesPlay.innerHTML = "";
-          const intro = document.createElement("p");
-          intro.className = "lh-gap-retry-intro";
-          intro.textContent = I18n.t("learning_gap_retry_intro");
-          examplesPlay.appendChild(intro);
-          setTimeout(function () {
-            exGapPhase = "retry";
-            renderExampleStep();
-          }, 2000);
-        }
-
-        function finishGapRound() {
-          if (exGapWrongPool.length > 0) {
-            const pending = exGapWrongPool.slice();
-            exGapWrongPool = [];
-            exGapActiveQueue = shuffleGapItems(pending);
-            exGapStep = 0;
-            if (exGapPhase === "main") {
-              exGapPhase = "retry_intro";
-              renderRetryIntro();
-            } else {
-              exGapPhase = "retry";
-              renderExampleStep();
-            }
-            return;
-          }
-          renderGapComplete();
-        }
-
         function handleGapAnswer(item, ok) {
           const key = gapItemKey(item);
-          const attempts = (exGapAttemptCounts[key] || 0) + 1;
-          exGapAttemptCounts[key] = attempts;
-
-          if (exGapPhase === "main") {
+          if (!exGapFirstSeen[key]) {
+            exGapFirstSeen[key] = true;
             if (ok) exGapFirstPassCorrect += 1;
-            exGapFirstPassAnswered += 1;
           }
 
-          if (!ok && attempts < 3) pushToWrongPool(item);
+          exGapQueue.shift();
+          if (!ok) {
+            exGapWrongAdds += 1;
+            exGapQueue.push(copyGapItem(item));
+          }
 
           if (ok) bumpXp(4);
           else bumpXp(1);
 
-          exGapStep += 1;
-          if (exGapStep >= exGapActiveQueue.length) finishGapRound();
+          if (!exGapQueue.length) renderGapComplete();
           else renderExampleStep();
         }
 
         function renderExampleStep() {
           examplesPlay.innerHTML = "";
-          if (!exGapAllItems.length) {
+          if (!exGapOriginalLength) {
             const p = document.createElement("p");
             p.className = "lh-muted";
             p.textContent = I18n.t("learning_exercise_no_inline");
             examplesPlay.appendChild(p);
             return;
           }
-          const item = exGapActiveQueue[exGapStep];
-          const scoreDisplay = document.createElement("p");
-          scoreDisplay.className = "lh-gap-score";
-          scoreDisplay.textContent = I18n.t("learning_gap_score_line", {
-            current: String(exGapStep + 1),
-            total: String(
-              exGapPhase === "main" ? exGapAllItems.length : exGapActiveQueue.length
-            ),
-            correct: String(exGapFirstPassCorrect),
-            answered: String(
-              exGapPhase === "main" ? exGapFirstPassAnswered : exGapAllItems.length
-            ),
+          if (!exGapQueue.length) {
+            renderGapComplete();
+            return;
+          }
+          exGapPosition += 1;
+          const item = exGapQueue[0];
+          const prog = document.createElement("p");
+          prog.className = "lh-muted lh-ex-example-prog";
+          prog.textContent = I18n.t("learning_ex_example_progress", {
+            current: String(exGapPosition),
+            total: String(exGapOriginalLength + exGapWrongAdds),
           });
-          const card = buildGapMcRow(item, exGapAllItems, exGapStep, handleGapAnswer);
-          examplesPlay.appendChild(scoreDisplay);
+          const card = buildGapMcRow(item, exGapAllItems, exGapPosition, handleGapAnswer);
+          examplesPlay.appendChild(prog);
           examplesPlay.appendChild(card);
         }
         examplesSec.appendChild(examplesPlay);
