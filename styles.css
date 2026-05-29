@@ -1208,6 +1208,10 @@ html[data-theme="dark"] .booking-sync-warning {
   display: none !important;
 }
 
+.is-hidden-panel {
+  display: none !important;
+}
+
 /* --- Content section --- */
 .content-levels {
   position: relative;
@@ -3462,7 +3466,7 @@ html[data-theme="dark"] .flashcard-btn--got-it:hover {
   transition: width 0.35s ease;
 }
 
-/* Topic grid and lesson views (Topics tab: in-flow show/hide) */
+/* Topic grid and lesson views: sibling containers, instant show/hide */
 .lh-topics-flow {
   display: block;
   min-height: 12rem;
@@ -3470,16 +3474,12 @@ html[data-theme="dark"] .flashcard-btn--got-it:hover {
 
 .lh-topics-grid-wrap {
   display: block;
-}
-
-.lh-topics-grid-wrap--hidden {
-  display: none;
+  width: 100%;
 }
 
 .lh-topics-lesson-panel {
-  display: none;
-  flex-direction: column;
-  gap: 0.85rem;
+  display: block;
+  position: static;
   width: 100%;
   padding: 0.85rem 1rem 1.25rem;
   background: var(--surface-elevated);
@@ -3488,55 +3488,13 @@ html[data-theme="dark"] .flashcard-btn--got-it:hover {
   box-sizing: border-box;
 }
 
-.lh-topics-lesson-panel--visible {
-  display: flex;
-}
-
 .lh-topics-lesson-panel .lh-lesson-view__back {
   position: static;
   z-index: auto;
-  align-self: flex-start;
-  margin: 0 0 0.25rem;
+  margin: 0 0 1rem;
   padding: 0.35rem 0;
-  background: transparent;
+  background: var(--surface-elevated);
   backdrop-filter: none;
-}
-
-/* Exercises tab: slide transitions (overlay-style) */
-.lh-slide-flow {
-  position: relative;
-  overflow: hidden;
-  min-height: 12rem;
-}
-
-.lh-slide-stage {
-  transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
-}
-
-.lh-slide-stage--grid {
-  transform: translateX(0);
-  opacity: 1;
-}
-
-.lh-slide-stage--lesson {
-  position: absolute;
-  inset: 0;
-  transform: translateX(100%);
-  opacity: 0;
-  pointer-events: none;
-  overflow-y: auto;
-}
-
-.lh-slide-flow.is-lesson-open .lh-slide-stage--grid {
-  transform: translateX(-28%);
-  opacity: 0.35;
-  pointer-events: none;
-}
-
-.lh-slide-flow.is-lesson-open .lh-slide-stage--lesson {
-  transform: translateX(0);
-  opacity: 1;
-  pointer-events: auto;
 }
 
 .lh-topic-grid {
@@ -3594,6 +3552,7 @@ html[data-theme="dark"] .flashcard-btn--got-it:hover {
 }
 
 .lh-topics-lesson-panel.lh-lesson-view {
+  display: block;
   max-height: min(72vh, 42rem);
   overflow-y: auto;
 }

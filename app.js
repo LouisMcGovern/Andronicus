@@ -4013,26 +4013,40 @@
 
       grammarPanel.innerHTML = "";
       const exFlow = document.createElement("div");
-      exFlow.className = "lh-slide-flow lh-ex-flow";
-      const exStageList = document.createElement("div");
-      exStageList.className = "lh-slide-stage lh-slide-stage--grid";
+      exFlow.className = "lh-topics-flow lh-ex-flow";
+      const exGridWrap = document.createElement("div");
+      exGridWrap.className = "lh-topics-grid-wrap";
       const exTopicGrid = document.createElement("div");
       exTopicGrid.className = "lh-topic-grid lh-ex-topic-grid";
-      const exStageLesson = document.createElement("div");
-      exStageLesson.className = "lh-slide-stage lh-slide-stage--lesson lh-lesson-view lh-ex-lesson-view";
-      exFlow.appendChild(exStageList);
-      exFlow.appendChild(exStageLesson);
-      exStageList.appendChild(exTopicGrid);
+      const exLessonPanel = document.createElement("div");
+      exLessonPanel.className =
+        "lh-topics-lesson-panel lh-lesson-view lh-ex-lesson-view is-hidden-panel";
+      exGridWrap.appendChild(exTopicGrid);
+      exFlow.appendChild(exGridWrap);
+      exFlow.appendChild(exLessonPanel);
       grammarPanel.appendChild(exFlow);
 
       let exLessonOpen = false;
       let activeExIdx = -1;
 
-      function closeExLesson() {
+      function showExGrid() {
         exLessonOpen = false;
         activeExIdx = -1;
-        exFlow.classList.remove("is-lesson-open");
-        exStageLesson.innerHTML = "";
+        exGridWrap.classList.remove("is-hidden-panel");
+        exLessonPanel.classList.add("is-hidden-panel");
+        exLessonPanel.innerHTML = "";
+      }
+
+      function openExLesson(idx) {
+        exLessonOpen = true;
+        activeExIdx = idx;
+        exGridWrap.classList.add("is-hidden-panel");
+        exLessonPanel.classList.remove("is-hidden-panel");
+        renderExLesson(idx);
+      }
+
+      function closeExLesson() {
+        showExGrid();
       }
 
       function renderExTopicList() {
@@ -4050,10 +4064,7 @@
           card.appendChild(h);
           card.appendChild(blurb);
           card.addEventListener("click", function () {
-            activeExIdx = i;
-            exLessonOpen = true;
-            exFlow.classList.add("is-lesson-open");
-            renderExLesson(i);
+            openExLesson(i);
           });
           exTopicGrid.appendChild(card);
         });
@@ -4062,7 +4073,7 @@
       function renderExLesson(idx) {
         const ex = data.exercises[idx];
         if (!ex) return;
-        exStageLesson.innerHTML = "";
+        exLessonPanel.innerHTML = "";
 
         const backBtn = document.createElement("button");
         backBtn.type = "button";
@@ -4182,11 +4193,11 @@
         practiceSec.appendChild(selfMarkBtn);
         practiceSec.appendChild(practiceMsg);
 
-        exStageLesson.appendChild(backBtn);
-        exStageLesson.appendChild(title);
-        exStageLesson.appendChild(learnSec);
-        exStageLesson.appendChild(examplesSec);
-        exStageLesson.appendChild(practiceSec);
+        exLessonPanel.appendChild(backBtn);
+        exLessonPanel.appendChild(title);
+        exLessonPanel.appendChild(learnSec);
+        exLessonPanel.appendChild(examplesSec);
+        exLessonPanel.appendChild(practiceSec);
         renderExampleStep();
       }
 
