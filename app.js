@@ -4336,6 +4336,25 @@
         return I18n.t("learning_exercise_topic_fallback", { topic: ex.topic });
       }
 
+      function gapItemKey(item) {
+        return item.before + "|" + item.after + "|" + item.answer;
+      }
+
+      function copyGapItem(item) {
+        return { before: item.before, after: item.after, answer: item.answer };
+      }
+
+      function shuffleGapItems(arr) {
+        const a = arr.slice();
+        for (let i = a.length - 1; i > 0; i -= 1) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const t = a[i];
+          a[i] = a[j];
+          a[j] = t;
+        }
+        return a;
+      }
+
       function buildGapMcRow(item, pool, step, onAnswered) {
         const wrap = document.createElement("div");
         wrap.className = "lh-gap-card";
@@ -4367,26 +4386,45 @@
         });
         const row = document.createElement("div");
         row.className = "lh-vocab-options lh-gap-card__options";
-        let answered = false;
+        const feedback = document.createElement("p");
+        feedback.className = "lh-gap-feedback";
+        feedback.setAttribute("aria-live", "polite");
+        let locked = false;
         opts.forEach(function (o) {
           const b = document.createElement("button");
           b.type = "button";
           b.className = "flashcard-btn lh-option-btn";
           b.textContent = o;
           b.addEventListener("click", function () {
-            if (answered) return;
-            answered = true;
+            if (locked) return;
+            locked = true;
             const ok = o === item.answer;
-            if (ok) b.classList.add("is-correct");
-            else b.classList.add("is-wrong");
             Array.from(row.querySelectorAll("button")).forEach(function (btn) {
-              if (btn.textContent === item.answer) btn.classList.add("is-correct");
+              btn.disabled = true;
             });
-            onAnswered(ok);
+            if (ok) {
+              b.classList.add("is-correct");
+              feedback.textContent = I18n.t("learning_gap_correct");
+              feedback.classList.add("lh-gap-feedback--ok");
+              setTimeout(function () {
+                onAnswered(ok);
+              }, 1000);
+            } else {
+              b.classList.add("is-wrong");
+              Array.from(row.querySelectorAll("button")).forEach(function (btn) {
+                if (btn.textContent === item.answer) btn.classList.add("is-correct");
+              });
+              feedback.textContent = I18n.t("learning_gap_incorrect", { answer: item.answer });
+              feedback.classList.add("lh-gap-feedback--bad");
+              setTimeout(function () {
+                onAnswered(ok);
+              }, 1800);
+            }
           });
           row.appendChild(b);
         });
         wrap.appendChild(row);
+        wrap.appendChild(feedback);
         return wrap;
       }
 
@@ -4484,53 +4522,152 @@
         const examplesPlay = document.createElement("div");
         examplesPlay.className = "lh-ex-examples-play";
 
-        const exGapPool = [];
+        const exGapAllItems = [];
         (ex.examples || []).forEach(function (line) {
           const g = parseGapLine(line);
-          if (g) exGapPool.push(g);
+          if (g) exGapAllItems.push(g);
         });
+        let exGapActiveQueue = shuffleGapItems(exGapAllItems);
+        let exGapWrongPool = [];
         let exGapStep = 0;
-        let exGapScore = 0;
+        let exGapPhase = "main";
+        let exGapFirstPassCorrect = 0;
+        let exGapFirstPassAnswered = 0;
+        const exGapAttemptCounts = Object.create(null);
+
+        function pushToWrongPool(item) {
+          const key = gapItemKey(item);
+          let i = 0;
+          for (; i < exGapWrongPool.length; i += 1) {
+            if (gapItemKey(exGapWrongPool[i]) === key) return;
+          }
+          exGapWrongPool.push(copyGapItem(item));
+        }
+
+        function resetGapSession() {
+          exGapActiveQueue = shuffleGapItems(exGapAllItems);
+          exGapWrongPool = [];
+          exGapStep = 0;
+          exGapPhase = "main";
+          exGapFirstPassCorrect = 0;
+          exGapFirstPassAnswered = 0;
+          Object.keys(exGapAttemptCounts).forEach(function (k) {
+            delete exGapAttemptCounts[k];
+          });
+          renderExampleStep();
+        }
+
+        function renderGapComplete() {
+          examplesPlay.innerHTML = "";
+          const total = exGapAllItems.length;
+          const correct = exGapFirstPassCorrect;
+          const pct = total ? (correct / total) * 100 : 0;
+          let msgKey = "learning_gap_complete_review";
+          if (pct > 80) msgKey = "learning_gap_complete_excellent";
+          else if (pct >= 60) msgKey = "learning_gap_complete_good";
+
+          const card = document.createElement("div");
+          card.className = "lh-gap-results";
+
+          const scoreP = document.createElement("p");
+          scoreP.className = "lh-gap-results__score";
+          scoreP.textContent = I18n.t("learning_gap_complete_score", {
+            correct: String(correct),
+            total: String(total),
+          });
+
+          const msg = document.createElement("p");
+          msg.className = "lh-gap-results__message";
+          msg.textContent = I18n.t(msgKey);
+
+          const restartBtn = document.createElement("button");
+          restartBtn.type = "button";
+          restartBtn.className = "flashcard-btn lh-primary-btn";
+          restartBtn.textContent = I18n.t("learning_gap_restart");
+          restartBtn.addEventListener("click", resetGapSession);
+
+          card.appendChild(scoreP);
+          card.appendChild(msg);
+          card.appendChild(restartBtn);
+          examplesPlay.appendChild(card);
+          bumpXp(4 + exGapFirstPassCorrect * 2);
+          refreshGamificationHeader();
+        }
+
+        function renderRetryIntro() {
+          examplesPlay.innerHTML = "";
+          const intro = document.createElement("p");
+          intro.className = "lh-gap-retry-intro";
+          intro.textContent = I18n.t("learning_gap_retry_intro");
+          examplesPlay.appendChild(intro);
+          setTimeout(function () {
+            exGapPhase = "retry";
+            renderExampleStep();
+          }, 2000);
+        }
+
+        function finishGapRound() {
+          if (exGapWrongPool.length > 0) {
+            const pending = exGapWrongPool.slice();
+            exGapWrongPool = [];
+            exGapActiveQueue = shuffleGapItems(pending);
+            exGapStep = 0;
+            if (exGapPhase === "main") {
+              exGapPhase = "retry_intro";
+              renderRetryIntro();
+            } else {
+              exGapPhase = "retry";
+              renderExampleStep();
+            }
+            return;
+          }
+          renderGapComplete();
+        }
+
+        function handleGapAnswer(item, ok) {
+          const key = gapItemKey(item);
+          const attempts = (exGapAttemptCounts[key] || 0) + 1;
+          exGapAttemptCounts[key] = attempts;
+
+          if (exGapPhase === "main") {
+            if (ok) exGapFirstPassCorrect += 1;
+            exGapFirstPassAnswered += 1;
+          }
+
+          if (!ok && attempts < 3) pushToWrongPool(item);
+
+          if (ok) bumpXp(4);
+          else bumpXp(1);
+
+          exGapStep += 1;
+          if (exGapStep >= exGapActiveQueue.length) finishGapRound();
+          else renderExampleStep();
+        }
 
         function renderExampleStep() {
           examplesPlay.innerHTML = "";
-          if (!exGapPool.length) {
+          if (!exGapAllItems.length) {
             const p = document.createElement("p");
             p.className = "lh-muted";
             p.textContent = I18n.t("learning_exercise_no_inline");
             examplesPlay.appendChild(p);
             return;
           }
-          if (exGapStep >= exGapPool.length) {
-            const done = document.createElement("div");
-            done.className = "lh-celebrate";
-            done.textContent = I18n.t("learning_exercise_gap_complete", {
-              score: String(exGapScore),
-              total: String(exGapPool.length),
-            });
-            examplesPlay.appendChild(done);
-            bumpXp(4 + exGapScore * 2);
-            refreshGamificationHeader();
-            return;
-          }
-          const item = exGapPool[exGapStep];
-          const card = buildGapMcRow(item, exGapPool, exGapStep, function (ok) {
-            if (ok) {
-              exGapScore += 1;
-              bumpXp(4);
-            } else bumpXp(1);
-            setTimeout(function () {
-              exGapStep += 1;
-              renderExampleStep();
-            }, 480);
-          });
-          const prog = document.createElement("p");
-          prog.className = "lh-muted lh-ex-example-prog";
-          prog.textContent = I18n.t("learning_ex_example_progress", {
+          const item = exGapActiveQueue[exGapStep];
+          const scoreDisplay = document.createElement("p");
+          scoreDisplay.className = "lh-gap-score";
+          scoreDisplay.textContent = I18n.t("learning_gap_score_line", {
             current: String(exGapStep + 1),
-            total: String(exGapPool.length),
+            total: String(
+              exGapPhase === "main" ? exGapAllItems.length : exGapActiveQueue.length
+            ),
+            correct: String(exGapFirstPassCorrect),
+            answered: String(
+              exGapPhase === "main" ? exGapFirstPassAnswered : exGapAllItems.length
+            ),
           });
-          examplesPlay.appendChild(prog);
+          const card = buildGapMcRow(item, exGapAllItems, exGapStep, handleGapAnswer);
+          examplesPlay.appendChild(scoreDisplay);
           examplesPlay.appendChild(card);
         }
         examplesSec.appendChild(examplesPlay);

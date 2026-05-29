@@ -74,6 +74,15 @@
   --font-body: "Source Sans 3", system-ui, sans-serif;
   --font-display: "Cormorant Garamond", "Times New Roman", Times, serif;
   --font-tagline: "Outfit", system-ui, sans-serif;
+
+  --gap-correct-bg: rgba(34, 197, 94, 0.15);
+  --gap-correct-border: #16a34a;
+  --gap-correct-text: #14532d;
+  --gap-wrong-bg: rgba(239, 68, 68, 0.15);
+  --gap-wrong-border: #dc2626;
+  --gap-wrong-text: #7f1d1d;
+  --gap-feedback-ok: #16a34a;
+  --gap-feedback-bad: #dc2626;
 }
 
 html[data-theme="dark"] {
@@ -136,6 +145,15 @@ html[data-theme="dark"] {
   --overlay-scrim: rgba(42, 38, 34, 0.48);
   --btn-primary-hover: #5fa3d4;
   --btn-primary-hover-shadow: 0 4px 18px rgba(90, 160, 210, 0.35);
+
+  --gap-correct-bg: rgba(34, 197, 94, 0.22);
+  --gap-correct-border: #4ade80;
+  --gap-correct-text: #bbf7d0;
+  --gap-wrong-bg: rgba(239, 68, 68, 0.22);
+  --gap-wrong-border: #f87171;
+  --gap-wrong-text: #fecaca;
+  --gap-feedback-ok: #4ade80;
+  --gap-feedback-bad: #f87171;
 }
 
 html {
@@ -3680,6 +3698,72 @@ html[data-theme="dark"] .flashcard-btn--got-it:hover {
 
 .lh-gap-card__options {
   margin-top: 0.35rem;
+}
+
+.lh-gap-score {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin: 0 0 0.35rem;
+}
+
+.lh-option-btn.is-correct {
+  background: var(--gap-correct-bg) !important;
+  border-color: var(--gap-correct-border) !important;
+  color: var(--gap-correct-text) !important;
+}
+
+.lh-option-btn.is-wrong {
+  background: var(--gap-wrong-bg) !important;
+  border-color: var(--gap-wrong-border) !important;
+  color: var(--gap-wrong-text) !important;
+}
+
+.lh-gap-feedback {
+  display: block;
+  margin-top: 0.65rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+.lh-gap-feedback--ok {
+  color: var(--gap-feedback-ok);
+}
+
+.lh-gap-feedback--bad {
+  color: var(--gap-feedback-bad);
+}
+
+.lh-gap-retry-intro {
+  margin: 0;
+  padding: 0.85rem 0;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--ink-heading);
+  text-align: center;
+}
+
+.lh-gap-results {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.1rem;
+  background: var(--glass-fill, var(--surface));
+  text-align: center;
+}
+
+.lh-gap-results__score {
+  margin: 0 0 0.5rem;
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: var(--ink-heading);
+}
+
+.lh-gap-results__message {
+  margin: 0 0 0.85rem;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--accent);
 }
 
 .lh-ex-example-prog {
