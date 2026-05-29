@@ -430,6 +430,10 @@
       exercises: [
         {
           topic: "Possessive adjectives (my/your/his/her/our/their)",
+          introEn:
+            "Possessive adjectives show who something belongs to: my, your, his, her, its, our, their. They always come directly before a noun and never change form in English, unlike French where the adjective agrees. Use his for a male owner, her for a female owner, and their for plural owners or when gender is unknown.",
+          introFr:
+            "Les adjectifs possessifs anglais indiquent à qui appartient quelque chose : my, your, his, her, its, our, their. Ils se placent toujours juste devant le nom et ne changent jamais de forme en anglais, contrairement au français où l'adjectif s'accorde. On utilise his pour un possesseur masculin, her pour un possesseur féminin, et their au pluriel ou quand le genre n'est pas précisé.",
           examples: [
             "1) This is ___ book. (I) -> my",
             "2) We like ___ teacher. (we) -> our",
@@ -470,6 +474,10 @@
         },
         {
           topic: "There is / there are",
+          introEn:
+            "Use there is with singular nouns and there are with plural nouns to say that something exists in a place. The structure is fixed: there + be + noun + place. In questions, invert to Is there…? or Are there…? This is very different from French, where we often start with a noun rather than an empty subject.",
+          introFr:
+            "On utilise there is avec un nom singulier et there are avec un nom pluriel pour dire que quelque chose existe quelque part. La structure est fixe : there + be + nom + lieu. Aux questions, on inverse : Is there… ? ou Are there… ? C'est très différent du français, où on commence souvent directement par le nom.",
           examples: [
             "1) ___ a book on the table. (There is)",
             "2) ___ two windows in my room. (There are)",
@@ -480,6 +488,10 @@
         },
         {
           topic: "Question forms (do/does/is/are)",
+          introEn:
+            "English questions often need an auxiliary verb at the start. Use Do/Does + subject + base verb for most present simple questions, and Am/Is/Are + subject for the verb to be. Wh- questions keep the same word order but start with who, what, where, when, why, or how. Remember: does he/she/it takes the base verb without -s.",
+          introFr:
+            "Les questions en anglais ont souvent besoin d'un auxiliaire au début. On utilise Do/Does + sujet + verbe de base pour la plupart des questions au present simple, et Am/Is/Are + sujet pour le verbe to be. Les questions avec un mot interrogatif (who, what, where…) gardent le même ordre mais commencent par ce mot. Attention : après does, le verbe reste à la base, sans -s.",
           examples: [
             "1) ___ you like English? (Do)",
             "2) Where ___ she live? (does)",
@@ -490,6 +502,10 @@
         },
         {
           topic: "Articles (a / an / the)",
+          introEn:
+            "Use a before consonant sounds and an before vowel sounds for non-specific singular nouns. Use the when the listener knows exactly which thing you mean. French speakers often drop articles in English or use the too often — remember that English uses the with unique things (the sun, the president) and with things already mentioned.",
+          introFr:
+            "On utilise a devant un son consonne et an devant un son voyelle pour parler d'un nom singulier non précis. On utilise the quand l'interlocuteur sait exactement de quoi on parle. Les francophones oublient souvent les articles en anglais ou surutilisent the — pense à the pour les choses uniques (the sun, the president) et pour ce qui a déjà été mentionné.",
           examples: [
             "1) I have ___ orange and ___ banana. (an, a)",
             "2) ___ sun is bright today. (The)",
@@ -500,6 +516,10 @@
         },
         {
           topic: "Prepositions of place",
+          introEn:
+            "Prepositions of place describe where something is: in (inside), on (surface), under, behind, between, next to, in front of. English prepositions rarely match French one-to-one — être sur une photo but on the wall, in the kitchen not dans la cuisine as a direct rule. Learn them in chunks with common nouns rather than translating from French.",
+          introFr:
+            "Les prépositions de lieu décrivent où se trouve quelque chose : in (dedans), on (sur une surface), under, behind, between, next to, in front of. Elles ne correspondent presque jamais mot à mot avec le français — on dit on the wall et in the kitchen sans traduction directe. Apprends-les par groupes avec des noms fréquents plutôt qu'en traduisant depuis le français.",
           examples: [
             "1) The bag is ___ the chair. (under)",
             "2) The clock is ___ the wall. (on)",
@@ -510,6 +530,10 @@
         },
         {
           topic: "Countable and uncountable nouns",
+          introEn:
+            "Countable nouns have a plural form and use many/a few/number + noun. Uncountable nouns (water, money, information) have no plural and use much/a little/some. Some nouns change meaning: a coffee (one cup) vs coffee (the drink in general). French treats many nouns as countable that English treats as uncountable, so check each word carefully.",
+          introFr:
+            "Les noms dénombrables ont un pluriel et s'emploient avec many, a few ou un chiffre. Les noms indénombrables (water, money, information) n'ont pas de pluriel et s'emploient avec much, a little ou some. Certains mots changent de sens : a coffee (un café, une tasse) vs coffee (la boisson en général). En français, beaucoup de mots sont dénombrables alors qu'en anglais ils ne le sont pas — vérifie chaque mot.",
           examples: [
             "1) We need ___ apples. (some)",
             "2) There isn't ___ sugar left. (much)",
@@ -520,6 +544,10 @@
         },
         {
           topic: "Can / can't for ability",
+          introEn:
+            "Use can + base verb to talk about ability or possibility now: I can swim, She can't drive. Can never changes form — no -s in the third person. For questions, put can first: Can you help me? To talk about past ability, use could. Do not add to after can (not can to swim).",
+          introFr:
+            "On utilise can + verbe de base pour parler d'une capacité ou d'une possibilité : I can swim, She can't drive. Can ne change jamais de forme — pas de -s à la troisième personne. Aux questions, can passe devant : Can you help me ? Pour le passé, on utilise could. N'ajoute pas to après can (pas can to swim).",
           examples: [
             "1) I ___ swim very well. (can)",
             "2) She ___ drive yet. (can't)",
@@ -530,6 +558,10 @@
         },
         {
           topic: "Past simple regular/irregular verbs",
+          introEn:
+            "The past simple describes finished actions at a specific time in the past. Regular verbs add -ed (walk → walked). Irregular verbs have special forms you must memorise (go → went, see → saw). Use did + base verb in questions and negatives — never double the past form (not did went). Time words like yesterday and last week signal past simple.",
+          introFr:
+            "Le past simple décrit des actions terminées à un moment précis du passé. Les verbes réguliers ajoutent -ed (walk → walked). Les verbes irréguliers ont des formes spéciales à apprendre par cœur (go → went, see → saw). Aux questions et à la forme négative, on utilise did + verbe de base — jamais did went. Des mots comme yesterday et last week indiquent le past simple.",
           examples: [
             "1) Yesterday I ___ to school. (went)",
             "2) We ___ football after class. (played)",
@@ -544,6 +576,10 @@
         },
         {
           topic: "Object pronouns (me/you/him/her/us/them)",
+          introEn:
+            "Object pronouns replace the person or thing receiving the action: me, you, him, her, it, us, them. They come after the verb or preposition: She called me, Give it to them. Do not confuse subject pronouns (I, he) with object forms (me, him). After prepositions like to and for, always use object pronouns.",
+          introFr:
+            "Les pronoms compléments remplacent la personne ou la chose qui reçoit l'action : me, you, him, her, it, us, them. Ils viennent après le verbe ou une préposition : She called me, Give it to them. Ne confonds pas les pronoms sujets (I, he) avec les formes complément (me, him). Après to ou for, utilise toujours le pronom complément.",
           examples: [
             "1) My teacher helped ___. (me)",
             "2) I called ___ yesterday. (him)",
@@ -556,6 +592,10 @@
         },
         {
           topic: "Future forms (going to / will)",
+          introEn:
+            "Use going to + base verb for plans and evidence-based predictions: I'm going to study tonight, Look — it's going to rain. Use will + base verb for instant decisions, offers, and general predictions: I'll help you, I think it will be fine. Both forms use the base verb without to after will/going to.",
+          introFr:
+            "On utilise going to + verbe de base pour les projets et les prédictions basées sur des indices : I'm going to study tonight, Look — it's going to rain. On utilise will + verbe de base pour les décisions spontanées, les offres et les prédictions générales : I'll help you, I think it will be fine. Dans les deux cas, le verbe reste à la base, sans to.",
           examples: [
             "1) I ___ study tonight. (am going to)",
             "2) I think it ___ rain later. (will)",
@@ -858,6 +898,10 @@
       exercises: [
         {
           topic: "Possessive adjectives in context",
+          introEn:
+            "At intermediate level, possessive adjectives must match the owner, not the object: their research, its impact, our results. Watch for reference chains in writing — if you mention a team, use their consistently. Avoid mixing a name and a possessive for the same person in one sentence.",
+          introFr:
+            "Au niveau intermédiaire, l'adjectif possessif doit correspondre au possesseur, pas à l'objet : their research, its impact, our results. Attention aux chaînes de référence dans un texte — si tu parles d'une équipe, utilise their de façon cohérente. Évite de mélanger un nom propre et un possessif pour la même personne dans une phrase.",
           examples: [
             "1) The students presented ___ projects. (their)",
             "2) She forgot ___ charger at home. (her)",
@@ -868,6 +912,10 @@
         },
         {
           topic: "Present perfect vs past simple",
+          introEn:
+            "Use the past simple for finished time (yesterday, in 2020, last week). Use the present perfect for life experience or a past action linked to now, often with ever, never, already, yet, since, for. French uses passé composé where English may need present perfect — if you can name when it happened, past simple is usually correct.",
+          introFr:
+            "Utilise le past simple pour une date ou un moment terminé (yesterday, in 2020, last week). Utilise le present perfect pour une expérience de vie ou une action passée liée au présent, souvent avec ever, never, already, yet, since, for. Le français emploie le passé composé là où l'anglais peut exiger le present perfect — si tu peux nommer le moment précis, le past simple convient en général.",
           examples: [
             "1) I ___ that film last week. (watched)",
             "2) We ___ three units this month. (have completed)",
@@ -878,6 +926,10 @@
         },
         {
           topic: "Relative clauses (who/which/that)",
+          introEn:
+            "Relative clauses add information about a noun. Use who for people, which for things, and that for either in defining clauses. Omit the relative pronoun when it is the object: The book (that) I read. Non-defining clauses use who/which with commas and never that. Keep one clear idea per clause to avoid long, confusing sentences.",
+          introFr:
+            "Les propositions relatives ajoutent une information sur un nom. On utilise who pour les personnes, which pour les choses, et that pour les deux dans les propositions définissantes. On peut omettre le pronom relatif quand il est complément : The book (that) I read. Les propositions non définissantes prennent who/which avec des virgules, jamais that. Garde une idée claire par proposition pour éviter les phrases trop longues.",
           examples: [
             "1) The teacher ___ helped me was excellent. (who)",
             "2) This is the app ___ I use every day. (that/which)",
@@ -888,6 +940,10 @@
         },
         {
           topic: "Modal verbs for advice and obligation",
+          introEn:
+            "Modal verbs (should, must, mustn't, have to, don't have to) express advice, rules, and obligation without changing form. Must is strong obligation; should is advice; mustn't means forbidden; don't have to means no obligation. They are followed by the base verb. French learners often confuse must and have to — both express obligation but must feels more personal or urgent.",
+          introFr:
+            "Les modaux (should, must, mustn't, have to, don't have to) expriment le conseil, l'obligation et l'interdiction sans changer de forme. Must = obligation forte ; should = conseil ; mustn't = interdit ; don't have to = pas d'obligation. Ils sont suivis du verbe de base. Les francophones confondent souvent must et have to — les deux marquent l'obligation, mais must sonne plus personnel ou urgent.",
           examples: [
             "1) You ___ revise every day. (should)",
             "2) Students ___ wear a uniform. (must)",
@@ -898,6 +954,10 @@
         },
         {
           topic: "Conditionals (0, 1st, 2nd)",
+          introEn:
+            "Zero conditional states general truths: If you heat water, it boils. First conditional predicts real future results: If I study, I will pass. Second conditional imagines unreal present situations: If I had more time, I would travel. Do not use would in the if-clause. French si clauses map differently — learn each pattern as a fixed frame.",
+          introFr:
+            "Le zero conditional exprime une vérité générale : If you heat water, it boils. Le first conditional prévoit un résultat futur réaliste : If I study, I will pass. Le second conditional imagine une situation irréelle au présent : If I had more time, I would travel. N'utilise jamais would dans la proposition avec if. Les tournures avec si en français ne se traduisent pas toujours une à une — apprends chaque structure comme un modèle fixe.",
           examples: [
             "1) If you heat ice, it ___. (melts)",
             "2) If I study hard, I ___ the test. (will pass)",
@@ -908,6 +968,10 @@
         },
         {
           topic: "Reported speech",
+          introEn:
+            "Reported speech shifts the tense back when the reporting verb is past: She said, \"I am tired\" → She said (that) she was tired. Pronouns and time words also change (today → that day). With modal will, use would; with can, use could. Keep the sentence natural — you are reporting meaning, not translating word for word.",
+          introFr:
+            "Le discours indirect recule d'un temps quand le verbe introducteur est au passé : She said, « I am tired » → She said (that) she was tired. Les pronoms et les repères temporels changent aussi (today → that day). Will devient would, can devient could. Vise le sens naturel — tu rapportes l'idée, tu ne traduis pas mot à mot.",
           examples: [
             "1) She said, 'I am tired.' -> She said she ___ tired. (was)",
             "2) He said, 'I will call you.' -> He said he ___ call me. (would)",
@@ -918,6 +982,10 @@
         },
         {
           topic: "Passive voice in context",
+          introEn:
+            "The passive focuses on the action or result, not who did it: English is spoken worldwide. Form it with be + past participle. Use by + agent when the doer matters. Choose passive in formal writing and when the actor is unknown or unimportant. Active voice is usually clearer for short, direct sentences.",
+          introFr:
+            "La voix passive met l'accent sur l'action ou le résultat, pas sur l'auteur : English is spoken worldwide. On la forme avec be + participe passé. On ajoute by + agent quand l'auteur compte. Utilise la passive dans l'écriture formelle ou quand l'auteur est inconnu. La voix active reste plus claire pour des phrases courtes et directes.",
           examples: [
             "1) People speak English worldwide. -> English ___ worldwide. (is spoken)",
             "2) They built the bridge in 1998. -> The bridge ___ in 1998. (was built)",
@@ -928,6 +996,10 @@
         },
         {
           topic: "Comparatives and superlatives for argument writing",
+          introEn:
+            "Short adjectives take -er / -est (cheap → cheaper → cheapest). Long adjectives use more/most (more effective → most effective). Use than after comparatives and the before superlatives. In arguments, comparatives show contrast between options; superlatives highlight the strongest claim. Irregular forms include good → better → best and bad → worse → worst.",
+          introFr:
+            "Les adjectifs courts prennent -er / -est (cheap → cheaper → cheapest). Les adjectifs longs utilisent more/most (more effective → most effective). On met than après le comparatif et the devant le superlatif. Dans un argument, le comparatif oppose deux options ; le superlatif souligne le point le plus fort. Formes irrégulières : good → better → best et bad → worse → worst.",
           examples: [
             "1) This plan is ___ than the last one. (more effective)",
             "2) It is the ___ option for students. (best)",
@@ -938,6 +1010,10 @@
         },
         {
           topic: "Essay paragraph structure (PEEL)",
+          introEn:
+            "PEEL structures a paragraph: Point (your main idea), Evidence (a fact or example), Explain (why it matters), Link (back to the question). Each paragraph should prove one clear point. French essays often build slowly toward the idea — in English academic writing, state the point in the first sentence so the reader follows your logic immediately.",
+          introFr:
+            "PEEL structure un paragraphe : Point (idée principale), Evidence (fait ou exemple), Explain (pourquoi c'est important), Link (retour à la question). Chaque paragraphe doit défendre une seule idée claire. En français, on arrive parfois lentement à l'idée — en anglais, annonce ton point dès la première phrase pour guider le lecteur.",
           examples: [
             "Point: School uniforms improve focus.",
             "Evidence: Survey data from 200 students.",
@@ -951,6 +1027,10 @@
         },
         {
           topic: "Linkers for cohesion (however, therefore, moreover)",
+          introEn:
+            "Linkers connect ideas and show logic: however (contrast), therefore (result), moreover (addition), although (concession). Place them carefully — however often starts a new sentence or follows a semicolon. Overusing basic linkers (and, but, so) weakens formal writing. Match the linker to the relationship between your ideas, not just to fill space.",
+          introFr:
+            "Les connecteurs relient les idées et montrent la logique : however (contraste), therefore (conséquence), moreover (ajout), although (concession). Place-les avec soin — however commence souvent une nouvelle phrase ou suit un point-virgule. Trop de and, but, so affaiblissent un texte formel. Choisis le connecteur qui correspond au lien entre tes idées, pas pour remplir la page.",
           examples: [
             "1) The plan is expensive; ___, it is effective. (however)",
             "2) We practised daily; ___, we improved. (therefore)",
@@ -963,6 +1043,10 @@
         },
         {
           topic: "Error correction and redrafting",
+          introEn:
+            "Common learner errors include wrong verb forms, false friends, and word order in questions. Read your draft aloud — if it sounds wrong, it probably is. Compare each sentence to a simple model: subject + verb + object. Redrafting is not just fixing spelling; upgrade vocabulary and cut repeated words. Keep a personal error log to spot your own patterns.",
+          introFr:
+            "Les erreurs fréquentes concernent les formes verbales, les faux amis et l'ordre des mots dans les questions. Lis ton brouillon à voix haute — si ça sonne faux, c'est souvent le cas. Compare chaque phrase à un modèle simple : sujet + verbe + complément. Relire, ce n'est pas seulement corriger l'orthographe ; améliore le vocabulaire et évite les répétitions. Tiens une liste de tes erreurs typiques.",
           examples: [
             "1) He go to school every day. -> goes",
             "2) I am agree with you. -> I agree with you.",
@@ -1224,6 +1308,10 @@
       exercises: [
         {
           topic: "Possessive adjectives in advanced writing",
+          introEn:
+            "In formal writing, possessives must keep reference crystal clear across sentences. Use its for organisations and countries, not their, unless you treat them as groups of people. Avoid stacking too many possessives in one noun phrase. When precision matters, repeat the noun instead of using a vague their or its.",
+          introFr:
+            "Dans un texte formel, les possessifs doivent garder une référence limpide d'une phrase à l'autre. Utilise its pour une organisation ou un pays, pas their, sauf si tu les vois comme un groupe de personnes. Évite d'enchaîner trop de possessifs dans une même expression. Quand la précision compte, répète le nom plutôt qu'un their ou its vague.",
           examples: [
             "1) Each candidate must justify ___ methodology. (his/her/their)",
             "2) The committee reviewed ___ final draft. (its)",
@@ -1234,6 +1322,10 @@
         },
         {
           topic: "Cleft and inversion practice",
+          introEn:
+            "Cleft sentences (It was John who called) and inversion (Rarely do we see…) add emphasis in advanced English. Use them sparingly for focus, not in every sentence. Inversion often follows negative adverbs at the start: Never have I seen…, Not only did she win… Master the basic word order first, then use these structures to highlight one element.",
+          introFr:
+            "Les phrases clivées (It was John who called) et l'inversion (Rarely do we see…) mettent l'accent en anglais avancé. Utilise-les avec parcimonie, pas dans chaque phrase. L'inversion suit souvent un adverbe négatif en tête : Never have I seen…, Not only did she win… Maîtrise d'abord l'ordre des mots standard, puis emploie ces structures pour souligner un élément.",
           examples: [
             "1) It was only later that we ___ the issue. (understood)",
             "2) Rarely ___ students receive such feedback. (do)",
@@ -1244,6 +1336,10 @@
         },
         {
           topic: "Hedging and academic caution",
+          introEn:
+            "Hedging softens claims so they sound academic and careful: may, might, appears to, tends to, it could be argued. Avoid absolute words (always, proves, definitely) unless evidence is strong. French academic style can sound more direct — in English, qualified language shows you understand complexity and counterarguments.",
+          introFr:
+            "Le hedging atténue une affirmation pour un ton académique prudent : may, might, appears to, tends to, it could be argued. Évite les mots absolus (always, proves, definitely) sans preuve solide. Le style académique français peut paraître plus direct — en anglais, nuancer montre que tu comprends la complexité et les contre-arguments.",
           examples: [
             "1) This result ___ indicate a wider trend. (may)",
             "2) It ___ be argued that policy changes are needed. (can)",
@@ -1254,6 +1350,10 @@
         },
         {
           topic: "Nominalisation for formal writing",
+          introEn:
+            "Nominalisation turns verbs or adjectives into nouns: analyse → analysis, decide → decision. It makes writing denser and more formal. Use it in essays and reports, but balance with clear verbs so the reader still knows who did what. Too much nominalisation creates heavy, passive sentences that are hard to follow.",
+          introFr:
+            "La nominalisation transforme un verbe ou un adjectif en nom : analyse → analysis, decide → decision. Le style devient plus dense et plus formel. Utilise-la dans les essais et rapports, mais garde des verbes clairs pour que le lecteur sache qui fait quoi. Trop de nominalisations produit des phrases lourdes et difficiles à suivre.",
           examples: [
             "1) We analysed the data. -> The ___ of the data... (analysis)",
             "2) The government decided quickly. -> The quick ___ ... (decision)",
@@ -1264,6 +1364,10 @@
         },
         {
           topic: "Paraphrasing and synonym control",
+          introEn:
+            "Paraphrasing restates an idea in new words without changing the meaning. Use synonyms carefully — similar does not mean identical (event vs incident). Change both vocabulary and structure. In exams, paraphrase the question in your introduction to show understanding. Avoid copying long chunks from a source; that is not paraphrase.",
+          introFr:
+            "Paraphraser, c'est reformuler une idée avec d'autres mots sans changer le sens. Choisis les synonymes avec prudence — proche ne veut pas dire identique (event vs incident). Modifie le vocabulaire et la structure. À l'examen, paraphrase la question dans l'introduction pour montrer que tu l'as comprise. Ne recopie pas de longs passages ; ce n'est pas de la paraphrase.",
           examples: [
             "1) Important -> significant / crucial",
             "2) Show -> demonstrate / indicate",
@@ -1274,6 +1378,10 @@
         },
         {
           topic: "Complex sentence cohesion",
+          introEn:
+            "Complex sentences join ideas with subordination (although, while, whereas) and coordination (not only…but also). Each clause must connect logically to the next. Start with one main idea per sentence, then add a dependent clause that explains, contrasts, or qualifies. Long sentences are fine only if every part earns its place.",
+          introFr:
+            "Les phrases complexes relient les idées par subordination (although, while, whereas) et coordination (not only…but also). Chaque proposition doit avoir un lien logique avec la suivante. Commence par une idée principale, puis ajoute une proposition qui explique, oppose ou nuance. Les longues phrases ne fonctionnent que si chaque partie est utile.",
           examples: [
             "1) Although X, Y ...",
             "2) While it is true that X, ...",
@@ -1284,6 +1392,10 @@
         },
         {
           topic: "Advanced punctuation and clarity",
+          introEn:
+            "Semicolons link closely related independent clauses. Colons introduce lists or explanations. Commas set off non-essential clauses and items in a list. A comma splice joins two full sentences with only a comma — fix it with a full stop, semicolon, or conjunction. Clear punctuation guides the reader through your argument.",
+          introFr:
+            "Le point-virgule relie deux propositions indépendantes proches. Les deux-points introduisent une liste ou une explication. Les virgules isolent une proposition non essentielle ou séparent les éléments d'une liste. La comma splice unit deux phrases complètes avec seulement une virgule — corrige avec un point, un point-virgule ou une conjonction. Une ponctuation claire guide le lecteur.",
           examples: [
             "1) Use semicolons to connect related clauses.",
             "2) Use colons to introduce explanation or lists.",
@@ -1294,6 +1406,10 @@
         },
         {
           topic: "Synthesis writing from two sources",
+          introEn:
+            "Synthesis combines ideas from two or more sources into one coherent argument. Do not summarise each source separately — weave them together with compare/contrast language. Attribute clearly (Source A argues…, while Source B suggests…). Your thesis should show how the sources relate, not just repeat what each one says.",
+          introFr:
+            "La synthèse combine des idées de plusieurs sources en un argument cohérent. Ne résume pas chaque source à part — entrelace-les avec des connecteurs de comparaison. Indique clairement l'origine (Source A argues…, while Source B suggests…). Ta thèse doit montrer le lien entre les sources, pas seulement les répéter.",
           examples: [
             "1) Source A argues that remote learning increases access.",
             "2) Source B claims quality depends on teacher training.",
@@ -1304,6 +1420,10 @@
         },
         {
           topic: "Timed high-level speaking response",
+          introEn:
+            "In timed speaking, plan briefly then deliver a clear structure: claim, support, counterpoint, conclusion. Use signposting phrases (First, However, To sum up). Fluency matters, but so does accuracy — short correct sentences beat long broken ones. Practice with a timer until two minutes feels natural, not rushed.",
+          introFr:
+            "À l'oral chronométré, planifie brièvement puis suis une structure claire : affirmation, argument, contrepoint, conclusion. Utilise des marqueurs (First, However, To sum up). La fluidité compte, mais aussi la justesse — des phrases courtes correctes valent mieux que de longues phrases cassées. Entraîne-toi avec un minuteur jusqu'à ce que deux minutes paraissent naturelles.",
           examples: [
             "1) 30s plan -> 2min response",
             "2) Include claim, support, counterpoint, conclusion",
@@ -1317,6 +1437,10 @@
         },
         {
           topic: "Abstract topic essay planning",
+          introEn:
+            "Abstract prompts (technology, ethics, identity) need a clear thesis before you write. Brainstorm two supporting points and one counterargument you can answer. Each body paragraph should map to one part of your plan. Under time pressure, a strong plan prevents vague, repetitive essays that never land a clear position.",
+          introFr:
+            "Les sujets abstraits (technologie, éthique, identité) exigent une thèse claire avant d'écrire. Trouve deux arguments et un contre-argument que tu peux réfuter. Chaque paragraphe du corps doit correspondre à une partie du plan. Sous pression du temps, un bon plan évite les essais vagues qui n'aboutissent à aucune position nette.",
           examples: [
             "1) Prompt: Is technology making attention spans weaker?",
             "2) Build thesis + 2 balanced body points + counterargument.",
@@ -1329,6 +1453,10 @@
         },
         {
           topic: "Source comparison and reliability",
+          introEn:
+            "When comparing sources, examine purpose, audience, evidence, and bias — not just whether you agree. A reliable source cites evidence, acknowledges limits, and matches its goal (inform vs persuade). Distinguish fact from interpretation. Your judgment should explain why one source is stronger, not simply which one you prefer.",
+          introFr:
+            "Pour comparer des sources, examine l'objectif, le public visé, les preuves et les biais — pas seulement si tu es d'accord. Une source fiable cite des éléments, reconnaît ses limites et correspond à son but (informer vs convaincre). Distingue le fait de l'interprétation. Ton jugement doit expliquer pourquoi une source est plus solide, pas seulement laquelle tu préfères.",
           examples: [
             "1) Compare purpose, audience, and evidence quality.",
             "2) Distinguish claim from data.",
@@ -1930,6 +2058,36 @@
     document.querySelectorAll(".learning-hub").forEach(resetHubToLanding);
   }
 
+  function homeworkCategoryLabel(category) {
+    if (!category) return "";
+    const keys = {
+      Vocab: "learning_hw_cat_vocab",
+      Reading: "learning_hw_cat_reading",
+      Grammar: "learning_hw_cat_grammar",
+      Writing: "learning_hw_cat_writing",
+      Listening: "learning_hw_cat_listening",
+      Speaking: "learning_hw_cat_speaking",
+    };
+    const key = keys[category];
+    return key ? I18n.t(key) : category;
+  }
+
+  function refreshLevelPickerXpLabels() {
+    document.querySelectorAll(".btn-level").forEach(function (btn) {
+      const lbl = btn.querySelector(".btn-level__xp-label");
+      if (!lbl) return;
+      const lvl = btn.getAttribute("data-level");
+      if (!lvl) return;
+      const user = getActiveUser();
+      const lh = user ? ensureLearningHub(ensureStats(user)) : null;
+      const displayXp = getLevelXp(lh, lvl);
+      lbl.textContent = I18n.t("learning_level_xp_progress", {
+        current: String(displayXp),
+        goal: String(LEVEL_XP_GOAL),
+      });
+    });
+  }
+
   let _activeLevelForXp = null;
 
   function bumpLearningActivity(xpDelta, levelKey) {
@@ -2303,18 +2461,18 @@
     accountWelcome.textContent = I18n.t("account_welcome_logged_in", { user: activeUsername });
     accountProgressCards.innerHTML = "";
     const metrics = [
-      "Flashcard accuracy: " +
-        String(stats.flashcards.correct) +
-        "/" +
-        String(stats.flashcards.attempts) +
-        " (" +
-        formatPct(stats.flashcards.correct, stats.flashcards.attempts) +
-        ")",
-      "Quiz sessions completed: " + String(stats.quizSessions),
-      "Completed exercises: " + String(stats.completedExercises.length),
+      I18n.t("account_metric_flash_accuracy", {
+        correct: String(stats.flashcards.correct),
+        attempts: String(stats.flashcards.attempts),
+        pct: formatPct(stats.flashcards.correct, stats.flashcards.attempts),
+      }),
+      I18n.t("account_metric_quiz_sessions", { n: String(stats.quizSessions) }),
+      I18n.t("account_metric_exercises_done", { n: String(stats.completedExercises.length) }),
     ];
     Object.keys(stats.quizBest).forEach(function (k) {
-      metrics.push("Best " + k + ": " + String(stats.quizBest[k]) + "%");
+      metrics.push(
+        I18n.t("account_metric_quiz_best", { mode: k, pct: String(stats.quizBest[k]) })
+      );
     });
     metrics.forEach(function (txt) {
       const card = document.createElement("div");
@@ -2351,7 +2509,7 @@
           [bookingDisplayName(b), b.phone, b.level, (b.slots || []).join(", "), b.createdAt].forEach(
             function (txt) {
             const td = document.createElement("td");
-            td.textContent = txt || "-";
+            td.textContent = txt || I18n.t("admin_table_empty");
             tr.appendChild(td);
             }
           );
@@ -2442,7 +2600,10 @@
         editNameBtn.className = "flashcard-btn";
         editNameBtn.textContent = I18n.t("admin_edit_name");
         editNameBtn.addEventListener("click", function () {
-          const next = window.prompt("Update full name for " + username, user.fullName || username);
+          const next = window.prompt(
+            I18n.t("admin_edit_name_prompt", { user: username }),
+            user.fullName || username
+          );
           if (!next) return;
           user.fullName = next.trim();
           saveUsers();
@@ -2453,7 +2614,7 @@
         resetPassBtn.className = "flashcard-btn";
         resetPassBtn.textContent = I18n.t("admin_reset_password");
         resetPassBtn.addEventListener("click", function () {
-          const next = window.prompt("Set new password for " + username);
+          const next = window.prompt(I18n.t("admin_reset_password_prompt", { user: username }));
           if (!next) return;
           user.password = next.trim();
           saveUsers();
@@ -2504,7 +2665,8 @@
           renderAdminPanel();
         });
         const name = document.createElement("span");
-        name.textContent = item.name + (item.paid ? " (paid)" : " (not paid)");
+        name.textContent =
+          item.name + I18n.t(item.paid ? "admin_payment_paid_badge" : "admin_payment_unpaid_badge");
         left.appendChild(cb);
         left.appendChild(name);
         const owedWrap = document.createElement("label");
@@ -2656,6 +2818,8 @@
     buildBookingCalendar();
     refreshPasswordHint();
     syncPasswordToggleAria();
+    refreshLevelPickerXpLabels();
+    renderAccountPanel();
     if (adminUnlocked) renderAdminPanel();
     learningToolsLangRefreshers.forEach(function (fn) {
       try {
@@ -2696,7 +2860,10 @@
 
       const label = document.createElement("span");
       label.className = "btn-level__xp-label";
-      label.textContent = String(displayXp) + " / " + String(LEVEL_XP_GOAL) + " XP";
+      label.textContent = I18n.t("learning_level_xp_progress", {
+        current: String(displayXp),
+        goal: String(LEVEL_XP_GOAL),
+      });
 
       const track = document.createElement("span");
       track.className = "btn-level__xp-track";
@@ -3102,7 +3269,7 @@
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "booking-hour-btn";
-      btn.textContent = h + ":00";
+      btn.textContent = I18n.t("booking_hour_format", { hour: String(h) });
       if (bookingIsSelected(bookingActiveDayIndex, h)) btn.classList.add("is-selected");
       (function (hour) {
         btn.addEventListener("click", function () {
@@ -3136,7 +3303,7 @@
         const rm = document.createElement("button");
         rm.type = "button";
         rm.className = "booking-selected-remove";
-        rm.textContent = "×";
+        rm.textContent = I18n.t("ui_remove_symbol");
         rm.setAttribute(
           "aria-label",
           I18n.t("booking_remove_aria", { slot: bookingFormatSlot(sel.dayIndex, sel.hour) })
@@ -3318,7 +3485,10 @@
         statCard(I18n.t("learning_progress_streak"), String(lh.streak || 0));
         const fa = stats.flashcards.attempts || 0;
         const fc = stats.flashcards.correct || 0;
-        statCard(I18n.t("learning_progress_flash_accuracy"), fa ? String(Math.round((fc / fa) * 100)) + "%" : "N/A");
+        statCard(
+          I18n.t("learning_progress_flash_accuracy"),
+          fa ? String(Math.round((fc / fa) * 100)) + "%" : I18n.t("learning_progress_not_applicable")
+        );
         statCard(I18n.t("learning_progress_quiz_sessions"), String(stats.quizSessions || 0));
         statCard(I18n.t("learning_progress_exercises_done"), String((stats.completedExercises || []).length));
         wrap.appendChild(grid);
@@ -3370,11 +3540,13 @@
         const b1 = document.createElement("span");
         b1.className = "lh-badge";
         b1.textContent =
-          (getLevelXp(lh, level) >= 50 ? "★ " : "○ ") + I18n.t("learning_progress_badge_xp50");
+          (getLevelXp(lh, level) >= 50 ? I18n.t("learning_badge_earned") : I18n.t("learning_badge_unearned")) +
+          I18n.t("learning_progress_badge_xp50");
         const b2 = document.createElement("span");
         b2.className = "lh-badge";
         b2.textContent =
-          ((lh.streak || 0) >= 3 ? "★ " : "○ ") + I18n.t("learning_progress_badge_streak3");
+          ((lh.streak || 0) >= 3 ? I18n.t("learning_badge_earned") : I18n.t("learning_badge_unearned")) +
+          I18n.t("learning_progress_badge_streak3");
         badges.appendChild(b1);
         badges.appendChild(b2);
         wrap.appendChild(badges);
@@ -3443,7 +3615,7 @@
             });
             const tag = document.createElement("span");
             tag.className = "lh-hw-checklist__tag lh-hw-cat-" + String(item.category || "").toLowerCase();
-            tag.textContent = item.category || "";
+            tag.textContent = homeworkCategoryLabel(item.category);
             const text = document.createElement("span");
             text.className = "lh-hw-checklist__text";
             text.textContent = cLang === "fr" && item.fr ? item.fr : item.en || item.fr || "";
@@ -3814,7 +3986,7 @@
           I18n.t("learning_vocab_question_line", {
             n: String(askedCount),
             q: currentQuestion.question,
-            mode: currentMode,
+            mode: I18n.t("learning_vocab_mode_" + currentMode),
           });
         quizFeedback.textContent = I18n.t("learning_vocab_choose_prompt", {
           score: String(quizScore),
@@ -3928,9 +4100,11 @@
       }
 
       function exerciseTopicBlurb(ex) {
+        const lang = I18n.getLang();
+        const intro = lang === "fr" ? ex.introFr : ex.introEn;
         if (ex.summary) return ex.summary;
-        if (ex.introEn) {
-          const bit = ex.introEn.split(/[.!?]/)[0].trim();
+        if (intro) {
+          const bit = intro.split(/[.!?]/)[0].trim();
           if (bit) return bit + ".";
         }
         if (ex.practice) {
@@ -3941,20 +4115,12 @@
 
       function exerciseIntroEn(ex) {
         if (ex.introEn) return ex.introEn;
-        return (
-          "This lesson covers " +
-          ex.topic +
-          ". Read the explanation in both languages, work through each example, then complete the practice task in your notebook."
-        );
+        return I18n.t("learning_exercise_intro_en_fallback", { topic: ex.topic });
       }
 
       function exerciseIntroFr(ex) {
         if (ex.introFr) return ex.introFr;
-        return (
-          "Cette leçon porte sur : " +
-          ex.topic +
-          ". Lis l'explication dans les deux langues, fais tous les exemples, puis termine la tâche d'entraînement dans ton cahier."
-        );
+        return I18n.t("learning_exercise_intro_fr_fallback", { topic: ex.topic });
       }
 
       function buildGapMcRow(item, pool, step, onAnswered) {
@@ -4096,10 +4262,12 @@
         learnCols.className = "lh-bilingual";
         const colEn = document.createElement("div");
         colEn.className = "lh-bilingual__col";
-        colEn.innerHTML = "<strong>EN</strong><p>" + exerciseIntroEn(ex) + "</p>";
+        colEn.innerHTML =
+          "<strong>" + I18n.t("learning_bilingual_en") + "</strong><p>" + exerciseIntroEn(ex) + "</p>";
         const colFr = document.createElement("div");
         colFr.className = "lh-bilingual__col";
-        colFr.innerHTML = "<strong>FR</strong><p>" + exerciseIntroFr(ex) + "</p>";
+        colFr.innerHTML =
+          "<strong>" + I18n.t("learning_bilingual_fr") + "</strong><p>" + exerciseIntroFr(ex) + "</p>";
         learnCols.appendChild(colEn);
         learnCols.appendChild(colFr);
         learnSec.appendChild(learnH);
@@ -4137,6 +4305,7 @@
             done.className = "lh-celebrate";
             done.textContent = I18n.t("learning_exercise_gap_complete", {
               score: String(exGapScore),
+              total: String(exGapPool.length),
             });
             examplesPlay.appendChild(done);
             bumpXp(4 + exGapScore * 2);
@@ -4156,8 +4325,10 @@
           });
           const prog = document.createElement("p");
           prog.className = "lh-muted lh-ex-example-prog";
-          prog.textContent =
-            String(exGapStep + 1) + " / " + String(exGapPool.length);
+          prog.textContent = I18n.t("learning_ex_example_progress", {
+            current: String(exGapStep + 1),
+            total: String(exGapPool.length),
+          });
           examplesPlay.appendChild(prog);
           examplesPlay.appendChild(card);
         }
@@ -4180,12 +4351,12 @@
         const practiceMsg = document.createElement("p");
         practiceMsg.className = "exercise-complete-msg hidden";
         selfMarkBtn.addEventListener("click", function () {
-          bumpXp(12);
+          if (selfMarkBtn.disabled) return;
+          selfMarkBtn.disabled = true;
+          bumpXp(20);
           refreshGamificationHeader();
-          const res = recordExerciseCompletion(level, ex.topic);
-          if (res.ok) practiceMsg.textContent = I18n.t("learning_exercise_saved_ok");
-          else if (res.reason === "auth") practiceMsg.textContent = I18n.t("learning_exercise_saved_auth");
-          else practiceMsg.textContent = I18n.t("learning_exercise_saved_exists");
+          recordExerciseCompletion(level, ex.topic);
+          practiceMsg.textContent = I18n.t("learning_ex_practice_congrats");
           practiceMsg.classList.remove("hidden");
         });
         practiceSec.appendChild(practiceH);
@@ -4662,6 +4833,27 @@
         renderHomeworkPanel();
         renderProgressPanel();
         refreshGamificationHeader();
+        if (currentQuestion && askedCount > 0 && summary.classList.contains("hidden")) {
+          const vLabelMid =
+            activeVariant === "match"
+              ? I18n.t("learning_vocab_variant_match_prompt")
+              : activeVariant === "speed"
+                ? I18n.t("learning_vocab_variant_speed_prompt")
+                : "";
+          quizQuestion.textContent =
+            vLabelMid +
+            I18n.t("learning_vocab_question_line", {
+              n: String(askedCount),
+              q: currentQuestion.question,
+              mode: I18n.t("learning_vocab_mode_" + currentMode),
+            });
+          if (!quizAnswered) {
+            quizFeedback.textContent = I18n.t("learning_vocab_choose_prompt", {
+              score: String(quizScore),
+              round: String(askedCount - 1),
+            });
+          }
+        }
         renderCard();
       });
   }
@@ -4710,7 +4902,8 @@
       name:
         ((bookingStudentNameInput && bookingStudentNameInput.value.trim()) || "") +
         " (" +
-        (((bookingParentNameInput && bookingParentNameInput.value.trim()) || "") || "Parent") +
+        (((bookingParentNameInput && bookingParentNameInput.value.trim()) || "") ||
+          I18n.t("booking_parent_fallback")) +
         ")",
       phone: (bookingPhoneInput && bookingPhoneInput.value.trim()) || "",
       level: levelValue === "unknown" ? I18n.t("booking_level_unknown_badge") : levelValue,
