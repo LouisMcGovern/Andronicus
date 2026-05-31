@@ -2156,17 +2156,21 @@
         lastActiveDay: "",
         vocabTopic: {},
         savedWords: [],
+        savedFlashcards: [],
         homeworkTasks: {},
         homeworkChecklist: {},
         activityByDay: {},
+        onboardingShown: false,
       };
     }
     const lh = stats.learningHub;
     if (!lh.vocabTopic) lh.vocabTopic = {};
     if (!lh.savedWords) lh.savedWords = [];
+    if (!lh.savedFlashcards) lh.savedFlashcards = [];
     if (!lh.homeworkTasks) lh.homeworkTasks = {};
     if (!lh.homeworkChecklist) lh.homeworkChecklist = {};
     if (!lh.activityByDay) lh.activityByDay = {};
+    if (lh.onboardingShown !== true) lh.onboardingShown = false;
     return lh;
   }
 
@@ -2398,7 +2402,6 @@
   function syncPasswordToggleAria() {
     [
       ["account-register-password-toggle", "account-register-password"],
-      ["account-register-password-confirm-toggle", "account-register-password-confirm"],
       ["account-login-password-toggle", "account-login-password"],
     ].forEach(function (ids) {
       const btn = document.getElementById(ids[0]);
@@ -2421,10 +2424,6 @@
     wirePasswordToggle(
       document.getElementById("account-register-password-toggle"),
       document.getElementById("account-register-password")
-    );
-    wirePasswordToggle(
-      document.getElementById("account-register-password-confirm-toggle"),
-      document.getElementById("account-register-password-confirm")
     );
     wirePasswordToggle(
       document.getElementById("account-login-password-toggle"),
@@ -2635,6 +2634,94 @@
     adminStudentDetailInner.appendChild(secEx);
   }
 
+  function markAccountOnboardingShown() {
+    const user = getActiveUser();
+    if (!user) return;
+    const lh = ensureLearningHub(ensureStats(user));
+    lh.onboardingShown = true;
+    saveUsers();
+  }
+
+  function navigateToContentLevel(level) {
+    setContentPanelOpen(true);
+    panelHome.classList.add("hidden");
+    panels.forEach(function (p) {
+      p.classList.toggle("hidden", p.id !== "panel-content");
+    });
+    mainNav.classList.add("hidden");
+    btnHome.classList.remove("hidden");
+    pendingLevel = null;
+    levelPicker.classList.add("hidden");
+    contentPasswordOverlay.classList.add("hidden");
+    contentPasswordInput.value = "";
+    contentPasswordError.classList.add("hidden");
+    document.querySelectorAll(".btn-level").forEach(function (b) {
+      b.classList.toggle("is-active", b.getAttribute("data-level") === level);
+    });
+    document.querySelectorAll(".level-article").forEach(function (art) {
+      art.classList.toggle("hidden", art.id !== "content-" + level);
+    });
+    const article = document.getElementById("content-" + level);
+    if (article) {
+      resetHubToLanding(article.querySelector(".learning-hub"));
+    }
+  }
+
+  function renderAccountOnboarding(user, lh) {
+    const existing = accountDashboard.querySelector(".account-onboarding");
+    if (existing) existing.remove();
+    if (!user || lh.onboardingShown) return;
+
+    const card = document.createElement("div");
+    card.className = "account-onboarding";
+    card.setAttribute("role", "region");
+    card.setAttribute("aria-labelledby", "account-onboarding-title");
+
+    const dismissBtn = document.createElement("button");
+    dismissBtn.type = "button";
+    dismissBtn.className = "btn-icon-close account-onboarding__dismiss";
+    dismissBtn.setAttribute("aria-label", I18n.t("account_onboarding_dismiss"));
+    dismissBtn.textContent = "×";
+
+    const title = document.createElement("h3");
+    title.className = "account-onboarding__title";
+    title.id = "account-onboarding-title";
+    title.textContent = I18n.t("account_onboarding_welcome", {
+      name: user.fullName || activeUsername,
+    });
+
+    const bodyEn = document.createElement("p");
+    bodyEn.className = "account-onboarding__body";
+    bodyEn.lang = "en";
+    bodyEn.textContent = I18n.t("account_onboarding_start_en");
+
+    const bodyFr = document.createElement("p");
+    bodyFr.className = "account-onboarding__body";
+    bodyFr.lang = "fr";
+    bodyFr.textContent = I18n.t("account_onboarding_start_fr");
+
+    const goBtn = document.createElement("button");
+    goBtn.type = "button";
+    goBtn.className = "btn-primary account-onboarding__go";
+    goBtn.textContent = I18n.t("account_onboarding_btn");
+
+    dismissBtn.addEventListener("click", function () {
+      markAccountOnboardingShown();
+      renderAccountPanel();
+    });
+    goBtn.addEventListener("click", function () {
+      markAccountOnboardingShown();
+      navigateToContentLevel("beginner");
+    });
+
+    card.appendChild(dismissBtn);
+    card.appendChild(title);
+    card.appendChild(bodyEn);
+    card.appendChild(bodyFr);
+    card.appendChild(goBtn);
+    accountDashboard.insertBefore(card, accountProgressCards);
+  }
+
   function renderAccountPanel() {
     if (!accountAuth || !accountDashboard) return;
     const user = getActiveUser();
@@ -2644,9 +2731,11 @@
       return;
     }
     const stats = ensureStats(user);
+    const lh = ensureLearningHub(stats);
     accountAuth.classList.add("hidden");
     accountDashboard.classList.remove("hidden");
     accountWelcome.textContent = I18n.t("account_welcome_logged_in", { user: activeUsername });
+    renderAccountOnboarding(user, lh);
     accountProgressCards.innerHTML = "";
     const metrics = [
       I18n.t("account_metric_flash_accuracy", {
@@ -3110,13 +3199,8 @@
       const name = (document.getElementById("account-register-name").value || "").trim();
       const fullName = (document.getElementById("account-register-fullname").value || "").trim();
       const pass = (document.getElementById("account-register-password").value || "").trim();
-      const passConfirm = (document.getElementById("account-register-password-confirm").value || "").trim();
-      if (!name || !pass || !fullName || !passConfirm) {
+      if (!name || !pass || !fullName) {
         setAuthFeedback(I18n.t("account_err_register_fields"), true);
-        return;
-      }
-      if (pass !== passConfirm) {
-        setAuthFeedback(I18n.t("account_err_password_mismatch"), true);
         return;
       }
       if (users[name]) {
@@ -4135,11 +4219,42 @@
       vocShell.appendChild(vocHeader);
 
       const topicRow = document.createElement("div");
-      topicRow.className = "lh-pill-row";
+      topicRow.className = "lh-pill-row is-collapsed";
       let activeTopicFilter = "all";
+      let filterExpanded = false;
       const topicSet = {};
       (data.vocabQuiz || []).forEach(function (q) {
         if (q.topic) topicSet[q.topic] = true;
+      });
+      const filterToggle = document.createElement("button");
+      filterToggle.type = "button";
+      filterToggle.className = "lh-filter-toggle";
+      filterToggle.setAttribute("aria-expanded", "false");
+      const filterToggleLabel = document.createElement("span");
+      filterToggleLabel.className = "lh-filter-toggle__label";
+      const filterToggleChevron = document.createElement("span");
+      filterToggleChevron.className = "lh-filter-toggle__chevron";
+      filterToggleChevron.setAttribute("aria-hidden", "true");
+      filterToggleChevron.textContent = "▼";
+      const filterToggleDot = document.createElement("span");
+      filterToggleDot.className = "lh-filter-toggle__dot";
+      filterToggle.appendChild(filterToggleLabel);
+      filterToggle.appendChild(filterToggleChevron);
+      filterToggle.appendChild(filterToggleDot);
+      const filterWrap = document.createElement("div");
+      filterWrap.className = "lh-filter-wrap";
+      function updateFilterToggleUI() {
+        filterToggleLabel.textContent = filterExpanded
+          ? I18n.t("learning_vocab_filter_hide")
+          : I18n.t("learning_vocab_filter_show");
+        topicRow.classList.toggle("is-collapsed", !filterExpanded);
+        filterToggle.classList.toggle("is-expanded", filterExpanded);
+        filterToggle.setAttribute("aria-expanded", filterExpanded ? "true" : "false");
+        filterToggleDot.classList.toggle("is-visible", activeTopicFilter !== "all");
+      }
+      filterToggle.addEventListener("click", function () {
+        filterExpanded = !filterExpanded;
+        updateFilterToggleUI();
       });
       function makePill(label, value) {
         const b = document.createElement("button");
@@ -4153,6 +4268,7 @@
             p.classList.remove("is-active");
           });
           b.classList.add("is-active");
+          updateFilterToggleUI();
           startQuiz(currentMode);
         });
         return b;
@@ -4163,7 +4279,10 @@
         .forEach(function (t) {
           topicRow.appendChild(makePill(t, t));
         });
-      vocShell.appendChild(topicRow);
+      filterWrap.appendChild(filterToggle);
+      filterWrap.appendChild(topicRow);
+      vocShell.appendChild(filterWrap);
+      updateFilterToggleUI();
 
       const quizWrap = document.createElement("div");
       quizWrap.className = "lh-vocab-quiz resource-item";
@@ -4927,13 +5046,29 @@
       deckCountHint.setAttribute("aria-live", "polite");
       const sessionHint = document.createElement("p");
       sessionHint.className = "flashcard-session-hint";
+      const sessionProgressTrack = document.createElement("div");
+      sessionProgressTrack.className = "flashcard-progress-bar-track";
+      const sessionProgressFill = document.createElement("div");
+      sessionProgressFill.className = "flashcard-progress-bar-fill";
+      sessionProgressTrack.appendChild(sessionProgressFill);
+      const sessionProgressLabel = document.createElement("p");
+      sessionProgressLabel.className = "flashcard-progress-label";
       const flipBtn = document.createElement("button");
       flipBtn.type = "button";
       flipBtn.className = "flashcard";
+      const bookmarkBtn = document.createElement("button");
+      bookmarkBtn.type = "button";
+      bookmarkBtn.className = "flashcard-bookmark";
+      bookmarkBtn.setAttribute("aria-label", I18n.t("flashcard_bookmark_add"));
+      const bookmarkSvgOutline =
+        '<svg class="flashcard-bookmark__svg" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"><path d="M7 3h10a1 1 0 0 1 1 1v17l-5-3.5L8 21V4a1 1 0 0 1 1-1z"/></svg>';
+      const bookmarkSvgFilled =
+        '<svg class="flashcard-bookmark__svg" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="currentColor"><path d="M7 3h10a1 1 0 0 1 1 1v17l-5-3.5L8 21V4a1 1 0 0 1 1-1z"/></svg>';
       const front = document.createElement("span");
       front.className = "flashcard__side flashcard__front";
       const back = document.createElement("span");
       back.className = "flashcard__side flashcard__back";
+      flipBtn.appendChild(bookmarkBtn);
       flipBtn.appendChild(front);
       flipBtn.appendChild(back);
       const controls = document.createElement("div");
@@ -4990,6 +5125,8 @@
       stage.appendChild(top);
       stage.appendChild(deckCountHint);
       stage.appendChild(sessionHint);
+      stage.appendChild(sessionProgressTrack);
+      stage.appendChild(sessionProgressLabel);
       stage.appendChild(flipBtn);
       stage.appendChild(controls);
       stage.appendChild(completeOverlay);
@@ -4997,6 +5134,7 @@
 
       const decks = data.flashcards;
       const topicNames = Object.keys(decks);
+      const SAVED_CARDS_DECK = "__saved_cards__";
       let activeTopic = decks["Master 1000"] ? "Master 1000" : topicNames[0];
       let sessionIndices = [];
       let sessionPos = 0;
@@ -5008,6 +5146,19 @@
       let lastCompleteStats = null;
       let showingBack = false;
       let sessionSummarySaved = false;
+
+      function updateFlashcardSessionProgress() {
+        const total = sessionIndices.length;
+        const completed = total ? Math.min(sessionPos, total) : 0;
+        const pct = total ? (completed / total) * 100 : 0;
+        sessionProgressFill.style.width = String(pct) + "%";
+        sessionProgressLabel.textContent = total
+          ? I18n.t("flashcard_session_progress", {
+              n: String(completed),
+              total: String(total),
+            })
+          : "";
+      }
 
       function applySessionHintFromState() {
         const deck = fullDeck();
@@ -5027,10 +5178,79 @@
       }
 
       const flashMeta = function () {
-        return { level: level, topic: activeTopic };
+        return {
+          level: level,
+          topic: activeTopic === SAVED_CARDS_DECK ? I18n.t("flashcard_saved_deck_name") : activeTopic,
+        };
       };
 
+      function savedDeckCards() {
+        const user = getActiveUser();
+        if (!user) return [];
+        const lh = ensureLearningHub(ensureStats(user));
+        return (lh.savedFlashcards || [])
+          .filter(function (item) {
+            return item.level === level;
+          })
+          .map(function (item) {
+            return {
+              front: item.front,
+              back: item.back,
+              _savedDeck: item.deck,
+            };
+          });
+      }
+
+      function currentCardSourceDeck(card) {
+        if (activeTopic === SAVED_CARDS_DECK) {
+          return (card && card._savedDeck) || I18n.t("flashcard_saved_deck_name");
+        }
+        return activeTopic;
+      }
+
+      function isCardBookmarked(card) {
+        const user = getActiveUser();
+        if (!user || !card) return false;
+        const lh = ensureLearningHub(ensureStats(user));
+        const sourceDeck = currentCardSourceDeck(card);
+        return (lh.savedFlashcards || []).some(function (item) {
+          return (
+            item.level === level &&
+            item.deck === sourceDeck &&
+            item.front === card.front &&
+            item.back === card.back
+          );
+        });
+      }
+
+      function updateBookmarkButton(card) {
+        if (!card) {
+          bookmarkBtn.hidden = true;
+          return;
+        }
+        bookmarkBtn.hidden = false;
+        const user = getActiveUser();
+        if (!user) {
+          bookmarkBtn.disabled = true;
+          bookmarkBtn.classList.remove("is-saved");
+          bookmarkBtn.innerHTML = bookmarkSvgOutline;
+          bookmarkBtn.setAttribute("aria-label", I18n.t("flashcard_bookmark_add"));
+          return;
+        }
+        bookmarkBtn.disabled = false;
+        const saved = isCardBookmarked(card);
+        bookmarkBtn.classList.toggle("is-saved", saved);
+        bookmarkBtn.innerHTML = saved ? bookmarkSvgFilled : bookmarkSvgOutline;
+        bookmarkBtn.setAttribute(
+          "aria-label",
+          saved ? I18n.t("flashcard_bookmark_remove") : I18n.t("flashcard_bookmark_add")
+        );
+      }
+
       function fullDeck() {
+        if (activeTopic === SAVED_CARDS_DECK) {
+          return savedDeckCards();
+        }
         return decks[activeTopic] || [];
       }
 
@@ -5049,6 +5269,7 @@
           sessionPos = 0;
           lastSessionWrongKeys = null;
           sessionHint.textContent = "";
+          updateFlashcardSessionProgress();
           renderCard();
           return;
         }
@@ -5067,6 +5288,7 @@
         if (!sessionIndices.length) {
           sessionPos = 0;
           lastSessionWrongKeys = null;
+          updateFlashcardSessionProgress();
           renderCard();
           return;
         }
@@ -5075,6 +5297,7 @@
         applySessionHintFromState();
         prevBtn.classList.add("hidden");
         nextBtn.classList.add("hidden");
+        updateFlashcardSessionProgress();
         renderCard();
       }
 
@@ -5113,18 +5336,34 @@
       }
 
       function updateDeckCountHint() {
-        const n = (decks[activeTopic] || []).length;
+        const n = fullDeck().length;
         deckCountHint.textContent =
           n === 1 ? I18n.t("flashcard_deck_card_count_one") : I18n.t("flashcard_deck_card_count", { n: String(n) });
       }
 
-      topicNames.forEach(function (name) {
-        const option = document.createElement("option");
-        option.value = name;
-        option.textContent = name;
-        if (name === activeTopic) option.selected = true;
-        topicSelect.appendChild(option);
-      });
+      function populateTopicSelect() {
+        const prev = activeTopic;
+        topicSelect.innerHTML = "";
+        const savedOpt = document.createElement("option");
+        savedOpt.value = SAVED_CARDS_DECK;
+        savedOpt.setAttribute("data-saved-deck-option", "1");
+        savedOpt.textContent = I18n.t("flashcard_saved_deck_name");
+        topicSelect.appendChild(savedOpt);
+        topicNames.forEach(function (name) {
+          const option = document.createElement("option");
+          option.value = name;
+          option.textContent = name;
+          topicSelect.appendChild(option);
+        });
+        if (prev === SAVED_CARDS_DECK || (prev && topicNames.indexOf(prev) >= 0)) {
+          activeTopic = prev;
+        } else {
+          activeTopic = decks["Master 1000"] ? "Master 1000" : topicNames[0];
+        }
+        topicSelect.value = activeTopic;
+      }
+
+      populateTopicSelect();
       updateDeckCountHint();
 
       function renderCard() {
@@ -5142,14 +5381,22 @@
           });
           flipBtn.classList.remove("is-flipped");
           showingBack = false;
+          bookmarkBtn.hidden = true;
+          updateFlashcardSessionProgress();
           return;
         }
         if (!deck.length) {
-          front.textContent = I18n.t("flashcard_empty_deck");
+          if (activeTopic === SAVED_CARDS_DECK) {
+            front.textContent = I18n.t("flashcard_saved_empty");
+          } else {
+            front.textContent = I18n.t("flashcard_empty_deck");
+          }
           back.textContent = "";
           progress.textContent = "0 / 0";
           score.textContent = I18n.t("flashcard_score_label", { correct: "0", attempts: "0" });
           sessionHint.textContent = "";
+          bookmarkBtn.hidden = true;
+          updateFlashcardSessionProgress();
           return;
         }
         if (!sessionIndices.length) {
@@ -5157,6 +5404,8 @@
           back.textContent = "";
           progress.textContent = "0 / 0";
           score.textContent = I18n.t("flashcard_score_label", { correct: "0", attempts: "0" });
+          bookmarkBtn.hidden = true;
+          updateFlashcardSessionProgress();
           return;
         }
         const idx = sessionIndices[sessionPos];
@@ -5179,7 +5428,54 @@
           attempts: String(attempts),
         });
         flipBtn.classList.toggle("is-flipped", showingBack);
+        updateBookmarkButton(card);
+        updateFlashcardSessionProgress();
       }
+
+      bookmarkBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        const user = getActiveUser();
+        if (!user) return;
+        const deckNow = fullDeck();
+        if (!deckNow.length || sessionPos >= sessionIndices.length) return;
+        const idx = sessionIndices[sessionPos];
+        const card = deckNow[idx];
+        if (!card) return;
+        const stats = ensureStats(user);
+        const lh = ensureLearningHub(stats);
+        if (!lh.savedFlashcards) lh.savedFlashcards = [];
+        const sourceDeck = currentCardSourceDeck(card);
+        let found = -1;
+        for (let si = 0; si < lh.savedFlashcards.length; si += 1) {
+          const item = lh.savedFlashcards[si];
+          if (
+            item.level === level &&
+            item.deck === sourceDeck &&
+            item.front === card.front &&
+            item.back === card.back
+          ) {
+            found = si;
+            break;
+          }
+        }
+        if (found >= 0) {
+          lh.savedFlashcards.splice(found, 1);
+        } else {
+          lh.savedFlashcards.push({
+            level: level,
+            deck: sourceDeck,
+            front: card.front,
+            back: card.back,
+          });
+        }
+        saveUsers();
+        if (activeTopic === SAVED_CARDS_DECK) {
+          updateDeckCountHint();
+          startSession("full", null);
+        } else {
+          updateBookmarkButton(card);
+        }
+      });
 
       topicSelect.addEventListener("change", function () {
         activeTopic = topicSelect.value;
@@ -5263,6 +5559,7 @@
         });
         const allTopicPill = topicRow.querySelector('[data-lh-all-topic="1"]');
         if (allTopicPill) allTopicPill.textContent = I18n.t("learning_hub_topic_all");
+        updateFilterToggleUI();
         variantRow.querySelectorAll("[data-variant]").forEach(function (vb) {
           const vk = vb.getAttribute("data-variant");
           if (vk) vb.textContent = I18n.t("learning_vocab_variant_" + vk);
@@ -5287,6 +5584,8 @@
         orderSelect.setAttribute("aria-label", I18n.t("flashcard_order_label"));
         orderOptEn.textContent = I18n.t("flashcard_order_en_option");
         orderOptFr.textContent = I18n.t("flashcard_order_fr_option");
+        const savedDeckOpt = topicSelect.querySelector('[data-saved-deck-option="1"]');
+        if (savedDeckOpt) savedDeckOpt.textContent = I18n.t("flashcard_saved_deck_name");
         updateDeckCountHint();
         prevBtn.textContent = I18n.t("flashcard_prev");
         nextBtn.textContent = I18n.t("flashcard_next");
@@ -5295,6 +5594,7 @@
         btnWrongOnly.textContent = I18n.t("flashcard_complete_wrong_only");
         btnFullAgain.textContent = I18n.t("flashcard_complete_full_again");
         applySessionHintFromState();
+        updateFlashcardSessionProgress();
         if (!completeOverlay.classList.contains("hidden") && lastCompleteStats) {
           completeTitle.textContent = I18n.t("flashcard_complete_title");
           completeSummary.textContent = I18n.t("flashcard_complete_summary", {

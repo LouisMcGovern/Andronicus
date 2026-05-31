@@ -98,6 +98,26 @@
           </ul>
         </section>
 
+        <div class="home-testimonials" aria-labelledby="home-testimonials-heading">
+          <h2 id="home-testimonials-heading" class="home-section-title">What students and parents say</h2>
+          <div class="testimonial-grid">
+            <figure class="testimonial-card">
+              <p class="testimonial-card__mark" aria-hidden="true">&ldquo;</p>
+              <blockquote class="testimonial-card__quote">
+                Louis explains things the way a student thinks, not the way a textbook is written. My daughter went from dreading English class to actually enjoying it.
+              </blockquote>
+              <figcaption class="testimonial-card__attribution">Parent of a Beginner student</figcaption>
+            </figure>
+            <figure class="testimonial-card">
+              <p class="testimonial-card__mark" aria-hidden="true">&ldquo;</p>
+              <blockquote class="testimonial-card__quote">
+                The small group format means you can't hide. You actually have to speak, and that's what made the difference for my exam.
+              </blockquote>
+              <figcaption class="testimonial-card__attribution">Intermediate student, Lycée, Paris</figcaption>
+            </figure>
+          </div>
+        </div>
+
         <p class="home-trust-line" data-i18n="home_trust_line"></p>
 
         <section class="home-faq" aria-labelledby="home-faq-heading">
@@ -504,10 +524,10 @@
         <div id="account-auth" class="account-auth">
           <form id="account-register-form" class="account-card">
             <h3 data-i18n="account_register_heading">Create account</h3>
-            <label for="account-register-fullname" data-i18n="account_label_fullname">Full name</label>
-            <input type="text" id="account-register-fullname" autocomplete="name" required />
             <label for="account-register-name" data-i18n="account_label_username">Account name</label>
             <input type="text" id="account-register-name" autocomplete="username" required />
+            <label for="account-register-fullname" data-i18n="account_label_fullname">Full name</label>
+            <input type="text" id="account-register-fullname" autocomplete="name" required />
             <label for="account-register-password" data-i18n="account_label_password">Password</label>
             <div class="account-password-row">
               <input
@@ -522,38 +542,6 @@
                 type="button"
                 class="account-password-toggle"
                 id="account-register-password-toggle"
-                aria-pressed="false"
-                aria-label="Show password"
-              >
-                <span class="account-password-toggle__icon account-password-toggle__icon--masked" aria-hidden="true">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12Z" />
-                    <circle cx="12" cy="12" r="3" />
-                    <path d="m3 3 18 18" />
-                  </svg>
-                </span>
-                <span class="account-password-toggle__icon account-password-toggle__icon--shown hidden" aria-hidden="true">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12Z" />
-                    <circle cx="12" cy="12" r="3" />
-                  </svg>
-                </span>
-              </button>
-            </div>
-            <label for="account-register-password-confirm" data-i18n="account_label_password_confirm">Confirm password</label>
-            <div class="account-password-row">
-              <input
-                type="password"
-                id="account-register-password-confirm"
-                class="account-password-row__input"
-                autocomplete="new-password"
-                required
-                minlength="4"
-              />
-              <button
-                type="button"
-                class="account-password-toggle"
-                id="account-register-password-confirm-toggle"
                 aria-pressed="false"
                 aria-label="Show password"
               >
