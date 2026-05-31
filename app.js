@@ -56,6 +56,7 @@
   const contentPasswordClose = document.getElementById("content-password-close");
   const contentPasswordForLevel = document.getElementById("content-password-for-level");
   const levelPicker = document.getElementById("level-picker");
+  const contentBreadcrumb = document.getElementById("content-breadcrumb");
 
   const bookingForm = document.getElementById("booking-form");
   const bookingParentNameInput = document.getElementById("booking-parent-name");
@@ -2144,6 +2145,7 @@
     if (!user.stats.quizSessions) user.stats.quizSessions = 0;
     if (!user.stats.quizSessionLog) user.stats.quizSessionLog = [];
     if (!user.stats.completedExercises) user.stats.completedExercises = [];
+    if (!user.stats.exerciseCompletionLog) user.stats.exerciseCompletionLog = [];
     if (!user.fullName) user.fullName = "";
     ensureLearningHub(user.stats);
     return user.stats;
@@ -2161,6 +2163,7 @@
         homeworkChecklist: {},
         activityByDay: {},
         onboardingShown: false,
+        lastLevel: "",
       };
     }
     const lh = stats.learningHub;
@@ -2169,8 +2172,10 @@
     if (!lh.savedFlashcards) lh.savedFlashcards = [];
     if (!lh.homeworkTasks) lh.homeworkTasks = {};
     if (!lh.homeworkChecklist) lh.homeworkChecklist = {};
+    if (!lh.homeworkChecklistDates) lh.homeworkChecklistDates = {};
     if (!lh.activityByDay) lh.activityByDay = {};
     if (lh.onboardingShown !== true) lh.onboardingShown = false;
+    if (lh.lastLevel == null) lh.lastLevel = "";
     return lh;
   }
 
@@ -2281,6 +2286,106 @@
     }
   }
 
+  function breadcrumbToolLabel(tool) {
+    const key = {
+      flashcards: "learning_tab_flashcards",
+      vocab: "learning_tab_vocab",
+      grammar: "learning_tab_grammar",
+      homework: "learning_tab_homework",
+      progress: "learning_tab_progress",
+    }[tool];
+    return key ? I18n.t(key) : tool;
+  }
+
+  function updateContentBreadcrumb() {
+    if (!contentBreadcrumb) return;
+    const panelContent = document.getElementById("panel-content");
+    if (
+      !panelContent ||
+      panelContent.classList.contains("hidden") ||
+      !levelPicker ||
+      !levelPicker.classList.contains("hidden")
+    ) {
+      contentBreadcrumb.classList.add("hidden");
+      contentBreadcrumb.innerHTML = "";
+      return;
+    }
+    if (contentPasswordOverlay && !contentPasswordOverlay.classList.contains("hidden")) {
+      contentBreadcrumb.classList.add("hidden");
+      contentBreadcrumb.innerHTML = "";
+      return;
+    }
+
+    let openLevel = null;
+    let openArticle = null;
+    document.querySelectorAll(".level-article").forEach(function (art) {
+      if (!art.classList.contains("hidden")) {
+        openLevel = art.id.replace("content-", "");
+        openArticle = art;
+      }
+    });
+    if (!openLevel || !openArticle) {
+      contentBreadcrumb.classList.add("hidden");
+      contentBreadcrumb.innerHTML = "";
+      return;
+    }
+
+    const hub = openArticle.querySelector(".learning-hub");
+    const landingEl = hub && hub.querySelector("[data-level-landing]");
+    const onLanding = landingEl && !landingEl.classList.contains("hidden");
+
+    contentBreadcrumb.classList.remove("hidden");
+    contentBreadcrumb.innerHTML = "";
+
+    function appendSep() {
+      const sep = document.createElement("span");
+      sep.setAttribute("aria-hidden", "true");
+      sep.textContent = "›";
+      contentBreadcrumb.appendChild(sep);
+    }
+
+    function appendLink(text, handler) {
+      const link = document.createElement("span");
+      link.className = "content-breadcrumb__link";
+      link.textContent = text;
+      link.setAttribute("role", "link");
+      link.tabIndex = 0;
+      link.addEventListener("click", handler);
+      link.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          handler();
+        }
+      });
+      contentBreadcrumb.appendChild(link);
+    }
+
+    function appendCurrent(text) {
+      const cur = document.createElement("span");
+      cur.className = "content-breadcrumb__current";
+      cur.textContent = text;
+      cur.setAttribute("aria-current", "page");
+      contentBreadcrumb.appendChild(cur);
+    }
+
+    appendLink(I18n.t("nav_content_label"), showLevelPicker);
+    appendSep();
+    const levelLabel = I18n.t("level_" + openLevel);
+    if (onLanding) {
+      appendCurrent(levelLabel);
+      return;
+    }
+    appendLink(levelLabel, function () {
+      if (hub) resetHubToLanding(hub);
+    });
+    const activeTab = hub && hub.querySelector(".learning-hub__tab.is-active");
+    const tool = activeTab && activeTab.getAttribute("data-tool");
+    if (tool) {
+      appendSep();
+      appendCurrent(breadcrumbToolLabel(tool));
+    }
+  }
+
   function resetHubToLanding(hub) {
     if (!hub) return;
     hub.classList.remove("is-locked");
@@ -2296,6 +2401,7 @@
     const lvl = hub.getAttribute("data-learning-level");
     const data = learningData[lvl];
     if (data) refreshLandingCardProgress(hub, lvl, data);
+    updateContentBreadcrumb();
   }
 
   function resetAllLearningHubsToLanding() {
@@ -2642,6 +2748,17 @@
     saveUsers();
   }
 
+  const CONTENT_LEVELS = ["beginner", "intermediate", "advanced"];
+
+  function recordLastLevel(level) {
+    if (!level || CONTENT_LEVELS.indexOf(level) < 0) return;
+    const user = getActiveUser();
+    if (!user) return;
+    const lh = ensureLearningHub(ensureStats(user));
+    lh.lastLevel = level;
+    saveUsers();
+  }
+
   function navigateToContentLevel(level) {
     setContentPanelOpen(true);
     panelHome.classList.add("hidden");
@@ -2665,6 +2782,39 @@
     if (article) {
       resetHubToLanding(article.querySelector(".learning-hub"));
     }
+    recordLastLevel(level);
+  }
+
+  function renderAccountContinue(lh) {
+    const existing = accountDashboard.querySelector(".account-continue");
+    if (existing) existing.remove();
+    const level = lh && lh.lastLevel;
+    if (!level || CONTENT_LEVELS.indexOf(level) < 0) return;
+
+    const card = document.createElement("div");
+    card.className = "account-continue";
+
+    const textWrap = document.createElement("div");
+    const heading = document.createElement("h3");
+    heading.className = "account-continue__heading";
+    heading.textContent = I18n.t("account_continue_heading");
+    const levelLine = document.createElement("p");
+    levelLine.className = "account-continue__level";
+    levelLine.textContent = I18n.t("level_" + level);
+    textWrap.appendChild(heading);
+    textWrap.appendChild(levelLine);
+
+    const goBtn = document.createElement("button");
+    goBtn.type = "button";
+    goBtn.className = "btn-primary account-continue__btn";
+    goBtn.textContent = I18n.t("account_continue_btn", { level: I18n.t("level_" + level) });
+    goBtn.addEventListener("click", function () {
+      navigateToContentLevel(level);
+    });
+
+    card.appendChild(textWrap);
+    card.appendChild(goBtn);
+    accountDashboard.insertBefore(card, accountProgressCards);
   }
 
   function renderAccountOnboarding(user, lh) {
@@ -2735,6 +2885,7 @@
     accountAuth.classList.add("hidden");
     accountDashboard.classList.remove("hidden");
     accountWelcome.textContent = I18n.t("account_welcome_logged_in", { user: activeUsername });
+    renderAccountContinue(lh);
     renderAccountOnboarding(user, lh);
     accountProgressCards.innerHTML = "";
     const metrics = [
@@ -3035,6 +3186,10 @@
     const key = level + " - " + topic;
     if (stats.completedExercises.includes(key)) return { ok: false, reason: "exists" };
     stats.completedExercises.push(key);
+    stats.exerciseCompletionLog.push({
+      at: new Date().toISOString(),
+      topic: key,
+    });
     bumpLearningStreak(level);
     saveUsers();
     renderAccountPanel();
@@ -3104,6 +3259,7 @@
         console.error(err);
       }
     });
+    updateContentBreadcrumb();
   });
 
   function setContentPanelOpen(on) {
@@ -3119,6 +3275,7 @@
     document.querySelectorAll(".level-article").forEach((el) => el.classList.add("hidden"));
     document.querySelectorAll(".btn-level").forEach((b) => b.classList.remove("is-active"));
     resetAllLearningHubsToLanding();
+    updateContentBreadcrumb();
   }
 
   function showHome() {
@@ -3388,8 +3545,10 @@
       if (article) {
         article.classList.remove("hidden");
         resetHubToLanding(article.querySelector(".learning-hub"));
+        recordLastLevel(pendingLevel);
       }
       pendingLevel = null;
+      updateContentBreadcrumb();
     } else {
       contentPasswordError.classList.remove("hidden");
     }
@@ -3632,6 +3791,7 @@
         });
         if (name === "progress") renderProgressPanel();
         refreshStreakHeader();
+        updateContentBreadcrumb();
       }
 
       function enterSection(tabName) {
@@ -3662,6 +3822,12 @@
       landingCards.forEach(function (btn) {
         btn.addEventListener("click", function () {
           const tool = btn.getAttribute("data-tool");
+          if (tool) enterSection(tool);
+        });
+      });
+      workspaceTabs.forEach(function (tab) {
+        tab.addEventListener("click", function () {
+          const tool = tab.getAttribute("data-tool");
           if (tool) enterSection(tool);
         });
       });
@@ -3845,6 +4011,20 @@
         (stats.quizSessionLog || []).forEach(function (s) {
           bumpDay(s.at);
         });
+        const exerciseLogByTopic = {};
+        (stats.exerciseCompletionLog || []).forEach(function (entry) {
+          if (entry && entry.topic) exerciseLogByTopic[entry.topic] = entry.at;
+        });
+        (stats.completedExercises || []).forEach(function (key) {
+          bumpDay(exerciseLogByTopic[key]);
+        });
+        const hwChecked = (lh.homeworkChecklist && lh.homeworkChecklist[level]) || {};
+        const hwDates = lh.homeworkChecklistDates || {};
+        Object.keys(hwChecked).forEach(function (itemId) {
+          if (hwChecked[itemId]) {
+            bumpDay(hwDates[level + "|" + itemId]);
+          }
+        });
         let weekMax = 0;
         for (let wi = 6; wi >= 0; wi -= 1) {
           const wd = new Date();
@@ -3986,8 +4166,15 @@
               const hub = ensureLearningHub(st);
               if (!hub.homeworkChecklist) hub.homeworkChecklist = {};
               if (!hub.homeworkChecklist[level]) hub.homeworkChecklist[level] = {};
-              if (cb.checked) hub.homeworkChecklist[level][item.id] = true;
-              else delete hub.homeworkChecklist[level][item.id];
+              hub.homeworkChecklistDates = hub.homeworkChecklistDates || {};
+              const hwDateKey = level + "|" + item.id;
+              if (cb.checked) {
+                hub.homeworkChecklist[level][item.id] = true;
+                hub.homeworkChecklistDates[hwDateKey] = new Date().toISOString();
+              } else {
+                delete hub.homeworkChecklist[level][item.id];
+                delete hub.homeworkChecklistDates[hwDateKey];
+              }
               saveUsers();
               if (cb.checked) bumpLearningStreak(level);
               renderHomeworkPanel();
@@ -4808,6 +4995,17 @@
           const card = document.createElement("button");
           card.type = "button";
           card.className = "lh-topic-card lh-ex-topic-card" + (done ? " lh-topic-card--done" : "");
+          const num = document.createElement("span");
+          num.className = "lh-topic-num";
+          num.textContent = String(i + 1);
+          num.setAttribute("aria-hidden", "true");
+          card.appendChild(num);
+          if (i < 3) {
+            const startHere = document.createElement("span");
+            startHere.className = "lh-topic-card__start-here";
+            startHere.textContent = "Start here";
+            card.appendChild(startHere);
+          }
           if (done) {
             const check = document.createElement("span");
             check.className = "lh-topic-card__check";
@@ -5135,7 +5333,29 @@
       const decks = data.flashcards;
       const topicNames = Object.keys(decks);
       const SAVED_CARDS_DECK = "__saved_cards__";
-      let activeTopic = decks["Master 1000"] ? "Master 1000" : topicNames[0];
+
+      function sortedFlashcardDeckNames(names) {
+        const themed = names
+          .filter(function (name) {
+            return name !== "Master 1000";
+          })
+          .sort();
+        if (names.indexOf("Master 1000") >= 0) {
+          themed.push("Master 1000");
+        }
+        return themed;
+      }
+
+      function defaultFlashcardTopic(names) {
+        const ordered = sortedFlashcardDeckNames(names);
+        return ordered[0] || "";
+      }
+
+      function flashcardDeckOptionLabel(name) {
+        return name === "Master 1000" ? "Full deck" : name;
+      }
+
+      let activeTopic = defaultFlashcardTopic(topicNames);
       let sessionIndices = [];
       let sessionPos = 0;
       let sessionCorrect = 0;
@@ -5349,16 +5569,16 @@
         savedOpt.setAttribute("data-saved-deck-option", "1");
         savedOpt.textContent = I18n.t("flashcard_saved_deck_name");
         topicSelect.appendChild(savedOpt);
-        topicNames.forEach(function (name) {
+        sortedFlashcardDeckNames(topicNames).forEach(function (name) {
           const option = document.createElement("option");
           option.value = name;
-          option.textContent = name;
+          option.textContent = flashcardDeckOptionLabel(name);
           topicSelect.appendChild(option);
         });
         if (prev === SAVED_CARDS_DECK || (prev && topicNames.indexOf(prev) >= 0)) {
           activeTopic = prev;
         } else {
-          activeTopic = decks["Master 1000"] ? "Master 1000" : topicNames[0];
+          activeTopic = defaultFlashcardTopic(topicNames);
         }
         topicSelect.value = activeTopic;
       }

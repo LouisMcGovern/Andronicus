@@ -51,6 +51,12 @@
     </header>
 
     <nav class="main-nav" data-i18n-aria="nav_main_aria" aria-label="Main sections">
+      <div class="home-free-banner">
+        <p class="home-free-banner__text">
+          Your first class is free — no commitment, no payment until you decide to continue.
+        </p>
+        <button type="button" class="btn-primary home-free-banner__btn" data-section="booking">Book now</button>
+      </div>
       <button type="button" class="nav-card" data-section="about">
         <span class="nav-card__label" data-i18n="nav_about_label">About the teacher</span>
         <span class="nav-card__hint" data-i18n="nav_about_hint">Who I am &amp; my background</span>
@@ -66,6 +72,7 @@
       <button type="button" class="nav-card" data-section="booking">
         <span class="nav-card__label" data-i18n="nav_booking_label">Booking</span>
         <span class="nav-card__hint" data-i18n="nav_booking_hint">Choose a time &amp; register</span>
+        <span class="nav-card__price">€25 per session</span>
       </button>
       <button type="button" class="nav-card" data-section="account">
         <span class="nav-card__label" data-i18n="nav_account_label">Student account</span>
@@ -167,12 +174,22 @@
           <p data-i18n-html="about_p5_html"></p>
         </div>
         <div class="teacher-gallery" aria-label="Teacher photos">
-          <div class="teacher-gallery__frame teacher-gallery__frame--focus-left">
-            <img src="assets/teacher-1.png" alt="Louis McGovern in a collared shirt (left) at a dinner event" loading="lazy" />
-          </div>
-          <div class="teacher-gallery__frame teacher-gallery__frame--focus-left teacher-gallery__frame--chess">
-            <img src="assets/teacher-chess.png" alt="Louis McGovern in a navy suit, smiling, playing chess" loading="lazy" />
-          </div>
+          <figure class="teacher-figure">
+            <div class="teacher-gallery__frame teacher-gallery__frame--focus-left">
+              <img src="assets/teacher-1.png" alt="Louis McGovern in a collared shirt (left) at a dinner event" loading="lazy" />
+            </div>
+            <figcaption class="teacher-figure__caption">
+              Louis McGovern — studying Law and French at Trinity College Dublin.
+            </figcaption>
+          </figure>
+          <figure class="teacher-figure">
+            <div class="teacher-gallery__frame teacher-gallery__frame--focus-left teacher-gallery__frame--chess">
+              <img src="assets/teacher-chess.png" alt="Louis McGovern in a navy suit, smiling, playing chess" loading="lazy" />
+            </div>
+            <figcaption class="teacher-figure__caption">
+              Teaching approach: structured sessions, real conversation, and consistent feedback.
+            </figcaption>
+          </figure>
         </div>
       </section>
 
@@ -231,13 +248,23 @@
       </section>
 
       <section id="panel-content" class="panel panel--content hidden">
+        <nav id="content-breadcrumb" class="content-breadcrumb hidden" aria-label="Content location"></nav>
         <div id="content-levels" class="content-levels">
           <div id="level-picker" class="level-picker">
             <p class="content-intro" data-i18n-html="content_intro">Choose your level. Content is uploaded by English level, and the password is required each time. If you would like access, <strong>contact me</strong> and we can arrange a <strong>10-minute chat</strong>.</p>
             <div class="level-buttons" role="group" data-i18n-aria="content_levels_aria" aria-label="English level">
-              <button type="button" class="btn-level" data-level="beginner" data-i18n="level_beginner">Beginner</button>
-              <button type="button" class="btn-level" data-level="intermediate" data-i18n="level_intermediate">Intermediate</button>
-              <button type="button" class="btn-level" data-level="advanced" data-i18n="level_advanced">Advanced</button>
+              <button type="button" class="btn-level" data-level="beginner">
+                <span class="btn-level__name" data-i18n="level_beginner">Beginner</span>
+                <span class="btn-level__desc">A1 to A2 — core vocabulary, everyday grammar, and short practice tasks.</span>
+              </button>
+              <button type="button" class="btn-level" data-level="intermediate">
+                <span class="btn-level__name" data-i18n="level_intermediate">Intermediate</span>
+                <span class="btn-level__desc">B1 — stronger grammar, wider vocabulary, and longer written tasks.</span>
+              </button>
+              <button type="button" class="btn-level" data-level="advanced">
+                <span class="btn-level__name" data-i18n="level_advanced">Advanced</span>
+                <span class="btn-level__desc">B2 and above — nuanced grammar, academic vocabulary, and exam-style practice.</span>
+              </button>
             </div>
           </div>
           <div id="content-password-overlay" class="content-password-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="content-password-heading">
@@ -444,6 +471,9 @@
           <p class="booking-request-note" data-i18n-html="booking_request_note_html"></p>
         </div>
         <form id="booking-form" class="booking-form" novalidate>
+          <div class="booking-price-callout">
+            Each session is €25 per student. Maximum four students per class. Your first session is free.
+          </div>
           <label for="booking-parent-name" data-i18n="booking_parent_name_label">Parent name</label>
           <input type="text" id="booking-parent-name" name="parentName" required autocomplete="name" data-i18n-placeholder="booking_parent_name_ph" />
 
@@ -716,8 +746,12 @@
     </main>
 
     <footer class="site-footer">
-      <p class="site-footer__brand" data-i18n="footer_line">Andronicus · English grinds · Zoom</p>
-      <p class="site-footer__contact" data-i18n-html="footer_contact_html"></p>
+      <p class="site-footer__brand">Andronicus</p>
+      <p class="site-footer__contact">
+        <a href="tel:+353833198980">+353 (83) 319 8980</a>
+        ·
+        <a href="mailto:louis.f.mcgovern@gmail.com">louis.f.mcgovern@gmail.com</a>
+      </p>
     </footer>
   </div>
   <button type="button" id="admin-corner-btn" class="admin-corner-btn" data-i18n-aria="admin_corner_aria" aria-label="Open admin"></button>
