@@ -1709,7 +1709,7 @@
       const d2 = seedItems[(i + 2) % seedItems.length].correct;
       const d3 = seedItems[(i + 3) % seedItems.length].correct;
       questions.push({
-        question: current.q + " [Q" + String(i + 1) + "]",
+        question: current.q,
         options: [current.correct, d1, d2, d3],
         answer: current.correct,
         topic: current.topic || "General",
@@ -2152,8 +2152,6 @@
   function ensureLearningHub(stats) {
     if (!stats.learningHub) {
       stats.learningHub = {
-        xp: 0,
-        xpByLevel: {},
         streak: 0,
         lastActiveDay: "",
         vocabTopic: {},
@@ -2164,7 +2162,6 @@
       };
     }
     const lh = stats.learningHub;
-    if (!lh.xpByLevel) lh.xpByLevel = {};
     if (!lh.vocabTopic) lh.vocabTopic = {};
     if (!lh.savedWords) lh.savedWords = [];
     if (!lh.homeworkTasks) lh.homeworkTasks = {};
@@ -2177,24 +2174,106 @@
     return d.toISOString().slice(0, 10);
   }
 
-  const LEVEL_XP_ORDER = ["beginner", "intermediate", "advanced"];
-  const LEVEL_XP_GOAL = 1000;
-
-  function getLevelXp(lh, lvl) {
-    if (!lh || !lvl) return 0;
-    return Number(lh.xpByLevel && lh.xpByLevel[lvl]) || 0;
+  function countGrammarCompleted(stats, lvl, exercises) {
+    const completedKeys = stats.completedExercises || [];
+    let n = 0;
+    (exercises || []).forEach(function (ex) {
+      if (completedKeys.includes(lvl + " - " + ex.topic)) n += 1;
+    });
+    return n;
   }
 
-  function setXpElementAnimated(el, target) {
-    if (!el) return;
-    const next = Math.max(0, Number(target) || 0);
-    const prev = parseInt(el.getAttribute("data-xp-val") || el.textContent, 10) || 0;
-    el.setAttribute("data-xp-val", String(next));
-    el.textContent = String(next);
-    if (prev !== next) {
-      el.classList.remove("lh-xp-tick");
-      void el.offsetWidth;
-      el.classList.add("lh-xp-tick");
+  function countHomeworkCompleted(lh, lvl, checklist) {
+    const done = (lh.homeworkChecklist && lh.homeworkChecklist[lvl]) || {};
+    return (checklist || []).reduce(function (acc, item) {
+      return acc + (done[item.id] ? 1 : 0);
+    }, 0);
+  }
+
+  function landingCardProgressText(tool, lvl, data, stats, lh) {
+    if (tool === "grammar") {
+      const exercises = data.exercises || [];
+      return I18n.t("learning_landing_grammar_progress", {
+        n: String(countGrammarCompleted(stats, lvl, exercises)),
+        t: String(exercises.length),
+      });
+    }
+    if (tool === "homework") {
+      const checklist = data.homeworkChecklist || [];
+      return I18n.t("learning_landing_homework_progress", {
+        n: String(countHomeworkCompleted(lh, lvl, checklist)),
+        t: String(checklist.length),
+      });
+    }
+    if (tool === "flashcards") {
+      const n = (stats.flashcardSessions || []).filter(function (s) {
+        return s.level === lvl;
+      }).length;
+      return I18n.t("learning_landing_flashcards_progress", { n: String(n) });
+    }
+    if (tool === "vocab") {
+      const n = (stats.quizSessionLog || []).filter(function (s) {
+        return s.level === lvl;
+      }).length;
+      return I18n.t("learning_landing_vocab_progress", { n: String(n) });
+    }
+    return "";
+  }
+
+  function refreshLandingCardProgress(root, lvl, data) {
+    const user = getActiveUser();
+    const stats = user ? ensureStats(user) : null;
+    const lh = user ? ensureLearningHub(stats) : null;
+    root.querySelectorAll(".level-landing__card[data-tool]").forEach(function (card) {
+      const tool = card.getAttribute("data-tool");
+      let prog = card.querySelector(".level-landing__card__progress");
+      const text =
+        user && stats && lh && tool !== "progress"
+          ? landingCardProgressText(tool, lvl, data, stats, lh)
+          : "";
+      if (!text) {
+        if (prog) prog.remove();
+        return;
+      }
+      if (!prog) {
+        prog = document.createElement("span");
+        prog.className = "level-landing__card__progress";
+        card.appendChild(prog);
+      }
+      prog.textContent = text;
+    });
+  }
+
+  function refreshAllLandingCardProgress() {
+    document.querySelectorAll(".learning-hub").forEach(function (root) {
+      const lvl = root.getAttribute("data-learning-level");
+      const data = learningData[lvl];
+      if (data) refreshLandingCardProgress(root, lvl, data);
+    });
+  }
+
+  function bumpLearningStreak(levelKey) {
+    const user = getActiveUser();
+    if (!user) return;
+    const stats = ensureStats(user);
+    const lh = ensureLearningHub(stats);
+    const today = isoDay(new Date());
+    if (lh.lastActiveDay !== today) {
+      const y = new Date();
+      y.setDate(y.getDate() - 1);
+      const ystr = isoDay(y);
+      if (lh.lastActiveDay === ystr) lh.streak = (lh.streak || 0) + 1;
+      else lh.streak = lh.lastActiveDay ? 1 : Math.max(1, lh.streak || 1);
+      lh.lastActiveDay = today;
+    }
+    lh.activityByDay[today] = (lh.activityByDay[today] || 0) + 1;
+    saveUsers();
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(
+        new CustomEvent("andronicus:streakchange", {
+          detail: { level: levelKey },
+        })
+      );
     }
   }
 
@@ -2210,6 +2289,9 @@
     hub.querySelectorAll(".tool-panel").forEach(function (panel) {
       panel.classList.add("hidden");
     });
+    const lvl = hub.getAttribute("data-learning-level");
+    const data = learningData[lvl];
+    if (data) refreshLandingCardProgress(hub, lvl, data);
   }
 
   function resetAllLearningHubsToLanding() {
@@ -2228,57 +2310,6 @@
     };
     const key = keys[category];
     return key ? I18n.t(key) : category;
-  }
-
-  function refreshLevelPickerXpLabels() {
-    document.querySelectorAll(".btn-level").forEach(function (btn) {
-      const lbl = btn.querySelector(".btn-level__xp-label");
-      if (!lbl) return;
-      const lvl = btn.getAttribute("data-level");
-      if (!lvl) return;
-      const user = getActiveUser();
-      const lh = user ? ensureLearningHub(ensureStats(user)) : null;
-      const displayXp = getLevelXp(lh, lvl);
-      lbl.textContent = I18n.t("learning_level_xp_progress", {
-        current: String(displayXp),
-        goal: String(LEVEL_XP_GOAL),
-      });
-    });
-  }
-
-  let _activeLevelForXp = null;
-
-  function bumpLearningActivity(xpDelta, levelKey) {
-    const user = getActiveUser();
-    if (!user) return;
-    const stats = ensureStats(user);
-    const lh = ensureLearningHub(stats);
-    const lvl = levelKey || _activeLevelForXp;
-    const today = isoDay(new Date());
-    if (typeof xpDelta === "number" && xpDelta > 0) {
-      lh.xp = (lh.xp || 0) + xpDelta;
-      if (lvl) {
-        if (!lh.xpByLevel) lh.xpByLevel = {};
-        lh.xpByLevel[lvl] = (lh.xpByLevel[lvl] || 0) + xpDelta;
-      }
-    }
-    if (lh.lastActiveDay !== today) {
-      const y = new Date();
-      y.setDate(y.getDate() - 1);
-      const ystr = isoDay(y);
-      if (lh.lastActiveDay === ystr) lh.streak = (lh.streak || 0) + 1;
-      else lh.streak = lh.lastActiveDay ? 1 : Math.max(1, lh.streak || 1);
-      lh.lastActiveDay = today;
-    }
-    lh.activityByDay[today] = (lh.activityByDay[today] || 0) + 1;
-    saveUsers();
-    if (typeof window !== "undefined" && lvl) {
-      window.dispatchEvent(
-        new CustomEvent("andronicus:xpchange", {
-          detail: { level: lvl, delta: xpDelta },
-        })
-      );
-    }
   }
 
   function vocabMasteryLabel(correct, wrong) {
@@ -2331,8 +2362,7 @@
     if (stats.flashcardSessions.length > 48) {
       stats.flashcardSessions = stats.flashcardSessions.slice(-48);
     }
-    const bonus = Math.min(18, 6 + Math.max(0, Number(payload.correct) || 0));
-    bumpLearningActivity(bonus, payload.level);
+    bumpLearningStreak(payload.level);
     saveUsers();
   }
 
@@ -2916,7 +2946,7 @@
     const key = level + " - " + topic;
     if (stats.completedExercises.includes(key)) return { ok: false, reason: "exists" };
     stats.completedExercises.push(key);
-    bumpLearningActivity(22, level);
+    bumpLearningStreak(level);
     saveUsers();
     renderAccountPanel();
     return { ok: true };
@@ -2936,7 +2966,6 @@
       stats.flashcardsByDeck[dk].attempts += 1;
       if (wasCorrect) stats.flashcardsByDeck[dk].correct += 1;
     }
-    bumpLearningActivity(wasCorrect ? 4 : 1, meta && meta.level ? meta.level : null);
     saveUsers();
   }
 
@@ -2959,7 +2988,7 @@
     if (stats.quizSessionLog.length > 48) {
       stats.quizSessionLog = stats.quizSessionLog.slice(-48);
     }
-    bumpLearningActivity(Math.min(20, 8 + Math.round(pct / 5)), level);
+    bumpLearningStreak(level);
     saveUsers();
     renderAccountPanel();
   }
@@ -2976,7 +3005,7 @@
     buildBookingCalendar();
     refreshPasswordHint();
     syncPasswordToggleAria();
-    refreshLevelPickerXpLabels();
+    refreshAllLandingCardProgress();
     renderAccountPanel();
     if (adminUnlocked) renderAdminPanel();
     learningToolsLangRefreshers.forEach(function (fn) {
@@ -3000,40 +3029,6 @@
     contentPasswordError.classList.add("hidden");
     document.querySelectorAll(".level-article").forEach((el) => el.classList.add("hidden"));
     document.querySelectorAll(".btn-level").forEach((b) => b.classList.remove("is-active"));
-
-    document.querySelectorAll(".btn-level").forEach((btn) => {
-      const lvl = btn.getAttribute("data-level");
-      if (!lvl) return;
-
-      const existing = btn.querySelector(".btn-level__xp");
-      if (existing) existing.remove();
-
-      const user = getActiveUser();
-      const lh = user ? ensureLearningHub(ensureStats(user)) : null;
-      const displayXp = getLevelXp(lh, lvl);
-      const pct = Math.max(0, Math.min(100, Math.round((displayXp / LEVEL_XP_GOAL) * 100)));
-
-      const wrap = document.createElement("span");
-      wrap.className = "btn-level__xp";
-
-      const label = document.createElement("span");
-      label.className = "btn-level__xp-label";
-      label.textContent = I18n.t("learning_level_xp_progress", {
-        current: String(displayXp),
-        goal: String(LEVEL_XP_GOAL),
-      });
-
-      const track = document.createElement("span");
-      track.className = "btn-level__xp-track";
-      const fill = document.createElement("span");
-      fill.className = "btn-level__xp-fill";
-      fill.style.width = String(pct) + "%";
-      track.appendChild(fill);
-
-      wrap.appendChild(label);
-      wrap.appendChild(track);
-      btn.appendChild(wrap);
-    });
     resetAllLearningHubsToLanding();
   }
 
@@ -3135,6 +3130,7 @@
       persistActiveUser();
       setAuthFeedback(I18n.t("account_ok_register"), false);
       renderAccountPanel();
+      refreshAllLandingCardProgress();
       accountRegisterForm.reset();
       syncPasswordToggleAria();
     });
@@ -3169,6 +3165,7 @@
       }
       setAuthFeedback(I18n.t("account_ok_login"), false);
       renderAccountPanel();
+      refreshAllLandingCardProgress();
       accountLoginForm.reset();
       syncPasswordToggleAria();
     });
@@ -3180,6 +3177,7 @@
       persistActiveUser();
       setAuthFeedback("", false);
       renderAccountPanel();
+      refreshAllLandingCardProgress();
     });
   }
 
@@ -3515,20 +3513,16 @@
 
   function initLearningTools() {
     document.querySelectorAll(".learning-tools").forEach(initLearningHubForRoot);
+    refreshAllLandingCardProgress();
   }
 
   function initLearningHubForRoot(root) {
       const level = root.getAttribute("data-learning-level");
-      _activeLevelForXp = level;
       const data = learningData[level];
       if (!data) return;
 
       function homeworkKey(topic) {
         return level + "|hw|" + topic;
-      }
-
-      function bumpXp(delta) {
-        bumpLearningActivity(delta, level);
       }
 
       const levelLanding = root.querySelector("[data-level-landing]");
@@ -3544,7 +3538,6 @@
       const progressPanel = root.querySelector('[data-tool-panel="progress"]');
 
       function activateTab(name) {
-        _activeLevelForXp = level;
         workspaceTabs.forEach(function (b) {
           const on = b.getAttribute("data-tool") === name;
           b.classList.toggle("is-active", on);
@@ -3554,11 +3547,10 @@
           panel.classList.toggle("hidden", panel.getAttribute("data-tool-panel") !== name);
         });
         if (name === "progress") renderProgressPanel();
-        refreshGamificationHeader();
+        refreshStreakHeader();
       }
 
       function enterSection(tabName) {
-        _activeLevelForXp = level;
         root.classList.add("is-locked");
         if (levelLanding) levelLanding.classList.add("hidden");
         if (hubWorkspace) hubWorkspace.classList.remove("hidden");
@@ -3589,24 +3581,108 @@
           if (tool) enterSection(tool);
         });
       });
+      refreshLandingCardProgress(root, level, data);
 
-      window.addEventListener("andronicus:xpchange", function (ev) {
-        if (ev.detail && ev.detail.level === level) refreshGamificationHeader();
+      window.addEventListener("andronicus:streakchange", function (ev) {
+        if (ev.detail && ev.detail.level === level) refreshStreakHeader();
       });
 
-      function refreshGamificationHeader() {
+      function refreshStreakHeader() {
         const user = getActiveUser();
-        const xpEl = root.querySelector(".lh-vocab__xp-val");
         const stEl = root.querySelector(".lh-vocab__streak-val");
-        if (!xpEl || !stEl) return;
+        if (!stEl) return;
         if (!user) {
-          setXpElementAnimated(xpEl, 0);
           stEl.textContent = "0";
           return;
         }
         const lh = ensureLearningHub(ensureStats(user));
-        setXpElementAnimated(xpEl, getLevelXp(lh, level));
         stEl.textContent = String(lh.streak || 0);
+      }
+
+      function progressDonutColor(pct) {
+        const t = Math.max(0, Math.min(100, pct)) / 100;
+        const r = Math.round(0x1a + (0x16 - 0x1a) * t);
+        const g = Math.round(0x6f + (0xa3 - 0x6f) * t);
+        const b = Math.round(0xa3 + (0x4a - 0xa3) * t);
+        return (
+          "#" +
+          [r, g, b]
+            .map(function (n) {
+              const h = n.toString(16);
+              return h.length < 2 ? "0" + h : h;
+            })
+            .join("")
+        );
+      }
+
+      function progressDayAbbrev(d) {
+        const lang = I18n.getLang();
+        let s = d.toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", { weekday: "short" });
+        s = s.replace(/\./g, "").trim();
+        if (!s) return "";
+        return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+      }
+
+      function buildHomeworkDonut(pct, strokeColor) {
+        const size = 120;
+        const strokeW = 12;
+        const r = (size - strokeW) / 2;
+        const cx = size / 2;
+        const circ = 2 * Math.PI * r;
+        const wrap = document.createElement("div");
+        wrap.className = "lh-donut-wrap";
+
+        const chart = document.createElement("div");
+        chart.className = "lh-donut-chart";
+
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("class", "lh-donut");
+        svg.setAttribute("width", String(size));
+        svg.setAttribute("height", String(size));
+        svg.setAttribute("viewBox", "0 0 " + size + " " + size);
+        svg.setAttribute("aria-hidden", "true");
+
+        const track = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        track.setAttribute("class", "lh-donut__track");
+        track.setAttribute("cx", String(cx));
+        track.setAttribute("cy", String(cx));
+        track.setAttribute("r", String(r));
+        track.setAttribute("fill", "none");
+        track.setAttribute("stroke", "var(--border)");
+        track.setAttribute("stroke-width", String(strokeW));
+
+        const arc = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        arc.setAttribute("class", "lh-donut__arc");
+        arc.setAttribute("cx", String(cx));
+        arc.setAttribute("cy", String(cx));
+        arc.setAttribute("r", String(r));
+        arc.setAttribute("fill", "none");
+        arc.setAttribute("stroke", strokeColor);
+        arc.setAttribute("stroke-width", String(strokeW));
+        arc.setAttribute("stroke-linecap", "round");
+        arc.setAttribute("transform", "rotate(-90 " + cx + " " + cx + ")");
+        arc.style.strokeDasharray = String(circ);
+        arc.style.strokeDashoffset = String(circ);
+        arc.style.transition = "stroke-dashoffset 0.65s ease";
+
+        svg.appendChild(track);
+        svg.appendChild(arc);
+
+        const center = document.createElement("div");
+        center.className = "lh-donut__center";
+        center.textContent = String(pct) + "%";
+
+        chart.appendChild(svg);
+        chart.appendChild(center);
+        wrap.appendChild(chart);
+
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            arc.style.strokeDashoffset = String(circ * (1 - pct / 100));
+          });
+        });
+
+        return wrap;
       }
 
       function renderProgressPanel() {
@@ -3624,6 +3700,12 @@
         }
         const stats = ensureStats(user);
         const lh = ensureLearningHub(stats);
+        const exercises = Array.isArray(data.exercises) ? data.exercises : [];
+        const hwList = Array.isArray(data.homeworkChecklist) ? data.homeworkChecklist : [];
+        const grammarDone = countGrammarCompleted(stats, level, exercises);
+        const grammarTotal = exercises.length;
+        const hwDone = countHomeworkCompleted(lh, level, hwList);
+        const hwTotal = hwList.length;
         const grid = document.createElement("div");
         grid.className = "lh-stat-grid";
         function statCard(label, val) {
@@ -3639,16 +3721,26 @@
           c.appendChild(v);
           grid.appendChild(c);
         }
-        statCard(I18n.t("learning_progress_xp"), String(getLevelXp(lh, level)));
-        statCard(I18n.t("learning_progress_streak"), String(lh.streak || 0));
+        statCard(
+          I18n.t("learning_progress_stat_grammar_label"),
+          I18n.t("learning_progress_stat_grammar", {
+            n: String(grammarDone),
+            t: String(grammarTotal),
+          })
+        );
+        statCard(
+          I18n.t("learning_progress_stat_homework_label"),
+          I18n.t("learning_progress_stat_homework", {
+            n: String(hwDone),
+            t: String(hwTotal),
+          })
+        );
         const fa = stats.flashcards.attempts || 0;
         const fc = stats.flashcards.correct || 0;
         statCard(
           I18n.t("learning_progress_flash_accuracy"),
           fa ? String(Math.round((fc / fa) * 100)) + "%" : I18n.t("learning_progress_not_applicable")
         );
-        statCard(I18n.t("learning_progress_quiz_sessions"), String(stats.quizSessions || 0));
-        statCard(I18n.t("learning_progress_exercises_done"), String((stats.completedExercises || []).length));
         wrap.appendChild(grid);
 
         const weekTitle = document.createElement("h4");
@@ -3669,6 +3761,13 @@
         (stats.quizSessionLog || []).forEach(function (s) {
           bumpDay(s.at);
         });
+        let weekMax = 0;
+        for (let wi = 6; wi >= 0; wi -= 1) {
+          const wd = new Date();
+          wd.setDate(wd.getDate() - wi);
+          const wn = dayCounts[isoDay(wd)] || 0;
+          if (wn > weekMax) weekMax = wn;
+        }
         for (let i = 6; i >= 0; i -= 1) {
           const d = new Date();
           d.setDate(d.getDate() - i);
@@ -3678,37 +3777,82 @@
           const n = dayCounts[key] || 0;
           const bar = document.createElement("div");
           bar.className = "lh-week-chart__bar";
-          bar.style.height = String(Math.min(72, 8 + n * 10)) + "px";
+          const barH =
+            n === 0 ? 0 : weekMax > 0 ? Math.max(10, Math.round((n / weekMax) * 100)) : 10;
+          bar.style.height = String(Math.min(100, barH)) + "px";
           bar.title = key + ": " + String(n);
           const lab = document.createElement("span");
           lab.className = "lh-week-chart__lab";
-          lab.textContent = String(d.getDate());
+          lab.textContent = progressDayAbbrev(d);
           col.appendChild(bar);
           col.appendChild(lab);
           chart.appendChild(col);
         }
         wrap.appendChild(chart);
 
-        const badgeTitle = document.createElement("h4");
-        badgeTitle.className = "lh-subheading";
-        badgeTitle.textContent = I18n.t("learning_progress_badges");
-        wrap.appendChild(badgeTitle);
-        const badges = document.createElement("div");
-        badges.className = "lh-badges";
-        const b1 = document.createElement("span");
-        b1.className = "lh-badge";
-        b1.textContent =
-          (getLevelXp(lh, level) >= 50 ? I18n.t("learning_badge_earned") : I18n.t("learning_badge_unearned")) +
-          I18n.t("learning_progress_badge_xp50");
-        const b2 = document.createElement("span");
-        b2.className = "lh-badge";
-        b2.textContent =
-          ((lh.streak || 0) >= 3 ? I18n.t("learning_badge_earned") : I18n.t("learning_badge_unearned")) +
-          I18n.t("learning_progress_badge_streak3");
-        badges.appendChild(b1);
-        badges.appendChild(b2);
-        wrap.appendChild(badges);
+        const hwPct = hwTotal ? Math.round((hwDone / hwTotal) * 100) : 0;
+        const completedKeys = stats.completedExercises || [];
 
+        const progressGrid = document.createElement("div");
+        progressGrid.className = "lh-progress-grid";
+
+        const hwSec = document.createElement("section");
+        hwSec.className = "lh-progress-section";
+        const hwTitle = document.createElement("h4");
+        hwTitle.className = "lh-subheading";
+        hwTitle.textContent = I18n.t("learning_progress_homework_title");
+        hwSec.appendChild(hwTitle);
+        const hwDonutWrap = buildHomeworkDonut(hwPct, progressDonutColor(hwPct));
+        const hwCaption = document.createElement("p");
+        hwCaption.className = "lh-donut-wrap__caption lh-muted";
+        hwCaption.textContent = I18n.t("learning_progress_tasks_caption", {
+          n: String(hwDone),
+          t: String(hwTotal),
+        });
+        hwDonutWrap.appendChild(hwCaption);
+        hwSec.appendChild(hwDonutWrap);
+        progressGrid.appendChild(hwSec);
+
+        const grammarSec = document.createElement("section");
+        grammarSec.className = "lh-progress-section";
+        const grammarTitle = document.createElement("h4");
+        grammarTitle.className = "lh-subheading";
+        grammarTitle.textContent = I18n.t("learning_progress_grammar_title");
+        grammarSec.appendChild(grammarTitle);
+        const grammarList = document.createElement("ul");
+        grammarList.className = "lh-grammar-list";
+        exercises.forEach(function (ex) {
+          const li = document.createElement("li");
+          li.className = "lh-grammar-list__row";
+          const name = document.createElement("span");
+          name.className = "lh-grammar-list__topic";
+          name.textContent = ex.topic;
+          const done = completedKeys.includes(level + " - " + ex.topic);
+          const check = document.createElement("span");
+          check.className = "lh-grammar-list__check" + (done ? " is-complete" : "");
+          if (done) check.textContent = "✓";
+          check.setAttribute("aria-hidden", "true");
+          li.appendChild(name);
+          li.appendChild(check);
+          grammarList.appendChild(li);
+        });
+        grammarSec.appendChild(grammarList);
+        const grammarSummary = document.createElement("p");
+        grammarSummary.className = "lh-grammar-list__summary lh-muted";
+        grammarSummary.textContent = I18n.t("learning_progress_grammar_summary", {
+          n: String(grammarDone),
+          t: String(grammarTotal),
+        });
+        grammarSec.appendChild(grammarSummary);
+        if (grammarTotal > 0 && grammarDone >= grammarTotal) {
+          const grammarCongrats = document.createElement("p");
+          grammarCongrats.className = "lh-grammar-list__congrats";
+          grammarCongrats.textContent = I18n.t("learning_progress_grammar_all_done");
+          grammarSec.appendChild(grammarCongrats);
+        }
+        progressGrid.appendChild(grammarSec);
+
+        wrap.appendChild(progressGrid);
         progressPanel.appendChild(wrap);
       }
 
@@ -3721,39 +3865,32 @@
           const cstats = cuser ? ensureStats(cuser) : null;
           const clh = cuser ? ensureLearningHub(cstats) : null;
           const done = (clh && clh.homeworkChecklist && clh.homeworkChecklist[level]) || {};
-
-          const cwrap = document.createElement("section");
-          cwrap.className = "lh-hw-checklist";
-
-          const cTitle = document.createElement("h3");
-          cTitle.className = "lh-hw-section__title";
-          cTitle.textContent = I18n.t("learning_homework_checklist_title");
-          cwrap.appendChild(cTitle);
-
-          const cIntro = document.createElement("p");
-          cIntro.className = "lh-muted";
-          cIntro.textContent = I18n.t("learning_homework_checklist_intro");
-          cwrap.appendChild(cIntro);
-
-          const totalDone = data.homeworkChecklist.reduce(function (acc, item) {
-            return acc + (done[item.id] ? 1 : 0);
-          }, 0);
-          const cProgress = document.createElement("p");
-          cProgress.className = "lh-hw-checklist__progress";
-          cProgress.textContent = I18n.t("learning_homework_checklist_progress", {
-            n: String(totalDone),
-            t: String(data.homeworkChecklist.length),
-          });
-          cwrap.appendChild(cProgress);
-
-          const cList = document.createElement("ol");
-          cList.className = "lh-hw-checklist__list";
           const cLang = I18n.getLang();
-          data.homeworkChecklist.forEach(function (item) {
+          const hwCategories = ["Vocab", "Grammar", "Reading", "Listening", "Speaking", "Writing"];
+
+          function countHomeworkDone(items) {
+            return items.reduce(function (acc, item) {
+              return acc + (done[item.id] ? 1 : 0);
+            }, 0);
+          }
+
+          function buildHwProgressBar(doneCount, total, categoryComplete) {
+            const track = document.createElement("div");
+            track.className = "lh-hw-category__bar-track";
+            const fill = document.createElement("div");
+            fill.className =
+              "lh-hw-category__bar-fill" + (categoryComplete ? " is-complete" : "");
+            const pct = total ? Math.round((doneCount / total) * 100) : 0;
+            fill.style.width = String(pct) + "%";
+            track.appendChild(fill);
+            return track;
+          }
+
+          function renderHomeworkChecklistItem(item) {
             const li = document.createElement("li");
             li.className = "lh-hw-checklist__item" + (done[item.id] ? " is-done" : "");
             const label = document.createElement("label");
-            label.className = "lh-hw-checklist__label";
+            label.className = "lh-hw-checklist__label lh-hw-checklist__label--in-category";
             const cb = document.createElement("input");
             cb.type = "checkbox";
             cb.className = "lh-hw-checklist__cb";
@@ -3768,22 +3905,88 @@
               if (cb.checked) hub.homeworkChecklist[level][item.id] = true;
               else delete hub.homeworkChecklist[level][item.id];
               saveUsers();
-              bumpXp(cb.checked ? 3 : 0);
+              if (cb.checked) bumpLearningStreak(level);
               renderHomeworkPanel();
             });
-            const tag = document.createElement("span");
-            tag.className = "lh-hw-checklist__tag lh-hw-cat-" + String(item.category || "").toLowerCase();
-            tag.textContent = homeworkCategoryLabel(item.category);
             const text = document.createElement("span");
             text.className = "lh-hw-checklist__text";
             text.textContent = cLang === "fr" && item.fr ? item.fr : item.en || item.fr || "";
             label.appendChild(cb);
-            label.appendChild(tag);
             label.appendChild(text);
             li.appendChild(label);
-            cList.appendChild(li);
+            return li;
+          }
+
+          const cwrap = document.createElement("section");
+          cwrap.className = "lh-hw-checklist";
+
+          const cTitle = document.createElement("h3");
+          cTitle.className = "lh-hw-section__title";
+          cTitle.textContent = I18n.t("learning_homework_checklist_title");
+          cwrap.appendChild(cTitle);
+
+          const cIntro = document.createElement("p");
+          cIntro.className = "lh-muted";
+          cIntro.textContent = I18n.t("learning_homework_checklist_intro");
+          cwrap.appendChild(cIntro);
+
+          const totalDone = countHomeworkDone(data.homeworkChecklist);
+          const totalItems = data.homeworkChecklist.length;
+          const overallRow = document.createElement("div");
+          overallRow.className = "lh-hw-checklist__overall";
+          overallRow.appendChild(
+            buildHwProgressBar(totalDone, totalItems, totalDone >= totalItems && totalItems > 0)
+          );
+          const overallFraction = document.createElement("span");
+          overallFraction.className = "lh-hw-checklist__overall-fraction";
+          overallFraction.textContent = String(totalDone) + " / " + String(totalItems);
+          overallRow.appendChild(overallFraction);
+          cwrap.appendChild(overallRow);
+
+          const grouped = Object.create(null);
+          hwCategories.forEach(function (cat) {
+            grouped[cat] = [];
           });
-          cwrap.appendChild(cList);
+          data.homeworkChecklist.forEach(function (item) {
+            const cat = item.category || "Vocab";
+            if (!grouped[cat]) grouped[cat] = [];
+            grouped[cat].push(item);
+          });
+
+          hwCategories.forEach(function (cat) {
+            const items = grouped[cat];
+            if (!items || !items.length) return;
+
+            const catDone = countHomeworkDone(items);
+            const catTotal = items.length;
+            const catComplete = catDone >= catTotal;
+
+            const catSec = document.createElement("section");
+            catSec.className = "lh-hw-category";
+
+            const catHead = document.createElement("div");
+            catHead.className = "lh-hw-category__head";
+            const catTitle = document.createElement("h4");
+            catTitle.className = "lh-hw-category__title";
+            catTitle.textContent = homeworkCategoryLabel(cat);
+            catHead.appendChild(catTitle);
+            if (catComplete) {
+              const doneBadge = document.createElement("span");
+              doneBadge.className = "lh-hw-category__done-badge";
+              doneBadge.textContent = I18n.t("learning_homework_done");
+              catHead.appendChild(doneBadge);
+            }
+            catSec.appendChild(catHead);
+            catSec.appendChild(buildHwProgressBar(catDone, catTotal, catComplete));
+
+            const catList = document.createElement("ol");
+            catList.className = "lh-hw-checklist__list lh-hw-category__list";
+            items.forEach(function (item) {
+              catList.appendChild(renderHomeworkChecklistItem(item));
+            });
+            catSec.appendChild(catList);
+            cwrap.appendChild(catSec);
+          });
 
           if (!cuser) {
             const cNotice = document.createElement("p");
@@ -3853,7 +4056,7 @@
               prev[ti] = cb.checked;
               hub.homeworkTasks[key] = prev.slice(0, mission.tasks.length);
               saveUsers();
-              bumpXp(cb.checked ? 2 : 0);
+              if (cb.checked) bumpLearningStreak(level);
               renderHomeworkPanel();
             });
             const span = document.createElement("span");
@@ -3873,8 +4076,7 @@
           markBtn.disabled = !user;
           markBtn.addEventListener("click", function () {
             const res = recordExerciseCompletion(level, "Vocab: " + topic);
-            if (res.ok) bumpXp(18);
-            renderHomeworkPanel();
+            if (res.ok) renderHomeworkPanel();
           });
           foot.appendChild(markBtn);
           card.appendChild(foot);
@@ -3923,19 +4125,12 @@
       vocShell.className = "lh-vocab";
       const vocHeader = document.createElement("div");
       vocHeader.className = "lh-vocab__header";
-      const xpBox = document.createElement("div");
-      xpBox.className = "lh-chip lh-chip--xp";
-      xpBox.innerHTML =
-        '<span class="lh-chip__lab">' +
-        I18n.t("learning_hub_xp") +
-        '</span> <span class="lh-vocab__xp-val">0</span>';
       const stBox = document.createElement("div");
       stBox.className = "lh-chip lh-chip--streak";
       stBox.innerHTML =
         '<span class="lh-chip__lab">' +
         I18n.t("learning_hub_streak") +
         '</span> <span class="lh-vocab__streak-val">0</span>';
-      vocHeader.appendChild(xpBox);
       vocHeader.appendChild(stBox);
       vocShell.appendChild(vocHeader);
 
@@ -4113,7 +4308,7 @@
             summaryFocus.appendChild(li);
           });
         }
-        refreshGamificationHeader();
+        refreshStreakHeader();
       }
 
       function renderQuiz() {
@@ -4133,19 +4328,7 @@
         askedCount += 1;
         quizAnswered = false;
         quizNext.disabled = true;
-        const vLabel =
-          activeVariant === "match"
-            ? I18n.t("learning_vocab_variant_match_prompt")
-            : activeVariant === "speed"
-              ? I18n.t("learning_vocab_variant_speed_prompt")
-              : "";
-        quizQuestion.textContent =
-          vLabel +
-          I18n.t("learning_vocab_question_line", {
-            n: String(askedCount),
-            q: currentQuestion.question,
-            mode: I18n.t("learning_vocab_mode_" + currentMode),
-          });
+        quizQuestion.textContent = currentQuestion.question;
         quizFeedback.textContent = I18n.t("learning_vocab_choose_prompt", {
           score: String(quizScore),
           round: String(askedCount - 1),
@@ -4171,7 +4354,6 @@
                 score: String(quizScore),
                 round: String(askedCount),
               });
-              bumpXp(5);
             } else {
               btn.classList.add("is-wrong");
               wrongByTopic[currentQuestion.topic] = (wrongByTopic[currentQuestion.topic] || 0) + 1;
@@ -4180,7 +4362,6 @@
                 score: String(quizScore),
                 round: String(askedCount),
               });
-              bumpXp(1);
               const user = getActiveUser();
               if (user) {
                 const lh = ensureLearningHub(ensureStats(user));
@@ -4200,7 +4381,7 @@
               if (b.textContent === currentQuestion.answer) b.classList.add("is-correct");
             });
             quizNext.disabled = false;
-            refreshGamificationHeader();
+            refreshStreakHeader();
           });
           quizOptions.appendChild(btn);
         });
@@ -4244,7 +4425,7 @@
 
       vocabPanel.appendChild(vocShell);
       startQuiz("easy");
-      refreshGamificationHeader();
+      refreshStreakHeader();
 
       function parseGapLine(line) {
         if (!line || line.indexOf("___") < 0) return null;
@@ -4451,9 +4632,12 @@
       exGridWrap.className = "lh-topics-grid-wrap";
       const exTopicGrid = document.createElement("div");
       exTopicGrid.className = "lh-topic-grid lh-ex-topic-grid";
+      const exTopicSummary = document.createElement("p");
+      exTopicSummary.className = "lh-topic-grid-summary lh-muted";
       const exLessonPanel = document.createElement("div");
       exLessonPanel.className =
         "lh-topics-lesson-panel lh-lesson-view lh-ex-lesson-view is-hidden-panel";
+      exGridWrap.appendChild(exTopicSummary);
       exGridWrap.appendChild(exTopicGrid);
       exFlow.appendChild(exGridWrap);
       exFlow.appendChild(exLessonPanel);
@@ -4482,12 +4666,36 @@
         showExGrid();
       }
 
+      function isExerciseTopicDone(topic) {
+        const user = getActiveUser();
+        if (!user) return false;
+        const stats = ensureStats(user);
+        return (stats.completedExercises || []).includes(level + " - " + topic);
+      }
+
       function renderExTopicList() {
+        const exercises = data.exercises || [];
+        let doneCount = 0;
+        exercises.forEach(function (ex) {
+          if (isExerciseTopicDone(ex.topic)) doneCount += 1;
+        });
+        exTopicSummary.textContent = I18n.t("learning_progress_grammar_summary", {
+          n: String(doneCount),
+          t: String(exercises.length),
+        });
         exTopicGrid.innerHTML = "";
-        (data.exercises || []).forEach(function (ex, i) {
+        exercises.forEach(function (ex, i) {
+          const done = isExerciseTopicDone(ex.topic);
           const card = document.createElement("button");
           card.type = "button";
-          card.className = "lh-topic-card lh-ex-topic-card";
+          card.className = "lh-topic-card lh-ex-topic-card" + (done ? " lh-topic-card--done" : "");
+          if (done) {
+            const check = document.createElement("span");
+            check.className = "lh-topic-card__check";
+            check.textContent = "✓";
+            check.setAttribute("aria-hidden", "true");
+            card.appendChild(check);
+          }
           const h = document.createElement("span");
           h.className = "lh-topic-card__title";
           h.textContent = ex.topic;
@@ -4585,8 +4793,6 @@
           card.appendChild(fraction);
           card.appendChild(restartBtn);
           examplesPlay.appendChild(card);
-          bumpXp(4 + exGapFirstPassCorrect * 2);
-          refreshGamificationHeader();
         }
 
         function handleGapAnswer(item, ok) {
@@ -4601,9 +4807,6 @@
             exGapWrongAdds += 1;
             exGapQueue.push(copyGapItem(item));
           }
-
-          if (ok) bumpXp(4);
-          else bumpXp(1);
 
           if (!exGapQueue.length) renderGapComplete();
           else renderExampleStep();
@@ -4655,9 +4858,8 @@
         selfMarkBtn.addEventListener("click", function () {
           if (selfMarkBtn.disabled) return;
           selfMarkBtn.disabled = true;
-          bumpXp(20);
-          refreshGamificationHeader();
           recordExerciseCompletion(level, ex.topic);
+          renderExTopicList();
           practiceMsg.textContent = I18n.t("learning_ex_practice_congrats");
           practiceMsg.classList.remove("hidden");
         });
@@ -5066,9 +5268,7 @@
           if (vk) vb.textContent = I18n.t("learning_vocab_variant_" + vk);
         });
         saveWordBtn.textContent = I18n.t("learning_vocab_save_word");
-        const xpLab = xpBox.querySelector(".lh-chip__lab");
         const stLab = stBox.querySelector(".lh-chip__lab");
-        if (xpLab) xpLab.textContent = I18n.t("learning_hub_xp");
         if (stLab) stLab.textContent = I18n.t("learning_hub_streak");
         root.querySelectorAll("[data-learning-chrome]").forEach(function (el) {
           const key = el.getAttribute("data-learning-chrome");
@@ -5134,21 +5334,9 @@
         refreshExercisesPanel();
         renderHomeworkPanel();
         renderProgressPanel();
-        refreshGamificationHeader();
+        refreshStreakHeader();
         if (currentQuestion && askedCount > 0 && summary.classList.contains("hidden")) {
-          const vLabelMid =
-            activeVariant === "match"
-              ? I18n.t("learning_vocab_variant_match_prompt")
-              : activeVariant === "speed"
-                ? I18n.t("learning_vocab_variant_speed_prompt")
-                : "";
-          quizQuestion.textContent =
-            vLabelMid +
-            I18n.t("learning_vocab_question_line", {
-              n: String(askedCount),
-              q: currentQuestion.question,
-              mode: I18n.t("learning_vocab_mode_" + currentMode),
-            });
+          quizQuestion.textContent = currentQuestion.question;
           if (!quizAnswered) {
             quizFeedback.textContent = I18n.t("learning_vocab_choose_prompt", {
               score: String(quizScore),
