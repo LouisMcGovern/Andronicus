@@ -496,6 +496,29 @@ html[data-theme="dark"] .home-free-banner {
   border-color: rgba(126, 184, 220, 0.4);
 }
 
+@media (max-width: 600px) {
+  .home-free-banner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .home-free-banner__text {
+    font-size: 0.95rem;
+    text-align: center;
+  }
+
+  .home-free-banner .btn-primary {
+    margin-top: 0;
+    width: 100%;
+    text-align: center;
+    background: #ffffff;
+    color: var(--accent-strong);
+    border: 2px solid var(--accent);
+    font-weight: 700;
+    border-radius: 999px;
+  }
+}
+
 @media (min-width: 540px) {
   .main-nav {
     grid-template-columns: 1fr 1fr;
@@ -598,6 +621,15 @@ html[data-theme="dark"] .nav-card__hint {
 
 .panels {
   margin-top: 1.35rem;
+}
+
+.panel {
+  opacity: 1;
+  transition: opacity 0.15s ease;
+}
+
+.panel--fading {
+  opacity: 0;
 }
 
 .panel-toolbar {
@@ -846,6 +878,15 @@ body.content-panel-open .panel--content {
   background: var(--surface-elevated);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
+}
+
+.testimonial-card__lang-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin: 0 0 0.5rem;
+  font-weight: 600;
 }
 
 .testimonial-card__mark {
@@ -1477,11 +1518,12 @@ html[data-theme="dark"] .booking-sync-warning {
   position: fixed;
   inset: 0;
   z-index: 50;
-  background: var(--overlay-scrim);
+  background: rgba(8, 40, 65, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  padding-top: 3.5rem;
   box-sizing: border-box;
 }
 
@@ -1492,29 +1534,99 @@ html[data-theme="dark"] .booking-sync-warning {
 .content-password-overlay__box {
   position: relative;
   width: 100%;
-  max-width: 22rem;
-  padding: 1.35rem 1.25rem 1.5rem;
+  max-width: 24rem;
+  padding: 2rem 1.75rem;
   background: var(--surface-elevated);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow);
+  border-radius: 0.85rem;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.22);
 }
 
-.content-password-overlay__head {
+.content-password-overlay__close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.85rem;
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 0.35rem;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  font-family: inherit;
+  font-size: 1.35rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
 }
 
-.content-password-overlay__title {
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  margin: 0;
-  flex: 1;
-  min-width: 0;
+.content-password-overlay__close:hover {
   color: var(--ink-heading);
+  background: var(--surface);
+}
+
+.content-password-overlay__close:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.content-password-overlay__brand {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  text-align: center;
+  margin: 0 0 0.25rem;
+  color: var(--ink-heading);
+}
+
+.content-password-overlay__intro {
+  font-size: 0.88rem;
+  color: var(--muted);
+  text-align: center;
+  margin: 0 0 1.25rem;
+}
+
+.content-password-overlay__hint {
+  margin: -0.75rem 0 1rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+.content-password-overlay__form {
+  margin-top: 0;
+}
+
+.content-password-overlay__form label {
+  width: 100%;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--ink-heading);
+}
+
+.content-password-overlay__form input[type="password"] {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border);
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  background: var(--surface-elevated);
+  color: var(--text);
+  box-sizing: border-box;
+}
+
+.content-password-overlay__form .btn-primary {
+  width: 100%;
+  margin-top: 0;
+}
+
+.content-password-overlay .form-error {
+  margin-top: 0.75rem;
+  text-align: center;
 }
 
 .btn-icon-close {
@@ -1547,12 +1659,6 @@ html[data-theme="dark"] .booking-sync-warning {
 .btn-icon-close:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
-}
-
-.content-password-overlay__hint {
-  margin: 0 0 1rem;
-  font-size: 0.92rem;
-  color: var(--muted);
 }
 
 .inline-form {
@@ -1800,8 +1906,15 @@ html[data-theme="dark"] .booking-sync-warning {
 }
 
 .level-landing__card__icon {
-  font-size: 1.75rem;
-  line-height: 1;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.level-landing__card__icon svg {
+  width: 24px;
+  height: 24px;
 }
 
 .level-landing__card__label {
@@ -2347,39 +2460,6 @@ html[data-theme="dark"] .booking-sync-warning {
 }
 
 /* Flat homework checklist (35-item annual list) */
-.lh-hw-toggle {
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  font-size: 0.88rem;
-  color: var(--readable-body);
-  cursor: pointer;
-  margin-bottom: 0.85rem;
-  padding: 0.5rem 0.65rem;
-  background: var(--surface-elevated);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-}
-
-.lh-hw-toggle input[type="checkbox"] {
-  width: 1rem;
-  height: 1rem;
-  flex-shrink: 0;
-}
-
-.lh-hw-all-complete {
-  width: 100%;
-  text-align: center;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--ink-heading);
-  margin: 0.75rem 0 0.25rem;
-  padding: 0.85rem 1rem;
-  background: var(--surface-elevated);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-}
-
 .lh-hw-checklist {
   display: flex;
   flex-direction: column;
@@ -2387,22 +2467,29 @@ html[data-theme="dark"] .booking-sync-warning {
 }
 
 .lh-hw-checklist__overall {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin: 0.35rem 0 0.85rem;
+  margin: 0.35rem 0 1rem;
 }
 
-.lh-hw-checklist__overall .lh-hw-category__bar-track {
-  flex: 1;
-  margin-bottom: 0;
+.lh-hw-overall-bar-track {
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--border);
+  overflow: hidden;
 }
 
-.lh-hw-checklist__overall-fraction {
-  font-weight: 700;
-  font-size: 0.95rem;
+.lh-hw-overall-bar-fill {
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  transition: width 0.35s ease, background-color 0.35s ease;
+}
+
+.lh-hw-overall-stat {
+  margin: 0.45rem 0 0;
+  font-size: 0.9rem;
+  font-weight: 600;
   color: var(--ink-heading);
-  white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
 
@@ -2432,26 +2519,6 @@ html[data-theme="dark"] .booking-sync-warning {
   text-transform: uppercase;
   color: #16a34a;
   white-space: nowrap;
-}
-
-.lh-hw-category__bar-track {
-  height: 6px;
-  border-radius: 999px;
-  background: var(--border);
-  overflow: hidden;
-  margin-bottom: 0.65rem;
-}
-
-.lh-hw-category__bar-fill {
-  height: 100%;
-  width: 0;
-  border-radius: inherit;
-  background: var(--accent);
-  transition: width 0.35s ease;
-}
-
-.lh-hw-category__bar-fill.is-complete {
-  background: #16a34a;
 }
 
 .lh-hw-checklist__list {
@@ -2938,10 +3005,32 @@ html:not([data-theme="dark"]) .tool-panel {
   overflow: hidden;
 }
 
+.flashcard-lang-toggle {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  z-index: 2;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--readable-body);
+  cursor: pointer;
+  line-height: 1.2;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.flashcard-lang-toggle:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
 .flashcard-bookmark {
   position: absolute;
   top: 0.6rem;
-  right: 0.6rem;
+  right: 4.35rem;
   z-index: 3;
   background: none;
   border: none;
@@ -2972,7 +3061,7 @@ html:not([data-theme="dark"]) .tool-panel {
 .flashcard-remove-saved {
   position: absolute;
   top: 0.55rem;
-  right: 2.85rem;
+  right: 6.15rem;
   z-index: 3;
   font-size: 0.72rem;
   padding: 0.25rem 0.5rem;
@@ -3162,6 +3251,17 @@ html[data-theme="dark"] .flashcard-btn--got-it:hover {
   font-size: 1.05rem;
   font-weight: 600;
   color: var(--ink-heading);
+}
+
+.lh-gap-score.vocab-quiz__counter {
+  margin: 0.5rem 0 0.15rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.lh-gap-score.vocab-quiz__counter.hidden {
+  display: none;
 }
 
 .vocab-quiz__options {
@@ -3997,6 +4097,27 @@ html[data-theme="dark"] .account-level-badge--advanced {
   outline-offset: 2px;
 }
 
+@media (max-width: 540px) {
+  .booking-day-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-day-btn {
+    min-height: 3.25rem;
+    font-size: 1rem;
+    text-align: left;
+    padding: 0.75rem 1rem;
+  }
+
+  .booking-hours-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .booking-hour-btn {
+    min-height: 3rem;
+  }
+}
+
 .booking-selected-block {
   margin-top: 1.35rem;
   padding-top: 1.1rem;
@@ -4265,6 +4386,7 @@ html[data-theme="dark"] .account-level-badge--advanced {
 }
 
 .lh-topic-card--done {
+  opacity: 0.65;
   background: rgba(22, 163, 74, 0.08);
   border-color: rgba(22, 163, 74, 0.35);
   padding-right: 2.25rem;
@@ -4541,6 +4663,25 @@ html[data-theme="dark"] .account-level-badge--advanced {
 
 .lh-ex-topic-grid {
   padding-bottom: 0.5rem;
+}
+
+.lh-ex-topic-grid__separator {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0.35rem 0 0.15rem;
+  border-top: 1px dashed var(--border);
+  padding-top: 0.85rem;
+}
+
+.lh-ex-topic-grid__separator-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
 }
 
 @media (max-width: 640px) {

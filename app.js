@@ -22,6 +22,39 @@
     "slot_day_sat",
   ];
 
+  const LANDING_TOOL_ICONS = {
+    flashcards:
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>',
+    vocab:
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+    grammar:
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
+    homework:
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
+    progress:
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
+  };
+
+  function applyLandingCardIcons(root) {
+    root.querySelectorAll(".level-landing__card[data-tool]").forEach(function (card) {
+      const tool = card.getAttribute("data-tool");
+      const iconEl = card.querySelector(".level-landing__card__icon");
+      if (iconEl && tool && LANDING_TOOL_ICONS[tool]) {
+        iconEl.innerHTML = LANDING_TOOL_ICONS[tool];
+      }
+    });
+  }
+
+  function hwProgressBarColor(pct) {
+    const t = Math.max(0, Math.min(100, pct)) / 100;
+    const from = { r: 26, g: 111, b: 163 };
+    const to = { r: 22, g: 163, b: 74 };
+    const r = Math.round(from.r + (to.r - from.r) * t);
+    const g = Math.round(from.g + (to.g - from.g) * t);
+    const b = Math.round(from.b + (to.b - from.b) * t);
+    return "rgb(" + r + ", " + g + ", " + b + ")";
+  }
+
   function refreshStaticPageCopy() {
     const bannerText = document.querySelector(".home-free-banner__text");
     if (bannerText) bannerText.textContent = I18n.t("home_free_banner_text");
@@ -32,13 +65,13 @@
     const bookingCallout = document.querySelector(".booking-price-callout");
     if (bookingCallout) bookingCallout.textContent = I18n.t("booking_price_callout");
     const testimonialHeading = document.getElementById("home-testimonials-heading");
-    if (testimonialHeading) testimonialHeading.textContent = I18n.t("home_testimonials_heading");
+    if (testimonialHeading) testimonialHeading.textContent = I18n.t("testimonials_heading");
     document.querySelectorAll(".testimonial-card").forEach(function (card, i) {
       const idx = i + 1;
-      const quote = card.querySelector(".testimonial-card__quote");
+      const label = card.querySelector(".testimonial-card__lang-label");
       const attr = card.querySelector(".testimonial-card__attribution");
-      if (quote) quote.textContent = I18n.t("testimonial_" + idx + "_quote");
-      if (attr) attr.textContent = I18n.t("testimonial_" + idx + "_attr");
+      if (label) label.textContent = I18n.t("testimonial_label");
+      if (attr) attr.textContent = I18n.t("testimonial_attr_" + idx);
     });
     document.querySelectorAll(".teacher-figure__caption").forEach(function (cap, i) {
       cap.textContent = I18n.t("teacher_caption_" + (i + 1));
@@ -51,6 +84,10 @@
     document.querySelectorAll(".level-landing__grid").forEach(function (grid) {
       grid.setAttribute("aria-label", I18n.t("level_landing_grid_aria"));
     });
+    const footerBrand = document.querySelector(".site-footer__brand");
+    if (footerBrand) footerBrand.textContent = I18n.t("footer_line");
+    const footerContact = document.querySelector(".site-footer__contact");
+    if (footerContact) footerContact.innerHTML = I18n.t("footer_contact_html");
   }
 
   refreshStaticPageCopy();
@@ -3310,6 +3347,8 @@
   }
 
   function refreshPasswordHint() {
+    const intro = document.getElementById("content-password-intro");
+    if (intro) intro.textContent = I18n.t("content_password_intro");
     if (!contentPasswordOverlay.classList.contains("hidden") && pendingLevel) {
       contentPasswordForLevel.textContent = I18n.t("content_opening", {
         level: I18n.t("level_" + pendingLevel),
@@ -3351,17 +3390,69 @@
     updateContentBreadcrumb();
   }
 
-  function showHome() {
-    panelHome.classList.remove("hidden");
-    panels.forEach((p) => p.classList.add("hidden"));
-    mainNav.classList.remove("hidden");
-    btnHome.classList.add("hidden");
-    setContentPanelOpen(false);
-    resetContentPanel();
+  function getVisibleTopLevelPanel() {
+    if (panelHome && !panelHome.classList.contains("hidden")) {
+      return panelHome;
+    }
+    for (let i = 0; i < panels.length; i++) {
+      if (!panels[i].classList.contains("hidden")) return panels[i];
+    }
+    return null;
+  }
+
+  const PANEL_FADE_MS = 150;
+  let panelTransitioning = false;
+
+  function transitionTopLevelPanel(applyView) {
+    if (panelTransitioning) return;
+    const current = getVisibleTopLevelPanel();
+    if (!current) {
+      applyView();
+      return;
+    }
+    panelTransitioning = true;
+    current.classList.add("panel--fading");
+    setTimeout(function () {
+      current.classList.remove("panel--fading");
+      applyView();
+      const next = getVisibleTopLevelPanel();
+      if (!next) {
+        panelTransitioning = false;
+        return;
+      }
+      next.classList.add("panel--fading");
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          next.classList.remove("panel--fading");
+          panelTransitioning = false;
+        });
+      });
+    }, PANEL_FADE_MS);
+  }
+
+  function showHome(animate) {
+    if (animate !== false && getVisibleTopLevelPanel() === panelHome) {
+      animate = false;
+    }
+
+    function applyHomeView() {
+      panelHome.classList.remove("hidden");
+      panels.forEach((p) => p.classList.add("hidden"));
+      mainNav.classList.remove("hidden");
+      btnHome.classList.add("hidden");
+      setContentPanelOpen(false);
+      resetContentPanel();
+    }
+
+    if (animate === false) {
+      applyHomeView();
+      return;
+    }
+    transitionTopLevelPanel(applyHomeView);
   }
 
   function forceInitialHomeView() {
-    showHome();
+    showHome(false);
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }
 
@@ -3369,36 +3460,48 @@
     showLevelPicker();
   }
 
-  function openSection(id) {
-    setContentPanelOpen(id === "content");
-    panelHome.classList.add("hidden");
-    panels.forEach((p) => {
-      p.classList.toggle("hidden", p.id !== "panel-" + id);
-    });
-    mainNav.classList.add("hidden");
-    btnHome.classList.remove("hidden");
+  function openSection(id, animate) {
+    const target = id === "home" ? panelHome : document.getElementById("panel-" + id);
+    if (!target) return;
+    if (getVisibleTopLevelPanel() === target) return;
 
-    if (id === "content") {
-      resetContentPanel();
-    }
-    if (id === "account") {
-      renderAccountPanel();
-    }
-    if (id === "admin") {
-      renderAdminPanel();
-    }
-    if (id === "booking") {
-      if (bookingForm) bookingForm.classList.remove("hidden");
-      if (bookingSuccess) bookingSuccess.classList.add("hidden");
-      if (bookingSubmitError) {
-        bookingSubmitError.textContent = "";
-        bookingSubmitError.classList.add("hidden");
+    function applySectionView() {
+      setContentPanelOpen(id === "content");
+      panelHome.classList.add("hidden");
+      panels.forEach((p) => {
+        p.classList.toggle("hidden", p.id !== "panel-" + id);
+      });
+      mainNav.classList.add("hidden");
+      btnHome.classList.remove("hidden");
+
+      if (id === "content") {
+        resetContentPanel();
       }
-      if (bookingSuccessWarning) {
-        bookingSuccessWarning.textContent = "";
-        bookingSuccessWarning.classList.add("hidden");
+      if (id === "account") {
+        renderAccountPanel();
+      }
+      if (id === "admin") {
+        renderAdminPanel();
+      }
+      if (id === "booking") {
+        if (bookingForm) bookingForm.classList.remove("hidden");
+        if (bookingSuccess) bookingSuccess.classList.add("hidden");
+        if (bookingSubmitError) {
+          bookingSubmitError.textContent = "";
+          bookingSubmitError.classList.add("hidden");
+        }
+        if (bookingSuccessWarning) {
+          bookingSuccessWarning.textContent = "";
+          bookingSuccessWarning.classList.add("hidden");
+        }
       }
     }
+
+    if (animate === false) {
+      applySectionView();
+      return;
+    }
+    transitionTopLevelPanel(applySectionView);
   }
 
   mainNav.addEventListener("click", (e) => {
@@ -3845,6 +3948,7 @@
       const hubWorkspace = root.querySelector("[data-hub-workspace]");
       const hubBody = root.querySelector(".learning-hub__body");
       const landingCards = root.querySelectorAll(".level-landing__card[data-tool]");
+      applyLandingCardIcons(root);
       const workspaceTabs = root.querySelectorAll(".learning-hub__tab[data-tool]");
       const panels = root.querySelectorAll(".tool-panel");
       const flashcardsPanel = root.querySelector('[data-tool-panel="flashcards"]');
@@ -3852,7 +3956,6 @@
       const grammarPanel = root.querySelector('[data-tool-panel="grammar"]');
       const homeworkPanel = root.querySelector('[data-tool-panel="homework"]');
       const progressPanel = root.querySelector('[data-tool-panel="progress"]');
-      let homeworkShowIncompleteOnly = false;
 
       function activateTab(name) {
         workspaceTabs.forEach(function (b) {
@@ -4209,16 +4312,27 @@
             }, 0);
           }
 
-          function buildHwProgressBar(doneCount, total, categoryComplete) {
-            const track = document.createElement("div");
-            track.className = "lh-hw-category__bar-track";
-            const fill = document.createElement("div");
-            fill.className =
-              "lh-hw-category__bar-fill" + (categoryComplete ? " is-complete" : "");
+          function buildOverallHwProgress(doneCount, total) {
             const pct = total ? Math.round((doneCount / total) * 100) : 0;
+            const wrap = document.createElement("div");
+            wrap.className = "lh-hw-checklist__overall";
+            const track = document.createElement("div");
+            track.className = "lh-hw-overall-bar-track";
+            const fill = document.createElement("div");
+            fill.className = "lh-hw-overall-bar-fill";
             fill.style.width = String(pct) + "%";
+            fill.style.backgroundColor = hwProgressBarColor(pct);
             track.appendChild(fill);
-            return track;
+            wrap.appendChild(track);
+            const stat = document.createElement("p");
+            stat.className = "lh-hw-overall-stat";
+            stat.textContent = I18n.t("learning_homework_overall_progress", {
+              n: String(doneCount),
+              t: String(total),
+              pct: String(pct),
+            });
+            wrap.appendChild(stat);
+            return wrap;
           }
 
           function renderHomeworkChecklistItem(item) {
@@ -4277,33 +4391,9 @@
           cIntro.textContent = I18n.t("learning_homework_checklist_intro");
           cwrap.appendChild(cIntro);
 
-          const toggleLabel = document.createElement("label");
-          toggleLabel.className = "lh-hw-toggle";
-          const toggleCb = document.createElement("input");
-          toggleCb.type = "checkbox";
-          toggleCb.checked = homeworkShowIncompleteOnly;
-          toggleCb.addEventListener("change", function () {
-            homeworkShowIncompleteOnly = toggleCb.checked;
-            renderHomeworkPanel();
-          });
-          const toggleText = document.createElement("span");
-          toggleText.textContent = I18n.t("learning_homework_show_incomplete");
-          toggleLabel.appendChild(toggleCb);
-          toggleLabel.appendChild(toggleText);
-          cwrap.appendChild(toggleLabel);
-
           const totalDone = countHomeworkDone(data.homeworkChecklist);
           const totalItems = data.homeworkChecklist.length;
-          const overallRow = document.createElement("div");
-          overallRow.className = "lh-hw-checklist__overall";
-          overallRow.appendChild(
-            buildHwProgressBar(totalDone, totalItems, totalDone >= totalItems && totalItems > 0)
-          );
-          const overallFraction = document.createElement("span");
-          overallFraction.className = "lh-hw-checklist__overall-fraction";
-          overallFraction.textContent = String(totalDone) + " / " + String(totalItems);
-          overallRow.appendChild(overallFraction);
-          cwrap.appendChild(overallRow);
+          cwrap.appendChild(buildOverallHwProgress(totalDone, totalItems));
 
           const grouped = Object.create(null);
           hwCategories.forEach(function (cat) {
@@ -4315,20 +4405,9 @@
             grouped[cat].push(item);
           });
 
-          let anyIncompleteVisible = false;
-
           hwCategories.forEach(function (cat) {
             const items = grouped[cat];
             if (!items || !items.length) return;
-
-            const visibleItems = homeworkShowIncompleteOnly
-              ? items.filter(function (item) {
-                  return !done[item.id];
-                })
-              : items;
-            if (homeworkShowIncompleteOnly && !visibleItems.length) return;
-
-            anyIncompleteVisible = true;
 
             const catDone = countHomeworkDone(items);
             const catTotal = items.length;
@@ -4350,23 +4429,15 @@
               catHead.appendChild(doneBadge);
             }
             catSec.appendChild(catHead);
-            catSec.appendChild(buildHwProgressBar(catDone, catTotal, catComplete));
 
             const catList = document.createElement("ol");
             catList.className = "lh-hw-checklist__list lh-hw-category__list";
-            visibleItems.forEach(function (item) {
+            items.forEach(function (item) {
               catList.appendChild(renderHomeworkChecklistItem(item));
             });
             catSec.appendChild(catList);
             cwrap.appendChild(catSec);
           });
-
-          if (homeworkShowIncompleteOnly && !anyIncompleteVisible) {
-            const allDoneMsg = document.createElement("p");
-            allDoneMsg.className = "lh-hw-all-complete";
-            allDoneMsg.textContent = I18n.t("learning_homework_all_complete_congrats");
-            cwrap.appendChild(allDoneMsg);
-          }
 
           if (!cuser) {
             const cNotice = document.createElement("p");
@@ -4604,6 +4675,8 @@
       });
       const quizQuestion = document.createElement("p");
       quizQuestion.className = "vocab-quiz__question lh-vocab-q";
+      const quizCounter = document.createElement("p");
+      quizCounter.className = "lh-gap-score vocab-quiz__counter lh-muted";
       const quizOptions = document.createElement("div");
       quizOptions.className = "vocab-quiz__options lh-vocab-options";
       const quizFeedback = document.createElement("p");
@@ -4637,6 +4710,7 @@
         quizModeWrap.appendChild(modeBtn);
       });
       quizWrap.insertBefore(quizModeWrap, quizQuestion);
+      quizWrap.insertBefore(quizCounter, quizQuestion);
 
       const summary = document.createElement("div");
       summary.className = "vocab-summary lh-vocab-summary hidden";
@@ -4674,6 +4748,7 @@
       let currentMode = "easy";
       let remainingQuestions = [];
       let askedCount = 0;
+      let sessionQuestionTotal = 0;
       let sessionRecorded = false;
       const wrongByTopic = {};
 
@@ -4712,6 +4787,18 @@
         });
       }
 
+      function updateQuizCounter() {
+        if (summary.classList.contains("hidden") && sessionQuestionTotal > 0 && askedCount > 0) {
+          quizCounter.classList.remove("hidden");
+          quizCounter.textContent = I18n.t("learning_vocab_question_counter", {
+            current: String(askedCount),
+            total: String(sessionQuestionTotal),
+          });
+        } else {
+          quizCounter.classList.add("hidden");
+        }
+      }
+
       function updateResultsCard(totalCount) {
         const pct = totalCount ? Math.round((quizScore / totalCount) * 100) : 0;
         resultsPct.textContent = String(pct) + "%";
@@ -4729,6 +4816,7 @@
       }
 
       function showSummary(totalCount) {
+        quizCounter.classList.add("hidden");
         quizQuestion.classList.add("hidden");
         quizOptions.classList.add("hidden");
         quizFeedback.classList.add("hidden");
@@ -4761,6 +4849,7 @@
         quizAnswered = false;
         lastQuizCorrect = null;
         quizNext.disabled = true;
+        updateQuizCounter();
         quizQuestion.textContent = currentQuestion.question;
         quizFeedback.textContent = I18n.t("learning_vocab_choose_prompt", {
           score: String(quizScore),
@@ -4833,6 +4922,7 @@
           delete wrongByTopic[key];
         });
         remainingQuestions = questionsForMode(mode).slice();
+        sessionQuestionTotal = remainingQuestions.length;
         renderQuiz();
       }
 
@@ -5116,6 +5206,60 @@
         return (stats.completedExercises || []).includes(level + " - " + topic);
       }
 
+      function renderExTopicCard(ex, i) {
+        const done = isExerciseTopicDone(ex.topic);
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = "lh-topic-card lh-ex-topic-card" + (done ? " lh-topic-card--done" : "");
+        const num = document.createElement("span");
+        num.className = "lh-topic-num";
+        num.textContent = String(i + 1);
+        num.setAttribute("aria-hidden", "true");
+        card.appendChild(num);
+        if (i < 3 && !done) {
+          const startHere = document.createElement("span");
+          startHere.className = "lh-topic-card__start-here";
+          startHere.textContent = I18n.t("learning_topic_start_here");
+          card.appendChild(startHere);
+        }
+        if (done) {
+          const statusWrap = document.createElement("span");
+          statusWrap.className = "lh-topic-card__status";
+          const check = document.createElement("span");
+          check.className = "lh-topic-card__check";
+          check.textContent = "✓";
+          check.setAttribute("aria-hidden", "true");
+          statusWrap.appendChild(check);
+          const undoBtn = document.createElement("button");
+          undoBtn.type = "button";
+          undoBtn.className = "lh-undo-link";
+          undoBtn.textContent = I18n.t("learning_ex_undo_done");
+          undoBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!getActiveUser()) return;
+            undoExerciseCompletion(level, ex.topic);
+            renderExTopicList();
+            refreshLandingCardProgress(root, level, data);
+            renderProgressPanel();
+          });
+          statusWrap.appendChild(undoBtn);
+          card.appendChild(statusWrap);
+        }
+        const h = document.createElement("span");
+        h.className = "lh-topic-card__title";
+        h.textContent = ex.topic;
+        const blurb = document.createElement("span");
+        blurb.className = "lh-topic-card__focus";
+        blurb.textContent = exerciseTopicBlurb(ex);
+        card.appendChild(h);
+        card.appendChild(blurb);
+        card.addEventListener("click", function () {
+          openExLesson(i);
+        });
+        return card;
+      }
+
       function renderExTopicList() {
         const exercises = data.exercises || [];
         let doneCount = 0;
@@ -5127,59 +5271,29 @@
           t: String(exercises.length),
         });
         exTopicGrid.innerHTML = "";
+        const incomplete = [];
+        const completed = [];
         exercises.forEach(function (ex, i) {
-          const done = isExerciseTopicDone(ex.topic);
-          const card = document.createElement("button");
-          card.type = "button";
-          card.className = "lh-topic-card lh-ex-topic-card" + (done ? " lh-topic-card--done" : "");
-          const num = document.createElement("span");
-          num.className = "lh-topic-num";
-          num.textContent = String(i + 1);
-          num.setAttribute("aria-hidden", "true");
-          card.appendChild(num);
-          if (i < 3) {
-            const startHere = document.createElement("span");
-            startHere.className = "lh-topic-card__start-here";
-            startHere.textContent = I18n.t("learning_topic_start_here");
-            card.appendChild(startHere);
-          }
-          if (done) {
-            const statusWrap = document.createElement("span");
-            statusWrap.className = "lh-topic-card__status";
-            const check = document.createElement("span");
-            check.className = "lh-topic-card__check";
-            check.textContent = "✓";
-            check.setAttribute("aria-hidden", "true");
-            statusWrap.appendChild(check);
-            const undoBtn = document.createElement("button");
-            undoBtn.type = "button";
-            undoBtn.className = "lh-undo-link";
-            undoBtn.textContent = I18n.t("learning_ex_undo_done");
-            undoBtn.addEventListener("click", function (e) {
-              e.preventDefault();
-              e.stopPropagation();
-              if (!getActiveUser()) return;
-              undoExerciseCompletion(level, ex.topic);
-              renderExTopicList();
-              refreshLandingCardProgress(root, level, data);
-              renderProgressPanel();
-            });
-            statusWrap.appendChild(undoBtn);
-            card.appendChild(statusWrap);
-          }
-          const h = document.createElement("span");
-          h.className = "lh-topic-card__title";
-          h.textContent = ex.topic;
-          const blurb = document.createElement("span");
-          blurb.className = "lh-topic-card__focus";
-          blurb.textContent = exerciseTopicBlurb(ex);
-          card.appendChild(h);
-          card.appendChild(blurb);
-          card.addEventListener("click", function () {
-            openExLesson(i);
-          });
-          exTopicGrid.appendChild(card);
+          const entry = { ex: ex, i: i };
+          if (isExerciseTopicDone(ex.topic)) completed.push(entry);
+          else incomplete.push(entry);
         });
+        incomplete.forEach(function (entry) {
+          exTopicGrid.appendChild(renderExTopicCard(entry.ex, entry.i));
+        });
+        if (completed.length) {
+          const sep = document.createElement("div");
+          sep.className = "lh-ex-topic-grid__separator";
+          sep.setAttribute("aria-hidden", "true");
+          const sepLabel = document.createElement("span");
+          sepLabel.className = "lh-ex-topic-grid__separator-label";
+          sepLabel.textContent = I18n.t("learning_topics_completed_sep");
+          sep.appendChild(sepLabel);
+          exTopicGrid.appendChild(sep);
+          completed.forEach(function (entry) {
+            exTopicGrid.appendChild(renderExTopicCard(entry.ex, entry.i));
+          });
+        }
       }
 
       function renderExLesson(idx) {
@@ -5396,31 +5510,7 @@
       topicSelect.className = "flashcard-topic";
       deckRow.appendChild(label);
       deckRow.appendChild(topicSelect);
-      const orderRow = document.createElement("div");
-      orderRow.className = "flashcard-trainer__top-row";
-      const orderLabel = document.createElement("label");
-      orderLabel.setAttribute("for", "flashcard-order-" + level);
-      orderLabel.textContent = I18n.t("flashcard_order_label");
-      const orderSelect = document.createElement("select");
-      orderSelect.id = "flashcard-order-" + level;
-      orderSelect.className = "flashcard-topic flashcard-order-select";
-      orderSelect.setAttribute("aria-label", I18n.t("flashcard_order_label"));
-      const orderOptEn = document.createElement("option");
-      orderOptEn.value = "en";
-      orderOptEn.textContent = I18n.t("flashcard_order_en_option");
-      const orderOptFr = document.createElement("option");
-      orderOptFr.value = "fr";
-      orderOptFr.textContent = I18n.t("flashcard_order_fr_option");
-      orderSelect.appendChild(orderOptEn);
-      orderSelect.appendChild(orderOptFr);
-      orderSelect.value = readFlashcardFirstLang();
-      orderSelect.addEventListener("change", function () {
-        writeFlashcardFirstLang(orderSelect.value);
-      });
-      orderRow.appendChild(orderLabel);
-      orderRow.appendChild(orderSelect);
       top.appendChild(deckRow);
-      top.appendChild(orderRow);
       const deckCountHint = document.createElement("p");
       deckCountHint.className = "flashcard-deck-count";
       deckCountHint.setAttribute("aria-live", "polite");
@@ -5439,6 +5529,24 @@
       const flipBtn = document.createElement("button");
       flipBtn.type = "button";
       flipBtn.className = "flashcard";
+      const langToggleBtn = document.createElement("button");
+      langToggleBtn.type = "button";
+      langToggleBtn.className = "flashcard-lang-toggle";
+      function syncLangToggleLabel() {
+        const current = readFlashcardFirstLang();
+        langToggleBtn.textContent = I18n.t(
+          current === "fr" ? "flashcard_lang_toggle_to_en" : "flashcard_lang_toggle_to_fr"
+        );
+        langToggleBtn.setAttribute(
+          "aria-label",
+          I18n.t(current === "fr" ? "flashcard_order_en_option" : "flashcard_order_fr_option")
+        );
+      }
+      syncLangToggleLabel();
+      langToggleBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        writeFlashcardFirstLang(readFlashcardFirstLang() === "fr" ? "en" : "fr");
+      });
       const bookmarkBtn = document.createElement("button");
       bookmarkBtn.type = "button";
       bookmarkBtn.className = "flashcard-bookmark";
@@ -5457,6 +5565,7 @@
       front.className = "flashcard__side flashcard__front";
       const back = document.createElement("span");
       back.className = "flashcard__side flashcard__back";
+      flipBtn.appendChild(langToggleBtn);
       flipBtn.appendChild(removeSavedBtn);
       flipBtn.appendChild(bookmarkBtn);
       flipBtn.appendChild(front);
@@ -6024,7 +6133,7 @@
       startSession("full", null);
 
       flashcardOrderRefreshers.push(function () {
-        orderSelect.value = readFlashcardFirstLang();
+        syncLangToggleLabel();
         showingBack = false;
         renderCard();
       });
@@ -6059,10 +6168,7 @@
         if (landingIntro) landingIntro.textContent = I18n.t("learning_level_desc_" + level);
         if (landingHeading) landingHeading.textContent = I18n.t("level_" + level);
         label.textContent = I18n.t("flashcard_deck_label");
-        orderLabel.textContent = I18n.t("flashcard_order_label");
-        orderSelect.setAttribute("aria-label", I18n.t("flashcard_order_label"));
-        orderOptEn.textContent = I18n.t("flashcard_order_en_option");
-        orderOptFr.textContent = I18n.t("flashcard_order_fr_option");
+        syncLangToggleLabel();
         const savedDeckOpt = topicSelect.querySelector('[data-saved-deck-option="1"]');
         if (savedDeckOpt) savedDeckOpt.textContent = I18n.t("flashcard_saved_deck_name");
         populateTopicSelect();
@@ -6090,6 +6196,7 @@
         refreshLandingCardProgress(root, level, data);
         refreshStreakHeader();
         if (currentQuestion && askedCount > 0 && summary.classList.contains("hidden")) {
+          updateQuizCounter();
           quizQuestion.textContent = currentQuestion.question;
           if (!quizAnswered) {
             quizFeedback.textContent = I18n.t("learning_vocab_choose_prompt", {

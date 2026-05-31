@@ -122,6 +122,10 @@
       level_landing_grid_aria: "Choose activity",
       content_breadcrumb_aria: "Content location",
       home_testimonials_heading: "What students and parents say",
+      testimonials_heading: "What students and parents say",
+      testimonial_label: "Testimonial",
+      testimonial_attr_1: "Parent of a Beginner student",
+      testimonial_attr_2: "Intermediate student, Lycée, Paris",
       testimonial_1_quote:
         "Louis explains things the way a student thinks, not the way a textbook is written. My daughter went from dreading English class to actually enjoying it.",
       testimonial_1_attr: "Parent of a Beginner student",
@@ -132,6 +136,7 @@
       teacher_caption_2:
         "Teaching approach: structured sessions, real conversation, and consistent feedback.",
       content_password_title: "Enter Password",
+      content_password_intro: "Enter the password your teacher gave you.",
       content_password_close_aria: "Cancel and return to levels",
       content_password_label: "Password",
       content_password_submit: "Continue",
@@ -220,7 +225,7 @@
         "Your booking was saved on this device only because the server was unavailable. Please also email or call me so I receive it.",
       footer_line: "Andronicus · English grinds",
       footer_contact_html:
-        "<a href=\"mailto:louis.f.mcgovern@gmail.com\">louis.f.mcgovern@gmail.com</a> · <a href=\"tel:+353833198980\">+353 (83) 319 8980</a>",
+        "<a href=\"tel:+353833198980\">+353 (83) 319 8980</a> · <a href=\"mailto:louis.f.mcgovern@gmail.com\">louis.f.mcgovern@gmail.com</a>",
       account_title: "Your Account",
       account_intro: "For students who want to track exercises and quiz progress on this device.",
       account_register_heading: "Create account",
@@ -342,6 +347,8 @@
       flashcard_order_label: "Show first",
       flashcard_order_en_option: "English (front)",
       flashcard_order_fr_option: "French (front)",
+      flashcard_lang_toggle_to_fr: "French first",
+      flashcard_lang_toggle_to_en: "English first",
       flashcard_deck_card_count: "{n} cards in this deck",
       flashcard_deck_card_count_one: "1 card in this deck",
       flashcard_full_deck_name: "Full deck",
@@ -397,9 +404,8 @@
       learning_homework_checklist_title: "Homework checklist",
       learning_homework_checklist_intro: "Work through these across the year. Your teacher will tell you which to do for each class — tick them off when you're done.",
       learning_homework_checklist_progress: "{n} of {t} completed",
+      learning_homework_overall_progress: "{n} / {t} tasks completed ({pct}%)",
       learning_homework_checklist_signin: "Sign in to save your progress.",
-      learning_homework_show_incomplete: "Show only incomplete tasks",
-      learning_homework_all_complete_congrats: "Everything is done! Congratulations.",
       learning_hub_streak: "Streak",
       learning_hub_topic_all: "All topics",
       learning_vocab_variant_mc: "Multiple choice",
@@ -418,6 +424,7 @@
       learning_ex_mark_done: "I finished the practice task",
       learning_ex_undo_done: "Mark as not done",
       learning_topic_start_here: "Start here",
+      learning_topics_completed_sep: "Completed",
       learning_topics_back: "← Back to topics",
       learning_topics_what_learn: "What you will learn",
       learning_topics_content: "Lesson content",
@@ -429,6 +436,7 @@
         "No inline gap-fill lines in this topic yet. Use the practice text above.",
       learning_exercise_gap_complete: "Great work! You scored {score} out of {total}.",
       learning_vocab_quiz_title: "Vocab challenge (fill in the blank)",
+      learning_vocab_question_counter: "Question {current} of {total}",
       learning_vocab_next: "Next question",
       learning_vocab_restart_session: "Restart session",
       learning_vocab_mode_easy: "Easy",
@@ -621,6 +629,10 @@
       level_landing_grid_aria: "Choisir une activité",
       content_breadcrumb_aria: "Emplacement dans le contenu",
       home_testimonials_heading: "Ce qu'en disent élèves et parents",
+      testimonials_heading: "Ce qu'en disent élèves et parents",
+      testimonial_label: "Témoignage",
+      testimonial_attr_1: "Parent d'un élève débutant",
+      testimonial_attr_2: "Intermediate student, Lycée, Paris",
       testimonial_1_quote:
         "Louis explique comme pense un élève, pas comme est rédigé un manuel. Ma fille est passée de la crainte du cours d'anglais au plaisir d'y aller.",
       testimonial_1_attr: "Parent d'une élève débutante",
@@ -631,6 +643,7 @@
       teacher_caption_2:
         "Ma façon d'enseigner : des séances structurées, de vraies conversations et des retours réguliers.",
       content_password_title: "Saisir le mot de passe",
+      content_password_intro: "Entrez le mot de passe que votre professeur vous a donné.",
       content_password_close_aria: "Annuler et revenir au choix des niveaux",
       content_password_label: "Mot de passe",
       content_password_submit: "Continuer",
@@ -719,7 +732,7 @@
         "La demande n’a été enregistrée que sur cet appareil car le serveur était indisponible. Écrivez-moi aussi par e-mail ou téléphone pour que je la reçoive.",
       footer_line: "Andronicus · Cours d’anglais",
       footer_contact_html:
-        "<a href=\"mailto:louis.f.mcgovern@gmail.com\">louis.f.mcgovern@gmail.com</a> · <a href=\"tel:+353833198980\">+353 (83) 319 8980</a>",
+        "<a href=\"tel:+353833198980\">+353 (83) 319 8980</a> · <a href=\"mailto:louis.f.mcgovern@gmail.com\">louis.f.mcgovern@gmail.com</a>",
       account_title: "Votre compte",
       account_intro: "Pour les élèves qui souhaitent suivre leurs exercices et quiz sur cet appareil.",
       account_register_heading: "Créer un compte",
@@ -844,6 +857,8 @@
       flashcard_order_label: "Afficher d’abord",
       flashcard_order_en_option: "Anglais (face avant)",
       flashcard_order_fr_option: "Français (face avant)",
+      flashcard_lang_toggle_to_fr: "FR d'abord",
+      flashcard_lang_toggle_to_en: "EN d'abord",
       flashcard_deck_card_count: "{n} cartes dans ce paquet",
       flashcard_deck_card_count_one: "1 carte dans ce paquet",
       flashcard_full_deck_name: "Paquet complet",
@@ -900,9 +915,8 @@
       learning_homework_checklist_title: "Liste de devoirs",
       learning_homework_checklist_intro: "Avance dans cette liste au fil de l'année. Ton professeur te dira lesquels faire pour chaque cours — coche-les quand c'est terminé.",
       learning_homework_checklist_progress: "{n} sur {t} terminés",
+      learning_homework_overall_progress: "{n} / {t} tâches terminées ({pct}%)",
       learning_homework_checklist_signin: "Connecte-toi pour enregistrer ta progression.",
-      learning_homework_show_incomplete: "Afficher uniquement les tâches non terminées",
-      learning_homework_all_complete_congrats: "Tout est terminé ! Félicitations.",
       learning_hub_streak: "Série",
       learning_hub_topic_all: "Tous les thèmes",
       learning_vocab_variant_mc: "QCM",
@@ -921,6 +935,7 @@
       learning_ex_mark_done: "J'ai terminé la tâche",
       learning_ex_undo_done: "Marquer comme non fait",
       learning_topic_start_here: "Commence ici",
+      learning_topics_completed_sep: "Terminés",
       learning_topics_back: "← Retour aux thèmes",
       learning_topics_what_learn: "Ce que vous allez apprendre",
       learning_topics_content: "Contenu de la leçon",
@@ -933,6 +948,7 @@
         "Pas encore de phrases à trous intégrées pour ce thème. Utilise le texte d’exercice ci-dessus.",
       learning_exercise_gap_complete: "Bravo ! Tu as {score} bonnes réponses sur {total}.",
       learning_vocab_quiz_title: "Quiz vocabulaire (texte à trous)",
+      learning_vocab_question_counter: "Question {current} sur {total}",
       learning_vocab_next: "Question suivante",
       learning_vocab_restart_session: "Recommencer la session",
       learning_vocab_mode_easy: "Facile",
@@ -1096,6 +1112,15 @@
         el.setAttribute("title", STRINGS[L][key]);
       }
     });
+
+    var footerBrand = document.querySelector(".site-footer__brand");
+    if (footerBrand) {
+      footerBrand.textContent = STRINGS[L].footer_line || STRINGS.en.footer_line;
+    }
+    var footerContact = document.querySelector(".site-footer__contact");
+    if (footerContact) {
+      footerContact.innerHTML = STRINGS[L].footer_contact_html || STRINGS.en.footer_contact_html;
+    }
   }
 
   function initLangSwitch(root) {

@@ -108,18 +108,20 @@
         </section>
 
         <div class="home-testimonials" aria-labelledby="home-testimonials-heading">
-          <h2 id="home-testimonials-heading" class="home-section-title">What students and parents say</h2>
+          <h2 id="home-testimonials-heading" class="home-section-title" data-i18n="testimonials_heading">What students and parents say</h2>
           <div class="testimonial-grid">
             <figure class="testimonial-card">
+              <p class="testimonial-card__lang-label">Testimonial</p>
               <p class="testimonial-card__mark" aria-hidden="true">&ldquo;</p>
-              <blockquote class="testimonial-card__quote">
+              <blockquote class="testimonial-card__quote" lang="en">
                 Louis explains things the way a student thinks, not the way a textbook is written. My daughter went from dreading English class to actually enjoying it.
               </blockquote>
               <figcaption class="testimonial-card__attribution">Parent of a Beginner student</figcaption>
             </figure>
             <figure class="testimonial-card">
+              <p class="testimonial-card__lang-label">Testimonial</p>
               <p class="testimonial-card__mark" aria-hidden="true">&ldquo;</p>
-              <blockquote class="testimonial-card__quote">
+              <blockquote class="testimonial-card__quote" lang="en">
                 The small group format means you can't hide. You actually have to speak, and that's what made the difference for my exam.
               </blockquote>
               <figcaption class="testimonial-card__attribution">Intermediate student, Lycée, Paris</figcaption>
@@ -269,14 +271,13 @@
               </button>
             </div>
           </div>
-          <div id="content-password-overlay" class="content-password-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="content-password-heading">
+          <div id="content-password-overlay" class="content-password-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="content-password-heading" aria-describedby="content-password-intro">
             <div class="content-password-overlay__box">
-              <div class="content-password-overlay__head">
-                <h2 id="content-password-heading" class="content-password-overlay__title" data-i18n="content_password_title">Enter password</h2>
-                <button type="button" id="content-password-close" class="btn-icon-close" data-i18n-aria="content_password_close_aria" aria-label="Cancel and return to levels">×</button>
-              </div>
+              <button type="button" id="content-password-close" class="content-password-overlay__close" data-i18n-aria="content_password_close_aria" aria-label="Cancel and return to levels">×</button>
+              <h2 id="content-password-heading" class="content-password-overlay__brand">Andronicus</h2>
+              <p id="content-password-intro" class="content-password-overlay__intro" data-i18n="content_password_intro">Enter the password your teacher gave you.</p>
               <p id="content-password-for-level" class="content-password-overlay__hint"></p>
-              <form id="content-password-form" class="inline-form inline-form--stack">
+              <form id="content-password-form" class="content-password-overlay__form inline-form inline-form--stack">
                 <label for="content-password" data-i18n="content_password_label">Password</label>
                 <input type="password" id="content-password" name="password" autocomplete="off" />
                 <button type="submit" class="btn-primary" data-i18n="content_password_submit">Continue</button>
