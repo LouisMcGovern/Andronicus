@@ -28,6 +28,10 @@
       nav_content_hint: "Materials by level (password)",
       nav_booking_label: "Booking",
       nav_booking_hint: "Send a time request",
+      nav_booking_price: "€25 per session",
+      home_free_banner_text:
+        "Your first class is free — no commitment, no payment until you decide to continue.",
+      hero_cta_book_now: "Book now",
       nav_account_label: "Student Account",
       nav_account_hint: "Optional login to track practice",
       btn_home: "← Back to home",
@@ -109,6 +113,24 @@
       level_beginner: "Beginner",
       level_intermediate: "Intermediate",
       level_advanced: "Advanced",
+      btn_level_desc_beginner:
+        "A1 to A2 — core vocabulary, everyday grammar, and short practice tasks.",
+      btn_level_desc_intermediate:
+        "B1 — stronger grammar, wider vocabulary, and longer written tasks.",
+      btn_level_desc_advanced:
+        "B2 and above — nuanced grammar, academic vocabulary, and exam-style practice.",
+      level_landing_grid_aria: "Choose activity",
+      content_breadcrumb_aria: "Content location",
+      home_testimonials_heading: "What students and parents say",
+      testimonial_1_quote:
+        "Louis explains things the way a student thinks, not the way a textbook is written. My daughter went from dreading English class to actually enjoying it.",
+      testimonial_1_attr: "Parent of a Beginner student",
+      testimonial_2_quote:
+        "The small group format means you can't hide. You actually have to speak, and that's what made the difference for my exam.",
+      testimonial_2_attr: "Intermediate student, Lycée, Paris",
+      teacher_caption_1: "Louis McGovern — studying Law and French at Trinity College Dublin.",
+      teacher_caption_2:
+        "Teaching approach: structured sessions, real conversation, and consistent feedback.",
       content_password_title: "Enter Password",
       content_password_close_aria: "Cancel and return to levels",
       content_password_label: "Password",
@@ -154,6 +176,8 @@
       booking_phone_ph: "Mobile, with country code if not Ireland",
       booking_request_note_html:
         "<strong>This form is only a request.</strong> Your place is fixed once I have answered you by email or message.",
+      booking_price_callout:
+        "Each session is €25 per student. Maximum four students per class. Your first session is free.",
       booking_level_empty: "Select level",
       booking_level_unknown: "I do not know yet",
       booking_slots_legend: "Preferred times (France · Paris time)",
@@ -175,6 +199,11 @@
       booking_missing_times: "Preferred times (or choose 'I do not know yet')",
       booking_level_unknown_badge: "I do not know yet",
       booking_submit: "Send request",
+      booking_success_heading: "Request received",
+      booking_success_main:
+        "Louis will contact you within 24 hours by email or WhatsApp to confirm your slot. Your first class is free — no payment until confirmed.",
+      booking_success_followup_html:
+        'If you have not heard back within 24 hours, call <a href="tel:+353833198980">+353 (83) 319 8980</a>.',
       booking_success_p1:
         "Thanks, I have your request. I will email or message you to confirm a slot and what happens next.",
       booking_success_small:
@@ -293,6 +322,7 @@
       flashcard_again: "Save for later",
       flashcard_got_it: "Got it",
       flashcard_score_label: "Score: {correct}/{attempts}",
+      flashcard_live_score: "{correct} correct out of {total}",
       flashcard_session_progress: "{n} of {total} cards",
       flashcard_session_sample_hint:
         "This session practises {n} random cards from {total} in this deck. Use Got it or Save for later for each.",
@@ -314,8 +344,10 @@
       flashcard_order_fr_option: "French (front)",
       flashcard_deck_card_count: "{n} cards in this deck",
       flashcard_deck_card_count_one: "1 card in this deck",
+      flashcard_full_deck_name: "Full deck",
       flashcard_saved_deck_name: "Saved cards",
-      flashcard_saved_empty: "Tap the bookmark on any card to save it here.",
+      flashcard_saved_empty: "No saved cards. Use the bookmark on any card to save it here.",
+      flashcard_remove_saved: "Remove from saved",
       flashcard_bookmark_add: "Save card",
       flashcard_bookmark_remove: "Remove saved card",
       learning_tab_flashcards: "Flashcards",
@@ -354,7 +386,7 @@
       learning_progress_tasks_caption: "{n} of {t} tasks completed",
       learning_progress_grammar_summary: "{n} of {t} grammar topics completed",
       learning_progress_grammar_all_done:
-        "Bravo ! Tu as terminé tous les thèmes de grammaire !",
+        "Well done — you have completed every grammar topic!",
       learning_progress_plan: "Upcoming class plan",
       learning_homework_today: "Today",
       learning_homework_upcoming: "In progress",
@@ -366,6 +398,8 @@
       learning_homework_checklist_intro: "Work through these across the year. Your teacher will tell you which to do for each class — tick them off when you're done.",
       learning_homework_checklist_progress: "{n} of {t} completed",
       learning_homework_checklist_signin: "Sign in to save your progress.",
+      learning_homework_show_incomplete: "Show only incomplete tasks",
+      learning_homework_all_complete_congrats: "Everything is done! Congratulations.",
       learning_hub_streak: "Streak",
       learning_hub_topic_all: "All topics",
       learning_vocab_variant_mc: "Multiple choice",
@@ -382,6 +416,8 @@
       learning_ex_examples: "Examples",
       learning_ex_practice: "Practice",
       learning_ex_mark_done: "I finished the practice task",
+      learning_ex_undo_done: "Mark as not done",
+      learning_topic_start_here: "Start here",
       learning_topics_back: "← Back to topics",
       learning_topics_what_learn: "What you will learn",
       learning_topics_content: "Lesson content",
@@ -402,6 +438,12 @@
       learning_vocab_summary_focus: "Great work. Focus next on these topics:",
       learning_vocab_summary_no_misses: "No weak topics this round — excellent consistency.",
       learning_vocab_summary_miss: "{topic} ({misses} misses)",
+      learning_vocab_results_score: "{score} / {total} correct",
+      learning_vocab_results_msg_excellent: "Excellent work — keep it up!",
+      learning_vocab_results_msg_good: "Good effort — you're making progress!",
+      learning_vocab_results_msg_review: "Review the flashcards and try again — you've got this!",
+      learning_vocab_results_retry: "Try again",
+      learning_vocab_results_level_up: "Next level up",
       learning_vocab_question_line: "Q{n}: {q} [{mode}]",
       learning_vocab_choose_prompt: "Score: {score}/{round} | Choose an option to continue.",
       learning_vocab_correct_feedback: "Correct. Score: {score}/{round}",
@@ -434,12 +476,13 @@
       learning_gap_correct: "Correct!",
       learning_gap_incorrect: "Incorrect. The correct answer is: {answer}",
       learning_gap_retry_intro: "Good effort. Now let's go over the ones you missed.",
-      learning_gap_score_line: "Question {current} sur {total} — Score : {correct}/{answered}",
+      learning_gap_score_line: "Question {current} of {total} — Score: {correct}/{answered}",
       learning_gap_complete_score: "{correct} out of {total} on the first try",
-      learning_gap_complete_excellent: "Excellent travail !",
-      learning_gap_complete_good: "Bon effort, continue !",
-      learning_gap_complete_review: "Revois la leçon et réessaie !",
-      learning_gap_restart: "Recommencer",
+      learning_gap_complete_excellent: "Excellent work!",
+      learning_gap_complete_good: "Good effort — keep going!",
+      learning_gap_complete_review: "Review the lesson and try again!",
+      learning_gap_restart: "Start again",
+      learning_gap_continue: "Continue",
       learning_ex_practice_congrats: "Congratulations! You completed the practice task.",
       learning_exercise_intro_en_fallback:
         "This lesson covers {topic}. Read the explanation in both languages, work through each example, then complete the practice task in your notebook.",
@@ -484,6 +527,10 @@
       nav_content_hint: "Supports par niveau (mot de passe)",
       nav_booking_label: "Inscription",
       nav_booking_hint: "Envoyer une demande de créneau",
+      nav_booking_price: "25 € par séance",
+      home_free_banner_text:
+        "Ton premier cours est gratuit — sans engagement, et aucun paiement tant que tu n'as pas décidé de continuer.",
+      hero_cta_book_now: "Réserver",
       nav_account_label: "Compte élève",
       nav_account_hint: "Connexion facultative pour suivre le travail",
       btn_home: "← Retour à l’accueil",
@@ -565,6 +612,24 @@
       level_beginner: "Débutant",
       level_intermediate: "Intermédiaire",
       level_advanced: "Avancé",
+      btn_level_desc_beginner:
+        "A1 à A2 — vocabulaire de base, grammaire du quotidien et exercices courts.",
+      btn_level_desc_intermediate:
+        "B1 — grammaire plus solide, vocabulaire élargi et tâches écrites plus longues.",
+      btn_level_desc_advanced:
+        "B2 et plus — grammaire nuancée, vocabulaire académique et pratique type examen.",
+      level_landing_grid_aria: "Choisir une activité",
+      content_breadcrumb_aria: "Emplacement dans le contenu",
+      home_testimonials_heading: "Ce qu'en disent élèves et parents",
+      testimonial_1_quote:
+        "Louis explique comme pense un élève, pas comme est rédigé un manuel. Ma fille est passée de la crainte du cours d'anglais au plaisir d'y aller.",
+      testimonial_1_attr: "Parent d'une élève débutante",
+      testimonial_2_quote:
+        "Le petit groupe ne laisse pas place à la passivité. Il faut vraiment parler — c'est ce qui a fait la différence pour mon examen.",
+      testimonial_2_attr: "Élève de niveau intermédiaire, lycée, Paris",
+      teacher_caption_1: "Louis McGovern — étudiant en droit et en français à Trinity College Dublin.",
+      teacher_caption_2:
+        "Ma façon d'enseigner : des séances structurées, de vraies conversations et des retours réguliers.",
       content_password_title: "Saisir le mot de passe",
       content_password_close_aria: "Annuler et revenir au choix des niveaux",
       content_password_label: "Mot de passe",
@@ -610,6 +675,8 @@
       booking_phone_ph: "Portable, indicatif si hors d’Irlande",
       booking_request_note_html:
         "<strong>Ce formulaire ne fait qu’une demande.</strong> La place est sûre seulement quand je vous ai répondu par mail ou message.",
+      booking_price_callout:
+        "Chaque séance coûte 25 € par élève. Quatre élèves maximum par cours. La première séance est gratuite.",
       booking_level_empty: "Choisir un niveau",
       booking_level_unknown: "Je ne sais pas encore",
       booking_slots_legend: "Créneaux souhaités (heure de Paris)",
@@ -631,6 +698,11 @@
       booking_missing_times: "Créneaux souhaités (ou 'Je ne sais pas encore')",
       booking_level_unknown_badge: "Je ne sais pas encore",
       booking_submit: "Envoyer la demande",
+      booking_success_heading: "Demande envoyée",
+      booking_success_main:
+        "Louis vous contactera dans les 24 heures par email ou WhatsApp pour confirmer votre créneau. Votre premier cours est gratuit — aucun paiement avant confirmation.",
+      booking_success_followup_html:
+        'Si vous n\'avez pas de nouvelles dans 24 heures, appelez le <a href="tel:+353833198980">+353 (83) 319 8980</a>.',
       booking_success_p1:
         "Merci, j’ai bien reçu votre demande. Je vous écris ou vous envoie un message pour confirmer un créneau et la suite.",
       booking_success_small:
@@ -750,6 +822,7 @@
       flashcard_again: "Garder pour plus tard",
       flashcard_got_it: "OK",
       flashcard_score_label: "Score : {correct}/{attempts}",
+      flashcard_live_score: "{correct} bonnes réponses sur {total}",
       flashcard_session_progress: "{n} sur {total} cartes",
       flashcard_session_sample_hint:
         "Cette session mélange {n} cartes au hasard sur {total}. Utilise OK ou « Garder pour plus tard » pour chaque carte.",
@@ -773,8 +846,11 @@
       flashcard_order_fr_option: "Français (face avant)",
       flashcard_deck_card_count: "{n} cartes dans ce paquet",
       flashcard_deck_card_count_one: "1 carte dans ce paquet",
+      flashcard_full_deck_name: "Paquet complet",
       flashcard_saved_deck_name: "Cartes enregistrées",
-      flashcard_saved_empty: "Appuie sur le signet d'une carte pour l'enregistrer ici.",
+      flashcard_saved_empty:
+        "Aucune carte sauvegardée. Utilise le signet sur une carte pour la sauvegarder ici.",
+      flashcard_remove_saved: "Retirer des sauvegardés",
       flashcard_bookmark_add: "Enregistrer la carte",
       flashcard_bookmark_remove: "Retirer la carte enregistrée",
       learning_tab_flashcards: "Cartes mémoire",
@@ -825,6 +901,8 @@
       learning_homework_checklist_intro: "Avance dans cette liste au fil de l'année. Ton professeur te dira lesquels faire pour chaque cours — coche-les quand c'est terminé.",
       learning_homework_checklist_progress: "{n} sur {t} terminés",
       learning_homework_checklist_signin: "Connecte-toi pour enregistrer ta progression.",
+      learning_homework_show_incomplete: "Afficher uniquement les tâches non terminées",
+      learning_homework_all_complete_congrats: "Tout est terminé ! Félicitations.",
       learning_hub_streak: "Série",
       learning_hub_topic_all: "Tous les thèmes",
       learning_vocab_variant_mc: "QCM",
@@ -841,6 +919,8 @@
       learning_ex_examples: "Exemples",
       learning_ex_practice: "Entraînement",
       learning_ex_mark_done: "J'ai terminé la tâche",
+      learning_ex_undo_done: "Marquer comme non fait",
+      learning_topic_start_here: "Commence ici",
       learning_topics_back: "← Retour aux thèmes",
       learning_topics_what_learn: "Ce que vous allez apprendre",
       learning_topics_content: "Contenu de la leçon",
@@ -862,6 +942,12 @@
       learning_vocab_summary_focus: "Bravo. Concentre-toi ensuite sur ces thèmes :",
       learning_vocab_summary_no_misses: "Aucun thème faible cette fois — très régulier.",
       learning_vocab_summary_miss: "{topic} ({misses} erreurs)",
+      learning_vocab_results_score: "{score} / {total} bonnes réponses",
+      learning_vocab_results_msg_excellent: "Excellent travail, continue comme ça !",
+      learning_vocab_results_msg_good: "Bon effort, tu progresses bien !",
+      learning_vocab_results_msg_review: "Revois les flashcards et réessaie, tu vas y arriver !",
+      learning_vocab_results_retry: "Réessayer",
+      learning_vocab_results_level_up: "Niveau supérieur",
       learning_vocab_question_line: "Q{n} : {q} [{mode}]",
       learning_vocab_choose_prompt: "Score : {score}/{round} | Choisis une réponse pour continuer.",
       learning_vocab_correct_feedback: "Correct. Score : {score}/{round}",
@@ -900,6 +986,7 @@
       learning_gap_complete_good: "Bon effort, continue !",
       learning_gap_complete_review: "Revois la leçon et réessaie !",
       learning_gap_restart: "Recommencer",
+      learning_gap_continue: "Continuer",
       learning_ex_practice_congrats: "Félicitations ! Tu as terminé la tâche d'entraînement.",
       learning_exercise_intro_en_fallback:
         "This lesson covers {topic}. Read the explanation in both languages, work through each example, then complete the practice task in your notebook.",

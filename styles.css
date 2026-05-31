@@ -883,8 +883,8 @@ body.content-panel-open .panel--content {
 }
 
 .faq-item {
-  padding: 1rem 0;
   border-bottom: 1px solid var(--border);
+  padding: 0;
 }
 
 .faq-item:last-child {
@@ -892,18 +892,45 @@ body.content-panel-open .panel--content {
 }
 
 .faq-q {
-  margin: 0 0 0.35rem;
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  margin: 0;
   font-family: var(--font-tagline);
   font-weight: 600;
   font-size: clamp(0.98rem, 2.1vw, 1.05rem);
   color: var(--text);
 }
 
+.faq-q::-webkit-details-marker {
+  display: none;
+}
+
+.faq-q::marker {
+  display: none;
+}
+
+.faq-q::after {
+  content: "+";
+  font-size: 1.2rem;
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-left: 0.75rem;
+}
+
+details[open] .faq-q::after {
+  content: "−";
+}
+
 .faq-a {
+  padding: 0 0 1rem;
   margin: 0;
   font-size: 0.94rem;
   color: var(--readable-body);
-  line-height: 1.52;
+  line-height: 1.55;
 }
 
 .card-cta {
@@ -2320,6 +2347,39 @@ html[data-theme="dark"] .booking-sync-warning {
 }
 
 /* Flat homework checklist (35-item annual list) */
+.lh-hw-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.88rem;
+  color: var(--readable-body);
+  cursor: pointer;
+  margin-bottom: 0.85rem;
+  padding: 0.5rem 0.65rem;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.lh-hw-toggle input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+.lh-hw-all-complete {
+  width: 100%;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink-heading);
+  margin: 0.75rem 0 0.25rem;
+  padding: 0.85rem 1rem;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
 .lh-hw-checklist {
   display: flex;
   flex-direction: column;
@@ -2909,6 +2969,16 @@ html:not([data-theme="dark"]) .tool-panel {
   display: block;
 }
 
+.flashcard-remove-saved {
+  position: absolute;
+  top: 0.55rem;
+  right: 2.85rem;
+  z-index: 3;
+  font-size: 0.72rem;
+  padding: 0.25rem 0.5rem;
+  white-space: nowrap;
+}
+
 .flashcard__side {
   display: flex;
   align-items: center;
@@ -3041,6 +3111,35 @@ html[data-theme="dark"] .flashcard-btn--got-it:hover {
   margin: 0.35rem 0 0.35rem;
 }
 
+.flashcard-live-score {
+  text-align: center;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--ink-heading);
+  margin-bottom: 0.35rem;
+}
+
+.flashcard-live-score.hidden {
+  display: none;
+}
+
+.flashcard-stars {
+  font-size: 1.5rem;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+  margin-bottom: 0.35rem;
+  text-align: center;
+}
+
+.flashcard-complete-overlay__pct {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+  text-align: center;
+  margin-bottom: 0.35rem;
+}
+
 .resource-item {
   border: 1.5px solid var(--elevated-stroke);
   border-radius: 0.28rem;
@@ -3107,6 +3206,36 @@ html[data-theme="dark"] .flashcard-btn--got-it:hover {
 
 .vocab-summary p {
   margin-top: 0.45rem;
+}
+
+.lh-quiz-results {
+  text-align: center;
+  padding: 1.5rem 1rem;
+}
+
+.lh-quiz-results__pct {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.lh-quiz-results__score {
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+}
+
+.lh-quiz-results__msg {
+  font-size: 1rem;
+  color: var(--readable-body);
+  margin: 0.65rem 0 1rem;
+}
+
+.lh-quiz-results__actions {
+  display: flex;
+  gap: 0.65rem;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .vocab-mission__head {
@@ -3547,6 +3676,48 @@ html[data-theme="dark"] .flashcard-btn--got-it:hover {
   font-weight: 700;
 }
 
+.account-level-badge {
+  display: inline-block;
+  margin-left: 0.65rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.account-level-badge--beginner {
+  background: rgba(34, 197, 94, 0.15);
+  color: #15803d;
+}
+
+.account-level-badge--intermediate {
+  background: rgba(234, 179, 8, 0.15);
+  color: #a16207;
+}
+
+.account-level-badge--advanced {
+  background: rgba(139, 92, 246, 0.15);
+  color: #6d28d9;
+}
+
+html[data-theme="dark"] .account-level-badge--beginner {
+  background: rgba(74, 222, 128, 0.18);
+  color: #4ade80;
+}
+
+html[data-theme="dark"] .account-level-badge--intermediate {
+  background: rgba(250, 204, 21, 0.18);
+  color: #facc15;
+}
+
+html[data-theme="dark"] .account-level-badge--advanced {
+  background: rgba(167, 139, 250, 0.18);
+  color: #a78bfa;
+}
+
 .account-continue {
   background: var(--accent-soft);
   border: 1.5px solid var(--accent);
@@ -3949,15 +4120,45 @@ html[data-theme="dark"] .flashcard-btn--got-it:hover {
 .booking-success {
   padding: 1.15rem 1.25rem;
   border-radius: var(--radius-md);
-  background: var(--accent-soft);
-  border: 1px solid var(--border);
+  background: rgba(22, 163, 74, 0.08);
+  border: none;
+  border-left: 3px solid #16a34a;
+}
+
+.booking-success__heading {
+  margin: 0 0 0.55rem;
+  font-family: var(--font-tagline);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink-heading);
+}
+
+.booking-success__main {
+  margin: 0;
+  font-size: 0.96rem;
+  color: var(--readable-body);
+  line-height: 1.55;
+}
+
+.booking-success__detail {
+  margin-top: 0.75rem;
+  margin-bottom: 0;
+}
+
+.booking-success__followup {
+  margin-top: 0.75rem;
+  margin-bottom: 0;
 }
 
 .booking-success .small-print {
   font-size: 0.82rem;
   color: var(--muted);
-  margin-top: 0.75rem;
-  margin-bottom: 0;
+  line-height: 1.45;
+}
+
+.booking-success__followup a {
+  color: var(--accent);
+  font-weight: 600;
 }
 
 .site-footer {
@@ -4059,7 +4260,7 @@ html[data-theme="dark"] .flashcard-btn--got-it:hover {
   pointer-events: none;
 }
 
-.lh-topic-card:has(.lh-topic-card__start-here) .lh-topic-card__check {
+.lh-topic-card:has(.lh-topic-card__start-here) .lh-topic-card__status {
   top: 2.15rem;
 }
 
@@ -4067,6 +4268,7 @@ html[data-theme="dark"] .flashcard-btn--got-it:hover {
   background: rgba(22, 163, 74, 0.08);
   border-color: rgba(22, 163, 74, 0.35);
   padding-right: 2.25rem;
+  padding-top: 2.35rem;
 }
 
 .lh-topic-card--done:hover {
@@ -4074,15 +4276,53 @@ html[data-theme="dark"] .flashcard-btn--got-it:hover {
   box-shadow: var(--shadow-sm, 0 4px 14px rgba(22, 163, 74, 0.1));
 }
 
-.lh-topic-card__check {
+.lh-topic-card__status {
   position: absolute;
   top: 0.55rem;
   right: 0.6rem;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.15rem;
+  max-width: calc(100% - 1.2rem);
+  pointer-events: none;
+}
+
+.lh-topic-card__check {
+  position: static;
   font-size: 1.4rem;
   line-height: 1;
   font-weight: 800;
   color: #16a34a;
   pointer-events: none;
+}
+
+.lh-topic-card__status .lh-undo-link {
+  pointer-events: auto;
+  white-space: nowrap;
+}
+
+.lh-undo-link {
+  display: inline-block;
+  margin-top: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: inherit;
+}
+
+.lh-undo-link:hover {
+  color: var(--accent);
+}
+
+.lh-practice-undo-btn {
+  margin-top: 0.65rem;
 }
 
 .lh-topic-grid-summary {
@@ -4328,4 +4568,38 @@ html[data-theme="dark"] .flashcard-btn--got-it:hover {
     width: 100%;
     min-height: 48px;
   }
+}
+
+.scroll-top-btn {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease, background 0.2s ease;
+  transform: translateY(8px);
+  z-index: 900;
+}
+
+.scroll-top-btn.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.scroll-top-btn.is-visible:hover {
+  background: var(--btn-primary-hover);
+  transform: translateY(-2px);
 }

@@ -12,6 +12,49 @@
   const learningToolsLangRefreshers = [];
   const flashcardOrderRefreshers = [];
 
+  const PROGRESS_DAY_KEYS = [
+    "slot_day_sun",
+    "slot_day_mon",
+    "slot_day_tue",
+    "slot_day_wed",
+    "slot_day_thu",
+    "slot_day_fri",
+    "slot_day_sat",
+  ];
+
+  function refreshStaticPageCopy() {
+    const bannerText = document.querySelector(".home-free-banner__text");
+    if (bannerText) bannerText.textContent = I18n.t("home_free_banner_text");
+    const bannerBtn = document.querySelector(".home-free-banner__btn");
+    if (bannerBtn) bannerBtn.textContent = I18n.t("hero_cta_book_now");
+    const navPrice = document.querySelector(".nav-card__price");
+    if (navPrice) navPrice.textContent = I18n.t("nav_booking_price");
+    const bookingCallout = document.querySelector(".booking-price-callout");
+    if (bookingCallout) bookingCallout.textContent = I18n.t("booking_price_callout");
+    const testimonialHeading = document.getElementById("home-testimonials-heading");
+    if (testimonialHeading) testimonialHeading.textContent = I18n.t("home_testimonials_heading");
+    document.querySelectorAll(".testimonial-card").forEach(function (card, i) {
+      const idx = i + 1;
+      const quote = card.querySelector(".testimonial-card__quote");
+      const attr = card.querySelector(".testimonial-card__attribution");
+      if (quote) quote.textContent = I18n.t("testimonial_" + idx + "_quote");
+      if (attr) attr.textContent = I18n.t("testimonial_" + idx + "_attr");
+    });
+    document.querySelectorAll(".teacher-figure__caption").forEach(function (cap, i) {
+      cap.textContent = I18n.t("teacher_caption_" + (i + 1));
+    });
+    document.querySelectorAll(".btn-level").forEach(function (btn) {
+      const level = btn.getAttribute("data-level");
+      const desc = btn.querySelector(".btn-level__desc");
+      if (desc && level) desc.textContent = I18n.t("btn_level_desc_" + level);
+    });
+    document.querySelectorAll(".level-landing__grid").forEach(function (grid) {
+      grid.setAttribute("aria-label", I18n.t("level_landing_grid_aria"));
+    });
+  }
+
+  refreshStaticPageCopy();
+
   const FLASHCARD_FIRST_LANG_KEY = "andronicus_flashcard_first_lang";
 
   function readFlashcardFirstLang() {
@@ -57,6 +100,7 @@
   const contentPasswordForLevel = document.getElementById("content-password-for-level");
   const levelPicker = document.getElementById("level-picker");
   const contentBreadcrumb = document.getElementById("content-breadcrumb");
+  const scrollTopBtn = document.getElementById("scroll-top-btn");
 
   const bookingForm = document.getElementById("booking-form");
   const bookingParentNameInput = document.getElementById("booking-parent-name");
@@ -2336,6 +2380,7 @@
 
     contentBreadcrumb.classList.remove("hidden");
     contentBreadcrumb.innerHTML = "";
+    contentBreadcrumb.setAttribute("aria-label", I18n.t("content_breadcrumb_aria"));
 
     function appendSep() {
       const sep = document.createElement("span");
@@ -2757,6 +2802,7 @@
     const lh = ensureLearningHub(ensureStats(user));
     lh.lastLevel = level;
     saveUsers();
+    renderAccountPanel();
   }
 
   function navigateToContentLevel(level) {
@@ -2885,6 +2931,14 @@
     accountAuth.classList.add("hidden");
     accountDashboard.classList.remove("hidden");
     accountWelcome.textContent = I18n.t("account_welcome_logged_in", { user: activeUsername });
+    const existingBadge = accountWelcome.querySelector(".account-level-badge");
+    if (existingBadge) existingBadge.remove();
+    if (lh.lastLevel && CONTENT_LEVELS.indexOf(lh.lastLevel) >= 0) {
+      const levelBadge = document.createElement("span");
+      levelBadge.className = "account-level-badge account-level-badge--" + lh.lastLevel;
+      levelBadge.textContent = I18n.t("level_" + lh.lastLevel);
+      accountWelcome.appendChild(levelBadge);
+    }
     renderAccountContinue(lh);
     renderAccountOnboarding(user, lh);
     accountProgressCards.innerHTML = "";
@@ -3196,6 +3250,24 @@
     return { ok: true };
   }
 
+  function undoExerciseCompletion(level, topic) {
+    const user = getActiveUser();
+    if (!user) return { ok: false, reason: "auth" };
+    const stats = ensureStats(user);
+    const key = level + " - " + topic;
+    const before = (stats.completedExercises || []).length;
+    stats.completedExercises = (stats.completedExercises || []).filter(function (k) {
+      return k !== key;
+    });
+    stats.exerciseCompletionLog = (stats.exerciseCompletionLog || []).filter(function (entry) {
+      return !entry || entry.topic !== key;
+    });
+    if (stats.completedExercises.length === before) return { ok: false, reason: "missing" };
+    saveUsers();
+    renderAccountPanel();
+    return { ok: true };
+  }
+
   function recordFlashcardResult(wasCorrect, meta) {
     const user = getActiveUser();
     if (!user) return;
@@ -3246,6 +3318,7 @@
   }
 
   window.addEventListener("andronicus:langchange", function () {
+    refreshStaticPageCopy();
     buildBookingCalendar();
     refreshPasswordHint();
     syncPasswordToggleAria();
@@ -3779,6 +3852,7 @@
       const grammarPanel = root.querySelector('[data-tool-panel="grammar"]');
       const homeworkPanel = root.querySelector('[data-tool-panel="homework"]');
       const progressPanel = root.querySelector('[data-tool-panel="progress"]');
+      let homeworkShowIncompleteOnly = false;
 
       function activateTab(name) {
         workspaceTabs.forEach(function (b) {
@@ -3866,11 +3940,8 @@
       }
 
       function progressDayAbbrev(d) {
-        const lang = I18n.getLang();
-        let s = d.toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", { weekday: "short" });
-        s = s.replace(/\./g, "").trim();
-        if (!s) return "";
-        return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+        const key = PROGRESS_DAY_KEYS[d.getDay()];
+        return key ? I18n.t(key) : "";
       }
 
       function buildHomeworkDonut(pct, strokeColor) {
@@ -4174,10 +4245,15 @@
               } else {
                 delete hub.homeworkChecklist[level][item.id];
                 delete hub.homeworkChecklistDates[hwDateKey];
+                if (!Object.keys(hub.homeworkChecklist[level]).length) {
+                  delete hub.homeworkChecklist[level];
+                }
               }
               saveUsers();
               if (cb.checked) bumpLearningStreak(level);
               renderHomeworkPanel();
+              renderProgressPanel();
+              refreshLandingCardProgress(root, level, data);
             });
             const text = document.createElement("span");
             text.className = "lh-hw-checklist__text";
@@ -4200,6 +4276,21 @@
           cIntro.className = "lh-muted";
           cIntro.textContent = I18n.t("learning_homework_checklist_intro");
           cwrap.appendChild(cIntro);
+
+          const toggleLabel = document.createElement("label");
+          toggleLabel.className = "lh-hw-toggle";
+          const toggleCb = document.createElement("input");
+          toggleCb.type = "checkbox";
+          toggleCb.checked = homeworkShowIncompleteOnly;
+          toggleCb.addEventListener("change", function () {
+            homeworkShowIncompleteOnly = toggleCb.checked;
+            renderHomeworkPanel();
+          });
+          const toggleText = document.createElement("span");
+          toggleText.textContent = I18n.t("learning_homework_show_incomplete");
+          toggleLabel.appendChild(toggleCb);
+          toggleLabel.appendChild(toggleText);
+          cwrap.appendChild(toggleLabel);
 
           const totalDone = countHomeworkDone(data.homeworkChecklist);
           const totalItems = data.homeworkChecklist.length;
@@ -4224,9 +4315,20 @@
             grouped[cat].push(item);
           });
 
+          let anyIncompleteVisible = false;
+
           hwCategories.forEach(function (cat) {
             const items = grouped[cat];
             if (!items || !items.length) return;
+
+            const visibleItems = homeworkShowIncompleteOnly
+              ? items.filter(function (item) {
+                  return !done[item.id];
+                })
+              : items;
+            if (homeworkShowIncompleteOnly && !visibleItems.length) return;
+
+            anyIncompleteVisible = true;
 
             const catDone = countHomeworkDone(items);
             const catTotal = items.length;
@@ -4252,12 +4354,19 @@
 
             const catList = document.createElement("ol");
             catList.className = "lh-hw-checklist__list lh-hw-category__list";
-            items.forEach(function (item) {
+            visibleItems.forEach(function (item) {
               catList.appendChild(renderHomeworkChecklistItem(item));
             });
             catSec.appendChild(catList);
             cwrap.appendChild(catSec);
           });
+
+          if (homeworkShowIncompleteOnly && !anyIncompleteVisible) {
+            const allDoneMsg = document.createElement("p");
+            allDoneMsg.className = "lh-hw-all-complete";
+            allDoneMsg.textContent = I18n.t("learning_homework_all_complete_congrats");
+            cwrap.appendChild(allDoneMsg);
+          }
 
           if (!cuser) {
             const cNotice = document.createElement("p");
@@ -4531,22 +4640,36 @@
 
       const summary = document.createElement("div");
       summary.className = "vocab-summary lh-vocab-summary hidden";
-      const summaryTitle = document.createElement("h4");
-      const summaryText = document.createElement("p");
-      const summaryFocus = document.createElement("ul");
-      summaryFocus.className = "resource-list";
-      const summaryRestart = document.createElement("button");
-      summaryRestart.type = "button";
-      summaryRestart.className = "flashcard-btn";
-      summaryRestart.textContent = I18n.t("learning_vocab_restart_session");
-      summary.appendChild(summaryTitle);
-      summary.appendChild(summaryText);
-      summary.appendChild(summaryFocus);
-      summary.appendChild(summaryRestart);
+      const resultsCard = document.createElement("div");
+      resultsCard.className = "lh-quiz-results";
+      const resultsPct = document.createElement("div");
+      resultsPct.className = "lh-quiz-results__pct";
+      const resultsScore = document.createElement("p");
+      resultsScore.className = "lh-muted lh-quiz-results__score";
+      const resultsMsg = document.createElement("p");
+      resultsMsg.className = "lh-quiz-results__msg";
+      const resultsActions = document.createElement("div");
+      resultsActions.className = "lh-quiz-results__actions";
+      const resultsRetryBtn = document.createElement("button");
+      resultsRetryBtn.type = "button";
+      resultsRetryBtn.className = "flashcard-btn lh-primary-btn";
+      resultsRetryBtn.textContent = I18n.t("learning_vocab_results_retry");
+      const resultsLevelUpBtn = document.createElement("button");
+      resultsLevelUpBtn.type = "button";
+      resultsLevelUpBtn.className = "flashcard-btn";
+      resultsLevelUpBtn.textContent = I18n.t("learning_vocab_results_level_up");
+      resultsActions.appendChild(resultsRetryBtn);
+      resultsActions.appendChild(resultsLevelUpBtn);
+      resultsCard.appendChild(resultsPct);
+      resultsCard.appendChild(resultsScore);
+      resultsCard.appendChild(resultsMsg);
+      resultsCard.appendChild(resultsActions);
+      summary.appendChild(resultsCard);
       quizWrap.appendChild(summary);
 
       let quizScore = 0;
       let quizAnswered = false;
+      let lastQuizCorrect = null;
       let currentQuestion = null;
       let currentMode = "easy";
       let remainingQuestions = [];
@@ -4577,6 +4700,34 @@
         saveUsers();
       }
 
+      function quizNextMode(mode) {
+        if (mode === "easy") return "medium";
+        if (mode === "medium") return "hard";
+        return null;
+      }
+
+      function setQuizModeActive(mode) {
+        Array.from(quizModeWrap.querySelectorAll("[data-mode]")).forEach(function (b) {
+          b.classList.toggle("is-active", b.getAttribute("data-mode") === mode);
+        });
+      }
+
+      function updateResultsCard(totalCount) {
+        const pct = totalCount ? Math.round((quizScore / totalCount) * 100) : 0;
+        resultsPct.textContent = String(pct) + "%";
+        resultsScore.textContent = I18n.t("learning_vocab_results_score", {
+          score: String(quizScore),
+          total: String(totalCount),
+        });
+        let msgKey = "learning_vocab_results_msg_review";
+        if (pct >= 80) msgKey = "learning_vocab_results_msg_excellent";
+        else if (pct >= 60) msgKey = "learning_vocab_results_msg_good";
+        resultsMsg.textContent = I18n.t(msgKey);
+        resultsRetryBtn.textContent = I18n.t("learning_vocab_results_retry");
+        resultsLevelUpBtn.textContent = I18n.t("learning_vocab_results_level_up");
+        resultsLevelUpBtn.disabled = !quizNextMode(currentMode);
+      }
+
       function showSummary(totalCount) {
         quizQuestion.classList.add("hidden");
         quizOptions.classList.add("hidden");
@@ -4584,36 +4735,11 @@
         quizNext.classList.add("hidden");
         saveWordBtn.classList.add("hidden");
         summary.classList.remove("hidden");
-        const pct = totalCount ? Math.round((quizScore / totalCount) * 100) : 0;
-        summaryTitle.textContent = I18n.t("learning_vocab_summary_title", {
-          score: String(quizScore),
-          total: String(totalCount),
-          pct: String(pct),
-        });
         if (!sessionRecorded) {
           recordQuizSummary(level, currentMode, quizScore, totalCount);
           sessionRecorded = true;
         }
-        summaryText.textContent = I18n.t("learning_vocab_summary_focus");
-        summaryFocus.innerHTML = "";
-        const ranked = Object.keys(wrongByTopic).sort(function (a, b) {
-          return wrongByTopic[b] - wrongByTopic[a];
-        });
-        const focusTopics = ranked.slice(0, 3);
-        if (!focusTopics.length) {
-          const li = document.createElement("li");
-          li.textContent = I18n.t("learning_vocab_summary_no_misses");
-          summaryFocus.appendChild(li);
-        } else {
-          focusTopics.forEach(function (topic) {
-            const li = document.createElement("li");
-            li.textContent = I18n.t("learning_vocab_summary_miss", {
-              topic: topic,
-              misses: String(wrongByTopic[topic]),
-            });
-            summaryFocus.appendChild(li);
-          });
-        }
+        updateResultsCard(totalCount);
         refreshStreakHeader();
       }
 
@@ -4633,6 +4759,7 @@
         currentQuestion = remainingQuestions.splice(pickIdx, 1)[0];
         askedCount += 1;
         quizAnswered = false;
+        lastQuizCorrect = null;
         quizNext.disabled = true;
         quizQuestion.textContent = currentQuestion.question;
         quizFeedback.textContent = I18n.t("learning_vocab_choose_prompt", {
@@ -4655,12 +4782,14 @@
             trackVocabAnswer(currentQuestion.topic, correct);
             if (correct) {
               quizScore += 1;
+              lastQuizCorrect = true;
               btn.classList.add("is-correct");
               quizFeedback.textContent = I18n.t("learning_vocab_correct_feedback", {
                 score: String(quizScore),
                 round: String(askedCount),
               });
             } else {
+              lastQuizCorrect = false;
               btn.classList.add("is-wrong");
               wrongByTopic[currentQuestion.topic] = (wrongByTopic[currentQuestion.topic] || 0) + 1;
               quizFeedback.textContent = I18n.t("learning_vocab_wrong_feedback", {
@@ -4698,6 +4827,7 @@
         quizScore = 0;
         askedCount = 0;
         quizAnswered = false;
+        lastQuizCorrect = null;
         sessionRecorded = false;
         Object.keys(wrongByTopic).forEach(function (key) {
           delete wrongByTopic[key];
@@ -4721,8 +4851,15 @@
         renderQuiz();
       });
 
-      summaryRestart.addEventListener("click", function () {
+      resultsRetryBtn.addEventListener("click", function () {
         startQuiz(currentMode);
+      });
+
+      resultsLevelUpBtn.addEventListener("click", function () {
+        const next = quizNextMode(currentMode);
+        if (!next) return;
+        setQuizModeActive(next);
+        startQuiz(next);
       });
 
       saveWordBtn.addEventListener("click", function () {
@@ -4890,7 +5027,7 @@
         const continueBtn = document.createElement("button");
         continueBtn.type = "button";
         continueBtn.className = "btn-primary lh-gap-continue";
-        continueBtn.textContent = "Continue";
+        continueBtn.textContent = I18n.t("learning_gap_continue");
         continueBtn.hidden = true;
         let locked = false;
         let pendingOk = false;
@@ -5003,15 +5140,32 @@
           if (i < 3) {
             const startHere = document.createElement("span");
             startHere.className = "lh-topic-card__start-here";
-            startHere.textContent = "Start here";
+            startHere.textContent = I18n.t("learning_topic_start_here");
             card.appendChild(startHere);
           }
           if (done) {
+            const statusWrap = document.createElement("span");
+            statusWrap.className = "lh-topic-card__status";
             const check = document.createElement("span");
             check.className = "lh-topic-card__check";
             check.textContent = "✓";
             check.setAttribute("aria-hidden", "true");
-            card.appendChild(check);
+            statusWrap.appendChild(check);
+            const undoBtn = document.createElement("button");
+            undoBtn.type = "button";
+            undoBtn.className = "lh-undo-link";
+            undoBtn.textContent = I18n.t("learning_ex_undo_done");
+            undoBtn.addEventListener("click", function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              if (!getActiveUser()) return;
+              undoExerciseCompletion(level, ex.topic);
+              renderExTopicList();
+              refreshLandingCardProgress(root, level, data);
+              renderProgressPanel();
+            });
+            statusWrap.appendChild(undoBtn);
+            card.appendChild(statusWrap);
           }
           const h = document.createElement("span");
           h.className = "lh-topic-card__title";
@@ -5169,17 +5323,45 @@
         selfMarkBtn.type = "button";
         selfMarkBtn.className = "flashcard-btn lh-primary-btn";
         selfMarkBtn.setAttribute("data-learning-chrome", "learning_ex_mark_done");
-        selfMarkBtn.textContent = I18n.t("learning_ex_mark_done");
         const practiceMsg = document.createElement("p");
         practiceMsg.className = "exercise-complete-msg hidden";
+
+        function syncPracticeMarkBtn() {
+          const user = getActiveUser();
+          const done = isExerciseTopicDone(ex.topic);
+          if (!user) {
+            selfMarkBtn.disabled = true;
+            selfMarkBtn.className = "flashcard-btn lh-primary-btn";
+            selfMarkBtn.textContent = I18n.t("learning_ex_mark_done");
+            practiceMsg.classList.add("hidden");
+            return;
+          }
+          selfMarkBtn.disabled = false;
+          if (done) {
+            selfMarkBtn.className = "lh-undo-link lh-practice-undo-btn";
+            selfMarkBtn.textContent = I18n.t("learning_ex_undo_done");
+            practiceMsg.textContent = I18n.t("learning_ex_practice_congrats");
+            practiceMsg.classList.remove("hidden");
+          } else {
+            selfMarkBtn.className = "flashcard-btn lh-primary-btn";
+            selfMarkBtn.textContent = I18n.t("learning_ex_mark_done");
+            practiceMsg.classList.add("hidden");
+          }
+        }
+
         selfMarkBtn.addEventListener("click", function () {
-          if (selfMarkBtn.disabled) return;
-          selfMarkBtn.disabled = true;
-          recordExerciseCompletion(level, ex.topic);
+          if (!getActiveUser()) return;
+          if (isExerciseTopicDone(ex.topic)) {
+            undoExerciseCompletion(level, ex.topic);
+          } else {
+            recordExerciseCompletion(level, ex.topic);
+          }
           renderExTopicList();
-          practiceMsg.textContent = I18n.t("learning_ex_practice_congrats");
-          practiceMsg.classList.remove("hidden");
+          syncPracticeMarkBtn();
+          refreshLandingCardProgress(root, level, data);
+          renderProgressPanel();
         });
+        syncPracticeMarkBtn();
         practiceSec.appendChild(practiceH);
         practiceSec.appendChild(practiceP);
         practiceSec.appendChild(selfMarkBtn);
@@ -5251,6 +5433,9 @@
       sessionProgressTrack.appendChild(sessionProgressFill);
       const sessionProgressLabel = document.createElement("p");
       sessionProgressLabel.className = "flashcard-progress-label";
+      const liveScore = document.createElement("p");
+      liveScore.className = "flashcard-live-score";
+      liveScore.setAttribute("aria-live", "polite");
       const flipBtn = document.createElement("button");
       flipBtn.type = "button";
       flipBtn.className = "flashcard";
@@ -5258,6 +5443,12 @@
       bookmarkBtn.type = "button";
       bookmarkBtn.className = "flashcard-bookmark";
       bookmarkBtn.setAttribute("aria-label", I18n.t("flashcard_bookmark_add"));
+      const removeSavedBtn = document.createElement("button");
+      removeSavedBtn.type = "button";
+      removeSavedBtn.className = "flashcard-btn flashcard-remove-saved";
+      removeSavedBtn.style.color = "#b74848";
+      removeSavedBtn.textContent = I18n.t("flashcard_remove_saved");
+      removeSavedBtn.hidden = true;
       const bookmarkSvgOutline =
         '<svg class="flashcard-bookmark__svg" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"><path d="M7 3h10a1 1 0 0 1 1 1v17l-5-3.5L8 21V4a1 1 0 0 1 1-1z"/></svg>';
       const bookmarkSvgFilled =
@@ -5266,6 +5457,7 @@
       front.className = "flashcard__side flashcard__front";
       const back = document.createElement("span");
       back.className = "flashcard__side flashcard__back";
+      flipBtn.appendChild(removeSavedBtn);
       flipBtn.appendChild(bookmarkBtn);
       flipBtn.appendChild(front);
       flipBtn.appendChild(back);
@@ -5289,20 +5481,21 @@
       gotItBtn.type = "button";
       gotItBtn.className = "flashcard-btn flashcard-btn--got-it";
       gotItBtn.textContent = I18n.t("flashcard_got_it");
-      const score = document.createElement("span");
-      score.className = "flashcard-progress";
-      score.textContent = I18n.t("flashcard_score_label", { correct: "0", attempts: "0" });
       controls.appendChild(prevBtn);
       controls.appendChild(progress);
       controls.appendChild(nextBtn);
       controls.appendChild(againBtn);
       controls.appendChild(gotItBtn);
-      controls.appendChild(score);
       const completeOverlay = document.createElement("div");
       completeOverlay.className = "flashcard-complete-overlay hidden";
       const completeInner = document.createElement("div");
       completeInner.className = "flashcard-complete-overlay__inner";
       const completeTitle = document.createElement("h4");
+      const completeStars = document.createElement("div");
+      completeStars.className = "flashcard-stars";
+      completeStars.setAttribute("aria-hidden", "true");
+      const completePct = document.createElement("div");
+      completePct.className = "flashcard-complete-overlay__pct";
       const completeSummary = document.createElement("p");
       const completeActions = document.createElement("div");
       completeActions.className = "flashcard-complete-actions";
@@ -5317,6 +5510,8 @@
       completeActions.appendChild(btnWrongOnly);
       completeActions.appendChild(btnFullAgain);
       completeInner.appendChild(completeTitle);
+      completeInner.appendChild(completeStars);
+      completeInner.appendChild(completePct);
       completeInner.appendChild(completeSummary);
       completeInner.appendChild(completeActions);
       completeOverlay.appendChild(completeInner);
@@ -5325,6 +5520,7 @@
       stage.appendChild(sessionHint);
       stage.appendChild(sessionProgressTrack);
       stage.appendChild(sessionProgressLabel);
+      stage.appendChild(liveScore);
       stage.appendChild(flipBtn);
       stage.appendChild(controls);
       stage.appendChild(completeOverlay);
@@ -5352,7 +5548,7 @@
       }
 
       function flashcardDeckOptionLabel(name) {
-        return name === "Master 1000" ? "Full deck" : name;
+        return name === "Master 1000" ? I18n.t("flashcard_full_deck_name") : name;
       }
 
       let activeTopic = defaultFlashcardTopic(topicNames);
@@ -5378,6 +5574,48 @@
               total: String(total),
             })
           : "";
+        updateLiveScore();
+      }
+
+      function updateLiveScore() {
+        const total = sessionIndices.length;
+        if (!total) {
+          liveScore.textContent = "";
+          liveScore.classList.add("hidden");
+          return;
+        }
+        liveScore.classList.remove("hidden");
+        liveScore.textContent = I18n.t("flashcard_live_score", {
+          correct: String(sessionCorrect),
+          total: String(total),
+        });
+      }
+
+      function flashcardStarFillCount(pct) {
+        if (pct > 90) return 3;
+        if (pct >= 70) return 2;
+        return 1;
+      }
+
+      function flashcardStarRatingText(filledCount) {
+        let out = "";
+        for (let i = 0; i < 3; i += 1) {
+          out += i < filledCount ? "★" : "☆";
+        }
+        return out;
+      }
+
+      function updateCompleteOverlay(stats) {
+        const total = stats.total || 0;
+        const pct = total ? Math.round((stats.correct / total) * 100) : 0;
+        completeTitle.textContent = I18n.t("flashcard_complete_title");
+        completeStars.textContent = flashcardStarRatingText(flashcardStarFillCount(pct));
+        completePct.textContent = String(pct) + "%";
+        completeSummary.textContent = I18n.t("flashcard_complete_summary", {
+          correct: String(stats.correct),
+          wrong: String(stats.wrong),
+          total: String(stats.total),
+        });
       }
 
       function applySessionHintFromState() {
@@ -5467,6 +5705,22 @@
         );
       }
 
+      function updateRemoveSavedButton(card) {
+        const onSavedDeck = activeTopic === SAVED_CARDS_DECK;
+        if (
+          !onSavedDeck ||
+          !card ||
+          !getActiveUser() ||
+          !sessionIndices.length ||
+          sessionPos >= sessionIndices.length
+        ) {
+          removeSavedBtn.hidden = true;
+          return;
+        }
+        removeSavedBtn.hidden = false;
+        removeSavedBtn.textContent = I18n.t("flashcard_remove_saved");
+      }
+
       function fullDeck() {
         if (activeTopic === SAVED_CARDS_DECK) {
           return savedDeckCards();
@@ -5544,12 +5798,7 @@
           total: total,
           mode: lastSessionMode,
         });
-        completeTitle.textContent = I18n.t("flashcard_complete_title");
-        completeSummary.textContent = I18n.t("flashcard_complete_summary", {
-          correct: String(correctCount),
-          wrong: String(wrongCount),
-          total: String(total),
-        });
+        updateCompleteOverlay(lastCompleteStats);
         const wrongSetSize = Object.keys(lastSessionWrongKeys).length;
         btnWrongOnly.classList.toggle("hidden", wrongSetSize === 0);
         completeOverlay.classList.remove("hidden");
@@ -5594,14 +5843,10 @@
           back.textContent = I18n.t("flashcard_session_done_back");
           progress.textContent =
             String(sessionIndices.length) + " / " + String(sessionIndices.length);
-          const attempts = sessionCorrect + sessionWrong;
-          score.textContent = I18n.t("flashcard_score_label", {
-            correct: String(sessionCorrect),
-            attempts: String(attempts),
-          });
           flipBtn.classList.remove("is-flipped");
           showingBack = false;
           bookmarkBtn.hidden = true;
+          removeSavedBtn.hidden = true;
           updateFlashcardSessionProgress();
           return;
         }
@@ -5613,9 +5858,9 @@
           }
           back.textContent = "";
           progress.textContent = "0 / 0";
-          score.textContent = I18n.t("flashcard_score_label", { correct: "0", attempts: "0" });
           sessionHint.textContent = "";
           bookmarkBtn.hidden = true;
+          removeSavedBtn.hidden = true;
           updateFlashcardSessionProgress();
           return;
         }
@@ -5623,8 +5868,8 @@
           front.textContent = I18n.t("flashcard_pick_deck");
           back.textContent = "";
           progress.textContent = "0 / 0";
-          score.textContent = I18n.t("flashcard_score_label", { correct: "0", attempts: "0" });
           bookmarkBtn.hidden = true;
+          removeSavedBtn.hidden = true;
           updateFlashcardSessionProgress();
           return;
         }
@@ -5642,15 +5887,30 @@
         }
         progress.textContent =
           String(sessionPos + 1) + " / " + String(sessionIndices.length);
-        const attempts = sessionCorrect + sessionWrong;
-        score.textContent = I18n.t("flashcard_score_label", {
-          correct: String(sessionCorrect),
-          attempts: String(attempts),
-        });
         flipBtn.classList.toggle("is-flipped", showingBack);
         updateBookmarkButton(card);
+        updateRemoveSavedButton(card);
         updateFlashcardSessionProgress();
       }
+
+      removeSavedBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        const user = getActiveUser();
+        if (!user || activeTopic !== SAVED_CARDS_DECK) return;
+        const deckNow = fullDeck();
+        if (!deckNow.length || sessionPos >= sessionIndices.length) return;
+        const idx = sessionIndices[sessionPos];
+        const card = deckNow[idx];
+        if (!card) return;
+        const stats = ensureStats(user);
+        const lh = ensureLearningHub(stats);
+        lh.savedFlashcards = (lh.savedFlashcards || []).filter(function (item) {
+          return !(item.front === card.front && item.back === card.back);
+        });
+        saveUsers();
+        updateDeckCountHint();
+        startSession("full", null);
+      });
 
       bookmarkBtn.addEventListener("click", function (e) {
         e.stopPropagation();
@@ -5772,7 +6032,6 @@
       learningToolsLangRefreshers.push(function () {
         quizTitle.textContent = I18n.t("learning_vocab_quiz_title");
         quizNext.textContent = I18n.t("learning_vocab_next");
-        summaryRestart.textContent = I18n.t("learning_vocab_restart_session");
         Array.from(quizModeWrap.querySelectorAll("[data-mode]")).forEach(function (mb) {
           const mode = mb.getAttribute("data-mode");
           if (mode) mb.textContent = I18n.t("learning_vocab_mode_" + mode);
@@ -5806,54 +6065,29 @@
         orderOptFr.textContent = I18n.t("flashcard_order_fr_option");
         const savedDeckOpt = topicSelect.querySelector('[data-saved-deck-option="1"]');
         if (savedDeckOpt) savedDeckOpt.textContent = I18n.t("flashcard_saved_deck_name");
+        populateTopicSelect();
         updateDeckCountHint();
         prevBtn.textContent = I18n.t("flashcard_prev");
         nextBtn.textContent = I18n.t("flashcard_next");
         againBtn.textContent = I18n.t("flashcard_again");
         gotItBtn.textContent = I18n.t("flashcard_got_it");
+        if (!removeSavedBtn.hidden) {
+          removeSavedBtn.textContent = I18n.t("flashcard_remove_saved");
+        }
         btnWrongOnly.textContent = I18n.t("flashcard_complete_wrong_only");
         btnFullAgain.textContent = I18n.t("flashcard_complete_full_again");
         applySessionHintFromState();
         updateFlashcardSessionProgress();
         if (!completeOverlay.classList.contains("hidden") && lastCompleteStats) {
-          completeTitle.textContent = I18n.t("flashcard_complete_title");
-          completeSummary.textContent = I18n.t("flashcard_complete_summary", {
-            correct: String(lastCompleteStats.correct),
-            wrong: String(lastCompleteStats.wrong),
-            total: String(lastCompleteStats.total),
-          });
+          updateCompleteOverlay(lastCompleteStats);
         }
         if (!summary.classList.contains("hidden")) {
-          const pct = askedCount ? Math.round((quizScore / askedCount) * 100) : 0;
-          summaryTitle.textContent = I18n.t("learning_vocab_summary_title", {
-            score: String(quizScore),
-            total: String(askedCount),
-            pct: String(pct),
-          });
-          summaryText.textContent = I18n.t("learning_vocab_summary_focus");
-          summaryFocus.innerHTML = "";
-          const ranked = Object.keys(wrongByTopic).sort(function (a, b) {
-            return wrongByTopic[b] - wrongByTopic[a];
-          });
-          const focusTopics = ranked.slice(0, 3);
-          if (!focusTopics.length) {
-            const li = document.createElement("li");
-            li.textContent = I18n.t("learning_vocab_summary_no_misses");
-            summaryFocus.appendChild(li);
-          } else {
-            focusTopics.forEach(function (topic) {
-              const li = document.createElement("li");
-              li.textContent = I18n.t("learning_vocab_summary_miss", {
-                topic: topic,
-                misses: String(wrongByTopic[topic]),
-              });
-              summaryFocus.appendChild(li);
-            });
-          }
+          updateResultsCard(askedCount);
         }
         refreshExercisesPanel();
         renderHomeworkPanel();
         renderProgressPanel();
+        refreshLandingCardProgress(root, level, data);
         refreshStreakHeader();
         if (currentQuestion && askedCount > 0 && summary.classList.contains("hidden")) {
           quizQuestion.textContent = currentQuestion.question;
@@ -5861,6 +6095,17 @@
             quizFeedback.textContent = I18n.t("learning_vocab_choose_prompt", {
               score: String(quizScore),
               round: String(askedCount - 1),
+            });
+          } else if (lastQuizCorrect === true) {
+            quizFeedback.textContent = I18n.t("learning_vocab_correct_feedback", {
+              score: String(quizScore),
+              round: String(askedCount),
+            });
+          } else if (lastQuizCorrect === false) {
+            quizFeedback.textContent = I18n.t("learning_vocab_wrong_feedback", {
+              answer: currentQuestion.answer,
+              score: String(quizScore),
+              round: String(askedCount),
             });
           }
         }
@@ -5971,11 +6216,14 @@
     }
     if (bookingSuccessDetail) {
       if (cloudSaved) {
-        bookingSuccessDetail.textContent = I18n.t("booking_success_cloud");
+        bookingSuccessDetail.textContent = "";
+        bookingSuccessDetail.classList.add("hidden");
       } else if (isSupabaseConfigured()) {
         bookingSuccessDetail.textContent = I18n.t("booking_success_local_fallback");
+        bookingSuccessDetail.classList.remove("hidden");
       } else {
         bookingSuccessDetail.textContent = I18n.t("booking_success_small");
+        bookingSuccessDetail.classList.remove("hidden");
       }
     }
   });
@@ -6011,4 +6259,13 @@
       app.classList.add("intro-visible");
     }, INTRO_MS);
   })();
+
+  if (scrollTopBtn) {
+    window.addEventListener("scroll", function () {
+      scrollTopBtn.classList.toggle("is-visible", window.scrollY > 300);
+    }, { passive: true });
+    scrollTopBtn.addEventListener("click", function () {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }
 })();
