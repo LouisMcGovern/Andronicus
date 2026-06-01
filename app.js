@@ -5430,10 +5430,6 @@
           sub.textContent = exerciseSubtitleLabel(ex);
           card.appendChild(sub);
         }
-        const blurb = document.createElement("span");
-        blurb.className = "lh-topic-card__focus";
-        blurb.textContent = exerciseTopicBlurb(ex);
-        card.appendChild(blurb);
         card.addEventListener("click", function () {
           openExLesson(i);
         });

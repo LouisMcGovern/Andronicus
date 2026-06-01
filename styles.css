@@ -4816,6 +4816,36 @@ html[data-theme="dark"] .account-level-badge--advanced {
   padding-bottom: 0.5rem;
 }
 
+.lh-ex-topic-card {
+  padding: 0.85rem 0.95rem;
+  min-height: 6rem;
+  gap: 0;
+}
+
+.lh-ex-topic-card .lh-topic-num {
+  margin-bottom: 0.25rem;
+}
+
+.lh-ex-topic-card .lh-topic-card__title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.lh-ex-topic-card .lh-topic-card__subtitle {
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-style: italic;
+  margin: 0.2rem 0 0;
+  line-height: 1.35;
+}
+
+.lh-ex-topic-card.lh-topic-card--done {
+  padding: 0.85rem 2rem 0.85rem 0.95rem;
+  min-height: 6rem;
+}
+
 .lh-ex-topic-grid__separator {
   grid-column: 1 / -1;
   display: flex;
