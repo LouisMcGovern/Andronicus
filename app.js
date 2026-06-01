@@ -4636,278 +4636,184 @@
       function renderHomeworkPanel() {
         homeworkPanel.innerHTML = "";
 
-        // New flat checklist (if defined for this level, replaces the mission-card UI).
-        if (Array.isArray(data.homeworkChecklist) && data.homeworkChecklist.length) {
-          const cuser = getActiveUser();
-          const cstats = cuser ? ensureStats(cuser) : null;
-          const clh = cuser ? ensureLearningHub(cstats) : null;
-          const done = (clh && clh.homeworkChecklist && clh.homeworkChecklist[level]) || {};
-          const cLang = I18n.getLang();
-          const hwCategories = ["Vocab", "Grammar", "Reading", "Listening", "Speaking", "Writing"];
-
-          function countHomeworkDone(items) {
-            return items.reduce(function (acc, item) {
-              return acc + (done[item.id] ? 1 : 0);
-            }, 0);
-          }
-
-          function buildOverallHwProgress(doneCount, total) {
-            const pct = total ? Math.round((doneCount / total) * 100) : 0;
-            const wrap = document.createElement("div");
-            wrap.className = "lh-hw-checklist__overall";
-            const track = document.createElement("div");
-            track.className = "lh-hw-overall-bar-track";
-            const fill = document.createElement("div");
-            fill.className = "lh-hw-overall-bar-fill";
-            fill.style.width = String(pct) + "%";
-            fill.style.backgroundColor = levelColor.accent;
-            track.appendChild(fill);
-            wrap.appendChild(track);
-            const stat = document.createElement("p");
-            stat.className = "lh-hw-overall-stat";
-            stat.textContent = I18n.t("learning_homework_overall_progress", {
-              n: String(doneCount),
-              t: String(total),
-              pct: String(pct),
-            });
-            wrap.appendChild(stat);
-            return wrap;
-          }
-
-          function renderHomeworkChecklistItem(item) {
-            const li = document.createElement("li");
-            li.className = "lh-hw-checklist__item" + (done[item.id] ? " is-done" : "");
-            li.setAttribute("data-category", (item.category || "Vocab").toLowerCase());
-            const label = document.createElement("label");
-            label.className = "lh-hw-checklist__label lh-hw-checklist__label--in-category";
-            const cb = document.createElement("input");
-            cb.type = "checkbox";
-            cb.className = "lh-hw-checklist__cb";
-            cb.checked = !!done[item.id];
-            cb.disabled = !cuser;
-            cb.addEventListener("change", function () {
-              if (!cuser) return;
-              const st = ensureStats(cuser);
-              const hub = ensureLearningHub(st);
-              if (!hub.homeworkChecklist) hub.homeworkChecklist = {};
-              if (!hub.homeworkChecklist[level]) hub.homeworkChecklist[level] = {};
-              hub.homeworkChecklistDates = hub.homeworkChecklistDates || {};
-              const hwDateKey = level + "|" + item.id;
-              if (cb.checked) {
-                hub.homeworkChecklist[level][item.id] = true;
-                hub.homeworkChecklistDates[hwDateKey] = new Date().toISOString();
-              } else {
-                delete hub.homeworkChecklist[level][item.id];
-                delete hub.homeworkChecklistDates[hwDateKey];
-                if (!Object.keys(hub.homeworkChecklist[level]).length) {
-                  delete hub.homeworkChecklist[level];
-                }
-              }
-              saveUsers();
-              if (cb.checked) bumpLearningStreak(level);
-              renderHomeworkPanel();
-              renderProgressPanel();
-              refreshLandingCardProgress(root, level, data);
-            });
-            const text = document.createElement("span");
-            text.className = "lh-hw-checklist__text";
-            text.textContent = cLang === "fr" && item.fr ? item.fr : item.en || item.fr || "";
-            label.appendChild(cb);
-            label.appendChild(text);
-            li.appendChild(label);
-            return li;
-          }
-
-          const cwrap = document.createElement("section");
-          cwrap.className = "lh-hw-checklist";
-
-          const cTitle = document.createElement("h3");
-          cTitle.className = "lh-hw-section__title";
-          cTitle.textContent = I18n.t("learning_homework_checklist_title");
-          cwrap.appendChild(cTitle);
-
-          const cIntro = document.createElement("p");
-          cIntro.className = "lh-muted";
-          cIntro.textContent = I18n.t("learning_homework_checklist_intro");
-          cwrap.appendChild(cIntro);
-
-          const totalDone = countHomeworkDone(data.homeworkChecklist);
-          const totalItems = data.homeworkChecklist.length;
-          cwrap.appendChild(buildOverallHwProgress(totalDone, totalItems));
-
-          const grouped = Object.create(null);
-          hwCategories.forEach(function (cat) {
-            grouped[cat] = [];
-          });
-          data.homeworkChecklist.forEach(function (item) {
-            const cat = item.category || "Vocab";
-            if (!grouped[cat]) grouped[cat] = [];
-            grouped[cat].push(item);
-          });
-
-          hwCategories.forEach(function (cat) {
-            const items = grouped[cat];
-            if (!items || !items.length) return;
-
-            const catDone = countHomeworkDone(items);
-            const catTotal = items.length;
-            const catComplete = catDone >= catTotal;
-
-            const catSec = document.createElement("section");
-            catSec.className = "lh-hw-category";
-
-            const catHead = document.createElement("div");
-            catHead.className = "lh-hw-category__head";
-            const catTitle = document.createElement("h4");
-            catTitle.className = "lh-hw-category__title";
-            catTitle.textContent = homeworkCategoryLabel(cat);
-            catHead.appendChild(catTitle);
-            if (catComplete) {
-              const doneBadge = document.createElement("span");
-              doneBadge.className = "lh-hw-category__done-badge";
-              doneBadge.textContent = I18n.t("learning_homework_done");
-              catHead.appendChild(doneBadge);
-            }
-            catSec.appendChild(catHead);
-
-            const catList = document.createElement("ol");
-            catList.className = "lh-hw-checklist__list lh-hw-category__list";
-            items.forEach(function (item) {
-              catList.appendChild(renderHomeworkChecklistItem(item));
-            });
-            catSec.appendChild(catList);
-            cwrap.appendChild(catSec);
-          });
-
-          if (!cuser) {
-            const cNotice = document.createElement("p");
-            cNotice.className = "lh-muted";
-            cNotice.textContent = I18n.t("learning_homework_checklist_signin");
-            cwrap.appendChild(cNotice);
-          }
-
-          homeworkPanel.appendChild(cwrap);
+        if (!Array.isArray(data.homeworkChecklist) || data.homeworkChecklist.length === 0) {
+          const unavailable = document.createElement("p");
+          unavailable.className = "lh-muted";
+          unavailable.textContent = "The checklist is not available for this level.";
+          homeworkPanel.appendChild(unavailable);
           return;
         }
 
-        const wrap = document.createElement("div");
-        wrap.className = "lh-homework";
-        const user = getActiveUser();
-        const stats = user ? ensureStats(user) : null;
-        const lh = user ? ensureLearningHub(stats) : null;
-
-        const sections = [
-          { key: "today", title: I18n.t("learning_homework_today") },
-          { key: "upcoming", title: I18n.t("learning_homework_upcoming") },
-          { key: "done", title: I18n.t("learning_homework_done") },
-        ];
-        const buckets = { today: [], upcoming: [], done: [] };
-        (data.vocab || []).forEach(function (mission, mi) {
-          const topic = mission.topic;
-          const doneKey = level + " - Vocab: " + topic;
-          const taskArr =
-            lh && lh.homeworkTasks && lh.homeworkTasks[homeworkKey(topic)]
-              ? lh.homeworkTasks[homeworkKey(topic)].slice()
-              : Array(mission.tasks.length).fill(false);
-          const allChecked = taskArr.every(Boolean);
-          const completedFlag = allChecked || (stats && stats.completedExercises.includes(doneKey));
-          const card = document.createElement("article");
-          card.className = "lh-hw-card";
-          const head = document.createElement("div");
-          head.className = "lh-hw-card__head";
-          const h = document.createElement("h4");
-          h.textContent = topic;
-          const meta = document.createElement("span");
-          meta.className = "lh-hw-card__meta";
-          meta.textContent = I18n.t("learning_homework_tasks_count", {
-            n: String(mission.tasks.length),
-          });
-          head.appendChild(h);
-          head.appendChild(meta);
-          card.appendChild(head);
-          const ul = document.createElement("ul");
-          ul.className = "lh-hw-tasks";
-          mission.tasks.forEach(function (task, ti) {
-            const li = document.createElement("li");
-            const lab = document.createElement("label");
-            lab.className = "lh-hw-task";
-            const cb = document.createElement("input");
-            cb.type = "checkbox";
-            cb.checked = !!taskArr[ti];
-            cb.disabled = !user;
-            cb.addEventListener("change", function () {
-              if (!user) return;
-              const st = ensureStats(user);
-              const hub = ensureLearningHub(st);
-              const key = homeworkKey(topic);
-              const prev = Array.isArray(hub.homeworkTasks[key])
-                ? hub.homeworkTasks[key].slice()
-                : Array(mission.tasks.length).fill(false);
-              while (prev.length < mission.tasks.length) prev.push(false);
-              prev[ti] = cb.checked;
-              hub.homeworkTasks[key] = prev.slice(0, mission.tasks.length);
-              saveUsers();
-              if (cb.checked) bumpLearningStreak(level);
-              renderHomeworkPanel();
-            });
-            const span = document.createElement("span");
-            span.textContent = task;
-            lab.appendChild(cb);
-            lab.appendChild(span);
-            li.appendChild(lab);
-            ul.appendChild(li);
-          });
-          card.appendChild(ul);
-          const foot = document.createElement("div");
-          foot.className = "lh-hw-card__foot";
-          const markBtn = document.createElement("button");
-          markBtn.type = "button";
-          markBtn.className = "flashcard-btn";
-          markBtn.textContent = I18n.t("learning_vocab_done_btn");
-          markBtn.disabled = !user;
-          markBtn.addEventListener("click", function () {
-            const res = recordExerciseCompletion(level, "Vocab: " + topic);
-            if (res.ok) renderHomeworkPanel();
-          });
-          foot.appendChild(markBtn);
-          card.appendChild(foot);
-
-          if (completedFlag) buckets.done.push(card);
-          else if (buckets.today.length < 2) buckets.today.push(card);
-          else buckets.upcoming.push(card);
-        });
-
-        sections.forEach(function (sec) {
-          const list = buckets[sec.key];
-          if (!list.length && sec.key !== "done") return;
-          const block = document.createElement("section");
-          block.className = "lh-hw-section";
-          const ht = document.createElement("h3");
-          ht.className = "lh-hw-section__title";
-          ht.textContent = sec.title;
-          block.appendChild(ht);
-          if (!list.length) {
-            const empty = document.createElement("p");
-            empty.className = "lh-muted";
-            empty.textContent = I18n.t("learning_homework_empty");
-            block.appendChild(empty);
-          } else {
-            const grid = document.createElement("div");
-            grid.className = "lh-hw-grid";
-            list.forEach(function (c) {
-              grid.appendChild(c);
-            });
-            block.appendChild(grid);
+        const seenIds = Object.create(null);
+        data.homeworkChecklist.forEach(function (item) {
+          if (!item || typeof item.id !== "string" || !item.id) {
+            console.warn(
+              "[Andronicus] homeworkChecklist item missing id field; checklist save will not work for this item.",
+              item
+            );
+            return;
           }
-          wrap.appendChild(block);
+          if (seenIds[item.id]) {
+            console.warn(
+              "[Andronicus] homeworkChecklist duplicate id field:",
+              item.id
+            );
+          }
+          seenIds[item.id] = true;
         });
 
-        const weekNote = document.createElement("p");
-        weekNote.className = "lh-muted lh-hw-footnote";
-        weekNote.textContent = I18n.t("learning_homework_week_hint");
-        wrap.appendChild(weekNote);
+        const user = getActiveUser();
+        const hub = user ? ensureLearningHub(ensureStats(user)) : null;
+        const levelDone =
+          hub && hub.homeworkChecklist && hub.homeworkChecklist[level]
+            ? hub.homeworkChecklist[level]
+            : {};
+        const cLang = I18n.getLang();
+        const hwCategories = ["Vocab", "Grammar", "Reading", "Listening", "Speaking", "Writing"];
 
-        homeworkPanel.appendChild(wrap);
+        function homeworkLevelDoneCount() {
+          if (!hub || !hub.homeworkChecklist || !hub.homeworkChecklist[level]) return 0;
+          return Object.keys(hub.homeworkChecklist[level]).length;
+        }
+
+        function countCategoryDone(items) {
+          return items.reduce(function (acc, item) {
+            if (!item || !item.id) return acc;
+            return acc + (levelDone[item.id] ? 1 : 0);
+          }, 0);
+        }
+
+        function buildOverallHwProgress(doneCount, total) {
+          const pct = total ? Math.round((doneCount / total) * 100) : 0;
+          const wrap = document.createElement("div");
+          wrap.className = "lh-hw-checklist__overall";
+          const track = document.createElement("div");
+          track.className = "lh-hw-overall-bar-track";
+          const fill = document.createElement("div");
+          fill.className = "lh-hw-overall-bar-fill";
+          fill.style.width = String(pct) + "%";
+          fill.style.backgroundColor = levelColor.accent;
+          track.appendChild(fill);
+          wrap.appendChild(track);
+          const stat = document.createElement("p");
+          stat.className = "lh-hw-overall-stat";
+          stat.textContent = I18n.t("learning_homework_overall_progress", {
+            n: String(doneCount),
+            t: String(total),
+            pct: String(pct),
+          });
+          wrap.appendChild(stat);
+          return wrap;
+        }
+
+        function renderHomeworkChecklistItem(item) {
+          if (!item || !item.id) return null;
+          const isChecked = !!(user && levelDone[item.id]);
+          const li = document.createElement("li");
+          li.className = "lh-hw-checklist__item" + (isChecked ? " is-done" : "");
+          li.setAttribute("data-category", (item.category || "Vocab").toLowerCase());
+          const label = document.createElement("label");
+          label.className = "lh-hw-checklist__label lh-hw-checklist__label--in-category";
+          const cb = document.createElement("input");
+          cb.type = "checkbox";
+          cb.className = "lh-hw-checklist__cb";
+          cb.checked = isChecked;
+          cb.disabled = !user;
+          cb.addEventListener("change", function () {
+            const activeUser = getActiveUser();
+            if (!activeUser || !item.id) return;
+            const stats = ensureStats(activeUser);
+            const activeHub = ensureLearningHub(stats);
+            if (!activeHub.homeworkChecklist) activeHub.homeworkChecklist = {};
+            if (!activeHub.homeworkChecklist[level]) activeHub.homeworkChecklist[level] = {};
+            if (cb.checked) {
+              activeHub.homeworkChecklist[level][item.id] = true;
+            } else {
+              delete activeHub.homeworkChecklist[level][item.id];
+            }
+            saveUsers();
+            renderHomeworkPanel();
+          });
+          const text = document.createElement("span");
+          text.className = "lh-hw-checklist__text";
+          text.textContent = cLang === "fr" && item.fr ? item.fr : item.en || item.fr || "";
+          label.appendChild(cb);
+          label.appendChild(text);
+          li.appendChild(label);
+          return li;
+        }
+
+        const cwrap = document.createElement("section");
+        cwrap.className = "lh-hw-checklist";
+
+        const cTitle = document.createElement("h3");
+        cTitle.className = "lh-hw-section__title";
+        cTitle.textContent = I18n.t("learning_homework_checklist_title");
+        cwrap.appendChild(cTitle);
+
+        const cIntro = document.createElement("p");
+        cIntro.className = "lh-muted";
+        cIntro.textContent = I18n.t("learning_homework_checklist_intro");
+        cwrap.appendChild(cIntro);
+
+        const totalDone = homeworkLevelDoneCount();
+        const totalItems = data.homeworkChecklist.length;
+        cwrap.appendChild(buildOverallHwProgress(totalDone, totalItems));
+
+        const grouped = Object.create(null);
+        hwCategories.forEach(function (cat) {
+          grouped[cat] = [];
+        });
+        data.homeworkChecklist.forEach(function (item) {
+          if (!item || !item.id) return;
+          const cat = item.category || "Vocab";
+          if (!grouped[cat]) grouped[cat] = [];
+          grouped[cat].push(item);
+        });
+
+        hwCategories.forEach(function (cat) {
+          const items = grouped[cat];
+          if (!items || !items.length) return;
+
+          const catDone = countCategoryDone(items);
+          const catTotal = items.length;
+          const catComplete = catDone >= catTotal;
+
+          const catSec = document.createElement("section");
+          catSec.className = "lh-hw-category";
+
+          const catHead = document.createElement("div");
+          catHead.className = "lh-hw-category__head";
+          const catTitle = document.createElement("h4");
+          catTitle.className = "lh-hw-category__title";
+          catTitle.textContent = homeworkCategoryLabel(cat);
+          catHead.appendChild(catTitle);
+          if (catComplete) {
+            const doneBadge = document.createElement("span");
+            doneBadge.className = "lh-hw-category__done-badge";
+            doneBadge.textContent = I18n.t("learning_homework_done");
+            catHead.appendChild(doneBadge);
+          }
+          catSec.appendChild(catHead);
+
+          const catList = document.createElement("ol");
+          catList.className = "lh-hw-checklist__list lh-hw-category__list";
+          items.forEach(function (item) {
+            const row = renderHomeworkChecklistItem(item);
+            if (row) catList.appendChild(row);
+          });
+          catSec.appendChild(catList);
+          cwrap.appendChild(catSec);
+        });
+
+        if (!user) {
+          const cNotice = document.createElement("p");
+          cNotice.className = "lh-muted";
+          cNotice.textContent = I18n.t("learning_homework_checklist_signin");
+          cwrap.appendChild(cNotice);
+        }
+
+        homeworkPanel.appendChild(cwrap);
       }
       renderHomeworkPanel();
 
