@@ -3092,6 +3092,7 @@
   }
 
   function navigateToContentLevel(level) {
+    window.scrollTo({ top: 0, behavior: "instant" });
     setContentPanelOpen(true);
     panelHome.classList.add("hidden");
     panels.forEach(function (p) {
@@ -3726,6 +3727,7 @@
       btnHome.classList.remove("hidden");
 
       if (id === "content") {
+        window.scrollTo({ top: 0, behavior: "instant" });
         resetContentPanel();
       }
       if (id === "account") {
@@ -3971,6 +3973,7 @@
     e.preventDefault();
     const val = (contentPasswordInput.value || "").trim();
     if (val === CONTENT_PASSWORD && pendingLevel) {
+      window.scrollTo({ top: 0, behavior: "instant" });
       contentPasswordError.classList.add("hidden");
       contentPasswordOverlay.classList.add("hidden");
       contentPasswordInput.value = "";
@@ -4262,6 +4265,7 @@
       }
 
       function enterSection(tabName) {
+        window.scrollTo({ top: 0, behavior: "instant" });
         root.classList.add("is-locked");
         if (levelLanding) levelLanding.classList.add("hidden");
         if (hubWorkspace) hubWorkspace.classList.remove("hidden");
@@ -4282,6 +4286,7 @@
           hubWorkspace.appendChild(backToMenuBtn);
         }
         backToMenuBtn.addEventListener("click", function () {
+          window.scrollTo({ top: 0, behavior: "instant" });
           resetHubToLanding(root);
         });
         backToMenuBtn.style.color = levelColor.accent;
@@ -5603,6 +5608,7 @@
       }
 
       function openExLesson(idx) {
+        window.scrollTo({ top: 0, behavior: "instant" });
         exLessonOpen = true;
         activeExIdx = idx;
         exGridWrap.classList.add("is-hidden-panel");
@@ -5611,6 +5617,7 @@
       }
 
       function closeExLesson() {
+        window.scrollTo({ top: 0, behavior: "instant" });
         showExGrid();
       }
 
