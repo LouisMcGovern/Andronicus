@@ -72,7 +72,7 @@
         "Call or email and we can sort level and timing in a few minutes. <a href=\"tel:+353833198980\">+353 (83) 319 8980</a> · <a href=\"mailto:louis.f.mcgovern@gmail.com\">louis.f.mcgovern@gmail.com</a>",
       about_title: "About the Teacher",
       about_p1_html:
-        "My name is <strong>Louis McGovern</strong>. I am <strong>21</strong> and I study <strong>French</strong> at <strong>Trinity College Dublin</strong> — widely ranked as Ireland's top university.",
+        "My name is <strong>Louis McGovern</strong>. I am <strong>21</strong> and I study <strong>Business and French</strong> at <strong>Trinity College Dublin</strong> — widely ranked as Ireland's top university.",
       about_p2_html:
         "In my Leaving Certificate I was awarded an <strong>H1</strong> — the highest possible grade — in Higher-Level French.",
       about_p3_html:
@@ -132,7 +132,7 @@
       testimonial_2_quote:
         "The small group format means you can't hide. You actually have to speak, and that's what made the difference for my exam.",
       testimonial_2_attr: "Intermediate student, Lycée, Paris",
-      teacher_caption_1: "Louis McGovern — studying Law and French at Trinity College Dublin.",
+      teacher_caption_1: "Louis McGovern — studying Business and French at Trinity College Dublin.",
       teacher_caption_2:
         "Teaching approach: structured sessions, real conversation, and consistent feedback.",
       content_password_title: "Enter Password",
@@ -579,7 +579,7 @@
         "Appelez ou écrivez, on règle souvent niveau et créneau en quelques minutes. <a href=\"tel:+353833198980\">+353 (83) 319 8980</a> · <a href=\"mailto:louis.f.mcgovern@gmail.com\">louis.f.mcgovern@gmail.com</a>",
       about_title: "À propos du professeur",
       about_p1_html:
-        "Je m’appelle <strong>Louis McGovern</strong>, j’ai <strong>21 ans</strong>, et je fais du <strong>français</strong> à <strong>Trinity College Dublin</strong>, souvent classée comme la meilleure université d’Irlande dans les grands classements.",
+        "Je m’appelle <strong>Louis McGovern</strong>, j’ai <strong>21 ans</strong>, et je fais <strong>commerce et français</strong> à <strong>Trinity College Dublin</strong>, souvent classée comme la meilleure université d’Irlande dans les grands classements.",
       about_p2_html:
         "Au Leaving Certificate j’ai obtenu un <strong>H1</strong>, la note la plus élevée, en français niveau supérieur.",
       about_p3_html:
@@ -639,7 +639,7 @@
       testimonial_2_quote:
         "Le petit groupe ne laisse pas place à la passivité. Il faut vraiment parler — c'est ce qui a fait la différence pour mon examen.",
       testimonial_2_attr: "Élève de niveau intermédiaire, lycée, Paris",
-      teacher_caption_1: "Louis McGovern — étudiant en droit et en français à Trinity College Dublin.",
+      teacher_caption_1: "Louis McGovern — étudiant en commerce et en français à Trinity College Dublin.",
       teacher_caption_2:
         "Ma façon d'enseigner : des séances structurées, de vraies conversations et des retours réguliers.",
       content_password_title: "Saisir le mot de passe",
