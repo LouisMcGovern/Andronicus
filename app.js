@@ -64,15 +64,6 @@
     if (navPrice) navPrice.textContent = I18n.t("nav_booking_price");
     const bookingCallout = document.querySelector(".booking-price-callout");
     if (bookingCallout) bookingCallout.textContent = I18n.t("booking_price_callout");
-    const testimonialHeading = document.getElementById("home-testimonials-heading");
-    if (testimonialHeading) testimonialHeading.textContent = I18n.t("testimonials_heading");
-    document.querySelectorAll(".testimonial-card").forEach(function (card, i) {
-      const idx = i + 1;
-      const label = card.querySelector(".testimonial-card__lang-label");
-      const attr = card.querySelector(".testimonial-card__attribution");
-      if (label) label.textContent = I18n.t("testimonial_label");
-      if (attr) attr.textContent = I18n.t("testimonial_attr_" + idx);
-    });
     document.querySelectorAll(".teacher-figure__caption").forEach(function (cap, i) {
       cap.textContent = I18n.t("teacher_caption_" + (i + 1));
     });
@@ -512,6 +503,7 @@
       exercises: [
         {
           topic: "Possessive adjectives (my/your/his/her/our/their)",
+          subtitle: "my, your, his, her, our, their",
           introFr:
             "En anglais, on utilise des adjectifs possessifs avant le nom pour dire à qui appartient quelque chose. Contrairement au français, ils ne changent pas selon le genre du nom, seulement selon la personne qui possède.\n\nFormule : my / your / his / her / our / their + nom.\n\n|||EXAMPLES|||\nThis is my bag.\nShe forgot her phone.\nWe love our teacher.\nThey did their homework.",
           examples: [
@@ -531,6 +523,7 @@
         },
         {
           topic: "Present simple vs present continuous",
+          subtitle: "I eat / I am eating",
           introFr:
             "En anglais il y a deux présents. Le Present Simple pour les habitudes et les faits, le Present Continuous pour ce qui se passe en ce moment.\n\nFormule Present Simple : sujet + verbe (+ s à la 3e personne).\nFormule Present Continuous : sujet + am/is/are + verbe-ing.\n\n|||EXAMPLES|||\nI eat lunch at 1pm every day.\nRight now I am eating lunch.\nShe plays football on Saturdays.\nLook, she is playing football now.",
           examples: [
@@ -559,6 +552,7 @@
         },
         {
           topic: "There is / there are",
+          subtitle: "There is a… / There are…",
           introFr:
             "On utilise \"there is\" pour parler d'une seule chose qui existe quelque part, et \"there are\" pour plusieurs choses. C'est l'équivalent de \"il y a\" en français mais ça ne change pas selon le genre.\n\nFormule : There is + nom singulier. There are + nom pluriel. Is there / Are there pour les questions.\n\n|||EXAMPLES|||\nThere is a book on the table.\nThere are three windows in my room.\nIs there a supermarket near here?\nAre there any students in the classroom?",
           examples: [
@@ -578,6 +572,7 @@
         },
         {
           topic: "Question forms (do/does/is/are)",
+          subtitle: "Do, Does, Is, Are",
           introFr:
             "En anglais, pour poser une question au Present Simple, il faut ajouter Do ou Does au début. Does s'utilise avec he, she, it. Do s'utilise avec I, you, we, they. Avec le verbe to be on inverse juste le sujet et le verbe.\n\nFormule : Do/Does + sujet + verbe de base ?\n\n|||EXAMPLES|||\nDo you like English?\nDoes she live in Paris?\nAre you tired?\nIs he at school today?",
           examples: [
@@ -597,6 +592,7 @@
         },
         {
           topic: "Articles (a / an / the)",
+          subtitle: "a, an, the",
           introFr:
             "En anglais il y a trois articles. A s'utilise devant un mot qui commence par une consonne pour quelque chose de non précis. An s'utilise devant un mot qui commence par une voyelle. The s'utilise quand on parle de quelque chose de précis ou déjà mentionné. Contrairement au français il n'y a pas de genre masculin ou féminin.\n\nFormule : a + consonne, an + voyelle, the + nom précis.\n\n|||EXAMPLES|||\nI have a dog and a cat.\nShe is eating an apple.\nThe dog is sleeping on the sofa.\nCan you close the window please?",
           examples: [
@@ -616,6 +612,7 @@
         },
         {
           topic: "Prepositions of place",
+          subtitle: "in, on, at, under, next to",
           introFr:
             "Les prépositions de lieu indiquent où se trouve quelque chose. En anglais les plus importantes sont in pour l'intérieur, on pour une surface, at pour un point précis, under pour en dessous, next to pour à côté, between pour entre, behind pour derrière, in front of pour devant.\n\nFormule : objet + préposition + lieu.\n\n|||EXAMPLES|||\nThe book is on the table.\nMy bag is under the chair.\nShe is standing next to the door.\nThe school is between the park and the supermarket.",
           examples: [
@@ -635,6 +632,7 @@
         },
         {
           topic: "Countable and uncountable nouns",
+          subtitle: "many, much, some, a lot of",
           introFr:
             "Les noms comptables sont des choses qu'on peut compter et ont un pluriel. Les noms incomptables sont des choses qu'on ne peut pas compter et n'ont jamais de pluriel ni de a ou an devant eux.\n\nFormule comptable : a/an + nom, ou nom + s au pluriel.\nFormule incomptable : some/much/a lot of + nom sans pluriel.\n\n|||EXAMPLES|||\nI have two apples.\nI need some water.\nThere are many students.\nThere isn't much time.",
           examples: [
@@ -654,6 +652,7 @@
         },
         {
           topic: "Can / can't for ability",
+          subtitle: "I can swim / She can't drive",
           introFr:
             "Can exprime la capacité, ce qu'on est capable de faire. Il est identique pour tous les sujets, on ne le conjugue jamais. Le négatif est cannot ou can't. Pour les questions on inverse juste can et le sujet.\n\nFormule positive : sujet + can + verbe de base.\nFormule négative : sujet + can't + verbe de base.\nQuestion : Can + sujet + verbe de base ?\n\n|||EXAMPLES|||\nI can swim very well.\nShe can't drive yet.\nCan you speak English?\nHe can play the guitar.",
           examples: [
@@ -673,6 +672,7 @@
         },
         {
           topic: "Past simple regular/irregular verbs",
+          subtitle: "went, played, saw, didn't",
           introFr:
             "Le Past Simple s'utilise pour parler d'une action terminée dans le passé. Les verbes réguliers prennent -ed à la fin. Les verbes irréguliers changent complètement et doivent être mémorisés. Pour le négatif et les questions on utilise toujours did plus la base verbale.\n\nFormule : sujet + verbe passé. Négatif : sujet + didn't + base. Question : Did + sujet + base ?\n\n|||EXAMPLES|||\nI walked to school yesterday.\nShe went to London last year.\nWe didn't watch the film.\nDid you eat breakfast this morning?",
           examples: [
@@ -696,6 +696,7 @@
         },
         {
           topic: "Object pronouns (me/you/him/her/us/them)",
+          subtitle: "me, him, her, us, them",
           introFr:
             "En anglais les pronoms sujets remplacent celui qui fait l'action et les pronoms compléments remplacent celui qui reçoit l'action. Le pronom complément se place toujours après le verbe ou après une préposition.\n\nFormule : verbe + pronom complément.\nListe : me, you, him, her, us, them.\n\n|||EXAMPLES|||\nMy teacher helped me a lot.\nI called him yesterday.\nShe gave the book to her.\nCan you help us please?",
           examples: [
@@ -717,6 +718,7 @@
         },
         {
           topic: "Future forms (going to / will)",
+          subtitle: "going to / will",
           introFr:
             "En anglais il y a deux façons principales de parler du futur. Going to s'utilise pour un plan décidé à l'avance ou une prédiction basée sur ce qu'on voit. Will s'utilise pour une décision spontanée, une promesse ou une prédiction basée sur une opinion.\n\nFormule going to : sujet + am/is/are + going to + verbe de base.\nFormule will : sujet + will + verbe de base.\n\n|||EXAMPLES|||\nI am going to study tonight, I planned it.\nIt will rain tomorrow I think.\nI will help you, don't worry.\nShe is going to visit her grandmother this weekend.",
           examples: [
@@ -1028,6 +1030,7 @@
       exercises: [
         {
           topic: "Possessive adjectives in context",
+          subtitle: "his / her / their + noun",
           introFr:
             "À ce niveau, l'adjectif possessif doit toujours correspondre au possesseur, pas à l'objet. En français on dit « sa maison » pour un homme ou une femme ; en anglais on dit his house ou her house selon qui possède. Pour une équipe ou un groupe, utilise their.\n\nFormule : possessif du possesseur + nom (his research, their results, its logo).\n\n|||EXAMPLES|||\nThe students presented their projects.\nShe forgot her charger at home.\nThe company changed its policy last year.\nWe improved our pronunciation this month.",
           examples: [
@@ -1047,6 +1050,7 @@
         },
         {
           topic: "Present perfect vs past simple",
+          subtitle: "have done / did yesterday",
           introFr:
             "Le passé composé français ne se traduit pas toujours pareil. Si tu peux nommer le moment précis (hier, en 2020, la semaine dernière), utilise le Past Simple. Si tu parles d'une expérience de vie ou d'un résultat visible maintenant, utilise le Present Perfect avec have/has + participe passé.\n\nFormule Past Simple : sujet + verbe passé (+ date).\nFormule Present Perfect : sujet + have/has + participe passé.\n\n|||EXAMPLES|||\nI watched that film last week.\nWe have completed three units this month.\nShe went to London in 2024.\nHave you ever tried sushi?",
           examples: [
@@ -1066,6 +1070,7 @@
         },
         {
           topic: "Relative clauses (who/which/that)",
+          subtitle: "who, which, that, whose",
           introFr:
             "Une proposition relative ajoute une information sur un nom juste avant. Who pour les personnes, which pour les choses, that pour les deux dans une phrase définissante. Tu peux omettre who/that/which quand c'est le complément : The book (that) I read.\n\nFormule : nom + who/which/that + phrase.\n\n|||EXAMPLES|||\nThe teacher who helped me was excellent.\nThis is the app that I use every day.\nStudents who revise regularly improve faster.\nThe film we saw was brilliant.",
           examples: [
@@ -1085,6 +1090,7 @@
         },
         {
           topic: "Modal verbs for advice and obligation",
+          subtitle: "should, must, mustn't, have to",
           introFr:
             "Les modaux ne se conjuguent pas : pas de -s, pas de did. Should = conseil, must = obligation forte, mustn't = interdit, have to = obligation extérieure (règle, loi), don't have to = pas obligé.\n\nFormule : sujet + modal + verbe de base.\n\n|||EXAMPLES|||\nYou should revise every day.\nStudents must wear a uniform.\nYou mustn't use your phone in the exam.\nWe have to leave early tomorrow.",
           examples: [
@@ -1104,6 +1110,7 @@
         },
         {
           topic: "Conditionals (0, 1st, 2nd)",
+          subtitle: "if + present, will / would",
           introFr:
             "Le zero conditional = vérité générale (si tu chauffes l'eau, elle bout). Le first conditional = futur réaliste (si j'étudie, je réussirai). Le second conditional = situation imaginaire au présent (si j'avais plus de temps, je voyagerais). Jamais de would dans la partie avec if.\n\nFormule 0 : If + présent, présent.\nFormule 1 : If + présent, will + base.\nFormule 2 : If + past simple, would + base.\n\n|||EXAMPLES|||\nIf you heat ice, it melts.\nIf I study hard, I will pass the test.\nIf I had more time, I would read more books.\nIf it rains, we will stay at home.",
           examples: [
@@ -1123,6 +1130,7 @@
         },
         {
           topic: "Reported speech",
+          subtitle: "said she was, would, could",
           introFr:
             "Le discours indirect rapporte ce que quelqu'un a dit sans guillemets. Si le verbe introducteur est au passé (said, told), les temps reculent : « I am tired » → she said she was tired. Les mots comme today deviennent that day, now → then.\n\nFormule : She said (that) + sujet + verbe au passé.\n\n|||EXAMPLES|||\nShe said she was tired.\nHe said he would call me.\nThey said they had finished.\nShe said she could help us.",
           examples: [
@@ -1142,6 +1150,7 @@
         },
         {
           topic: "Passive voice in context",
+          subtitle: "is made, was built, been stolen",
           introFr:
             "La voix passive met l'accent sur l'action, pas sur qui l'a faite. On la forme avec be + participe passé au bon temps. En français on utilise souvent « on » ; en anglais la passive est très courante à l'écrit.\n\nFormule : sujet + be + participe passé (+ by + agent si besoin).\n\n|||EXAMPLES|||\nEnglish is spoken worldwide.\nThe bridge was built in 1998.\nMy bike has been stolen.\nThe road is being repaired today.",
           examples: [
@@ -1161,6 +1170,7 @@
         },
         {
           topic: "Comparatives and superlatives for argument writing",
+          subtitle: "more… than, the best",
           introFr:
             "Les adjectifs courts prennent -er / -est (cheaper, cheapest). Les adjectifs longs utilisent more / most (more effective, most effective). Après le comparatif, mets than. Devant le superlatif, mets the. Attention aux irréguliers : good → better → best, bad → worse → worst.\n\nFormule comparatif court : adjectif + er + than.\nFormule superlatif court : the + adjectif + est.\n\n|||EXAMPLES|||\nThis plan is more effective than the last one.\nIt is the best option for students.\nPublic transport is often cheaper than driving.\nThat was the worst film I have ever seen.",
           examples: [
@@ -1180,6 +1190,7 @@
         },
         {
           topic: "Essay paragraph structure (PEEL)",
+          subtitle: "Point, Evidence, Explain, Link",
           introFr:
             "PEEL t'aide à structurer un paragraphe d'essai en anglais : annonce ton idée tout de suite, pas à la fin comme parfois en français. Point = idée principale, Evidence = preuve, Explain = pourquoi c'est important, Link = retour à la question.\n\nFormule : Point + Evidence + Explain + Link (un paragraphe = une idée).\n\n|||EXAMPLES|||\nPoint: School uniforms improve focus.\nEvidence: A survey of 200 students showed better concentration.\nExplain: Less social pressure helps students work.\nLink: This answers why uniforms can help learning.",
           examples: [
@@ -1202,6 +1213,7 @@
         },
         {
           topic: "Linkers for cohesion (however, therefore, moreover)",
+          subtitle: "however, therefore, moreover",
           introFr:
             "Les connecteurs montrent le lien logique entre tes idées. However = contraste, therefore = conséquence, moreover = en plus, although = bien que. En anglais formel, however commence souvent une nouvelle phrase ou suit un point-virgule.\n\nFormule : phrase 1 ; however, phrase 2.\n\n|||EXAMPLES|||\nThe plan is expensive; however, it is effective.\nWe practised daily; therefore, we improved.\nThe class is small; moreover, everyone participates.\nAlthough it was late, they continued working.",
           examples: [
@@ -1223,6 +1235,7 @@
         },
         {
           topic: "Error correction and redrafting",
+          subtitle: "3rd person -s, told me, agree",
           introFr:
             "Les francophones font souvent les mêmes erreurs : oubli du -s à la 3e personne (He go → goes), « I am agree » (faux ami → I agree), et « She said me » (→ She told me). Relis à voix haute : si ça sonne bizarre en anglais, corrige.\n\nFormule de base : sujet + verbe (+ compléments), dans cet ordre.\n\n|||EXAMPLES|||\nHe goes to school every day.\nI agree with you on this point.\nShe told me to come earlier.\nThey haven't finished their homework yet.",
           examples: [
@@ -1493,6 +1506,7 @@
       exercises: [
         {
           topic: "Possessive adjectives in advanced writing",
+          subtitle: "its policy, their results",
           introFr:
             "En rédaction formelle, chaque possessif doit renvoyer clairement au bon possesseur sur tout le texte. Its pour une organisation, un pays ou un document ; their pour un groupe de personnes. Si c'est flou, répète le nom au lieu d'utiliser their ou its.\n\nFormule : possessif précis + nom, ou répéter le nom pour éviter l'ambiguïté.\n\n|||EXAMPLES|||\nEach candidate must justify their methodology.\nThe committee reviewed its final draft.\nThe researchers defended their conclusions.\nThe university published its annual report.",
           examples: [
@@ -1512,6 +1526,7 @@
         },
         {
           topic: "Cleft and inversion practice",
+          subtitle: "It was… who, Rarely do…",
           introFr:
             "Les phrases clivées mettent en avant un élément : It was John who called. L'inversion donne un ton plus formel ou emphatique : Rarely do we see such progress. Utilise ces structures avec parcimonie dans un essai — une ou deux fois suffisent.\n\nFormule clivée : It was/was + élément + who/that + reste.\nFormule inversion : Rarely/Never + auxiliaire + sujet + verbe.\n\n|||EXAMPLES|||\nIt was Maria who solved the problem.\nRarely do students receive such detailed feedback.\nWhat the essay lacks is clear evidence.\nNever have I seen such dedication.",
           examples: [
@@ -1531,6 +1546,7 @@
         },
         {
           topic: "Hedging and academic caution",
+          subtitle: "may, might, appears to",
           introFr:
             "En anglais académique, on évite les affirmations trop absolues sans preuve. May, might, appears to, tends to et it could be argued that adoucissent ta phrase et montrent que tu réfléchis. En français on peut être plus direct ; en anglais, nuancer fait plus « universitaire ».\n\nFormule : sujet + may/might/appears to + verbe.\n\n|||EXAMPLES|||\nThis result may indicate a wider trend.\nIt could be argued that policy must change.\nThe evidence appears to suggest a link.\nThese findings may not apply to all groups.",
           examples: [
@@ -1550,6 +1566,7 @@
         },
         {
           topic: "Nominalisation for formal writing",
+          subtitle: "analysis, decision, improvement",
           introFr:
             "La nominalisation transforme un verbe en nom pour un style plus formel : analyse → analysis, decide → decision. C'est utile en essai, mais garde aussi des verbes clairs pour que le lecteur sache qui fait l'action.\n\nFormule : The + nominalisation + of + nom (The analysis of the data…).\n\n|||EXAMPLES|||\nWe analysed the data. → The analysis was thorough.\nThe government decided quickly. → The decision surprised many.\nStudents improved rapidly. → Rapid improvement was observed.\nThey discussed the issue for hours.",
           examples: [
@@ -1569,6 +1586,7 @@
         },
         {
           topic: "Paraphrasing and synonym control",
+          subtitle: "significant, demonstrate, issue",
           introFr:
             "Paraphraser, c'est dire la même chose avec d'autres mots — indispensable pour les essais et pour éviter le plagiat. Un synonyme proche n'est pas toujours exact : problem ≠ issue dans tous les contextes. Change le vocabulaire et la structure de la phrase.\n\nFormule : même sens, mots différents, structure différente.\n\n|||EXAMPLES|||\nImportant → significant or crucial.\nShow → demonstrate or indicate.\nProblem → issue or challenge.\nThink → consider or believe.",
           examples: [
@@ -1588,6 +1606,7 @@
         },
         {
           topic: "Complex sentence cohesion",
+          subtitle: "although, whereas, however",
           introFr:
             "Une phrase complexe relie plusieurs idées avec although, while, because, so that, not only… but also. Chaque partie doit avoir un lien logique clair. Si la phrase devient trop longue, coupe en deux.\n\nFormule : Although/While + proposition, proposition principale.\n\n|||EXAMPLES|||\nAlthough the exam was hard, she passed.\nHe studied hard, yet he still felt nervous.\nIf you practise regularly, you will improve.\nShe speaks French, whereas her brother speaks English.",
           examples: [
@@ -1607,6 +1626,7 @@
         },
         {
           topic: "Advanced punctuation and clarity",
+          subtitle: "semicolon, colon, comma splice",
           introFr:
             "Le point-virgule relie deux phrases complètes liées. Les deux-points introduisent une liste ou une explication. Une comma splice = deux phrases jointes seulement par une virgule — c'est une erreur fréquente. Corrige avec un point, un point-virgule ou une conjonction.\n\nFormule : phrase complète ; however, phrase complète.\n\n|||EXAMPLES|||\nThe results were mixed; however, the trend was positive.\nOne thing is clear: we need a plan.\nUse a semicolon to join related ideas.\nCommas separate items in a list of three or more.",
           examples: [
@@ -1626,6 +1646,7 @@
         },
         {
           topic: "Synthesis writing from two sources",
+          subtitle: "Source A argues, while B…",
           introFr:
             "La synthèse mélange deux sources dans un seul argument — ne fais pas un paragraphe par source. Utilise Source A argues… while Source B suggests… et montre comment les idées se répondent ou s'opposent.\n\nFormule : thèse + Source A + while/however + Source B + ta conclusion.\n\n|||EXAMPLES|||\nSource A argues that remote learning increases access.\nSource B claims quality depends on teacher training.\nA strong thesis must address both viewpoints.\nUse contrast linkers to compare the two sources.",
           examples: [
@@ -1645,6 +1666,7 @@
         },
         {
           topic: "Timed high-level speaking response",
+          subtitle: "First, However, To sum up",
           introFr:
             "À l'oral chronométré, prends trente secondes pour planifier, puis structure : affirmation, exemple, contrepoint, conclusion. Des phrases courtes et correctes valent mieux que de longues phrases cassées. Entraîne-toi avec un minuteur.\n\nFormule : First + point 1. However + contrepoint. To sum up + conclusion.\n\n|||EXAMPLES|||\nFirst, state your main claim clearly.\nSupport it with one concrete example.\nHowever, mention one counterargument briefly.\nTo sum up, restate your position in one sentence.",
           examples: [
@@ -1667,6 +1689,7 @@
         },
         {
           topic: "Abstract topic essay planning",
+          subtitle: "thesis, points, counterargument",
           introFr:
             "Avant d'écrire sur un sujet abstrait (technologie, éthique, climat), écris un plan avec une thèse claire, deux arguments et un contre-argument que tu peux réfuter. Chaque paragraphe du corps = une partie du plan. Planifier d'abord te fait gagner du temps.\n\nFormule : thèse + argument 1 + argument 2 + contre-argument + conclusion.\n\n|||EXAMPLES|||\nEvery essay plan needs a clear thesis.\nInclude at least two supporting points.\nAdd one counterargument you can answer.\nSpend the first minutes planning, then write.",
           examples: [
@@ -1688,6 +1711,7 @@
         },
         {
           topic: "Source comparison and reliability",
+          subtitle: "bias, evidence, reliability",
           introFr:
             "Comparer des sources, ce n'est pas dire laquelle tu préfères : examine l'objectif, le public visé, les preuves et les biais. Une source fiable cite ses sources, reconnaît ses limites et reste cohérente avec son but (informer ou convaincre).\n\nFormule : objectif + preuves + biais → jugement argumenté.\n\n|||EXAMPLES|||\nCompare each source's purpose and audience.\nDistinguish a claim from supporting data.\nIdentify bias and missing context.\nExplain why one source is more reliable.",
           examples: [
@@ -3357,6 +3381,7 @@
   }
 
   window.addEventListener("andronicus:langchange", function () {
+    I18n.apply();
     refreshStaticPageCopy();
     buildBookingCalendar();
     refreshPasswordHint();
@@ -4109,6 +4134,15 @@
         return wrap;
       }
 
+      function streakHintHtml() {
+        if (I18n.getLang() === "fr") {
+          return (
+            "Jours actifs d'affilée<br>Complète n'importe quelle activité pour continuer ta série"
+          );
+        }
+        return "Active days in a row<br>Complete any activity to keep your streak going";
+      }
+
       function renderProgressPanel() {
         progressPanel.innerHTML = "";
         const wrap = document.createElement("div");
@@ -4165,6 +4199,24 @@
           I18n.t("learning_progress_flash_accuracy"),
           fa ? String(Math.round((fc / fa) * 100)) + "%" : I18n.t("learning_progress_not_applicable")
         );
+        const streakCard = document.createElement("div");
+        streakCard.className = "lh-stat-card lh-stat-card--streak";
+        const streakLab = document.createElement("div");
+        streakLab.className = "lh-stat-card__label";
+        streakLab.textContent = I18n.t("learning_progress_streak");
+        const streakVal = document.createElement("div");
+        streakVal.className = "lh-stat-card__value";
+        streakVal.textContent = String(lh.streak || 0);
+        streakCard.appendChild(streakLab);
+        streakCard.appendChild(streakVal);
+        const streakHint = document.createElement("p");
+        streakHint.className = "lh-streak-hint";
+        streakHint.innerHTML = streakHintHtml();
+        const streakWrap = document.createElement("div");
+        streakWrap.className = "lh-streak-stat-wrap";
+        streakWrap.appendChild(streakCard);
+        streakWrap.appendChild(streakHint);
+        grid.appendChild(streakWrap);
         wrap.appendChild(grid);
 
         const weekTitle = document.createElement("h4");
@@ -4338,6 +4390,7 @@
           function renderHomeworkChecklistItem(item) {
             const li = document.createElement("li");
             li.className = "lh-hw-checklist__item" + (done[item.id] ? " is-done" : "");
+            li.setAttribute("data-category", (item.category || "Vocab").toLowerCase());
             const label = document.createElement("label");
             label.className = "lh-hw-checklist__label lh-hw-checklist__label--in-category";
             const cb = document.createElement("input");
@@ -4751,6 +4804,7 @@
       let sessionQuestionTotal = 0;
       let sessionRecorded = false;
       const wrongByTopic = {};
+      const wrongAnswers = [];
 
       function questionsForMode(mode) {
         return (data.vocabQuiz || []).filter(function (q) {
@@ -4815,6 +4869,36 @@
         resultsLevelUpBtn.disabled = !quizNextMode(currentMode);
       }
 
+      function renderMissedQuestions() {
+        const existing = resultsCard.querySelector(".lh-quiz-missed");
+        if (existing) existing.remove();
+        if (!wrongAnswers.length) return;
+        const missed = document.createElement("details");
+        missed.className = "lh-quiz-missed";
+        const missedSummary = document.createElement("summary");
+        missedSummary.textContent = I18n.t("learning_vocab_missed_summary", {
+          count: String(wrongAnswers.length),
+        });
+        const list = document.createElement("div");
+        list.className = "lh-quiz-missed__list";
+        wrongAnswers.forEach(function (item) {
+          const row = document.createElement("div");
+          row.className = "lh-quiz-missed__row";
+          const qSpan = document.createElement("span");
+          qSpan.className = "lh-quiz-missed__q";
+          qSpan.textContent = item.question;
+          const aSpan = document.createElement("span");
+          aSpan.className = "lh-quiz-missed__answer";
+          aSpan.textContent = item.answer;
+          row.appendChild(qSpan);
+          row.appendChild(aSpan);
+          list.appendChild(row);
+        });
+        missed.appendChild(missedSummary);
+        missed.appendChild(list);
+        resultsCard.insertBefore(missed, resultsActions);
+      }
+
       function showSummary(totalCount) {
         quizCounter.classList.add("hidden");
         quizQuestion.classList.add("hidden");
@@ -4828,6 +4912,7 @@
           sessionRecorded = true;
         }
         updateResultsCard(totalCount);
+        renderMissedQuestions();
         refreshStreakHeader();
       }
 
@@ -4881,6 +4966,10 @@
               lastQuizCorrect = false;
               btn.classList.add("is-wrong");
               wrongByTopic[currentQuestion.topic] = (wrongByTopic[currentQuestion.topic] || 0) + 1;
+              wrongAnswers.push({
+                question: currentQuestion.question,
+                answer: currentQuestion.answer,
+              });
               quizFeedback.textContent = I18n.t("learning_vocab_wrong_feedback", {
                 answer: currentQuestion.answer,
                 score: String(quizScore),
@@ -4921,6 +5010,7 @@
         Object.keys(wrongByTopic).forEach(function (key) {
           delete wrongByTopic[key];
         });
+        wrongAnswers.length = 0;
         remainingQuestions = questionsForMode(mode).slice();
         sessionQuestionTotal = remainingQuestions.length;
         renderQuiz();
@@ -5249,10 +5339,16 @@
         const h = document.createElement("span");
         h.className = "lh-topic-card__title";
         h.textContent = ex.topic;
+        card.appendChild(h);
+        if (ex.subtitle) {
+          const sub = document.createElement("p");
+          sub.className = "lh-topic-card__subtitle";
+          sub.textContent = ex.subtitle;
+          card.appendChild(sub);
+        }
         const blurb = document.createElement("span");
         blurb.className = "lh-topic-card__focus";
         blurb.textContent = exerciseTopicBlurb(ex);
-        card.appendChild(h);
         card.appendChild(blurb);
         card.addEventListener("click", function () {
           openExLesson(i);
@@ -5600,11 +5696,20 @@
       const completeInner = document.createElement("div");
       completeInner.className = "flashcard-complete-overlay__inner";
       const completeTitle = document.createElement("h4");
-      const completeStars = document.createElement("div");
-      completeStars.className = "flashcard-stars";
-      completeStars.setAttribute("aria-hidden", "true");
       const completePct = document.createElement("div");
-      completePct.className = "flashcard-complete-overlay__pct";
+      completePct.className = "flashcard-complete-pct";
+      const completeStars = document.createElement("div");
+      completeStars.className = "flashcard-complete-stars";
+      completeStars.setAttribute("aria-hidden", "true");
+      const completeStarSpans = [];
+      for (let si = 0; si < 3; si += 1) {
+        const starSpan = document.createElement("span");
+        starSpan.textContent = "★";
+        completeStars.appendChild(starSpan);
+        completeStarSpans.push(starSpan);
+      }
+      const completeMsg = document.createElement("p");
+      completeMsg.className = "flashcard-complete-msg";
       const completeSummary = document.createElement("p");
       const completeActions = document.createElement("div");
       completeActions.className = "flashcard-complete-actions";
@@ -5619,8 +5724,9 @@
       completeActions.appendChild(btnWrongOnly);
       completeActions.appendChild(btnFullAgain);
       completeInner.appendChild(completeTitle);
-      completeInner.appendChild(completeStars);
       completeInner.appendChild(completePct);
+      completeInner.appendChild(completeStars);
+      completeInner.appendChild(completeMsg);
       completeInner.appendChild(completeSummary);
       completeInner.appendChild(completeActions);
       completeOverlay.appendChild(completeInner);
@@ -5706,20 +5812,23 @@
         return 1;
       }
 
-      function flashcardStarRatingText(filledCount) {
-        let out = "";
-        for (let i = 0; i < 3; i += 1) {
-          out += i < filledCount ? "★" : "☆";
-        }
-        return out;
+      function flashcardCompleteEncouragement(pct) {
+        if (pct > 90) return "Excellent ! Tu maîtrises bien ce paquet.";
+        if (pct >= 70) return "Bon travail, continue comme ça !";
+        return "Continue à t'entraîner, tu vas y arriver !";
       }
 
       function updateCompleteOverlay(stats) {
         const total = stats.total || 0;
-        const pct = total ? Math.round((stats.correct / total) * 100) : 0;
+        const pct =
+          stats.pct != null ? stats.pct : total ? Math.round((stats.correct / total) * 100) : 0;
+        const filled = flashcardStarFillCount(pct);
         completeTitle.textContent = I18n.t("flashcard_complete_title");
-        completeStars.textContent = flashcardStarRatingText(flashcardStarFillCount(pct));
         completePct.textContent = String(pct) + "%";
+        completeStarSpans.forEach(function (starSpan, i) {
+          starSpan.style.color = i < filled ? "var(--accent)" : "var(--border)";
+        });
+        completeMsg.textContent = flashcardCompleteEncouragement(pct);
         completeSummary.textContent = I18n.t("flashcard_complete_summary", {
           correct: String(stats.correct),
           wrong: String(stats.wrong),
@@ -5890,6 +5999,7 @@
         const total = sessionIndices.length;
         const wrongCount = sessionWrong;
         const correctCount = sessionCorrect;
+        const accuracyPct = total ? Math.round((sessionCorrect / total) * 100) : 0;
         lastSessionWrongKeys = {};
         Object.keys(wrongKeysThisSession).forEach(function (k) {
           lastSessionWrongKeys[k] = true;
@@ -5898,6 +6008,7 @@
           correct: correctCount,
           wrong: wrongCount,
           total: total,
+          pct: accuracyPct,
         };
         recordFlashcardSessionComplete({
           level: level,
@@ -6155,6 +6266,8 @@
         saveWordBtn.textContent = I18n.t("learning_vocab_save_word");
         const stLab = stBox.querySelector(".lh-chip__lab");
         if (stLab) stLab.textContent = I18n.t("learning_hub_streak");
+        const streakHintEl = root.querySelector(".lh-streak-hint");
+        if (streakHintEl) streakHintEl.innerHTML = streakHintHtml();
         root.querySelectorAll("[data-learning-chrome]").forEach(function (el) {
           const key = el.getAttribute("data-learning-chrome");
           if (key) el.textContent = I18n.t(key);
@@ -6189,6 +6302,7 @@
         }
         if (!summary.classList.contains("hidden")) {
           updateResultsCard(askedCount);
+          renderMissedQuestions();
         }
         refreshExercisesPanel();
         renderHomeworkPanel();
@@ -6361,9 +6475,13 @@
     forceInitialHomeView();
 
     setTimeout(() => {
+      if (mainNav) mainNav.classList.add("nav-cards--loading");
       introOverlay.classList.add("is-done");
       app.classList.remove("hidden-until-intro");
       app.classList.add("intro-visible");
+      setTimeout(function () {
+        if (mainNav) mainNav.classList.remove("nav-cards--loading");
+      }, 350);
     }, INTRO_MS);
   })();
 

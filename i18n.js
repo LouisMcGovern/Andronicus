@@ -122,16 +122,14 @@
       level_landing_grid_aria: "Choose activity",
       content_breadcrumb_aria: "Content location",
       home_testimonials_heading: "What students and parents say",
-      testimonials_heading: "What students and parents say",
+      testimonial_heading: "What students and parents say",
       testimonial_label: "Testimonial",
-      testimonial_attr_1: "Parent of a Beginner student",
-      testimonial_attr_2: "Intermediate student, Lycée, Paris",
-      testimonial_1_quote:
+      testimonial_quote_1:
         "Louis explains things the way a student thinks, not the way a textbook is written. My daughter went from dreading English class to actually enjoying it.",
-      testimonial_1_attr: "Parent of a Beginner student",
-      testimonial_2_quote:
+      testimonial_attr_1: "Parent of a Beginner student",
+      testimonial_quote_2:
         "The small group format means you can't hide. You actually have to speak, and that's what made the difference for my exam.",
-      testimonial_2_attr: "Intermediate student, Lycée, Paris",
+      testimonial_attr_2: "Intermediate student, Lycée, Paris",
       teacher_caption_1: "Louis McGovern — studying Business and French at Trinity College Dublin.",
       teacher_caption_2:
         "Teaching approach: structured sessions, real conversation, and consistent feedback.",
@@ -452,6 +450,7 @@
       learning_vocab_results_msg_review: "Review the flashcards and try again — you've got this!",
       learning_vocab_results_retry: "Try again",
       learning_vocab_results_level_up: "Next level up",
+      learning_vocab_missed_summary: "See missed questions ({count})",
       learning_vocab_question_line: "Q{n}: {q} [{mode}]",
       learning_vocab_choose_prompt: "Score: {score}/{round} | Choose an option to continue.",
       learning_vocab_correct_feedback: "Correct. Score: {score}/{round}",
@@ -628,17 +627,15 @@
         "B2 et plus — grammaire nuancée, vocabulaire académique et pratique type examen.",
       level_landing_grid_aria: "Choisir une activité",
       content_breadcrumb_aria: "Emplacement dans le contenu",
-      home_testimonials_heading: "Ce qu'en disent élèves et parents",
-      testimonials_heading: "Ce qu'en disent élèves et parents",
+      home_testimonials_heading: "Ce que disent les élèves et les parents",
+      testimonial_heading: "Ce que disent les élèves et les parents",
       testimonial_label: "Témoignage",
+      testimonial_quote_1:
+        "Louis explique les choses comme un étudiant pense, pas comme un manuel scolaire est écrit. Ma fille est passée de redouter le cours d'anglais à vraiment l'apprécier.",
       testimonial_attr_1: "Parent d'un élève débutant",
-      testimonial_attr_2: "Intermediate student, Lycée, Paris",
-      testimonial_1_quote:
-        "Louis explique comme pense un élève, pas comme est rédigé un manuel. Ma fille est passée de la crainte du cours d'anglais au plaisir d'y aller.",
-      testimonial_1_attr: "Parent d'une élève débutante",
-      testimonial_2_quote:
-        "Le petit groupe ne laisse pas place à la passivité. Il faut vraiment parler — c'est ce qui a fait la différence pour mon examen.",
-      testimonial_2_attr: "Élève de niveau intermédiaire, lycée, Paris",
+      testimonial_quote_2:
+        "Le format en petits groupes fait qu'on ne peut pas se cacher. On doit vraiment parler, et c'est ce qui a fait la différence pour mon examen.",
+      testimonial_attr_2: "Élève intermédiaire, Lycée, Paris",
       teacher_caption_1: "Louis McGovern — étudiant en commerce et en français à Trinity College Dublin.",
       teacher_caption_2:
         "Ma façon d'enseigner : des séances structurées, de vraies conversations et des retours réguliers.",
@@ -964,6 +961,7 @@
       learning_vocab_results_msg_review: "Revois les flashcards et réessaie, tu vas y arriver !",
       learning_vocab_results_retry: "Réessayer",
       learning_vocab_results_level_up: "Niveau supérieur",
+      learning_vocab_missed_summary: "Voir les erreurs ({count})",
       learning_vocab_question_line: "Q{n} : {q} [{mode}]",
       learning_vocab_choose_prompt: "Score : {score}/{round} | Choisis une réponse pour continuer.",
       learning_vocab_correct_feedback: "Correct. Score : {score}/{round}",
