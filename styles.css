@@ -4786,8 +4786,6 @@ html[data-theme="dark"] .account-level-badge--advanced {
 .lh-topics-lesson-panel .lh-lesson-view__back {
   position: static;
   z-index: auto;
-  margin: 0 0 1rem;
-  padding: 0.35rem 0;
   background: var(--surface-elevated);
   backdrop-filter: none;
 }
@@ -4961,16 +4959,24 @@ html[data-theme="dark"] .account-level-badge--advanced {
   top: 0;
   z-index: 2;
   align-self: flex-start;
-  margin: 0 0 0.15rem;
-  padding: 0.35rem 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0 0 0.85rem;
+  padding: 0.55rem 1rem 0.55rem 0.85rem;
+  min-width: fit-content;
+  white-space: nowrap;
   background: var(--glass-fill, var(--surface));
   backdrop-filter: blur(6px);
 }
 
 .lh-lesson-view__title {
-  margin: 0;
+  margin: 1.25rem 0;
+  padding-left: 0.25rem;
   font-size: 1.2rem;
   color: var(--ink-heading);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
 }
 
 .lh-lesson-block {
