@@ -21,11 +21,11 @@
       tagline: "Online English grinds for French-speaking students.",
       nav_main_aria: "Main sections",
       nav_about_label: "About the Teacher",
-      nav_about_hint: "Louis McGovern, Trinity, and how I teach",
+      nav_about_hint: "Who I am and how I teach",
       nav_process_label: "The Process",
-      nav_process_hint: "Chat, booking, then weekly classes",
+      nav_process_hint: "How grinds work and what to expect",
       nav_content_label: "Content",
-      nav_content_hint: "Materials by level (password)",
+      nav_content_hint: "Materials by level",
       nav_booking_label: "Booking",
       nav_booking_hint: "Send a time request",
       nav_booking_price: "€25 per session",
@@ -337,6 +337,11 @@
       flashcard_complete_title: "Deck session complete",
       flashcard_complete_summary:
         "You answered {correct} correctly and saved {wrong} cards for later (out of {total}).",
+      flashcard_complete_msg_excellent: "Excellent! You really know this deck.",
+      flashcard_complete_msg_good: "Good work — keep it up!",
+      flashcard_complete_msg_review: "Keep practising — you'll get there!",
+      learning_streak_hint_html:
+        "Active days in a row<br>Complete any activity to keep your streak going",
       flashcard_complete_wrong_only: "Study cards saved for later",
       flashcard_complete_full_again: "Whole category again",
       flashcard_complete_close: "Close",
@@ -527,11 +532,11 @@
       tagline: "Cours d’anglais en ligne pour élèves francophones.",
       nav_main_aria: "Sections principales",
       nav_about_label: "À propos du professeur",
-      nav_about_hint: "Louis McGovern, Trinity, et ma façon d’enseigner",
+      nav_about_hint: "Qui je suis et comment j’enseigne",
       nav_process_label: "Le déroulement des cours",
-      nav_process_hint: "Échange, inscription, cours chaque semaine",
+      nav_process_hint: "Comment fonctionnent les cours et à quoi s’attendre",
       nav_content_label: "Contenu",
-      nav_content_hint: "Supports par niveau (mot de passe)",
+      nav_content_hint: "Supports par niveau",
       nav_booking_label: "Inscription",
       nav_booking_hint: "Envoyer une demande de créneau",
       nav_booking_price: "25 € par séance",
@@ -846,6 +851,11 @@
       flashcard_complete_title: "Session terminée",
       flashcard_complete_summary:
         "Tu as {correct} bonnes réponses et {wrong} cartes gardées pour plus tard sur {total}.",
+      flashcard_complete_msg_excellent: "Excellent ! Tu maîtrises bien ce paquet.",
+      flashcard_complete_msg_good: "Bon travail, continue comme ça !",
+      flashcard_complete_msg_review: "Continue à t'entraîner, tu vas y arriver !",
+      learning_streak_hint_html:
+        "Jours actifs d'affilée<br>Complète n'importe quelle activité pour continuer ta série",
       flashcard_complete_wrong_only: "Revoir les cartes gardées pour plus tard",
       flashcard_complete_full_again: "Tout le thème encore",
       flashcard_complete_close: "Fermer",
@@ -1062,30 +1072,30 @@
 
     document.querySelectorAll("[data-i18n]").forEach(function (el) {
       const key = el.getAttribute("data-i18n");
-      if (key && STRINGS[L][key] != null) {
-        el.textContent = STRINGS[L][key];
-      }
+      if (!key) return;
+      const s = STRINGS[L][key] != null ? STRINGS[L][key] : STRINGS.en[key];
+      if (s != null) el.textContent = s;
     });
 
     document.querySelectorAll("[data-i18n-html]").forEach(function (el) {
       const key = el.getAttribute("data-i18n-html");
-      if (key && STRINGS[L][key] != null) {
-        el.innerHTML = STRINGS[L][key];
-      }
+      if (!key) return;
+      const s = STRINGS[L][key] != null ? STRINGS[L][key] : STRINGS.en[key];
+      if (s != null) el.innerHTML = s;
     });
 
     document.querySelectorAll("[data-i18n-placeholder]").forEach(function (el) {
       const key = el.getAttribute("data-i18n-placeholder");
-      if (key && STRINGS[L][key] != null) {
-        el.setAttribute("placeholder", STRINGS[L][key]);
-      }
+      if (!key) return;
+      const s = STRINGS[L][key] != null ? STRINGS[L][key] : STRINGS.en[key];
+      if (s != null) el.setAttribute("placeholder", s);
     });
 
     document.querySelectorAll("[data-i18n-aria]").forEach(function (el) {
       const key = el.getAttribute("data-i18n-aria");
-      if (key && STRINGS[L][key] != null) {
-        el.setAttribute("aria-label", STRINGS[L][key]);
-      }
+      if (!key) return;
+      const s = STRINGS[L][key] != null ? STRINGS[L][key] : STRINGS.en[key];
+      if (s != null) el.setAttribute("aria-label", s);
     });
 
     document.title = STRINGS[L].meta_title || STRINGS.en.meta_title;
@@ -1106,9 +1116,9 @@
 
     document.querySelectorAll("[data-i18n-title]").forEach(function (el) {
       const key = el.getAttribute("data-i18n-title");
-      if (key && STRINGS[L][key] != null) {
-        el.setAttribute("title", STRINGS[L][key]);
-      }
+      if (!key) return;
+      const s = STRINGS[L][key] != null ? STRINGS[L][key] : STRINGS.en[key];
+      if (s != null) el.setAttribute("title", s);
     });
 
     var footerBrand = document.querySelector(".site-footer__brand");

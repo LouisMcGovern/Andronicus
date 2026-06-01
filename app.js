@@ -222,6 +222,93 @@
   let userCloudSyncTimer = null;
   let userCloudSyncInFlight = false;
   let userCloudSyncQueued = false;
+
+  const EXERCISE_TOPIC_FR = {
+    "Possessive adjectives (my/your/his/her/our/their)": "Les adjectifs possessifs",
+    "Present simple vs present continuous": "Present simple et present continuous",
+    "There is / there are": "There is / There are",
+    "Question forms (do/does/is/are)": "Les formes interrogatives",
+    "Articles (a / an / the)": "Les articles",
+    "Prepositions of place": "Prépositions de lieu",
+    "Countable and uncountable nouns": "Noms dénombrables et indénombrables",
+    "Can / can't for ability": "Can / can't (capacité)",
+    "Past simple regular/irregular verbs": "Past simple",
+    "Object pronouns (me/you/him/her/us/them)": "Pronoms compléments",
+    "Future forms (going to / will)": "Futur (going to / will)",
+    "Possessive adjectives in context": "Adjectifs possessifs en contexte",
+    "Present perfect vs past simple": "Present perfect vs past simple",
+    "Relative clauses (who/which/that)": "Propositions relatives",
+    "Modal verbs for advice and obligation": "Modaux (conseil et obligation)",
+    "Conditionals (0, 1st, 2nd)": "Conditionnels (0, 1er, 2e)",
+    "Reported speech": "Discours indirect",
+    "Passive voice in context": "Voix passive",
+    "Comparatives and superlatives for argument writing": "Comparatif et superlatif",
+    "Essay paragraph structure (PEEL)": "Structure de paragraphe (PEEL)",
+    "Linkers for cohesion (however, therefore, moreover)": "Connecteurs logiques",
+    "Error correction and redrafting": "Correction et réécriture",
+    "Possessive adjectives in advanced writing": "Adjectifs possessifs (écriture avancée)",
+    "Cleft and inversion practice": "Phrases clivées et inversion",
+    "Hedging and academic caution": "Atténuation académique",
+    "Nominalisation for formal writing": "Nominalisation",
+    "Paraphrasing and synonym control": "Paraphrase et synonymes",
+    "Complex sentence cohesion": "Cohésion de phrases complexes",
+    "Advanced punctuation and clarity": "Ponctuation avancée",
+    "Synthesis writing from two sources": "Synthèse de deux sources",
+    "Timed high-level speaking response": "Oral chronométré",
+    "Abstract topic essay planning": "Plan de dissertation",
+    "Source comparison and reliability": "Comparaison de sources",
+  };
+
+  const EXERCISE_SUBTITLE_FR = {
+    "Possessive adjectives (my/your/his/her/our/their)": "mon, ton, son, sa, notre, leur",
+    "Present simple vs present continuous": "I eat / I am eating",
+    "There is / there are": "There is a… / There are…",
+    "Question forms (do/does/is/are)": "Do, Does, Is, Are",
+    "Articles (a / an / the)": "a, an, the",
+    "Prepositions of place": "in, on, at, under, next to",
+    "Countable and uncountable nouns": "many, much, some, a lot of",
+    "Can / can't for ability": "I can swim / She can't drive",
+    "Past simple regular/irregular verbs": "went, played, saw, didn't",
+    "Object pronouns (me/you/him/her/us/them)": "me, him, her, us, them",
+    "Future forms (going to / will)": "going to / will",
+    "Possessive adjectives in context": "his / her / their + nom",
+    "Present perfect vs past simple": "have done / did yesterday",
+    "Relative clauses (who/which/that)": "who, which, that, whose",
+    "Modal verbs for advice and obligation": "should, must, mustn't, have to",
+    "Conditionals (0, 1st, 2nd)": "if + present, will / would",
+    "Reported speech": "said she was, would, could",
+    "Passive voice in context": "is made, was built, been stolen",
+    "Comparatives and superlatives for argument writing": "more… than, the best",
+    "Essay paragraph structure (PEEL)": "Point, Evidence, Explain, Link",
+    "Linkers for cohesion (however, therefore, moreover)": "however, therefore, moreover",
+    "Error correction and redrafting": "3rd person -s, told me, agree",
+    "Possessive adjectives in advanced writing": "its policy, their results",
+    "Cleft and inversion practice": "It was… who, Rarely do…",
+    "Hedging and academic caution": "may, might, appears to",
+    "Nominalisation for formal writing": "analysis, decision, improvement",
+    "Paraphrasing and synonym control": "significant, demonstrate, issue",
+    "Complex sentence cohesion": "although, whereas, however",
+    "Advanced punctuation and clarity": "semicolon, colon, comma splice",
+    "Synthesis writing from two sources": "Source A argues, while B…",
+    "Timed high-level speaking response": "First, However, To sum up",
+    "Abstract topic essay planning": "thesis, points, counterargument",
+    "Source comparison and reliability": "bias, evidence, reliability",
+  };
+
+  function exerciseTopicLabel(ex) {
+    if (I18n.getLang() === "fr" && EXERCISE_TOPIC_FR[ex.topic]) {
+      return EXERCISE_TOPIC_FR[ex.topic];
+    }
+    return ex.topic;
+  }
+
+  function exerciseSubtitleLabel(ex) {
+    if (I18n.getLang() === "fr" && EXERCISE_SUBTITLE_FR[ex.topic]) {
+      return EXERCISE_SUBTITLE_FR[ex.topic];
+    }
+    return ex.subtitle || "";
+  }
+
   const learningData = {
     beginner: {
       flashcards: {
@@ -4135,12 +4222,7 @@
       }
 
       function streakHintHtml() {
-        if (I18n.getLang() === "fr") {
-          return (
-            "Jours actifs d'affilée<br>Complète n'importe quelle activité pour continuer ta série"
-          );
-        }
-        return "Active days in a row<br>Complete any activity to keep your streak going";
+        return I18n.t("learning_streak_hint_html");
       }
 
       function renderProgressPanel() {
@@ -4316,7 +4398,7 @@
           li.className = "lh-grammar-list__row";
           const name = document.createElement("span");
           name.className = "lh-grammar-list__topic";
-          name.textContent = ex.topic;
+          name.textContent = exerciseTopicLabel(ex);
           const done = completedKeys.includes(level + " - " + ex.topic);
           const check = document.createElement("span");
           check.className = "lh-grammar-list__check" + (done ? " is-complete" : "");
@@ -5136,7 +5218,9 @@
         if (!parsed.prose && !parsed.examples.length) {
           const fallback = document.createElement("p");
           fallback.className = "lh-learn-panel__prose";
-          fallback.textContent = I18n.t("learning_exercise_intro_fr_fallback", { topic: ex.topic });
+          fallback.textContent = I18n.t("learning_exercise_intro_fr_fallback", {
+            topic: exerciseTopicLabel(ex),
+          });
           panel.appendChild(fallback);
         }
         return panel;
@@ -5151,7 +5235,7 @@
         if (ex.practice) {
           return ex.practice.length > 100 ? ex.practice.slice(0, 97) + "..." : ex.practice;
         }
-        return I18n.t("learning_exercise_topic_fallback", { topic: ex.topic });
+        return I18n.t("learning_exercise_topic_fallback", { topic: exerciseTopicLabel(ex) });
       }
 
       function gapItemKey(item) {
@@ -5338,12 +5422,12 @@
         }
         const h = document.createElement("span");
         h.className = "lh-topic-card__title";
-        h.textContent = ex.topic;
+        h.textContent = exerciseTopicLabel(ex);
         card.appendChild(h);
-        if (ex.subtitle) {
+        if (ex.subtitle || EXERCISE_SUBTITLE_FR[ex.topic]) {
           const sub = document.createElement("p");
           sub.className = "lh-topic-card__subtitle";
-          sub.textContent = ex.subtitle;
+          sub.textContent = exerciseSubtitleLabel(ex);
           card.appendChild(sub);
         }
         const blurb = document.createElement("span");
@@ -5406,7 +5490,7 @@
 
         const title = document.createElement("h3");
         title.className = "lh-lesson-view__title";
-        title.textContent = ex.topic;
+        title.textContent = exerciseTopicLabel(ex);
 
         const learnSec = document.createElement("section");
         learnSec.className = "lh-lesson-block";
@@ -5813,9 +5897,9 @@
       }
 
       function flashcardCompleteEncouragement(pct) {
-        if (pct > 90) return "Excellent ! Tu maîtrises bien ce paquet.";
-        if (pct >= 70) return "Bon travail, continue comme ça !";
-        return "Continue à t'entraîner, tu vas y arriver !";
+        if (pct > 90) return I18n.t("flashcard_complete_msg_excellent");
+        if (pct >= 70) return I18n.t("flashcard_complete_msg_good");
+        return I18n.t("flashcard_complete_msg_review");
       }
 
       function updateCompleteOverlay(stats) {

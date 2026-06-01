@@ -54,7 +54,7 @@
 
     <nav class="main-nav" data-i18n-aria="nav_main_aria" aria-label="Main sections">
       <div class="home-free-banner">
-        <p class="home-free-banner__text">
+        <p class="home-free-banner__text" data-i18n="home_free_banner_text">
           Your first class is free — no commitment, no payment until you decide to continue.
         </p>
         <button type="button" class="btn-primary home-free-banner__btn" data-section="booking">Book now</button>
@@ -74,7 +74,7 @@
       <button type="button" class="nav-card" data-section="booking">
         <span class="nav-card__label" data-i18n="nav_booking_label">Booking</span>
         <span class="nav-card__hint" data-i18n="nav_booking_hint">Send a time request</span>
-        <span class="nav-card__price">€25 per session</span>
+        <span class="nav-card__price" data-i18n="nav_booking_price">€25 per session</span>
       </button>
       <button type="button" class="nav-card" data-section="account">
         <span class="nav-card__label" data-i18n="nav_account_label">Student account</span>
@@ -93,16 +93,16 @@
           <h2 id="home-why-heading" class="home-section-title home-section-title--why" data-i18n="why_section_title">Why Choose Andronicus?</h2>
           <ul class="why-points">
             <li class="why-point">
-              <h3 class="why-point__title">I'm a Student Too</h3>
-              <p class="why-point__body">I'm at Trinity College Dublin right now, so I know what it's like to be inside the work, not above it. That changes how I teach — I remember exactly which bits felt hard, which explanations finally clicked, and how to find ten extra minutes when the week is already full.</p>
+              <h3 class="why-point__title" data-i18n="why_3_title">I'm a Student Too</h3>
+              <p class="why-point__body" data-i18n="why_3_body">I'm at Trinity College Dublin right now, so I know what it's like to be inside the work, not above it. That changes how I teach — I remember exactly which bits felt hard, which explanations finally clicked, and how to find ten extra minutes when the week is already full.</p>
             </li>
             <li class="why-point">
-              <h3 class="why-point__title">You Can See Progress</h3>
-              <p class="why-point__body">Every student has a tracking page with real graphs, test results, and notes on class performance. You're not guessing whether you're improving — you can look. Parents see the same view, so there are no surprises at the end of the term.</p>
+              <h3 class="why-point__title" data-i18n="why_2_title">You Can See Progress</h3>
+              <p class="why-point__body" data-i18n="why_2_body">Every student has a tracking page with real graphs, test results, and notes on class performance. You're not guessing whether you're improving — you can look. Parents see the same view, so there are no surprises at the end of the term.</p>
             </li>
             <li class="why-point">
-              <h3 class="why-point__title">Small Groups</h3>
-              <p class="why-point__body">Maximum four students per class. That's small enough that you can't disappear, that every answer gets a response, and that the lesson can shift if a topic isn't landing. Big classes save money for the teacher; small classes work for the student.</p>
+              <h3 class="why-point__title" data-i18n="why_1_title">Small Groups</h3>
+              <p class="why-point__body" data-i18n="why_1_body">Maximum four students per class. That's small enough that you can't disappear, that every answer gets a response, and that the lesson can shift if a topic isn't landing. Big classes save money for the teacher; small classes work for the student.</p>
             </li>
           </ul>
         </section>
@@ -224,29 +224,12 @@
         <section class="process-extra" aria-labelledby="process-extra-heading">
           <h3 id="process-extra-heading" class="process-extra__title" data-i18n="process_extra_heading">Fees, homework, and how it works</h3>
           <div class="prose prose--process-detail">
-          <p data-i18n-html="process_p1_html">
-            Each grind lasts <strong>one hour</strong> and costs <strong>€25 per student per session</strong>.
-            There is a <strong>maximum of four students</strong> in each class so everyone can participate and
-            receive attention.
-          </p>
-          <p data-i18n-html="process_p2_html">
-            Every student is followed individually. Progress is tracked over the year with
-            <strong>graphs</strong> that reflect improvement alongside <strong>test results</strong> and
-            <strong>class performance</strong>, so strengths and next steps stay visible.
-          </p>
-          <p data-i18n-html="process_p3_html">
-            Lessons combine structure and immersion: we cover <strong>grammar</strong> systematically, and we
-            also use <strong>debates</strong>, <strong>homework</strong>, recommended <strong>films and series</strong>,
-            and <strong>music</strong> so English comes from real situations, not only a textbook.
-          </p>
+          <p data-i18n-html="process_p1_html"></p>
+          <p data-i18n-html="process_p2_html"></p>
+          <p data-i18n-html="process_p3_html"></p>
           <p data-i18n-html="process_zoom_plus_html"></p>
           <p data-i18n-html="process_p4_html"></p>
-          <p data-i18n-html="process_p5_html">
-            <strong>Contact:</strong>
-            <a href="tel:+353833198980">+353 (83) 319 8980</a>
-            ·
-            <a href="mailto:louis.f.mcgovern@gmail.com">louis.f.mcgovern@gmail.com</a>
-          </p>
+          <p data-i18n-html="process_p5_html"></p>
           </div>
         </section>
       </section>
@@ -255,7 +238,7 @@
         <nav id="content-breadcrumb" class="content-breadcrumb hidden" aria-label="Content location"></nav>
         <div id="content-levels" class="content-levels">
           <div id="level-picker" class="level-picker">
-            <p class="content-intro" data-i18n-html="content_intro">Choose your level. Content is uploaded by English level, and the password is required each time. If you would like access, <strong>contact me</strong> and we can arrange a <strong>10-minute chat</strong>.</p>
+            <p class="content-intro" data-i18n-html="content_intro"></p>
             <div class="level-buttons" role="group" data-i18n-aria="content_levels_aria" aria-label="English level">
               <button type="button" class="btn-level" data-level="beginner">
                 <span class="btn-level__name" data-i18n="level_beginner">Beginner</span>
@@ -465,16 +448,11 @@
       <section id="panel-booking" class="panel hidden">
         <h2 data-i18n="booking_title">Booking</h2>
         <div class="prose booking-intro">
-          <p data-i18n-html="booking_intro_html">
-            Pick the hour that suits you best during the week. I use these preferences to organise classes around
-            the <strong>most popular slots</strong>. You will receive an email with an <strong>IBAN</strong> at the
-            <strong>start of each month</strong> for payment. Your <strong>first class is free</strong> so you can
-            see whether the format works for you before committing.
-          </p>
+          <p data-i18n-html="booking_intro_html"></p>
           <p class="booking-request-note" data-i18n-html="booking_request_note_html"></p>
         </div>
         <form id="booking-form" class="booking-form" novalidate>
-          <div class="booking-price-callout">
+          <div class="booking-price-callout" data-i18n="booking_price_callout">
             Each session is €25 per student. Maximum four students per class. Your first session is free.
           </div>
           <label for="booking-parent-name" data-i18n="booking_parent_name_label">Parent name</label>
@@ -546,7 +524,7 @@
           <h3 class="booking-success__heading" data-i18n="booking_success_heading">Request received</h3>
           <p class="booking-success__main" data-i18n="booking_success_main">Louis will contact you within 24 hours by email or WhatsApp to confirm your slot. Your first class is free — no payment until confirmed.</p>
           <p id="booking-success-detail" class="booking-success__detail small-print hidden"></p>
-          <p class="booking-success__followup small-print" data-i18n-html="booking_success_followup_html">If you have not heard back within 24 hours, call <a href="tel:+353833198980">+353 (83) 319 8980</a>.</p>
+          <p class="booking-success__followup small-print" data-i18n-html="booking_success_followup_html"></p>
         </div>
       </section>
 
