@@ -31,7 +31,7 @@
       nav_booking_price: "€25 per session",
       home_free_banner_text:
         "Your first class is free — no commitment, no payment until you decide to continue.",
-      hero_cta_book_now: "Book now",
+      hero_cta_book_now: "Claim your free class",
       nav_account_label: "Student Account",
       nav_account_hint: "Optional login to track practice",
       mobile_nav_aria: "Mobile navigation",
@@ -41,7 +41,7 @@
       mobile_nav_account: "Account",
       btn_home: "← Back to home",
       skip_to_content: "Skip to content",
-      hero_cta_book: "Book a lesson",
+      hero_cta_book: "Book a free class",
       why_section_title: "Why Choose Andronicus?",
       why_1_title: "Small Groups",
       why_1_body:
@@ -455,6 +455,8 @@
       learning_vocab_summary_no_misses: "No weak topics this round — excellent consistency.",
       learning_vocab_summary_miss: "{topic} ({misses} misses)",
       learning_vocab_results_score: "{score} / {total} correct",
+      learning_vocab_results_best: "Your best: {pct}%",
+      learning_vocab_results_new_record: "New best! {pct}%",
       learning_vocab_results_msg_excellent: "Excellent work — keep it up!",
       learning_vocab_results_msg_good: "Good effort — you're making progress!",
       learning_vocab_results_msg_review: "Review the flashcards and try again — you've got this!",
@@ -547,7 +549,7 @@
       nav_booking_price: "25 € par séance",
       home_free_banner_text:
         "Ton premier cours est gratuit — sans engagement, et aucun paiement tant que tu n'as pas décidé de continuer.",
-      hero_cta_book_now: "Réserver",
+      hero_cta_book_now: "Réserver mon cours gratuit",
       nav_account_label: "Compte élève",
       nav_account_hint: "Connexion facultative pour suivre le travail",
       mobile_nav_aria: "Navigation mobile",
@@ -557,7 +559,7 @@
       mobile_nav_account: "Compte",
       btn_home: "← Retour à l’accueil",
       skip_to_content: "Aller au contenu",
-      hero_cta_book: "Réserver un cours",
+      hero_cta_book: "Réserver un cours gratuit",
       why_section_title: "Pourquoi choisir Andronicus ?",
       why_1_title: "Petits groupes",
       why_1_body:
@@ -976,6 +978,8 @@
       learning_vocab_summary_no_misses: "Aucun thème faible cette fois — très régulier.",
       learning_vocab_summary_miss: "{topic} ({misses} erreurs)",
       learning_vocab_results_score: "{score} / {total} bonnes réponses",
+      learning_vocab_results_best: "Ton meilleur score : {pct}%",
+      learning_vocab_results_new_record: "Nouveau record ! {pct}%",
       learning_vocab_results_msg_excellent: "Excellent travail, continue comme ça !",
       learning_vocab_results_msg_good: "Bon effort, tu progresses bien !",
       learning_vocab_results_msg_review: "Revois les flashcards et réessaie, tu vas y arriver !",

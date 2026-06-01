@@ -1851,6 +1851,36 @@ html[data-theme="dark"] .booking-sync-warning {
   outline-offset: 2px;
 }
 
+.btn-level[data-level="beginner"] {
+  border-left: 3px solid #059669;
+}
+
+.btn-level[data-level="beginner"]:hover,
+.btn-level[data-level="beginner"].is-active {
+  border-left-color: #047857;
+  border-color: #047857;
+}
+
+.btn-level[data-level="intermediate"] {
+  border-left: 3px solid #1d4ed8;
+}
+
+.btn-level[data-level="intermediate"]:hover,
+.btn-level[data-level="intermediate"].is-active {
+  border-left-color: #1e40af;
+  border-color: #1e40af;
+}
+
+.btn-level[data-level="advanced"] {
+  border-left: 3px solid #7c3aed;
+}
+
+.btn-level[data-level="advanced"]:hover,
+.btn-level[data-level="advanced"].is-active {
+  border-left-color: #6d28d9;
+  border-color: #6d28d9;
+}
+
 .level-article {
   display: flex;
   flex-direction: column;
@@ -3674,6 +3704,21 @@ html[data-theme="dark"] .flashcard-btn--got-it:hover {
   font-size: 0.9rem;
 }
 
+.lh-quiz-best {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0.25rem 0 0;
+  text-align: center;
+}
+
+.lh-quiz-best--new-record {
+  font-size: 0.95rem;
+  color: var(--accent-warm);
+  font-weight: 700;
+  text-align: center;
+  margin: 0.3rem 0 0;
+}
+
 .lh-quiz-results__msg {
   font-size: 1rem;
   color: var(--readable-body);
@@ -4717,7 +4762,7 @@ html[data-theme="dark"] .account-level-badge--advanced {
 
 .lh-topics-lesson-panel {
   display: block;
-  position: static;
+  position: relative;
   width: 100%;
   padding: 0.85rem 1rem 1.25rem;
   background: var(--surface-elevated);
@@ -5258,6 +5303,15 @@ html[data-theme="dark"] .lh-lesson-section--practice {
   body.content-panel-open {
     padding-bottom: 0;
   }
+
+  .scroll-top-btn {
+    bottom: calc(4.5rem + 1rem);
+    right: 1rem;
+  }
+
+  body.content-panel-open .scroll-top-btn {
+    display: none;
+  }
 }
 
 .mobile-bottom-nav__btn {
@@ -5283,4 +5337,143 @@ html[data-theme="dark"] .lh-lesson-section--practice {
 
 .mobile-bottom-nav__btn.is-active {
   color: var(--accent);
+}
+
+.streak-celebration {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  animation: fadeInOut 2.8s ease forwards;
+}
+
+.streak-celebration__emoji {
+  font-size: clamp(3rem, 12vw, 4.5rem);
+  line-height: 1;
+}
+
+.streak-celebration h2 {
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  color: #ffffff;
+  font-family: var(--font-display);
+  margin: 0.5rem 0 0.25rem;
+  text-align: center;
+}
+
+.streak-celebration p {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.confetti-particle {
+  position: fixed;
+  top: -10px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: confettiFall 2s ease-in forwards;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.topic-complete-flash {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: rgba(5, 150, 105, 0.92);
+  border-radius: var(--radius-lg);
+  color: #ffffff;
+  animation: topicFlash 1.2s ease forwards;
+}
+
+.topic-complete-flash__check {
+  font-size: 3.5rem;
+  line-height: 1;
+  animation: checkPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s both;
+}
+
+.topic-complete-flash__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-family: var(--font-tagline);
+}
+
+.topic-complete-flash__name {
+  font-size: 0.92rem;
+  opacity: 0.85;
+}
+
+@keyframes topicFlash {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes checkPop {
+  0% {
+    transform: scale(0);
+  }
+  60% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.gap-burst-particle {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-warm);
+  position: fixed;
+  pointer-events: none;
+  z-index: 1500;
 }

@@ -22,6 +22,9 @@
     "slot_day_sat",
   ];
 
+  const STREAK_MILESTONES = [3, 7, 14, 30];
+  const STREAK_CONFETTI_COLORS = ["#1d4ed8", "#059669", "#7c3aed", "#f59e0b", "#ef4444"];
+
   const LANDING_TOOL_ICONS = {
     flashcards:
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>',
@@ -68,6 +71,100 @@
         { once: true }
       );
     });
+  }
+
+  function haptic(pattern) {
+    try {
+      if (navigator.vibrate) navigator.vibrate(pattern);
+    } catch (e) {}
+  }
+
+  function showStreakCelebration(days) {
+    const overlay = document.createElement("div");
+    overlay.className = "streak-celebration";
+    for (let i = 0; i < 24; i += 1) {
+      const particle = document.createElement("span");
+      particle.className = "confetti-particle";
+      particle.style.left = 5 + Math.random() * 90 + "%";
+      particle.style.animationDelay = Math.random() * 0.6 + "s";
+      particle.style.background =
+        STREAK_CONFETTI_COLORS[Math.floor(Math.random() * STREAK_CONFETTI_COLORS.length)];
+      overlay.appendChild(particle);
+    }
+    const emoji = document.createElement("div");
+    emoji.className = "streak-celebration__emoji";
+    emoji.setAttribute("aria-hidden", "true");
+    emoji.textContent = "🔥";
+    const heading = document.createElement("h2");
+    heading.textContent = String(days) + " jours de suite !";
+    const subline = document.createElement("p");
+    subline.textContent = "Continue comme ça !";
+    overlay.appendChild(emoji);
+    overlay.appendChild(heading);
+    overlay.appendChild(subline);
+    document.body.appendChild(overlay);
+    setTimeout(function () {
+      if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+    }, 2800);
+  }
+
+  function showTopicCompleteFlash(container, topicName) {
+    const flash = document.createElement("div");
+    flash.className = "topic-complete-flash";
+    const check = document.createElement("div");
+    check.className = "topic-complete-flash__check";
+    check.textContent = "✓";
+    check.setAttribute("aria-hidden", "true");
+    const title = document.createElement("div");
+    title.className = "topic-complete-flash__title";
+    title.textContent = "Topic terminé !";
+    const name = document.createElement("div");
+    name.className = "topic-complete-flash__name";
+    name.textContent = topicName;
+    flash.appendChild(check);
+    flash.appendChild(title);
+    flash.appendChild(name);
+    container.appendChild(flash);
+    return flash;
+  }
+
+  function burstParticles(el) {
+    if (!el || !el.getBoundingClientRect) return;
+    const rect = el.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    for (let i = 0; i < 8; i += 1) {
+      const particle = document.createElement("span");
+      particle.className = "gap-burst-particle";
+      particle.style.left = cx + "px";
+      particle.style.top = cy + "px";
+      particle.style.pointerEvents = "none";
+      particle.style.zIndex = "1500";
+      const angle = Math.random() * 360;
+      const dist = 30 + Math.random() * 40;
+      const dx = Math.cos((angle * Math.PI) / 180) * dist;
+      const dy = Math.sin((angle * Math.PI) / 180) * dist;
+      document.body.appendChild(particle);
+      const anim = particle.animate(
+        [
+          { transform: "translate(0, 0) scale(1)", opacity: 1 },
+          {
+            transform: "translate(" + dx + "px, " + dy + "px) scale(0)",
+            opacity: 0,
+          },
+        ],
+        { duration: 600, easing: "ease-out", fill: "forwards" }
+      );
+      if (anim && anim.finished) {
+        anim.finished.then(function () {
+          particle.remove();
+        });
+      } else {
+        setTimeout(function () {
+          particle.remove();
+        }, 600);
+      }
+    }
   }
 
   function refreshStaticPageCopy() {
@@ -2400,6 +2497,7 @@
     if (!lh.activityByDay) lh.activityByDay = {};
     if (lh.onboardingShown !== true) lh.onboardingShown = false;
     if (lh.lastLevel == null) lh.lastLevel = "";
+    if (!lh.lastCelebratedStreak) lh.lastCelebratedStreak = 0;
     return lh;
   }
 
@@ -2498,6 +2596,14 @@
       if (lh.lastActiveDay === ystr) lh.streak = (lh.streak || 0) + 1;
       else lh.streak = lh.lastActiveDay ? 1 : Math.max(1, lh.streak || 1);
       lh.lastActiveDay = today;
+      if (
+        STREAK_MILESTONES.indexOf(lh.streak) !== -1 &&
+        lh.lastCelebratedStreak !== lh.streak
+      ) {
+        lh.lastCelebratedStreak = lh.streak;
+        saveUsers();
+        showStreakCelebration(lh.streak);
+      }
     }
     lh.activityByDay[today] = (lh.activityByDay[today] || 0) + 1;
     saveUsers();
@@ -4092,9 +4198,37 @@
   }
 
   function initLearningHubForRoot(root) {
+      const LEVEL_COLORS = {
+        beginner: {
+          accent: "#059669",
+          soft: "rgba(5,150,105,0.12)",
+          strong: "#047857",
+        },
+        intermediate: {
+          accent: "#1d4ed8",
+          soft: "rgba(29,78,216,0.12)",
+          strong: "#1e40af",
+        },
+        advanced: {
+          accent: "#7c3aed",
+          soft: "rgba(124,58,237,0.12)",
+          strong: "#6d28d9",
+        },
+      };
       const level = root.getAttribute("data-learning-level");
+      const levelColor = LEVEL_COLORS[level] || LEVEL_COLORS.beginner;
       const data = learningData[level];
       if (!data) return;
+
+      const levelArticle = document.getElementById("content-" + level);
+      if (levelArticle) levelArticle.style.borderTopColor = levelColor.accent;
+      const levelLandingHeading = root.querySelector(".level-landing__heading");
+      if (levelLandingHeading) levelLandingHeading.style.color = levelColor.accent;
+
+      function applyBackToMenuColor() {
+        const btn = root.querySelector(".lh-back-to-menu");
+        if (btn) btn.style.color = levelColor.accent;
+      }
 
       function homeworkKey(topic) {
         return level + "|hw|" + topic;
@@ -4150,9 +4284,17 @@
         backToMenuBtn.addEventListener("click", function () {
           resetHubToLanding(root);
         });
+        backToMenuBtn.style.color = levelColor.accent;
       }
+      applyBackToMenuColor();
 
       landingCards.forEach(function (btn) {
+        btn.addEventListener("mouseenter", function () {
+          btn.style.borderColor = levelColor.accent;
+        });
+        btn.addEventListener("mouseleave", function () {
+          btn.style.borderColor = "";
+        });
         btn.addEventListener("click", function () {
           const tool = btn.getAttribute("data-tool");
           if (tool) enterSection(tool);
@@ -4456,7 +4598,11 @@
           const done = completedKeys.includes(level + " - " + ex.topic);
           const check = document.createElement("span");
           check.className = "lh-grammar-list__check" + (done ? " is-complete" : "");
-          if (done) check.textContent = "✓";
+          if (done) {
+            check.textContent = "✓";
+            check.style.background = levelColor.accent;
+            check.style.borderColor = levelColor.accent;
+          }
           check.setAttribute("aria-hidden", "true");
           li.appendChild(name);
           li.appendChild(check);
@@ -4509,7 +4655,7 @@
             const fill = document.createElement("div");
             fill.className = "lh-hw-overall-bar-fill";
             fill.style.width = String(pct) + "%";
-            fill.style.backgroundColor = hwProgressBarColor(pct);
+            fill.style.backgroundColor = levelColor.accent;
             track.appendChild(fill);
             wrap.appendChild(track);
             const stat = document.createElement("p");
@@ -4909,6 +5055,8 @@
       resultsPct.className = "lh-quiz-results__pct";
       const resultsScore = document.createElement("p");
       resultsScore.className = "lh-muted lh-quiz-results__score";
+      const resultsBest = document.createElement("p");
+      resultsBest.className = "lh-quiz-best hidden";
       const resultsMsg = document.createElement("p");
       resultsMsg.className = "lh-quiz-results__msg";
       const resultsActions = document.createElement("div");
@@ -4925,6 +5073,7 @@
       resultsActions.appendChild(resultsLevelUpBtn);
       resultsCard.appendChild(resultsPct);
       resultsCard.appendChild(resultsScore);
+      resultsCard.appendChild(resultsBest);
       resultsCard.appendChild(resultsMsg);
       resultsCard.appendChild(resultsActions);
       summary.appendChild(resultsCard);
@@ -5035,6 +5184,24 @@
         resultsCard.insertBefore(missed, resultsActions);
       }
 
+      function updateResultsBestLine(pct, previousBest) {
+        resultsBest.className = "lh-quiz-best hidden";
+        resultsBest.textContent = "";
+        if (previousBest == null) return;
+        if (pct > previousBest) {
+          resultsBest.className = "lh-quiz-best lh-quiz-best--new-record";
+          resultsBest.textContent = I18n.t("learning_vocab_results_new_record", {
+            pct: String(pct),
+          });
+          haptic([6, 30, 6, 30, 6]);
+        } else if (previousBest > pct) {
+          resultsBest.className = "lh-quiz-best";
+          resultsBest.textContent = I18n.t("learning_vocab_results_best", {
+            pct: String(previousBest),
+          });
+        }
+      }
+
       function showSummary(totalCount) {
         quizCounter.classList.add("hidden");
         quizQuestion.classList.add("hidden");
@@ -5043,11 +5210,25 @@
         quizNext.classList.add("hidden");
         saveWordBtn.classList.add("hidden");
         summary.classList.remove("hidden");
+        const pct = totalCount ? Math.round((quizScore / totalCount) * 100) : 0;
+        const quizKey = level + " " + currentMode;
+        let previousBest = null;
+        const summaryUser = getActiveUser();
+        if (summaryUser) {
+          const summaryStats = ensureStats(summaryUser);
+          if (
+            summaryStats.quizBest &&
+            Object.prototype.hasOwnProperty.call(summaryStats.quizBest, quizKey)
+          ) {
+            previousBest = summaryStats.quizBest[quizKey];
+          }
+        }
         if (!sessionRecorded) {
           recordQuizSummary(level, currentMode, quizScore, totalCount);
           sessionRecorded = true;
         }
         updateResultsCard(totalCount);
+        updateResultsBestLine(pct, previousBest);
         renderMissedQuestions();
         refreshStreakHeader();
       }
@@ -5087,6 +5268,7 @@
           btn.textContent = opt;
           btn.addEventListener("click", function () {
             if (quizAnswered) return;
+            haptic(4);
             quizAnswered = true;
             const correct = opt === currentQuestion.answer;
             trackVocabAnswer(currentQuestion.topic, correct);
@@ -5366,6 +5548,7 @@
             if (pendingOk) {
               b.classList.add("is-correct");
               playElementAnimation(b, "answer-correct-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)");
+              burstParticles(b);
             } else {
               b.classList.add("is-wrong");
               Array.from(row.querySelectorAll("button")).forEach(function (btn) {
@@ -5378,6 +5561,7 @@
         });
         continueBtn.addEventListener("click", function () {
           if (continueBtn.hidden) return;
+          haptic(6);
           Array.from(row.querySelectorAll("button")).forEach(function (btn) {
             btn.classList.remove("is-correct", "is-wrong");
           });
@@ -5451,6 +5635,7 @@
           const startHere = document.createElement("span");
           startHere.className = "lh-topic-card__start-here";
           startHere.textContent = I18n.t("learning_topic_start_here");
+          startHere.style.backgroundColor = levelColor.accent;
           card.appendChild(startHere);
         }
         if (done) {
@@ -5459,6 +5644,7 @@
           const check = document.createElement("span");
           check.className = "lh-topic-card__check";
           check.textContent = "✓";
+          check.style.color = levelColor.accent;
           check.setAttribute("aria-hidden", "true");
           statusWrap.appendChild(check);
           const undoBtn = document.createElement("button");
@@ -5700,14 +5886,28 @@
           if (!getActiveUser()) return;
           if (isExerciseTopicDone(ex.topic)) {
             undoExerciseCompletion(level, ex.topic);
+            renderExTopicList();
+            syncPracticeMarkBtn();
+            refreshLandingCardProgress(root, level, data);
+            renderProgressPanel();
           } else {
-            recordExerciseCompletion(level, ex.topic);
-            playElementAnimation(selfMarkBtn, "answer-correct-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)");
+            const res = recordExerciseCompletion(level, ex.topic);
+            if (res && res.ok) {
+              const flash = showTopicCompleteFlash(exLessonPanel, exerciseTopicLabel(ex));
+              setTimeout(function () {
+                if (flash.parentNode) flash.parentNode.removeChild(flash);
+                renderExTopicList();
+                refreshLandingCardProgress(root, level, data);
+                renderProgressPanel();
+                closeExLesson();
+              }, 1200);
+            } else {
+              renderExTopicList();
+              syncPracticeMarkBtn();
+              refreshLandingCardProgress(root, level, data);
+              renderProgressPanel();
+            }
           }
-          renderExTopicList();
-          syncPracticeMarkBtn();
-          refreshLandingCardProgress(root, level, data);
-          renderProgressPanel();
         });
         syncPracticeMarkBtn();
         practiceSec.appendChild(practiceH);
@@ -5921,6 +6121,7 @@
         const completed = total ? Math.min(sessionPos, total) : 0;
         const pct = total ? (completed / total) * 100 : 0;
         sessionProgressFill.style.width = String(pct) + "%";
+        sessionProgressFill.style.backgroundColor = levelColor.accent;
         sessionProgressLabel.textContent = total
           ? I18n.t("flashcard_session_progress", {
               n: String(completed),
@@ -6323,6 +6524,7 @@
       });
 
       flipBtn.addEventListener("click", function () {
+        haptic(4);
         showingBack = !showingBack;
         renderCard();
       });
@@ -6342,6 +6544,7 @@
       });
 
       againBtn.addEventListener("click", function () {
+        haptic([8, 40, 8]);
         if (!sessionIndices.length || sessionPos >= sessionIndices.length) return;
         if (!showingBack) showingBack = true;
         const deck = fullDeck();
@@ -6362,6 +6565,7 @@
       });
 
       gotItBtn.addEventListener("click", function () {
+        haptic(8);
         if (!sessionIndices.length || sessionPos >= sessionIndices.length) return;
         if (!showingBack) showingBack = true;
         sessionCorrect += 1;
@@ -6420,7 +6624,11 @@
         const landingIntro = root.querySelector(".level-landing__intro");
         const landingHeading = root.querySelector(".level-landing__heading");
         if (landingIntro) landingIntro.textContent = I18n.t("learning_level_desc_" + level);
-        if (landingHeading) landingHeading.textContent = I18n.t("level_" + level);
+        if (landingHeading) {
+          landingHeading.textContent = I18n.t("level_" + level);
+          landingHeading.style.color = levelColor.accent;
+        }
+        applyBackToMenuColor();
         label.textContent = I18n.t("flashcard_deck_label");
         syncLangToggleLabel();
         const savedDeckOpt = topicSelect.querySelector('[data-saved-deck-option="1"]');
