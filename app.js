@@ -124,7 +124,7 @@
     flash.appendChild(check);
     flash.appendChild(title);
     flash.appendChild(name);
-    container.appendChild(flash);
+    document.body.appendChild(flash);
     return flash;
   }
 

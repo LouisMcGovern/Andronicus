@@ -4762,7 +4762,6 @@ html[data-theme="dark"] .account-level-badge--advanced {
 
 .lh-topics-lesson-panel {
   display: block;
-  position: relative;
   width: 100%;
   padding: 0.85rem 1rem 1.25rem;
   background: var(--surface-elevated);
@@ -5410,14 +5409,16 @@ html[data-theme="dark"] .lh-lesson-section--practice {
 }
 
 .topic-complete-flash {
-  position: absolute;
+  position: fixed;
   inset: 0;
-  z-index: 10;
+  z-index: 2500;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  padding: 2rem;
+  box-sizing: border-box;
   background: rgba(5, 150, 105, 0.92);
   border-radius: var(--radius-lg);
   color: #ffffff;
@@ -5439,6 +5440,16 @@ html[data-theme="dark"] .lh-lesson-section--practice {
 .topic-complete-flash__name {
   font-size: 0.92rem;
   opacity: 0.85;
+}
+
+@media (max-width: 768px) {
+  .topic-complete-flash__check {
+    font-size: 2.75rem;
+  }
+
+  .topic-complete-flash__title {
+    font-size: 1.1rem;
+  }
 }
 
 @keyframes topicFlash {
