@@ -55,6 +55,21 @@
     return "rgb(" + r + ", " + g + ", " + b + ")";
   }
 
+  function playElementAnimation(el, animation) {
+    if (!el) return;
+    el.style.animation = "none";
+    requestAnimationFrame(function () {
+      el.style.animation = animation;
+      el.addEventListener(
+        "animationend",
+        function () {
+          el.style.animation = "";
+        },
+        { once: true }
+      );
+    });
+  }
+
   function refreshStaticPageCopy() {
     const bannerText = document.querySelector(".home-free-banner__text");
     if (bannerText) bannerText.textContent = I18n.t("home_free_banner_text");
@@ -129,6 +144,23 @@
   const levelPicker = document.getElementById("level-picker");
   const contentBreadcrumb = document.getElementById("content-breadcrumb");
   const scrollTopBtn = document.getElementById("scroll-top-btn");
+  const mobileBottomNav = document.getElementById("mobile-bottom-nav");
+
+  const MOBILE_NAV_SECTIONS = ["home", "content", "booking", "account"];
+  let mobileNavSection = "home";
+
+  function updateMobileNav(sectionId) {
+    if (sectionId !== undefined) {
+      mobileNavSection = sectionId;
+    }
+    if (!mobileBottomNav) return;
+    mobileBottomNav.querySelectorAll(".mobile-bottom-nav__btn").forEach(function (btn) {
+      btn.classList.toggle(
+        "is-active",
+        !!mobileNavSection && btn.getAttribute("data-section") === mobileNavSection
+      );
+    });
+  }
 
   const bookingForm = document.getElementById("booking-form");
   const bookingParentNameInput = document.getElementById("booking-parent-name");
@@ -3554,6 +3586,7 @@
       btnHome.classList.add("hidden");
       setContentPanelOpen(false);
       resetContentPanel();
+      updateMobileNav("home");
     }
 
     if (animate === false) {
@@ -3607,6 +3640,7 @@
           bookingSuccessWarning.classList.add("hidden");
         }
       }
+      updateMobileNav(MOBILE_NAV_SECTIONS.includes(id) ? id : null);
     }
 
     if (animate === false) {
@@ -3623,6 +3657,16 @@
   });
 
   btnHome.addEventListener("click", showHome);
+
+  if (mobileBottomNav) {
+    mobileBottomNav.addEventListener("click", function (e) {
+      const btn = e.target.closest(".mobile-bottom-nav__btn");
+      if (!btn) return;
+      const section = btn.getAttribute("data-section");
+      if (section === "home") showHome();
+      else openSection(section);
+    });
+  }
 
   const btnHomeContactBooking = document.getElementById("btn-home-contact-booking");
   if (btnHomeContactBooking) {
@@ -4248,17 +4292,24 @@
         const hwTotal = hwList.length;
         const grid = document.createElement("div");
         grid.className = "lh-stat-grid";
-        function statCard(label, val) {
+        function statCard(label, val, accentColor) {
           const c = document.createElement("div");
           c.className = "lh-stat-card";
+          const stripe = document.createElement("div");
+          stripe.className = "lh-stat-card__stripe";
+          stripe.style.backgroundColor = accentColor;
+          const content = document.createElement("div");
+          content.className = "lh-stat-card__content";
           const lab = document.createElement("div");
           lab.className = "lh-stat-card__label";
           lab.textContent = label;
           const v = document.createElement("div");
           v.className = "lh-stat-card__value";
           v.textContent = val;
-          c.appendChild(lab);
-          c.appendChild(v);
+          content.appendChild(lab);
+          content.appendChild(v);
+          c.appendChild(stripe);
+          c.appendChild(content);
           grid.appendChild(c);
         }
         statCard(
@@ -4266,20 +4317,23 @@
           I18n.t("learning_progress_stat_grammar", {
             n: String(grammarDone),
             t: String(grammarTotal),
-          })
+          }),
+          "#1a6fa3"
         );
         statCard(
           I18n.t("learning_progress_stat_homework_label"),
           I18n.t("learning_progress_stat_homework", {
             n: String(hwDone),
             t: String(hwTotal),
-          })
+          }),
+          "#d97706"
         );
         const fa = stats.flashcards.attempts || 0;
         const fc = stats.flashcards.correct || 0;
         statCard(
           I18n.t("learning_progress_flash_accuracy"),
-          fa ? String(Math.round((fc / fa) * 100)) + "%" : I18n.t("learning_progress_not_applicable")
+          fa ? String(Math.round((fc / fa) * 100)) + "%" : I18n.t("learning_progress_not_applicable"),
+          "#7c3aed"
         );
         const streakCard = document.createElement("div");
         streakCard.className = "lh-stat-card lh-stat-card--streak";
@@ -5040,6 +5094,7 @@
               quizScore += 1;
               lastQuizCorrect = true;
               btn.classList.add("is-correct");
+              playElementAnimation(btn, "answer-correct-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)");
               quizFeedback.textContent = I18n.t("learning_vocab_correct_feedback", {
                 score: String(quizScore),
                 round: String(askedCount),
@@ -5047,6 +5102,7 @@
             } else {
               lastQuizCorrect = false;
               btn.classList.add("is-wrong");
+              playElementAnimation(btn, "shake 0.35s ease");
               wrongByTopic[currentQuestion.topic] = (wrongByTopic[currentQuestion.topic] || 0) + 1;
               wrongAnswers.push({
                 question: currentQuestion.question,
@@ -5309,6 +5365,7 @@
             });
             if (pendingOk) {
               b.classList.add("is-correct");
+              playElementAnimation(b, "answer-correct-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)");
             } else {
               b.classList.add("is-wrong");
               Array.from(row.querySelectorAll("button")).forEach(function (btn) {
@@ -5489,7 +5546,7 @@
         title.textContent = exerciseTopicLabel(ex);
 
         const learnSec = document.createElement("section");
-        learnSec.className = "lh-lesson-block";
+        learnSec.className = "lh-lesson-block lh-lesson-section--learn";
         const learnH = document.createElement("h4");
         learnH.className = "lh-lesson-block__title";
         learnH.setAttribute("data-learning-chrome", "learning_ex_learn");
@@ -5498,7 +5555,7 @@
         learnSec.appendChild(buildLearnPanel(ex));
 
         const examplesSec = document.createElement("section");
-        examplesSec.className = "lh-lesson-block";
+        examplesSec.className = "lh-lesson-block lh-lesson-section--examples";
         const examplesH = document.createElement("h4");
         examplesH.className = "lh-lesson-block__title";
         examplesH.setAttribute("data-learning-chrome", "learning_ex_examples");
@@ -5601,7 +5658,7 @@
         examplesSec.appendChild(examplesPlay);
 
         const practiceSec = document.createElement("section");
-        practiceSec.className = "lh-lesson-block";
+        practiceSec.className = "lh-lesson-block lh-lesson-section--practice";
         const practiceH = document.createElement("h4");
         practiceH.className = "lh-lesson-block__title";
         practiceH.setAttribute("data-learning-chrome", "learning_ex_practice");
@@ -5645,6 +5702,7 @@
             undoExerciseCompletion(level, ex.topic);
           } else {
             recordExerciseCompletion(level, ex.topic);
+            playElementAnimation(selfMarkBtn, "answer-correct-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)");
           }
           renderExTopicList();
           syncPracticeMarkBtn();
@@ -6102,6 +6160,7 @@
         const wrongSetSize = Object.keys(lastSessionWrongKeys).length;
         btnWrongOnly.classList.toggle("hidden", wrongSetSize === 0);
         completeOverlay.classList.remove("hidden");
+        playElementAnimation(completeInner, "celebrate-bounce 0.4s ease");
       }
 
       function updateDeckCountHint() {
@@ -6292,6 +6351,7 @@
         wrongKeysThisSession[key] = true;
         sessionWrong += 1;
         recordFlashcardResult(false, flashMeta());
+        playElementAnimation(flipBtn, "card-again 0.3s ease");
         sessionPos += 1;
         showingBack = false;
         if (sessionPos >= sessionIndices.length) {
@@ -6306,6 +6366,7 @@
         if (!showingBack) showingBack = true;
         sessionCorrect += 1;
         recordFlashcardResult(true, flashMeta());
+        playElementAnimation(flipBtn, "card-got-it 0.3s ease");
         sessionPos += 1;
         showingBack = false;
         renderCard();
