@@ -343,6 +343,7 @@
   let pendingLevel = null;
   let users = {};
   let activeUsername = null;
+  let homeworkPanelRenderers = [];
   let adminUnlocked = false;
   let adminViewingStudent = null;
   let bookings = [];
@@ -2218,14 +2219,9 @@
   }
 
   function saveUsers() {
+    console.log("SAVING", activeUsername);
     try {
       localStorage.setItem(USERS_KEY, JSON.stringify(users));
-      if (activeUsername && users[activeUsername] && users[activeUsername].stats) {
-        console.log(
-          "saved",
-          JSON.stringify(users[activeUsername].stats.learningHub.homeworkChecklist)
-        );
-      }
     } catch (e) {}
     scheduleActiveUserCloudSync();
   }
@@ -2586,6 +2582,12 @@
       const lvl = root.getAttribute("data-learning-level");
       const data = learningData[lvl];
       if (data) refreshLandingCardProgress(root, lvl, data);
+    });
+  }
+
+  function refreshAllHomeworkPanels() {
+    homeworkPanelRenderers.forEach(function (renderFn) {
+      renderFn();
     });
   }
 
@@ -3818,6 +3820,7 @@
       setAuthFeedback(I18n.t("account_ok_register"), false);
       renderAccountPanel();
       refreshAllLandingCardProgress();
+      refreshAllHomeworkPanels();
       accountRegisterForm.reset();
       syncPasswordToggleAria();
     });
@@ -3853,6 +3856,7 @@
       setAuthFeedback(I18n.t("account_ok_login"), false);
       renderAccountPanel();
       refreshAllLandingCardProgress();
+      refreshAllHomeworkPanels();
       accountLoginForm.reset();
       syncPasswordToggleAria();
     });
@@ -3865,6 +3869,7 @@
       setAuthFeedback("", false);
       renderAccountPanel();
       refreshAllLandingCardProgress();
+      refreshAllHomeworkPanels();
     });
   }
 
@@ -4202,6 +4207,7 @@
   }
 
   function initLearningTools() {
+    homeworkPanelRenderers = [];
     document.querySelectorAll(".learning-tools").forEach(initLearningHubForRoot);
     refreshAllLandingCardProgress();
   }
@@ -4266,6 +4272,7 @@
           panel.classList.toggle("hidden", panel.getAttribute("data-tool-panel") !== name);
         });
         if (name === "progress") renderProgressPanel();
+        if (name === "homework") renderHomeworkPanel();
         refreshStreakHeader();
         updateContentBreadcrumb();
       }
@@ -4712,55 +4719,6 @@
           return wrap;
         }
 
-        function renderHomeworkChecklistItem(item) {
-          return (function (checklistItem) {
-            if (!checklistItem || !checklistItem.id) return null;
-            const renderUser = getActiveUser();
-            const renderHub = renderUser ? ensureLearningHub(ensureStats(renderUser)) : null;
-            const done =
-              (renderHub && renderHub.homeworkChecklist && renderHub.homeworkChecklist[level]) || {};
-            const isChecked = !!done[checklistItem.id];
-            const li = document.createElement("li");
-            li.className = "lh-hw-checklist__item" + (isChecked ? " is-done" : "");
-            li.setAttribute("data-category", (checklistItem.category || "Vocab").toLowerCase());
-            const label = document.createElement("label");
-            label.className = "lh-hw-checklist__label lh-hw-checklist__label--in-category";
-            const cb = document.createElement("input");
-            cb.type = "checkbox";
-            cb.className = "lh-hw-checklist__cb";
-            cb.checked = isChecked;
-            cb.disabled = !renderUser;
-            cb.addEventListener("change", function () {
-              const changeUser = getActiveUser();
-              if (!changeUser) {
-                cb.checked = false;
-                return;
-              }
-              const st = ensureStats(changeUser);
-              const hub = ensureLearningHub(st);
-              if (!hub.homeworkChecklist) hub.homeworkChecklist = {};
-              if (!hub.homeworkChecklist[level]) hub.homeworkChecklist[level] = {};
-              if (cb.checked) {
-                hub.homeworkChecklist[level][checklistItem.id] = true;
-              } else {
-                delete hub.homeworkChecklist[level][checklistItem.id];
-              }
-              saveUsers();
-              renderHomeworkPanel();
-            });
-            const text = document.createElement("span");
-            text.className = "lh-hw-checklist__text";
-            text.textContent =
-              cLang === "fr" && checklistItem.fr
-                ? checklistItem.fr
-                : checklistItem.en || checklistItem.fr || "";
-            label.appendChild(cb);
-            label.appendChild(text);
-            li.appendChild(label);
-            return li;
-          })(item);
-        }
-
         const cwrap = document.createElement("section");
         cwrap.className = "lh-hw-checklist";
 
@@ -4782,16 +4740,18 @@
         hwCategories.forEach(function (cat) {
           grouped[cat] = [];
         });
-        data.homeworkChecklist.forEach(function (item) {
-          if (!item || !item.id) return;
+        for (let gi = 0; gi < data.homeworkChecklist.length; gi++) {
+          let item = data.homeworkChecklist[gi];
+          if (!item || !item.id) continue;
           const cat = item.category || "Vocab";
           if (!grouped[cat]) grouped[cat] = [];
           grouped[cat].push(item);
-        });
+        }
 
-        hwCategories.forEach(function (cat) {
+        for (let ci = 0; ci < hwCategories.length; ci++) {
+          const cat = hwCategories[ci];
           const items = grouped[cat];
-          if (!items || !items.length) return;
+          if (!items || !items.length) continue;
 
           const catDone = countCategoryDone(items);
           const catTotal = items.length;
@@ -4816,15 +4776,55 @@
 
           const catList = document.createElement("ol");
           catList.className = "lh-hw-checklist__list lh-hw-category__list";
-          items.forEach(function (loopItem) {
-            (function (item) {
-              const row = renderHomeworkChecklistItem(item);
-              if (row) catList.appendChild(row);
-            })(loopItem);
-          });
+          for (let ii = 0; ii < items.length; ii++) {
+            let item = items[ii];
+            if (!item || !item.id) continue;
+
+            const renderUser = getActiveUser();
+            const renderHub = renderUser ? ensureLearningHub(ensureStats(renderUser)) : null;
+            const doneAtRender =
+              (renderHub && renderHub.homeworkChecklist && renderHub.homeworkChecklist[level]) || {};
+
+            const li = document.createElement("li");
+            li.className = "lh-hw-checklist__item" + (doneAtRender[item.id] ? " is-done" : "");
+            li.setAttribute("data-category", (item.category || "Vocab").toLowerCase());
+            const label = document.createElement("label");
+            label.className = "lh-hw-checklist__label lh-hw-checklist__label--in-category";
+            const cb = document.createElement("input");
+            cb.type = "checkbox";
+            cb.className = "lh-hw-checklist__cb";
+            cb.checked = !!doneAtRender[item.id];
+            console.log("[hw checkbox] getActiveUser()", getActiveUser());
+            cb.disabled = getActiveUser() === null;
+            cb.addEventListener("change", function () {
+              const user = getActiveUser();
+              if (!user) {
+                cb.checked = false;
+                return;
+              }
+              const st = ensureStats(user);
+              const hub = ensureLearningHub(st);
+              if (!hub.homeworkChecklist) hub.homeworkChecklist = {};
+              if (!hub.homeworkChecklist[level]) hub.homeworkChecklist[level] = {};
+              if (cb.checked) {
+                hub.homeworkChecklist[level][item.id] = true;
+              } else {
+                delete hub.homeworkChecklist[level][item.id];
+              }
+              saveUsers();
+              renderHomeworkPanel();
+            });
+            const text = document.createElement("span");
+            text.className = "lh-hw-checklist__text";
+            text.textContent = cLang === "fr" && item.fr ? item.fr : item.en || item.fr || "";
+            label.appendChild(cb);
+            label.appendChild(text);
+            li.appendChild(label);
+            catList.appendChild(li);
+          }
           catSec.appendChild(catList);
           cwrap.appendChild(catSec);
-        });
+        }
 
         if (!user) {
           const cNotice = document.createElement("p");
@@ -4835,6 +4835,7 @@
 
         homeworkPanel.appendChild(cwrap);
       }
+      homeworkPanelRenderers.push(renderHomeworkPanel);
       renderHomeworkPanel();
 
       vocabPanel.innerHTML = "";
