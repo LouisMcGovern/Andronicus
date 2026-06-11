@@ -346,6 +346,9 @@
   let homeworkPanelRenderers = [];
   let adminUnlocked = false;
   let adminViewingStudent = null;
+  let adminStudentsLoading = false;
+  let adminStudentsError = "";
+  let adminStudentsFetched = false;
   let bookings = [];
   let paymentChecklist = [];
   let supabaseClient = null;
@@ -2367,8 +2370,44 @@
     }
   }
 
+  async function fetchAdminStudents() {
+    if (adminStudentsLoading) return;
+    if (!isSupabaseConfigured()) {
+      adminStudentsFetched = true;
+      return;
+    }
+    const sb = getSupabaseClient();
+    if (!sb) {
+      adminStudentsFetched = true;
+      return;
+    }
+    adminStudentsLoading = true;
+    adminStudentsError = "";
+    renderAdminPanel();
+    try {
+      const { data, error } = await sb
+        .from("student_accounts")
+        .select("username, password, full_name, stats");
+      if (error) throw error;
+      (data || []).forEach(function (row) {
+        const normalized = normalizeCloudUserRow(row);
+        if (!normalized) return;
+        // Keep the active user's local copy so unsynced progress isn't clobbered.
+        if (row.username === activeUsername) return;
+        users[row.username] = normalized;
+      });
+    } catch (err) {
+      console.error(err);
+      adminStudentsError = err && err.message ? err.message : String(err);
+    }
+    adminStudentsLoading = false;
+    adminStudentsFetched = true;
+    renderAdminPanel();
+  }
+
   async function refreshAdminCloudData() {
     if (!adminUnlocked) return;
+    adminStudentsFetched = false;
     if (!isSupabaseConfigured()) {
       if (adminCloudStatus) {
         adminCloudStatus.classList.add("hidden");
@@ -3343,7 +3382,27 @@
       if (adminStudentListWrap) adminStudentListWrap.classList.remove("hidden");
       if (adminStudentDetail) adminStudentDetail.classList.add("hidden");
       adminStudentsTableBody.innerHTML = "";
-      Object.keys(users).forEach(function (username) {
+      if (!adminStudentsFetched && !adminStudentsLoading) {
+        void fetchAdminStudents();
+      }
+      if (adminStudentsLoading) {
+        const loadingTr = document.createElement("tr");
+        const loadingTd = document.createElement("td");
+        loadingTd.colSpan = 6;
+        loadingTd.textContent = I18n.t("admin_cloud_syncing");
+        loadingTr.appendChild(loadingTd);
+        adminStudentsTableBody.appendChild(loadingTr);
+      } else if (adminStudentsError) {
+        const errorTr = document.createElement("tr");
+        const errorTd = document.createElement("td");
+        errorTd.colSpan = 6;
+        errorTd.style.color = "#b74848";
+        errorTd.textContent = I18n.t("admin_cloud_fail_prefix") + " " + adminStudentsError;
+        errorTr.appendChild(errorTd);
+        adminStudentsTableBody.appendChild(errorTr);
+      }
+      const studentUsernames = adminStudentsLoading ? [] : Object.keys(users);
+      studentUsernames.forEach(function (username) {
         const user = users[username];
         const stats = ensureStats(user);
         const tr = document.createElement("tr");
