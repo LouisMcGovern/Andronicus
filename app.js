@@ -2955,7 +2955,10 @@
     const user = users[username];
     if (!user) return;
     const stats = ensureStats(user);
+    console.log("[admin] full stats for " + username, JSON.parse(JSON.stringify(stats)));
     adminStudentDetailInner.innerHTML = "";
+
+    const lh = stats.learningHub || {};
 
     const header = document.createElement("div");
     header.className = "admin-student-detail__header";
@@ -2963,6 +2966,12 @@
     h.textContent = I18n.t("admin_student_detail_title", {
       name: user.fullName || username,
     });
+    if (lh.lastLevel && CONTENT_LEVELS.indexOf(lh.lastLevel) >= 0) {
+      const badge = document.createElement("span");
+      badge.className = "admin-level-badge admin-level-badge--" + lh.lastLevel;
+      badge.textContent = I18n.t("level_" + lh.lastLevel);
+      h.appendChild(badge);
+    }
     const sub = document.createElement("p");
     sub.className = "admin-student-detail__sub";
     sub.textContent = I18n.t("admin_student_detail_username", { user: username });
@@ -2970,16 +2979,33 @@
     header.appendChild(sub);
     adminStudentDetailInner.appendChild(header);
 
-    const secFlash = document.createElement("section");
-    secFlash.className = "admin-detail-section";
-    const hFlash = document.createElement("h4");
-    hFlash.textContent = I18n.t("admin_student_flash_overall");
-    secFlash.appendChild(hFlash);
     const att = stats.flashcards.attempts || 0;
     const cor = stats.flashcards.correct || 0;
-    const pct = att ? (cor / att) * 100 : 0;
-    appendAdminBarRow(secFlash, I18n.t("admin_student_lifetime_accuracy"), pct);
-    adminStudentDetailInner.appendChild(secFlash);
+
+    const statRow = document.createElement("div");
+    statRow.className = "admin-stat-row";
+    function appendStatCard(label, value) {
+      const card = document.createElement("div");
+      card.className = "admin-stat-card";
+      const v = document.createElement("div");
+      v.className = "admin-stat-card__value";
+      v.textContent = value;
+      const lab = document.createElement("div");
+      lab.className = "admin-stat-card__label";
+      lab.textContent = label;
+      card.appendChild(v);
+      card.appendChild(lab);
+      statRow.appendChild(card);
+    }
+    appendStatCard(I18n.t("admin_student_stat_cards_reviewed"), String(att));
+    appendStatCard(I18n.t("admin_student_stat_accuracy"), formatPct(cor, att));
+    appendStatCard(I18n.t("admin_student_stat_quiz_sessions"), String(stats.quizSessions || 0));
+    appendStatCard(
+      I18n.t("admin_student_stat_exercises"),
+      String(stats.completedExercises.length)
+    );
+    appendStatCard(I18n.t("admin_student_stat_streak"), String(lh.streak || 0));
+    adminStudentDetailInner.appendChild(statRow);
 
     const secDeck = document.createElement("section");
     secDeck.className = "admin-detail-section";
@@ -3008,45 +3034,33 @@
     const hSess = document.createElement("h4");
     hSess.textContent = I18n.t("admin_student_flash_sessions");
     secSess.appendChild(hSess);
-    const sessions = (stats.flashcardSessions || []).slice(-12);
+    const sessions = (stats.flashcardSessions || []).slice(-12).reverse();
     if (!sessions.length) {
       const p = document.createElement("p");
       p.className = "admin-detail-empty";
       p.textContent = I18n.t("admin_student_no_sessions");
       secSess.appendChild(p);
     } else {
-      const chart = document.createElement("div");
-      chart.className = "admin-column-chart";
-      sessions.forEach(function (s, idx) {
-        const col = document.createElement("div");
-        col.className = "admin-column-chart__col";
-        const total = s.total || 1;
-        const hPct = Math.round(((s.correct || 0) / total) * 100);
-        const bar = document.createElement("div");
-        bar.className = "admin-column-chart__bar";
-        const px = Math.round((hPct / 100) * 110);
-        bar.style.height = String(Math.max(4, px)) + "px";
-        bar.title =
-          (s.topic || "") +
-          " (" +
-          (s.level || "") +
-          "): " +
-          String(s.correct) +
-          "/" +
-          String(total) +
+      const ul = document.createElement("ul");
+      ul.className = "admin-detail-list";
+      sessions.forEach(function (s) {
+        const total = s.total || 0;
+        const sessPct = total ? Math.round(((s.correct || 0) / total) * 100) : 0;
+        const deckName = [s.level, s.topic].filter(Boolean).join(" → ");
+        const li = document.createElement("li");
+        li.textContent =
+          (s.at ? new Date(s.at).toLocaleString() : "") +
+          " · " +
+          deckName +
+          " · " +
+          I18n.t("admin_student_session_cards", { n: String(total) }) +
+          " · " +
+          String(sessPct) +
+          "%" +
           (s.mode === "wrong_retry" ? " · " + I18n.t("admin_student_mode_wrong_retry") : "");
-        const lab = document.createElement("span");
-        lab.className = "admin-column-chart__label";
-        lab.textContent = String(idx + 1);
-        col.appendChild(bar);
-        col.appendChild(lab);
-        chart.appendChild(col);
+        ul.appendChild(li);
       });
-      secSess.appendChild(chart);
-      const tb = document.createElement("p");
-      tb.className = "admin-session-legend";
-      tb.textContent = I18n.t("admin_student_session_chart_hint");
-      secSess.appendChild(tb);
+      secSess.appendChild(ul);
     }
     adminStudentDetailInner.appendChild(secSess);
 
@@ -3106,11 +3120,16 @@
       p.textContent = I18n.t("account_no_exercises_done");
       secEx.appendChild(p);
     } else {
+      const exDates = {};
+      (stats.exerciseCompletionLog || []).forEach(function (entry) {
+        if (entry && entry.topic && entry.at) exDates[entry.topic] = entry.at;
+      });
       const ul = document.createElement("ul");
       ul.className = "admin-detail-list";
       stats.completedExercises.forEach(function (item) {
         const li = document.createElement("li");
-        li.textContent = item;
+        const when = exDates[item] ? " · " + new Date(exDates[item]).toLocaleDateString() : "";
+        li.textContent = item + when;
         ul.appendChild(li);
       });
       secEx.appendChild(ul);
