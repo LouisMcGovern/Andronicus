@@ -302,6 +302,8 @@
   const adminBookingsTab = document.getElementById("admin-bookings-tab");
   const adminProgressTab = document.getElementById("admin-progress-tab");
   const adminPaymentsTab = document.getElementById("admin-payments-tab");
+  const adminLeaderboardTab = document.getElementById("admin-leaderboard-tab");
+  const adminLeaderboardTbody = document.getElementById("admin-leaderboard-tbody");
   const adminPaymentForm = document.getElementById("admin-payment-form");
   const adminPaymentNameInput = document.getElementById("admin-payment-name");
   const adminPaymentOwedInput = document.getElementById("admin-payment-owed");
@@ -3135,6 +3137,54 @@
       secEx.appendChild(ul);
     }
     adminStudentDetailInner.appendChild(secEx);
+
+    const studentLevel = lh.lastLevel || null;
+    const hwAllItems =
+      studentLevel && learningData[studentLevel] && learningData[studentLevel].homeworkChecklist
+        ? learningData[studentLevel].homeworkChecklist
+        : [];
+    const hwDoneIds = studentHomeworkDoneIds(stats, studentLevel || "");
+    const secHw = document.createElement("section");
+    secHw.className = "admin-detail-section";
+    const hHw = document.createElement("h4");
+    hHw.textContent = I18n.t("admin_student_homework");
+    secHw.appendChild(hHw);
+    if (!hwAllItems.length) {
+      const p = document.createElement("p");
+      p.className = "admin-detail-empty";
+      p.textContent = I18n.t("admin_student_homework_none_for_level");
+      secHw.appendChild(p);
+    } else {
+      const summary = document.createElement("p");
+      summary.className = "admin-detail-empty";
+      summary.style.marginBottom = "0.45rem";
+      summary.textContent = I18n.t("admin_student_homework_summary", {
+        done: String(hwDoneIds.length),
+        total: String(hwAllItems.length),
+      });
+      secHw.appendChild(summary);
+      if (hwDoneIds.length) {
+        const idToLabel = Object.create(null);
+        hwAllItems.forEach(function (item) {
+          if (item && item.id) idToLabel[item.id] = item.en || item.fr || item.id;
+        });
+        const ul = document.createElement("ul");
+        ul.className = "admin-detail-list";
+        hwDoneIds.forEach(function (id) {
+          const li = document.createElement("li");
+          li.textContent = idToLabel[id] ? id + " · " + idToLabel[id] : id;
+          ul.appendChild(li);
+        });
+        secHw.appendChild(ul);
+      }
+    }
+    adminStudentDetailInner.appendChild(secHw);
+  }
+
+  function studentHomeworkDoneIds(stats, lvl) {
+    var lh = (stats && stats.learningHub) || {};
+    var done = (lh.homeworkChecklist && lh.homeworkChecklist[lvl]) || {};
+    return Object.keys(done).filter(function (k) { return done[k]; });
   }
 
   function markAccountOnboardingShown() {
@@ -3327,6 +3377,83 @@
       li.textContent = item;
       accountCompletedExercises.appendChild(li);
     });
+  }
+
+  function renderAdminLeaderboard() {
+    if (!adminLeaderboardTbody) return;
+    adminLeaderboardTbody.innerHTML = "";
+    var rows = Object.keys(users).map(function (username) {
+      var user = users[username];
+      var stats = ensureStats(user);
+      var lh = stats.learningHub || {};
+      var cards = (stats.flashcards && stats.flashcards.attempts) || 0;
+      var quizzes = stats.quizSessions || 0;
+      var exercises = (stats.completedExercises || []).length;
+      var lvl = lh.lastLevel || "";
+      var hwIds = studentHomeworkDoneIds(stats, lvl);
+      var hw = hwIds.length;
+      var score = cards * 1 + quizzes * 5 + exercises * 10 + hw * 3;
+      return {
+        username: username,
+        name: user.fullName || username,
+        level: lvl,
+        score: score,
+        cards: cards,
+        quizzes: quizzes,
+        exercises: exercises,
+        hw: hw,
+      };
+    });
+    rows.sort(function (a, b) { return b.score - a.score; });
+    var topScore = rows.length ? rows[0].score : -1;
+    rows.forEach(function (row, idx) {
+      var tr = document.createElement("tr");
+      var rankTd = document.createElement("td");
+      rankTd.textContent = (row.score === topScore && topScore > 0 ? "🏆 " : "") + String(idx + 1);
+      var nameTd = document.createElement("td");
+      nameTd.textContent = row.name;
+      var levelTd = document.createElement("td");
+      if (row.level && CONTENT_LEVELS.indexOf(row.level) >= 0) {
+        var badge = document.createElement("span");
+        badge.className = "admin-level-badge admin-level-badge--" + row.level;
+        badge.textContent = I18n.t("level_" + row.level);
+        levelTd.appendChild(badge);
+      } else {
+        levelTd.textContent = "—";
+      }
+      var scoreTd = document.createElement("td");
+      scoreTd.textContent = String(row.score);
+      scoreTd.style.fontWeight = "700";
+      var cardsTd = document.createElement("td");
+      cardsTd.textContent = String(row.cards);
+      var quizzesTd = document.createElement("td");
+      quizzesTd.textContent = String(row.quizzes);
+      var exTd = document.createElement("td");
+      exTd.textContent = String(row.exercises);
+      var hwTd = document.createElement("td");
+      hwTd.textContent = String(row.hw);
+      tr.appendChild(rankTd);
+      tr.appendChild(nameTd);
+      tr.appendChild(levelTd);
+      tr.appendChild(scoreTd);
+      tr.appendChild(cardsTd);
+      tr.appendChild(quizzesTd);
+      tr.appendChild(exTd);
+      tr.appendChild(hwTd);
+      if (row.score === topScore && topScore > 0) {
+        tr.style.background = "var(--accent-soft)";
+      }
+      adminLeaderboardTbody.appendChild(tr);
+    });
+    if (!rows.length) {
+      var emptyTr = document.createElement("tr");
+      var emptyTd = document.createElement("td");
+      emptyTd.colSpan = 8;
+      emptyTd.className = "admin-detail-empty";
+      emptyTd.textContent = I18n.t("admin_leaderboard_empty");
+      emptyTr.appendChild(emptyTd);
+      adminLeaderboardTbody.appendChild(emptyTr);
+    }
   }
 
   function renderAdminPanel() {
@@ -3985,6 +4112,8 @@
         if (adminBookingsTab) adminBookingsTab.classList.toggle("hidden", tab !== "bookings");
         if (adminProgressTab) adminProgressTab.classList.toggle("hidden", tab !== "progress");
         if (adminPaymentsTab) adminPaymentsTab.classList.toggle("hidden", tab !== "payments");
+        if (adminLeaderboardTab) adminLeaderboardTab.classList.toggle("hidden", tab !== "leaderboard");
+        if (tab === "leaderboard") renderAdminLeaderboard();
       });
     });
   }

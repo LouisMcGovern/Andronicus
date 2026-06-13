@@ -678,6 +678,7 @@
             <button type="button" class="tool-menu__btn is-active" data-admin-tab="bookings" data-i18n="admin_tab_bookings">Bookings</button>
             <button type="button" class="tool-menu__btn" data-admin-tab="progress" data-i18n="admin_tab_progress">Student progress</button>
             <button type="button" class="tool-menu__btn" data-admin-tab="payments" data-i18n="admin_tab_payments">Payments</button>
+            <button type="button" class="tool-menu__btn" data-admin-tab="leaderboard" data-i18n="admin_tab_leaderboard">Leaderboard</button>
           </div>
           <div id="admin-bookings-tab" class="admin-tab">
             <div class="account-card account-card--admin">
@@ -736,6 +737,28 @@
                 <button type="submit" class="btn-primary" data-i18n="admin_payment_add_btn">Add to checklist</button>
               </form>
               <ul id="admin-payment-list" class="resource-list"></ul>
+            </div>
+          </div>
+          <div id="admin-leaderboard-tab" class="admin-tab hidden">
+            <div class="account-card account-card--admin">
+              <h3 data-i18n="admin_leaderboard_heading">Leaderboard</h3>
+              <div class="table-scroll">
+                <table id="admin-leaderboard-table" class="admin-table">
+                  <thead>
+                    <tr>
+                      <th data-i18n="admin_lb_col_rank">Rank</th>
+                      <th data-i18n="admin_lb_col_name">Name</th>
+                      <th data-i18n="admin_lb_col_level">Level</th>
+                      <th data-i18n="admin_lb_col_score">Score</th>
+                      <th data-i18n="admin_lb_col_cards">Cards</th>
+                      <th data-i18n="admin_lb_col_quizzes">Quizzes</th>
+                      <th data-i18n="admin_lb_col_exercises">Exercises</th>
+                      <th data-i18n="admin_lb_col_homework">Homework</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-leaderboard-tbody"></tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
