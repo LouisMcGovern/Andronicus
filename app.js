@@ -291,6 +291,7 @@
   const adminLoginBtn = document.getElementById("admin-login-btn");
   const adminLoginFeedback = document.getElementById("admin-login-feedback");
   const adminDashboard = document.getElementById("admin-dashboard");
+  const adminReminderBanner = document.getElementById("admin-reminder-banner");
   const adminLogoutBtn = document.getElementById("admin-logout-btn");
   const adminStudentsTableBody = document.querySelector("#admin-students-table tbody");
   const adminStudentListWrap = document.getElementById("admin-student-list-wrap");
@@ -3458,11 +3459,62 @@
     }
   }
 
+  function renderAdminReminderBanner() {
+    if (!adminReminderBanner) return;
+    adminReminderBanner.innerHTML = "";
+    adminReminderBanner.className = "admin-reminder-banner";
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    lastDay.setHours(0, 0, 0, 0);
+    const daysLeft = Math.round((lastDay - today) / 86400000);
+
+    const dateStr = lastDay.toLocaleDateString("en-IE", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+
+    let countdownText;
+    if (daysLeft <= 0) {
+      countdownText = "Due today!";
+      adminReminderBanner.classList.add("admin-reminder-banner--urgent");
+    } else if (daysLeft <= 5) {
+      countdownText = "in " + daysLeft + " day" + (daysLeft === 1 ? "" : "s");
+      adminReminderBanner.classList.add("admin-reminder-banner--warning");
+    } else {
+      countdownText = "in " + daysLeft + " day" + (daysLeft === 1 ? "" : "s");
+    }
+
+    const row1 = document.createElement("p");
+    row1.className = "admin-reminder-banner__line";
+    row1.innerHTML =
+      "<span class='admin-reminder-banner__icon'>📧</span>" +
+      "<span>Next progress email due: <strong>" + dateStr + "</strong> — <em>" + countdownText + "</em></span>";
+
+    const row2 = document.createElement("p");
+    row2.className = "admin-reminder-banner__line";
+    row2.innerHTML =
+      "<span class='admin-reminder-banner__icon'>💶</span>" +
+      "<span>Payment collection due: <strong>" + dateStr + "</strong> — <em>" + countdownText + "</em></span>";
+
+    const row3 = document.createElement("p");
+    row3.className = "admin-reminder-banner__note";
+    row3.innerHTML =
+      "Don't forget to send progress emails to students — use the <strong>Send monthly progress emails</strong> button in the Payments tab.";
+
+    adminReminderBanner.appendChild(row1);
+    adminReminderBanner.appendChild(row2);
+    adminReminderBanner.appendChild(row3);
+  }
+
   function renderAdminPanel() {
     if (!adminLoginWrap || !adminDashboard || !adminStudentsTableBody) return;
     adminLoginWrap.classList.toggle("hidden", adminUnlocked);
     adminDashboard.classList.toggle("hidden", !adminUnlocked);
     if (!adminUnlocked) return;
+    renderAdminReminderBanner();
     if (adminBookingsTableBody) {
       adminBookingsTableBody.innerHTML = "";
       bookings
