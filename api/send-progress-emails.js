@@ -14,6 +14,23 @@
 const CONTENT_LEVELS = ["beginner", "intermediate", "advanced"];
 const LEVEL_LABELS = { beginner: "Beginner", intermediate: "Intermediate", advanced: "Advanced" };
 
+const FR_MONTHS = [
+  "janvier", "février", "mars", "avril", "mai", "juin",
+  "juillet", "août", "septembre", "octobre", "novembre", "décembre",
+];
+
+function buildSubject(fullName) {
+  const now = new Date();
+  const month = FR_MONTHS[now.getMonth()];
+  const year = now.getFullYear();
+  const firstName = (fullName || "").trim().split(/\s+/)[0] || "Élève";
+  return `Andronicus – Résultats de ${month} ${year} | ${firstName}`;
+}
+
+function isEmail(str) {
+  return typeof str === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(str.trim());
+}
+
 function getStudentLevel(lh) {
   const l = (lh && lh.lastLevel) || "";
   return CONTENT_LEVELS.includes(l) ? l : null;
@@ -24,6 +41,14 @@ function homeworkDoneCount(lh, level) {
   const done = lh.homeworkChecklist[level];
   if (!done || typeof done !== "object") return 0;
   return Object.values(done).filter(Boolean).length;
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
 function buildEmailHtml(fullName, username, stats) {
@@ -111,29 +136,6 @@ function buildEmailHtml(fullName, username, stats) {
 </html>`;
 }
 
-function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
-const FR_MONTHS = [
-  "janvier", "février", "mars", "avril", "mai", "juin",
-  "juillet", "août", "septembre", "octobre", "novembre", "décembre",
-];
-
-function buildSubject(fullName) {
-  const now = new Date();
-  const month = FR_MONTHS[now.getMonth()];
-  const year = now.getFullYear();
-  const firstName = (fullName || "").trim().split(/\s+/)[0] || "Élève";
-  return `Andronicus – Résultats de ${month} ${year} | ${firstName}`;
-}
-  return typeof str === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(str.trim());
-}
-
 async function fetchAllStudents(supabaseUrl, serviceRoleKey) {
   const url = `${supabaseUrl}/rest/v1/student_accounts?select=username,full_name,stats`;
   const res = await fetch(url, {
@@ -188,7 +190,12 @@ export default async function handler(req, res) {
     });
   }
 
-  const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+  let body;
+  try {
+    body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+  } catch (e) {
+    return res.status(400).json({ error: "Invalid JSON body" });
+  }
   if (!body || body.secret !== adminSecret) {
     return res.status(401).json({ error: "Unauthorised" });
   }
@@ -209,12 +216,7 @@ export default async function handler(req, res) {
     const html = buildEmailHtml(fullName, student.username, stats);
     const subject = buildSubject(fullName);
     try {
-      await sendEmail(
-        resendApiKey,
-        student.username,
-        subject,
-        html
-      );
+      await sendEmail(resendApiKey, student.username, subject, html);
       results.sent.push(student.username);
     } catch (err) {
       results.errors.push({ username: student.username, error: err.message });
