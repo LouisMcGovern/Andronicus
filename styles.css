@@ -4275,6 +4275,17 @@ html[data-theme="dark"] .flashcard-btn--got-it:hover {
   margin: 0 0 0.5rem;
 }
 
+.admin-email-section {
+  margin-bottom: 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.admin-email-section .field-hint {
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
+
 .admin-dashboard__actions {
   margin-bottom: 0.75rem;
 }

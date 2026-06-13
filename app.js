@@ -305,6 +305,8 @@
   const adminLeaderboardTab = document.getElementById("admin-leaderboard-tab");
   const adminLeaderboardTbody = document.getElementById("admin-leaderboard-tbody");
   const adminPaymentForm = document.getElementById("admin-payment-form");
+  const adminSendEmailsBtn = document.getElementById("admin-send-emails-btn");
+  const adminSendEmailsStatus = document.getElementById("admin-send-emails-status");
   const adminPaymentNameInput = document.getElementById("admin-payment-name");
   const adminPaymentOwedInput = document.getElementById("admin-payment-owed");
   const adminPaymentList = document.getElementById("admin-payment-list");
@@ -4180,6 +4182,50 @@
   if (adminCornerBtn) {
     adminCornerBtn.addEventListener("click", function () {
       openSection("admin");
+    });
+  }
+
+  if (adminSendEmailsBtn) {
+    adminSendEmailsBtn.addEventListener("click", async function () {
+      if (!adminSendEmailsStatus) return;
+      const secret = getSupabaseConfig().adminApiSecret;
+      if (!secret) {
+        adminSendEmailsStatus.textContent = I18n.t("admin_send_emails_no_secret");
+        adminSendEmailsStatus.style.color = "#b74848";
+        adminSendEmailsStatus.classList.remove("hidden");
+        return;
+      }
+      adminSendEmailsBtn.disabled = true;
+      adminSendEmailsStatus.textContent = I18n.t("admin_send_emails_sending");
+      adminSendEmailsStatus.style.color = "";
+      adminSendEmailsStatus.classList.remove("hidden");
+      try {
+        const res = await fetch("/api/send-progress-emails", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ secret }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          adminSendEmailsStatus.textContent =
+            I18n.t("admin_send_emails_error") + " " + (data.error || String(res.status));
+          adminSendEmailsStatus.style.color = "#b74848";
+        } else {
+          const errNote =
+            data.errors && data.errors.length
+              ? " (" + data.errors.length + " failed)"
+              : "";
+          adminSendEmailsStatus.textContent = I18n.t("admin_send_emails_ok", {
+            sent: String(data.sent || 0),
+            skipped: String(data.skipped || 0),
+          }) + errNote;
+          adminSendEmailsStatus.style.color = "#166534";
+        }
+      } catch (err) {
+        adminSendEmailsStatus.textContent = I18n.t("admin_send_emails_error") + " " + err.message;
+        adminSendEmailsStatus.style.color = "#b74848";
+      }
+      adminSendEmailsBtn.disabled = false;
     });
   }
 
