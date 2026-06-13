@@ -119,7 +119,18 @@ function escapeHtml(str) {
     .replace(/"/g, "&quot;");
 }
 
-function isEmail(str) {
+const FR_MONTHS = [
+  "janvier", "février", "mars", "avril", "mai", "juin",
+  "juillet", "août", "septembre", "octobre", "novembre", "décembre",
+];
+
+function buildSubject(fullName) {
+  const now = new Date();
+  const month = FR_MONTHS[now.getMonth()];
+  const year = now.getFullYear();
+  const firstName = (fullName || "").trim().split(/\s+/)[0] || "Élève";
+  return `Andronicus – Résultats de ${month} ${year} | ${firstName}`;
+}
   return typeof str === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(str.trim());
 }
 
@@ -196,11 +207,12 @@ export default async function handler(req, res) {
     const stats = student.stats || {};
     const fullName = student.full_name || student.username;
     const html = buildEmailHtml(fullName, student.username, stats);
+    const subject = buildSubject(fullName);
     try {
       await sendEmail(
         resendApiKey,
         student.username,
-        `Your Andronicus progress summary — ${new Date().toLocaleDateString("en-IE", { month: "long", year: "numeric" })}`,
+        subject,
         html
       );
       results.sent.push(student.username);
