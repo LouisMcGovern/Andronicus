@@ -261,6 +261,7 @@
 
   const bookingForm = document.getElementById("booking-form");
   const bookingParentNameInput = document.getElementById("booking-parent-name");
+  const bookingParentEmailInput = document.getElementById("booking-parent-email");
   const bookingStudentNameInput = document.getElementById("booking-student-name");
   const bookingPhoneInput = document.getElementById("booking-phone");
   const bookingLevelInput = document.getElementById("booking-level");
@@ -2306,6 +2307,7 @@
     return {
       fullName: String(row.full_name || ""),
       password: String(row.password || ""),
+      parentEmail: String(row.parent_email || ""),
       stats: row.stats && typeof row.stats === "object" ? row.stats : {},
     };
   }
@@ -2337,6 +2339,7 @@
         p_username: username,
         p_password: String(user.password || ""),
         p_full_name: String(user.fullName || ""),
+        p_parent_email: String(user.parentEmail || ""),
         p_stats: user.stats && typeof user.stats === "object" ? user.stats : {},
       });
       if (error) throw error;
@@ -2392,7 +2395,7 @@
     try {
       const { data, error } = await sb
         .from("student_accounts")
-        .select("username, password, full_name, stats");
+        .select("username, password, full_name, parent_email, stats");
       if (error) throw error;
       (data || []).forEach(function (row) {
         const normalized = normalizeCloudUserRow(row);
@@ -2982,6 +2985,77 @@
     sub.textContent = I18n.t("admin_student_detail_username", { user: username });
     header.appendChild(h);
     header.appendChild(sub);
+    // Parent email display + inline editor
+    const parentEmailWrap = document.createElement("div");
+    parentEmailWrap.className = "admin-parent-email-wrap";
+    const currentParentEmail = user.parentEmail || "";
+    const pEmailDisplay = document.createElement("p");
+    pEmailDisplay.className = "admin-student-detail__sub";
+    pEmailDisplay.innerHTML = "<strong>" + I18n.t("admin_parent_email_label") + ":</strong> " +
+      (currentParentEmail ? '<a href="mailto:' + currentParentEmail + '">' + currentParentEmail + "</a>" : "<em>" + I18n.t("admin_parent_email_none") + "</em>");
+    const pEmailEditWrap = document.createElement("div");
+    pEmailEditWrap.className = "admin-parent-email-edit hidden";
+    const pEmailInput = document.createElement("input");
+    pEmailInput.type = "email";
+    pEmailInput.className = "admin-parent-email-input";
+    pEmailInput.value = currentParentEmail;
+    pEmailInput.placeholder = "parent@example.com";
+    const pEmailSaveBtn = document.createElement("button");
+    pEmailSaveBtn.type = "button";
+    pEmailSaveBtn.className = "btn-primary btn-sm";
+    pEmailSaveBtn.textContent = I18n.t("admin_parent_email_save");
+    const pEmailCancelBtn = document.createElement("button");
+    pEmailCancelBtn.type = "button";
+    pEmailCancelBtn.className = "btn-secondary btn-sm";
+    pEmailCancelBtn.textContent = I18n.t("admin_parent_email_cancel");
+    pEmailEditWrap.appendChild(pEmailInput);
+    pEmailEditWrap.appendChild(pEmailSaveBtn);
+    pEmailEditWrap.appendChild(pEmailCancelBtn);
+    const pEmailEditBtn = document.createElement("button");
+    pEmailEditBtn.type = "button";
+    pEmailEditBtn.className = "btn-secondary btn-sm";
+    pEmailEditBtn.style.marginLeft = "0.5rem";
+    pEmailEditBtn.textContent = I18n.t("admin_parent_email_edit");
+    pEmailEditBtn.addEventListener("click", function () {
+      pEmailDisplay.classList.add("hidden");
+      pEmailEditBtn.classList.add("hidden");
+      pEmailEditWrap.classList.remove("hidden");
+      pEmailInput.focus();
+    });
+    pEmailCancelBtn.addEventListener("click", function () {
+      pEmailDisplay.classList.remove("hidden");
+      pEmailEditBtn.classList.remove("hidden");
+      pEmailEditWrap.classList.add("hidden");
+      pEmailInput.value = user.parentEmail || "";
+    });
+    pEmailSaveBtn.addEventListener("click", async function () {
+      const newEmail = pEmailInput.value.trim();
+      if (newEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+        pEmailInput.style.outline = "2px solid red";
+        return;
+      }
+      pEmailInput.style.outline = "";
+      user.parentEmail = newEmail;
+      if (isSupabaseConfigured()) {
+        const sb = getSupabaseClient();
+        if (sb) {
+          const { error } = await sb
+            .from("student_accounts")
+            .update({ parent_email: newEmail || null })
+            .eq("username", username);
+          if (error) console.error("parent_email update failed", error);
+        }
+      }
+      pEmailDisplay.innerHTML = "<strong>" + I18n.t("admin_parent_email_label") + ":</strong> " +
+        (newEmail ? '<a href="mailto:' + newEmail + '">' + newEmail + "</a>" : "<em>" + I18n.t("admin_parent_email_none") + "</em>");
+      pEmailDisplay.classList.remove("hidden");
+      pEmailEditBtn.classList.remove("hidden");
+      pEmailEditWrap.classList.add("hidden");
+    });
+    parentEmailWrap.appendChild(pEmailDisplay);
+    parentEmailWrap.appendChild(pEmailEditBtn);
+    parentEmailWrap.appendChild(pEmailEditWrap);
+    header.appendChild(parentEmailWrap);
     adminStudentDetailInner.appendChild(header);
 
     const att = stats.flashcards.attempts || 0;
@@ -4346,12 +4420,16 @@
   function getBookingMissingFields() {
     const missing = [];
     const parentName = (bookingParentNameInput && bookingParentNameInput.value.trim()) || "";
+    const parentEmail = (bookingParentEmailInput && bookingParentEmailInput.value.trim()) || "";
     const studentName = (bookingStudentNameInput && bookingStudentNameInput.value.trim()) || "";
     const phone = (bookingPhoneInput && bookingPhoneInput.value.trim()) || "";
     const level = (bookingLevelInput && bookingLevelInput.value) || "";
     const timesUnknown = bookingTimesUnknownSelected();
 
     if (!parentName) missing.push(I18n.t("booking_missing_parent_name"));
+    if (!parentEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(parentEmail)) {
+      missing.push(I18n.t("booking_missing_parent_email"));
+    }
     if (!studentName) missing.push(I18n.t("booking_missing_student_name"));
     if (!phone) missing.push(I18n.t("booking_missing_phone"));
     if (!level) missing.push(I18n.t("booking_missing_level"));
@@ -6962,6 +7040,7 @@
           });
     const row = {
       parentName: (bookingParentNameInput && bookingParentNameInput.value.trim()) || "",
+      parentEmail: (bookingParentEmailInput && bookingParentEmailInput.value.trim()) || "",
       studentName: (bookingStudentNameInput && bookingStudentNameInput.value.trim()) || "",
       name:
         ((bookingStudentNameInput && bookingStudentNameInput.value.trim()) || "") +
@@ -6983,6 +7062,7 @@
           phone: row.phone,
           level: row.level,
           slots: row.slots,
+          parent_email: row.parentEmail || null,
         });
         cloudSaved = !error;
         if (error) console.error(error);

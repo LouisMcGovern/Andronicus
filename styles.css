@@ -4286,6 +4286,39 @@ html[data-theme="dark"] .flashcard-btn--got-it:hover {
   margin-bottom: 0;
 }
 
+.admin-parent-email-wrap {
+  margin-top: 0.35rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.admin-parent-email-edit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  width: 100%;
+}
+
+.admin-parent-email-input {
+  flex: 1 1 220px;
+  min-width: 0;
+  padding: 0.3rem 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.875rem;
+}
+
+.btn-sm {
+  padding: 0.25rem 0.65rem;
+  font-size: 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
 .admin-dashboard__actions {
   margin-bottom: 0.75rem;
 }

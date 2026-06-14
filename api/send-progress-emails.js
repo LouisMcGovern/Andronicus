@@ -19,12 +19,13 @@ const FR_MONTHS = [
   "juillet", "août", "septembre", "octobre", "novembre", "décembre",
 ];
 
-function buildSubject(fullName) {
+function buildSubject(parentName, fullName) {
   const now = new Date();
   const month = FR_MONTHS[now.getMonth()];
   const year = now.getFullYear();
-  const firstName = (fullName || "").trim().split(/\s+/)[0] || "Élève";
-  return `Andronicus – Résultats de ${month} ${year} | ${firstName}`;
+  // Prefer parent name for subject personalisation; fall back to student name
+  const name = (parentName || fullName || "").trim().split(/\s+/)[0] || "Famille";
+  return `Andronicus – Résultats de ${month} ${year} | ${name}`;
 }
 
 function isEmail(str) {
@@ -51,7 +52,54 @@ function escapeHtml(str) {
     .replace(/"/g, "&quot;");
 }
 
-function buildEmailHtml(fullName, username, stats) {
+function buildCourseProgressHtml() {
+  const TOTAL_MONTHS = 10;
+  // September 2026 = month 1, June 2027 = month 10
+  const PROGRAMME_START = new Date(2026, 8, 1);  // 1 Sep 2026
+  const PROGRAMME_END   = new Date(2027, 5, 30); // 30 Jun 2027
+
+  const now = new Date();
+
+  if (now < PROGRAMME_START) {
+    return `<div class="course-progress">
+  <p class="course-progress__label">Programme starts 1 September 2026 — see you then!</p>
+</div>`;
+  }
+
+  if (now > PROGRAMME_END) {
+    return `<div class="course-progress">
+  <p class="course-progress__label">Programme completed — congratulations! 🎉</p>
+</div>`;
+  }
+
+  // Month 1 = Sep 2026 (year=2026, month=8 in JS)
+  const startYear = 2026, startMonth = 8;
+  const monthIndex = (now.getFullYear() - startYear) * 12 + (now.getMonth() - startMonth);
+  const currentMonth = Math.min(Math.max(monthIndex + 1, 1), TOTAL_MONTHS);
+
+  const filled = "█".repeat(currentMonth);
+  const empty  = "░".repeat(TOTAL_MONTHS - currentMonth);
+  const bar    = filled + empty;
+
+  let motivation;
+  if (currentMonth <= 3) {
+    motivation = "Great start — you're building your foundations!";
+  } else if (currentMonth <= 6) {
+    motivation = "You're halfway there — keep the momentum going!";
+  } else if (currentMonth <= 9) {
+    motivation = "The finish line is in sight — push through!";
+  } else {
+    motivation = "Final month — give it everything!";
+  }
+
+  return `<div class="course-progress">
+  <p class="course-progress__heading">Course progress</p>
+  <p class="course-progress__bar">${bar} <strong>Month ${currentMonth} of ${TOTAL_MONTHS}</strong></p>
+  <p class="course-progress__motivation">${motivation}</p>
+</div>`;
+}
+
+function buildEmailHtml(fullName, username, stats, parentName) {
   const lh = (stats && stats.learningHub) || {};
   const level = getStudentLevel(lh);
   const levelLabel = level ? LEVEL_LABELS[level] : "—";
@@ -65,6 +113,7 @@ function buildEmailHtml(fullName, username, stats) {
   const hwDone = homeworkDoneCount(lh, level);
 
   const displayName = fullName || username;
+  const greeting = parentName ? escapeHtml(parentName.trim().split(/\s+/)[0]) : null;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -87,15 +136,21 @@ function buildEmailHtml(fullName, username, stats) {
   td:last-child { text-align: right; font-weight: 700; color: #1d3a6e; }
   .footer { font-size: 12px; color: #9ca3af; margin-top: 28px; }
   a { color: #1d4ed8; }
+  .course-progress { background: #f0f4ff; border-radius: 8px; padding: 14px 18px; margin: 0 0 24px; }
+  .course-progress__heading { margin: 0 0 6px; font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; color: #9ca3af; font-family: Arial, sans-serif; }
+  .course-progress__bar { margin: 0 0 6px; font-family: monospace; font-size: 15px; color: #1d4ed8; letter-spacing: 1px; }
+  .course-progress__motivation { margin: 0; font-size: 13px; color: #374151; font-style: italic; }
+  .course-progress__label { margin: 0; font-size: 14px; color: #374151; font-style: italic; }
 </style>
 </head>
 <body>
 <div class="card">
   <h1>
-    Bonjour ${escapeHtml(displayName)} !
+    Bonjour ${greeting ? greeting : escapeHtml(displayName)} !
     ${level ? `<span class="level-badge ${level}">${escapeHtml(levelLabel)}</span>` : ""}
   </h1>
-  <p class="sub">Here is your Andronicus progress summary.</p>
+  <p class="sub">Voici le résumé de progression d'Andronicus pour ${escapeHtml(fullName || username)}.</p>
+  ${buildCourseProgressHtml()}
   <table>
     <thead>
       <tr>
@@ -137,7 +192,7 @@ function buildEmailHtml(fullName, username, stats) {
 }
 
 async function fetchAllStudents(supabaseUrl, serviceRoleKey) {
-  const url = `${supabaseUrl}/rest/v1/student_accounts?select=username,full_name,stats`;
+  const url = `${supabaseUrl}/rest/v1/student_accounts?select=username,full_name,parent_email,stats`;
   const res = await fetch(url, {
     headers: {
       apikey: serviceRoleKey,
@@ -207,25 +262,28 @@ export default async function handler(req, res) {
     return res.status(502).json({ error: "Failed to fetch students: " + err.message });
   }
 
-  const eligible = students.filter((s) => isEmail(s.username));
   const results = { sent: [], skipped: [], errors: [] };
 
-  for (const student of eligible) {
+  for (const student of students) {
+    const parentEmail = (student.parent_email || "").trim();
+    if (!isEmail(parentEmail)) {
+      console.warn(`[send-progress-emails] Skipping ${student.username} — no valid parent_email`);
+      results.skipped.push(student.username);
+      continue;
+    }
     const stats = student.stats || {};
     const fullName = student.full_name || student.username;
-    const html = buildEmailHtml(fullName, student.username, stats);
-    const subject = buildSubject(fullName);
+    // Extract parent name from full_name if it looks like "Parent / Student" or use the whole string
+    const parentName = student.full_name || "";
+    const html = buildEmailHtml(fullName, student.username, stats, parentName);
+    const subject = buildSubject(parentName, fullName);
     try {
-      await sendEmail(resendApiKey, student.username, subject, html);
-      results.sent.push(student.username);
+      await sendEmail(resendApiKey, parentEmail, subject, html);
+      results.sent.push(parentEmail);
     } catch (err) {
-      results.errors.push({ username: student.username, error: err.message });
+      results.errors.push({ username: student.username, parentEmail, error: err.message });
     }
   }
-
-  students
-    .filter((s) => !isEmail(s.username))
-    .forEach((s) => results.skipped.push(s.username));
 
   return res.status(200).json({
     sent: results.sent.length,
