@@ -735,7 +735,8 @@
             <div class="account-card account-card--admin">
               <h3 data-i18n="admin_payments_heading">Parent payment checklist</h3>
               <div class="admin-email-section">
-                <p class="field-hint" data-i18n="admin_send_emails_note">Use the "Draft email" buttons in the Student progress tab to send personalised emails to parents.</p>
+                <button type="button" id="admin-send-emails-btn" class="btn-primary" data-i18n="admin_send_emails_btn">Send monthly progress emails</button>
+                <p id="admin-send-emails-status" class="field-hint hidden" aria-live="polite"></p>
               </div>
               <form id="admin-payment-form" class="inline-form inline-form--stack">
                 <label for="admin-payment-name" data-i18n="admin_payment_name_label">Parent or student name</label>
