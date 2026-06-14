@@ -307,8 +307,8 @@
   const adminLeaderboardTab = document.getElementById("admin-leaderboard-tab");
   const adminLeaderboardTbody = document.getElementById("admin-leaderboard-tbody");
   const adminPaymentForm = document.getElementById("admin-payment-form");
-  const adminSendEmailsBtn = document.getElementById("admin-send-emails-btn");
-  const adminSendEmailsStatus = document.getElementById("admin-send-emails-status");
+  const adminSendEmailsBtn = null; // removed — use per-student Draft email buttons instead
+  const adminSendEmailsStatus = null;
   const adminPaymentNameInput = document.getElementById("admin-payment-name");
   const adminPaymentOwedInput = document.getElementById("admin-payment-owed");
   const adminPaymentList = document.getElementById("admin-payment-list");
@@ -2931,6 +2931,53 @@
     }
   }
 
+  const FR_MONTHS_ADMIN = [
+    "janvier", "février", "mars", "avril", "mai", "juin",
+    "juillet", "août", "septembre", "octobre", "novembre", "décembre",
+  ];
+
+  function buildDraftMailto(username, user, stats) {
+    const parentEmail = (user.parentEmail || "").trim();
+    const fullName = user.fullName || username;
+    const now = new Date();
+    const frMonth = FR_MONTHS_ADMIN[now.getMonth()];
+    const year = now.getFullYear();
+    const firstName = fullName.trim().split(/\s+/)[0] || "Élève";
+
+    const subject = "Andronicus \u2013 R\u00e9sultats de " + frMonth + " " + year + " | " + firstName;
+
+    const lh = (stats && stats.learningHub) || {};
+    const level = (lh.lastLevel && ["beginner", "intermediate", "advanced"].indexOf(lh.lastLevel) >= 0)
+      ? lh.lastLevel : null;
+    const accuracy = formatPct(stats.flashcards.correct, stats.flashcards.attempts);
+    const quizSessions = String(stats.quizSessions || 0);
+    const exercisesDone = String((stats.completedExercises || []).length);
+    const hwDoneIds = studentHomeworkDoneIds(stats, level || "");
+    const hwDone = String(hwDoneIds.length);
+
+    const body = [
+      "Bonjour,",
+      "",
+      "Voici le r\u00e9sum\u00e9 mensuel de progression de " + fullName + " pour le mois de " + frMonth + ".",
+      "",
+      "Flashcards : " + accuracy + " de pr\u00e9cision",
+      "Sessions de quiz : " + quizSessions,
+      "Exercices compl\u00e9t\u00e9s : " + exercisesDone,
+      "Devoirs coch\u00e9s : " + hwDone,
+      "",
+      "[Ajoutez votre note personnelle ici]",
+      "",
+      "\u00c0 bient\u00f4t,",
+      "Louis",
+      "Andronicus \u2013 English Grinds",
+      "andronicus-two.vercel.app",
+    ].join("\n");
+
+    return "mailto:" + encodeURIComponent(parentEmail) +
+      "?subject=" + encodeURIComponent(subject) +
+      "&body=" + encodeURIComponent(body);
+  }
+
   function formatPct(correct, attempts) {
     if (!attempts) return "0%";
     return String(Math.round((correct / attempts) * 100)) + "%";
@@ -3682,6 +3729,10 @@
         const tr = document.createElement("tr");
         const nameTd = document.createElement("td");
         nameTd.textContent = user.fullName || username;
+        const parentEmailSpan = document.createElement("span");
+        parentEmailSpan.style.cssText = "display:block;font-size:0.78rem;color:#9ca3af;margin-top:2px;";
+        parentEmailSpan.textContent = user.parentEmail || I18n.t("admin_parent_email_none");
+        nameTd.appendChild(parentEmailSpan);
         const userTd = document.createElement("td");
         userTd.textContent = username;
         const flashTd = document.createElement("td");
@@ -3732,6 +3783,16 @@
         actionTd.appendChild(viewBtn);
         actionTd.appendChild(editNameBtn);
         actionTd.appendChild(resetPassBtn);
+        const draftEmailBtn = document.createElement("button");
+        draftEmailBtn.type = "button";
+        draftEmailBtn.className = "flashcard-btn";
+        draftEmailBtn.textContent = I18n.t("admin_draft_email_btn");
+        draftEmailBtn.title = user.parentEmail || I18n.t("admin_parent_email_none");
+        if (!user.parentEmail) draftEmailBtn.disabled = true;
+        draftEmailBtn.addEventListener("click", function () {
+          window.open(buildDraftMailto(username, user, stats));
+        });
+        actionTd.appendChild(draftEmailBtn);
         tr.appendChild(nameTd);
         tr.appendChild(userTd);
         tr.appendChild(flashTd);
@@ -4311,51 +4372,8 @@
     });
   }
 
-  if (adminSendEmailsBtn) {
-    adminSendEmailsBtn.addEventListener("click", async function () {
-      if (!adminSendEmailsStatus) return;
-      const secret = getSupabaseConfig().adminApiSecret;
-      if (!secret) {
-        adminSendEmailsStatus.textContent = I18n.t("admin_send_emails_no_secret");
-        adminSendEmailsStatus.style.color = "#b74848";
-        adminSendEmailsStatus.classList.remove("hidden");
-        return;
-      }
-      adminSendEmailsBtn.disabled = true;
-      adminSendEmailsStatus.textContent = I18n.t("admin_send_emails_sending");
-      adminSendEmailsStatus.style.color = "";
-      adminSendEmailsStatus.classList.remove("hidden");
-      try {
-        const res = await fetch("/api/send-progress-emails", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ secret }),
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          adminSendEmailsStatus.textContent =
-            I18n.t("admin_send_emails_error") + " " + (data.error || String(res.status));
-          adminSendEmailsStatus.style.color = "#b74848";
-        } else {
-          const errNote =
-            data.errors && data.errors.length
-              ? " (" + data.errors.length + " failed)"
-              : "";
-          adminSendEmailsStatus.textContent = I18n.t("admin_send_emails_ok", {
-            sent: String(data.sent || 0),
-            skipped: String(data.skipped || 0),
-          }) + errNote;
-          adminSendEmailsStatus.style.color = "#166534";
-        }
-      } catch (err) {
-        adminSendEmailsStatus.textContent = I18n.t("admin_send_emails_error") + " " + err.message;
-        adminSendEmailsStatus.style.color = "#b74848";
-      }
-      adminSendEmailsBtn.disabled = false;
-    });
-  }
 
-  window.addEventListener("pageshow", function () {
+
     forceInitialHomeView();
   });
 
