@@ -2931,6 +2931,53 @@
     }
   }
 
+  const FR_MONTHS_ADMIN = [
+    "janvier", "f\u00e9vrier", "mars", "avril", "mai", "juin",
+    "juillet", "ao\u00fbt", "septembre", "octobre", "novembre", "d\u00e9cembre",
+  ];
+
+  function buildDraftMailto(username, user, stats) {
+    const parentEmail = (user.parentEmail || "").trim();
+    const fullName = user.fullName || username;
+    const now = new Date();
+    const frMonth = FR_MONTHS_ADMIN[now.getMonth()];
+    const year = now.getFullYear();
+    const firstName = fullName.trim().split(/\s+/)[0] || "\u00c9l\u00e8ve";
+
+    const subject = "Andronicus \u2013 R\u00e9sultats de " + frMonth + " " + year + " | " + firstName;
+
+    const lh = (stats && stats.learningHub) || {};
+    const level = (lh.lastLevel && ["beginner", "intermediate", "advanced"].indexOf(lh.lastLevel) >= 0)
+      ? lh.lastLevel : null;
+    const accuracy = formatPct(stats.flashcards.correct, stats.flashcards.attempts);
+    const quizSessions = String(stats.quizSessions || 0);
+    const exercisesDone = String((stats.completedExercises || []).length);
+    const hwDoneIds = studentHomeworkDoneIds(stats, level || "");
+    const hwDone = String(hwDoneIds.length);
+
+    const body = [
+      "Bonjour,",
+      "",
+      "Voici le r\u00e9sum\u00e9 mensuel de progression de " + fullName + " pour le mois de " + frMonth + ".",
+      "",
+      "Flashcards\u00a0: " + accuracy + " de pr\u00e9cision",
+      "Sessions de quiz\u00a0: " + quizSessions,
+      "Exercices compl\u00e9t\u00e9s\u00a0: " + exercisesDone,
+      "Devoirs coch\u00e9s\u00a0: " + hwDone,
+      "",
+      "[Ajoutez votre note personnelle ici]",
+      "",
+      "\u00c0 bient\u00f4t,",
+      "Louis",
+      "Andronicus \u2013 English Grinds",
+      "andronicus-two.vercel.app",
+    ].join("\n");
+
+    return "mailto:" + encodeURIComponent(parentEmail) +
+      "?subject=" + encodeURIComponent(subject) +
+      "&body=" + encodeURIComponent(body);
+  }
+
   function formatPct(correct, attempts) {
     if (!attempts) return "0%";
     return String(Math.round((correct / attempts) * 100)) + "%";
