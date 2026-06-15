@@ -435,6 +435,7 @@ body.content-panel-open .panel-toolbar {
   letter-spacing: -0.02em;
   line-height: 1;
   color: var(--ink-heading);
+  white-space: nowrap;
 }
 
 .tagline {
@@ -507,8 +508,9 @@ body.content-panel-open .panel-toolbar {
   }
 
   .site-title {
-    font-size: clamp(2.4rem, 12vw, 3.5rem);
+    font-size: clamp(1.8rem, 10vw, 3.2rem);
     letter-spacing: -0.02em;
+    white-space: nowrap;
   }
 
   .home-hero__watermark {
