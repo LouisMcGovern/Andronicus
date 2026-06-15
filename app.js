@@ -7208,4 +7208,39 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
   }
+
+  // --- Scroll-reveal via IntersectionObserver ---
+  (function () {
+    if (!("IntersectionObserver" in window)) {
+      // Fallback: make everything visible immediately
+      document.querySelectorAll(".reveal").forEach(function (el) {
+        el.classList.add("visible");
+      });
+      return;
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        var el = entry.target;
+
+        // Stagger siblings that share the same direct parent
+        var siblings = Array.prototype.slice.call(
+          el.parentElement.querySelectorAll(":scope > .reveal")
+        );
+        var idx = siblings.indexOf(el);
+        var delay = idx >= 0 ? Math.min(idx, 2) * 100 : 0;
+
+        setTimeout(function () {
+          el.classList.add("visible");
+        }, delay);
+
+        observer.unobserve(el);
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll(".reveal").forEach(function (el) {
+      observer.observe(el);
+    });
+  }());
 })();
