@@ -307,7 +307,7 @@ body.content-panel-open .panel-toolbar {
   transition: opacity 0.4s ease, visibility 0s linear 0.4s;
 }
 
-/* Large cinematic title — same font/weight/spacing as real h1 for seamless handoff */
+/* Large cinematic title — must exactly match .site-title for seamless handoff */
 .intro-title {
   margin: 0;
   font-family: var(--font-display);
@@ -317,8 +317,10 @@ body.content-panel-open .panel-toolbar {
   line-height: 1;
   color: var(--ink-heading);
   white-space: nowrap;
+  /* transform-origin top-left so scale()+translate() maths anchor from the same
+     corner as the real h1 — eliminates the jump on handoff */
+  transform-origin: 0 0;
   will-change: transform;
-  /* transform set by JS at 1200ms */
 }
 
 /* Char-by-char reveal inside the intro overlay */
@@ -330,13 +332,19 @@ body.content-panel-open .panel-toolbar {
 }
 
 /* ── Pause hero element animations while intro runs ─────────────────────── */
+body.intro-running {
+  overflow: hidden; /* prevent scroll during cinematic sequence */
+}
+
 body.intro-running .hero-brand-stamp,
 body.intro-running .tagline,
 body.intro-running .home-hero__rule {
   animation-play-state: paused !important;
+  /* keep at their pre-animation state so JS can take over */
+  opacity: 0 !important;
 }
 
-/* Real h1 hides during intro — chars animate invisibly, so they're done by reveal */
+/* Real h1 hidden throughout intro — chars prepped instantly before handoff */
 body.intro-running .site-title {
   opacity: 0;
 }
@@ -348,7 +356,7 @@ body.intro-running .site-title {
 
 .app.intro-visible {
   opacity: 1;
-  transition: opacity 0.24s ease 0s;
+  transition: opacity 0.4s ease 0s;
 }
 
 /* --- Layout --- */

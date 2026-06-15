@@ -7191,60 +7191,131 @@
 
     // ── Cinematic intro sequence ──────────────────────────────────────────
     var prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var introStart = Date.now();
+    var introFallback;
 
     function endIntroSequence() {
       clearTimeout(introFallback);
       document.body.classList.remove("intro-running");
-      if (mainNav) mainNav.classList.add("nav-cards--loading");
+      document.body.style.overflow = "";
       introOverlay.classList.add("is-done");
       app.classList.remove("hidden-until-intro");
       app.classList.add("intro-visible");
-      setTimeout(function () {
-        if (mainNav) mainNav.classList.remove("nav-cards--loading");
-      }, 350);
     }
 
     if (prefersReducedMotion) {
-      // Skip cinematic sequence for accessibility
       endIntroSequence();
     } else {
       document.body.classList.add("intro-running");
+      document.body.style.overflow = "hidden";
 
-      // Safety fallback: always end intro within 4 seconds
-      var introFallback = setTimeout(function () {
-        endIntroSequence();
-      }, 4000);
+      // Safety net: always finish within 5 seconds
+      introFallback = setTimeout(endIntroSequence, 5000);
 
-      // Step 1: At 1200ms — shrink + translate intro title to h1 position
-      setTimeout(function () {
+      // Wait for fonts to fully load before measuring — prevents jump from
+      // fallback-font metrics being used in getBoundingClientRect
+      document.fonts.ready.then(function () {
         var introTitle = document.querySelector(".intro-title");
-        var realH1 = document.querySelector(".site-title");
-        if (!introTitle || !realH1) return;
+        var realH1    = document.querySelector(".site-title");
+        if (!introTitle || !realH1) { endIntroSequence(); return; }
 
-        var iRect = introTitle.getBoundingClientRect();
-        var hRect = realH1.getBoundingClientRect();
+        // Overlay chars finish at: 9 chars × 60ms stagger + 100ms start + 450ms duration ≈ 1090ms
+        // Hold the centred title for 0.8 s of confidence after that
+        var elapsed   = Date.now() - introStart;
+        var holdUntil = 1090 + 800; // 1890 ms from page-load
+        var waitMs    = Math.max(50, holdUntil - elapsed);
 
-        // Scale factor: ratio of final font size to intro font size
-        var iFs = parseFloat(window.getComputedStyle(introTitle).fontSize);
-        var hFs = parseFloat(window.getComputedStyle(realH1).fontSize);
-        var scale = iFs > 0 ? hFs / iFs : 0.4;
+        setTimeout(function () {
+          // ── Accurate position measurement (fonts loaded) ──────────────
+          var iRect = introTitle.getBoundingClientRect();
+          var hRect = realH1.getBoundingClientRect();
 
-        // Center-to-center translation (in the scaled coordinate space)
-        var iCx = iRect.left + iRect.width / 2;
-        var iCy = iRect.top + iRect.height / 2;
-        var hCx = hRect.left + hRect.width / 2;
-        var hCy = hRect.top + hRect.height / 2;
-        var tx = (hCx - iCx) / scale;
-        var ty = (hCy - iCy) / scale;
+          var iFs   = parseFloat(window.getComputedStyle(introTitle).fontSize);
+          var hFs   = parseFloat(window.getComputedStyle(realH1).fontSize);
+          var scale = iFs > 0 ? hFs / iFs : 0.4;
 
-        introTitle.style.transition = "transform 0.8s ease-in-out";
-        introTitle.style.transform = "scale(" + scale + ") translate(" + tx + "px, " + ty + "px)";
-      }, 1200);
+          // transform-origin is 0 0 (top-left).
+          // With CSS `scale(s) translate(tx, ty)` the translate is applied
+          // first (in original coordinate space) then scaled, so:
+          //   final_top_left = (iRect.left + tx*scale, iRect.top + ty*scale)
+          // Solve for tx/ty to land on hRect:
+          var tx = (hRect.left - iRect.left) / scale;
+          var ty = (hRect.top  - iRect.top)  / scale;
 
-      // Step 2: At 2200ms — fade out overlay, reveal app, resume hero animations
-      setTimeout(function () {
-        endIntroSequence();
-      }, 2200);
+          // Kick off the move — 0.9 s, cinematic ease
+          introTitle.style.transition = "transform 0.9s cubic-bezier(0.4, 0, 0.2, 1)";
+          introTitle.style.transform  = "scale(" + scale + ") translate(" + tx + "px, " + ty + "px)";
+
+          // After 0.9 s move + 0.2 s pause = 1100 ms
+          setTimeout(function () {
+            // ── Pre-render real h1 so handoff is invisible ────────────
+            // Make every char instantly visible (no re-run of char-appear)
+            realH1.querySelectorAll(".char").forEach(function (ch) {
+              ch.style.animation  = "none";
+              ch.style.opacity    = "1";
+              ch.style.filter     = "none";
+              ch.style.transform  = "none";
+            });
+
+            // ── Stage hero sub-elements for simultaneous fade-in ──────
+            var stamp   = document.querySelector(".hero-brand-stamp");
+            var tagline = document.querySelector(".tagline");
+            var rule    = document.querySelector(".home-hero__rule");
+
+            [stamp, tagline, rule].forEach(function (el) {
+              if (!el) return;
+              el.style.animation = "none";
+              el.style.opacity   = "0";
+            });
+            if (stamp)   stamp.style.transform   = "translateX(-16px)";
+            if (tagline) tagline.style.transform  = "translateY(15px)";
+            if (rule) {
+              rule.style.transform       = "scaleX(0)";
+              rule.style.transformOrigin = "left center";
+            }
+
+            // Two rAF frames: first applies the staged styles above,
+            // second starts the transitions (avoids a single-frame flash)
+            requestAnimationFrame(function () {
+              requestAnimationFrame(function () {
+                // ── Seamless handoff ────────────────────────────────────
+                // 1. Real h1 becomes visible (intro-running removed)
+                document.body.classList.remove("intro-running");
+                document.body.style.overflow = "";
+                clearTimeout(introFallback);
+
+                // 2. Overlay fades away (0.4 s)
+                introOverlay.classList.add("is-done");
+
+                // 3. Hero sub-elements fade in simultaneously (0.5 s)
+                if (stamp) {
+                  stamp.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+                  stamp.style.opacity    = "1";
+                  stamp.style.transform  = "translateX(0)";
+                }
+                if (tagline) {
+                  tagline.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+                  tagline.style.opacity    = "1";
+                  tagline.style.transform  = "translateY(0)";
+                }
+                if (rule) {
+                  rule.style.transition = "transform 0.5s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease";
+                  rule.style.opacity    = "1";
+                  rule.style.transform  = "scaleX(1)";
+                }
+
+                // 4. Rest of page fades in 0.1 s later (0.4 s duration)
+                setTimeout(function () {
+                  app.classList.remove("hidden-until-intro");
+                  app.classList.add("intro-visible");
+                }, 100);
+                // ──────────────────────────────────────────────────────
+              });
+            });
+          }, 1100); // 900 ms move + 200 ms pause
+
+        }, waitMs);
+      });
     }
     // ─────────────────────────────────────────────────────────────────────
   })();
