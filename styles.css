@@ -227,6 +227,19 @@ body.content-panel-open .main-nav {
   .home-free-banner__btn {
     animation: none;
   }
+
+  .site-title .char {
+    opacity: 1;
+    animation: none;
+    filter: none;
+  }
+
+  .hero-brand-stamp,
+  .home-hero__rule {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
 }
 
 body.content-panel-open .site-footer {
@@ -373,8 +386,51 @@ body.content-panel-open .panel-toolbar {
   background: #059669;
   margin: 1.25rem auto 1.5rem;
   border-radius: 1px;
-  opacity: 1;
+  transform-origin: left center;
+  transform: scaleX(0);
+  animation: rule-slide-in 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: 900ms;
 }
+
+@keyframes rule-slide-in {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* ── Hero letter-by-letter entrance ─────────────────────────────────────── */
+@keyframes char-appear {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+.site-title .char {
+  display: inline-block;
+  opacity: 0;
+  animation: char-appear 0.45s ease forwards;
+  animation-delay: calc(var(--d) * 60ms + 150ms);
+}
+
+/* Brand stamp — fades in after last letter */
+.hero-brand-stamp {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #4ade80;
+  margin: 0.55rem auto 0;
+  opacity: 0;
+  animation: char-appear 0.5s ease forwards;
+  animation-delay: 820ms; /* after letter 9 at 9×60+150=690ms */
+}
+/* ────────────────────────────────────────────────────────────────────────── */
 
 .brand-card {
   display: inline-block;
@@ -539,6 +595,8 @@ body.content-panel-open .panel-toolbar {
 }
 
 .nav-card {
+  position: relative;
+  overflow: hidden;
   text-align: left;
   padding: 1.05rem 1rem;
   min-height: 7.5rem;
@@ -550,7 +608,30 @@ body.content-panel-open .panel-toolbar {
   box-shadow: var(--nav-card-shadow);
   cursor: pointer;
   font-family: var(--font-display);
-  transition: border-color 0.25s ease, border-left-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease, background 0.25s ease;
+  transition: border-color 0.25s ease, border-left-color 0.25s ease, box-shadow 0.25s ease, transform 0.35s ease, background 0.25s ease;
+}
+
+/* Green shimmer sweep */
+.nav-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -80%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(74, 222, 128, 0.06) 50%,
+    transparent 80%
+  );
+  transform: skewX(-15deg);
+  transition: left 0.55s ease;
+  pointer-events: none;
+}
+
+.nav-card:hover::after {
+  left: 140%;
 }
 
 .nav-card:hover {
@@ -558,7 +639,7 @@ body.content-panel-open .panel-toolbar {
   border-left-color: #059669;
   background: var(--nav-card-hover-bg);
   box-shadow: var(--nav-card-hover-shadow);
-  transform: translateY(-3px);
+  transform: perspective(600px) rotateX(2deg) rotateY(-2deg) translateY(-4px);
 }
 
 .nav-card:active {
@@ -880,9 +961,33 @@ body.content-panel-open .home-hero {
 }
 
 .why-point {
+  position: relative;
   margin: 0;
   padding: 0.75rem 0 0.85rem;
   border-bottom: 1px solid var(--border);
+}
+
+/* Faint watermark numbers */
+.why-point:nth-child(1)::before { content: "01"; }
+.why-point:nth-child(2)::before { content: "02"; }
+.why-point:nth-child(3)::before { content: "03"; }
+
+.why-point::before {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  font-size: 3.5rem;
+  font-weight: 800;
+  font-family: var(--font-display);
+  color: rgba(255, 255, 255, 0.04);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Green accent on why-point title */
+.why-point__title {
+  color: #4ade80;
 }
 
 .why-point:last-child {
@@ -899,7 +1004,7 @@ body.content-panel-open .home-hero {
   font-family: var(--font-tagline);
   font-size: clamp(0.95rem, 2.05vw, 1.05rem);
   font-weight: 600;
-  color: var(--ink-heading);
+  color: #4ade80;
   text-align: left;
   line-height: 1.35;
 }
@@ -944,6 +1049,8 @@ body.content-panel-open .home-hero {
 }
 
 .testimonial-card {
+  position: relative;
+  overflow: hidden;
   margin: 0;
   padding: 1.1rem 1.15rem;
   background: var(--surface-elevated);
@@ -961,11 +1068,25 @@ body.content-panel-open .home-hero {
 }
 
 .testimonial-card__mark {
-  font-size: 2.5rem;
+  position: absolute;
+  top: -0.6rem;
+  left: 0.6rem;
+  font-size: 80px;
   line-height: 1;
-  color: var(--accent);
-  font-family: var(--font-display);
-  margin: 0 0 0.25rem;
+  color: #059669;
+  font-family: Georgia, "Times New Roman", serif;
+  opacity: 0.15;
+  margin: 0;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+.testimonial-card__quote,
+.testimonial-card__attribution,
+.testimonial-card__lang-label {
+  position: relative;
+  z-index: 1;
 }
 
 .testimonial-card__quote {
@@ -1138,6 +1259,25 @@ details[open] .faq-q::after {
 @media (min-width: 900px) {
   .process-steps {
     grid-template-columns: repeat(3, 1fr);
+    position: relative;
+  }
+
+  /* Dashed green connector between step circles */
+  .process-steps::after {
+    content: "";
+    position: absolute;
+    top: 2.15rem; /* vertically centred on the circle (1rem padding + 1rem circle radius) */
+    left: calc(33.33% - 2rem);
+    right: calc(33.33% - 2rem);
+    height: 0;
+    border-top: 2px dashed rgba(5, 150, 105, 0.3);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .step-card {
+    position: relative;
+    z-index: 1;
   }
 }
 
@@ -1164,12 +1304,13 @@ details[open] .faq-q::after {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.75rem;
-  height: 1.75rem;
-  margin-bottom: 0.5rem;
-  border-radius: 0.4rem;
-  background: var(--accent-soft);
-  color: var(--accent);
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: 0.6rem;
+  border-radius: 50%;
+  background: transparent;
+  border: 2px solid #059669;
+  color: #059669;
   font-family: var(--font-tagline);
   font-size: 0.82rem;
   font-weight: 700;
@@ -4877,13 +5018,23 @@ details[open] .faq-q::after {
 
 .site-footer {
   margin-top: 3rem;
-  padding: 1.25rem 1.5rem;
-  border-top: 1px solid var(--border);
+  padding: 1.5rem 1.5rem 1.25rem;
+  border-top: 2px solid #059669;
   background: var(--glass-fill);
   box-shadow: none;
   text-align: center;
   font-size: 0.85rem;
   color: var(--readable-body);
+}
+
+.site-footer__tagline {
+  margin: 0.15rem 0 0.6rem;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #4ade80;
+  opacity: 0.7;
 }
 
 .site-footer p {
