@@ -7237,9 +7237,8 @@
         var tx = (hCx - iCx) / scale;
         var ty = (hCy - iCy) / scale;
 
-        introTitle.style.transition = "transform 0.8s ease-in-out, opacity 0.35s ease 0.45s";
+        introTitle.style.transition = "transform 0.8s ease-in-out";
         introTitle.style.transform = "scale(" + scale + ") translate(" + tx + "px, " + ty + "px)";
-        introTitle.style.opacity = "0";
       }, 1200);
 
       // Step 2: At 2200ms — fade out overlay, reveal app, resume hero animations

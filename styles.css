@@ -311,14 +311,14 @@ body.content-panel-open .panel-toolbar {
 .intro-title {
   margin: 0;
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 400;
   font-size: clamp(4rem, 12vw, 9rem);
   letter-spacing: -0.02em;
   line-height: 1;
   color: var(--ink-heading);
   white-space: nowrap;
-  will-change: transform, opacity;
-  /* transform + opacity set by JS at 1200ms */
+  will-change: transform;
+  /* transform set by JS at 1200ms */
 }
 
 /* Char-by-char reveal inside the intro overlay */
@@ -508,7 +508,7 @@ body.intro-running .site-title {
   margin: 0;
   font-family: var(--font-display);
   font-size: clamp(2.8rem, 9vw, 6rem);
-  font-weight: 700;
+  font-weight: 400;
   letter-spacing: -0.02em;
   line-height: 1;
   color: var(--ink-heading);
