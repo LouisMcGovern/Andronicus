@@ -76,7 +76,7 @@
   --radius-lg: 0.55rem;
   --radius-xl: 0.65rem;
   --font-body: "Source Sans 3", system-ui, sans-serif;
-  --font-display: "Cormorant Garamond", "Times New Roman", Times, serif;
+  --font-display: "DM Serif Display", "Cormorant Garamond", "Times New Roman", Times, serif;
   --font-tagline: "Outfit", system-ui, sans-serif;
 
   --gap-correct-bg: #16a34a;
@@ -345,39 +345,23 @@ body.content-panel-open .panel-toolbar {
   text-align: center;
 }
 
+/* Watermark hidden — clean hero */
 .home-hero__watermark {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-family: var(--font-display);
-  font-size: clamp(10rem, 28vw, 18rem);
-  font-weight: 600;
-  color: var(--accent);
-  opacity: 0.04;
-  pointer-events: none;
-  user-select: none;
-  line-height: 1;
-  z-index: 0;
-  letter-spacing: -0.02em;
+  display: none;
 }
 
-.home-hero__watermark {
-  opacity: 0.04;
-}
-
-.home-hero > *:not(.home-hero__watermark) {
+.home-hero > * {
   position: relative;
   z-index: 1;
 }
 
 .home-hero__rule {
-  width: 5rem;
-  height: 1.5px;
-  background: linear-gradient(90deg, transparent, rgba(5, 150, 105, 0.8), var(--accent-warm), rgba(5, 150, 105, 0.8), transparent);
+  width: 60px;
+  height: 2px;
+  background: #059669;
   margin: 1.25rem auto 1.5rem;
   border-radius: 1px;
-  opacity: 0.75;
+  opacity: 1;
 }
 
 .brand-card {
@@ -434,8 +418,9 @@ body.content-panel-open .panel-toolbar {
   flex-wrap: wrap;
   gap: 0.75rem;
   padding: 0.85rem 1.15rem;
-  background: linear-gradient(135deg, rgba(26, 111, 163, 0.12) 0%, rgba(26, 111, 163, 0.06) 100%);
-  border: 1.5px solid var(--accent);
+  background: #222222;
+  border: 1px solid #383838;
+  border-left: 4px solid #059669;
   border-radius: var(--radius-lg);
   margin: 0.75rem 0;
 }
@@ -461,11 +446,6 @@ body.content-panel-open .panel-toolbar {
   50% {
     box-shadow: 0 0 0 5px rgba(5, 150, 105, 0.14), 0 6px 24px rgba(5, 150, 105, 0.48);
   }
-}
-
-.home-free-banner {
-  background: rgba(5, 150, 105, 0.08);
-  border-color: rgba(5, 150, 105, 0.35);
 }
 
 @media (max-width: 600px) {
@@ -550,19 +530,21 @@ body.content-panel-open .panel-toolbar {
   min-height: 7.5rem;
   min-width: 0;
   border: 1px solid var(--nav-card-border);
+  border-bottom: 2px solid transparent;
   border-radius: 0.45rem;
   background: var(--nav-card-bg);
   box-shadow: var(--nav-card-shadow);
   cursor: pointer;
   font-family: inherit;
-  transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s, background 0.2s;
+  transition: border-color 0.25s ease, border-bottom-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease, background 0.25s ease;
 }
 
 .nav-card:hover {
   border-color: var(--nav-card-hover-border);
+  border-bottom-color: #059669;
   background: var(--nav-card-hover-bg);
   box-shadow: var(--nav-card-hover-shadow);
-  transform: translateY(-2px);
+  transform: translateY(-4px);
 }
 
 .nav-card:active {
@@ -742,11 +724,11 @@ body.content-panel-open .panel--content {
 .panel h2 {
   font-family: var(--font-display);
   font-size: clamp(1.45rem, 3.6vw, 1.75rem);
-  font-weight: 600;
+  font-weight: 400;
   margin: 0 0 0.85rem;
   padding-bottom: 0.45rem;
   border-bottom: 1px solid var(--border);
-  letter-spacing: 0.01em;
+  letter-spacing: 0.02em;
   color: var(--ink-heading);
   text-align: center;
 }
@@ -787,7 +769,8 @@ body.content-panel-open .panel--content {
   margin: 0 0 1rem;
   font-family: var(--font-display);
   font-size: clamp(1.25rem, 3.2vw, 1.55rem);
-  font-weight: 600;
+  font-weight: 400;
+  letter-spacing: 0.02em;
   text-align: center;
   color: var(--ink-heading);
 }
@@ -808,8 +791,8 @@ body.content-panel-open .panel--content {
   width: 2.75rem;
   height: 2px;
   margin: 0.55rem auto 0;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
-  opacity: 0.48;
+  background: #059669;
+  opacity: 0.75;
   border-radius: 1px;
 }
 
@@ -3385,13 +3368,19 @@ details[open] .faq-q::after {
 }
 
 .flashcard-btn {
-  border: 1px solid var(--border);
+  border: 1px solid #383838;
   background: var(--surface-elevated);
-  color: var(--text);
+  color: #c0c0c0;
   border-radius: 0.25rem;
   padding: 0.35rem 0.65rem;
   font-size: 0.86rem;
   cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.flashcard-btn:hover {
+  border-color: #059669;
+  color: var(--text);
 }
 
 .flashcard-btn:disabled {
@@ -3504,7 +3493,7 @@ details[open] .faq-q::after {
 }
 
 .flashcard-complete-stars span[style*="--accent"] {
-  color: var(--accent-purple) !important;
+  color: #059669 !important;
 }
 
 .flashcard-complete-msg {
@@ -3907,11 +3896,11 @@ details[open] .faq-q::after {
 .flashcard-complete-overlay__inner {
   max-width: 26rem;
   width: 100%;
-  background: var(--surface-elevated);
-  border: 1px solid var(--elevated-stroke);
-  border-radius: 0.45rem;
-  padding: 1rem 1.1rem;
-  box-shadow: var(--shadow-soft);
+  background: #1e1e1e;
+  border: 1px solid #303030;
+  border-radius: 16px;
+  padding: 1.35rem 1.5rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
 
 .flashcard-complete-overlay__inner h4 {
@@ -4732,11 +4721,39 @@ details[open] .faq-q::after {
 
 .btn-primary:hover {
   background: var(--accent-warm-hover);
-  box-shadow: 0 4px 18px rgba(5, 150, 105, 0.28);
+  box-shadow: 0 4px 18px rgba(5, 150, 105, 0.28), 0 0 20px rgba(5, 150, 105, 0.3);
 }
 
 .btn-primary:focus-visible {
   outline: 2px solid var(--accent-strong);
+  outline-offset: 2px;
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.9rem;
+  min-height: 2.25rem;
+  border: 1px solid #383838;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: #c0c0c0;
+  font-family: var(--font-tagline);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.btn-secondary:hover {
+  border-color: #059669;
+  color: var(--text);
+  background: rgba(5, 150, 105, 0.07);
+}
+
+.btn-secondary:focus-visible {
+  outline: 2px solid #059669;
   outline-offset: 2px;
 }
 

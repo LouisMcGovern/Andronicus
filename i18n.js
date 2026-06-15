@@ -381,8 +381,8 @@
       flashcard_complete_msg_review: "Keep practising — you'll get there!",
       learning_streak_hint_html:
         "Active days in a row<br>Complete any activity to keep your streak going",
-      flashcard_complete_wrong_only: "Study cards saved for later",
-      flashcard_complete_full_again: "Whole category again",
+      flashcard_complete_wrong_only: "Study cards I got wrong",
+      flashcard_complete_full_again: "Whole deck again",
       flashcard_complete_close: "Close",
       flashcard_side_english: "English — ",
       flashcard_side_french: "French — ",
@@ -936,8 +936,8 @@
       flashcard_complete_msg_review: "Continue à t'entraîner, tu vas y arriver !",
       learning_streak_hint_html:
         "Jours actifs d'affilée<br>Complète n'importe quelle activité pour continuer ta série",
-      flashcard_complete_wrong_only: "Revoir les cartes gardées pour plus tard",
-      flashcard_complete_full_again: "Tout le thème encore",
+      flashcard_complete_wrong_only: "Revoir les cartes ratées",
+      flashcard_complete_full_again: "Recommencer le deck entier",
       flashcard_complete_close: "Fermer",
       flashcard_side_english: "Anglais — ",
       flashcard_side_french: "Français — ",
