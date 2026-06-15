@@ -210,6 +210,12 @@ body.content-panel-open .main-nav {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* Skip intro entirely — chars immediately visible */
+  .intro-title .char {
+    opacity: 1;
+    animation: none;
+  }
+
   .reveal,
   .reveal-left,
   .reveal-right,
@@ -282,53 +288,59 @@ body.content-panel-open .panel-toolbar {
   min-height: auto;
 }
 
-/* --- Intro overlay (Times New Roman title) --- */
+/* ── Cinematic intro overlay ────────────────────────────────────────────── */
 .intro-overlay {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: 2000;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--intro-overlay-bg);
+  background: #f0e6d3; /* warm parchment — matches hero panel */
   pointer-events: none;
+  transition: opacity 0.4s ease;
 }
 
 .intro-overlay.is-done {
-  visibility: hidden;
   opacity: 0;
-  transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0s linear 0.4s;
 }
 
+/* Large cinematic title — same font/weight/spacing as real h1 for seamless handoff */
 .intro-title {
   margin: 0;
-  font-family: "Times New Roman", Times, serif;
-  font-weight: 400;
-  font-size: clamp(2.5rem, 8vw, 4.5rem);
-  letter-spacing: 0.12em;
-  color: var(--ink-intro);
-  opacity: 0;
-  animation: introFade 1.05s ease-out forwards;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(4rem, 12vw, 9rem);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--ink-heading);
+  white-space: nowrap;
+  will-change: transform, opacity;
+  /* transform + opacity set by JS at 1200ms */
 }
 
-@keyframes introFade {
-  0% {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  22% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  55% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
+/* Char-by-char reveal inside the intro overlay */
+.intro-title .char {
+  display: inline-block;
+  opacity: 0;
+  animation: char-appear 0.45s ease forwards;
+  animation-delay: calc(var(--d) * 60ms + 100ms);
 }
+
+/* ── Pause hero element animations while intro runs ─────────────────────── */
+body.intro-running .hero-brand-stamp,
+body.intro-running .tagline,
+body.intro-running .home-hero__rule {
+  animation-play-state: paused !important;
+}
+
+/* Real h1 hides during intro — chars animate invisibly, so they're done by reveal */
+body.intro-running .site-title {
+  opacity: 0;
+}
+/* ────────────────────────────────────────────────────────────────────────── */
 
 .app.hidden-until-intro {
   opacity: 0;

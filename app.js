@@ -7189,7 +7189,12 @@
     initLearningTools();
     forceInitialHomeView();
 
-    setTimeout(() => {
+    // ── Cinematic intro sequence ──────────────────────────────────────────
+    var prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function endIntroSequence() {
+      clearTimeout(introFallback);
+      document.body.classList.remove("intro-running");
       if (mainNav) mainNav.classList.add("nav-cards--loading");
       introOverlay.classList.add("is-done");
       app.classList.remove("hidden-until-intro");
@@ -7197,7 +7202,52 @@
       setTimeout(function () {
         if (mainNav) mainNav.classList.remove("nav-cards--loading");
       }, 350);
-    }, INTRO_MS);
+    }
+
+    if (prefersReducedMotion) {
+      // Skip cinematic sequence for accessibility
+      endIntroSequence();
+    } else {
+      document.body.classList.add("intro-running");
+
+      // Safety fallback: always end intro within 4 seconds
+      var introFallback = setTimeout(function () {
+        endIntroSequence();
+      }, 4000);
+
+      // Step 1: At 1200ms — shrink + translate intro title to h1 position
+      setTimeout(function () {
+        var introTitle = document.querySelector(".intro-title");
+        var realH1 = document.querySelector(".site-title");
+        if (!introTitle || !realH1) return;
+
+        var iRect = introTitle.getBoundingClientRect();
+        var hRect = realH1.getBoundingClientRect();
+
+        // Scale factor: ratio of final font size to intro font size
+        var iFs = parseFloat(window.getComputedStyle(introTitle).fontSize);
+        var hFs = parseFloat(window.getComputedStyle(realH1).fontSize);
+        var scale = iFs > 0 ? hFs / iFs : 0.4;
+
+        // Center-to-center translation (in the scaled coordinate space)
+        var iCx = iRect.left + iRect.width / 2;
+        var iCy = iRect.top + iRect.height / 2;
+        var hCx = hRect.left + hRect.width / 2;
+        var hCy = hRect.top + hRect.height / 2;
+        var tx = (hCx - iCx) / scale;
+        var ty = (hCy - iCy) / scale;
+
+        introTitle.style.transition = "transform 0.8s ease-in-out, opacity 0.35s ease 0.45s";
+        introTitle.style.transform = "scale(" + scale + ") translate(" + tx + "px, " + ty + "px)";
+        introTitle.style.opacity = "0";
+      }, 1200);
+
+      // Step 2: At 2200ms — fade out overlay, reveal app, resume hero animations
+      setTimeout(function () {
+        endIntroSequence();
+      }, 2200);
+    }
+    // ─────────────────────────────────────────────────────────────────────
   })();
 
   if (scrollTopBtn) {
