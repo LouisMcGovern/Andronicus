@@ -307,7 +307,7 @@ body.content-panel-open .panel-toolbar {
   transition: opacity 0.4s ease, visibility 0s linear 0.4s;
 }
 
-/* Large cinematic title — must exactly match .site-title for seamless handoff */
+/* Cinematic intro title — Phase 1 starts at opacity:0 blur:8px, JS transitions in */
 .intro-title {
   margin: 0;
   font-family: var(--font-display);
@@ -317,18 +317,17 @@ body.content-panel-open .panel-toolbar {
   line-height: 1;
   color: var(--ink-heading);
   white-space: nowrap;
-  /* transform-origin top-left so scale()+translate() maths anchor from the same
-     corner as the real h1 — eliminates the jump on handoff */
-  transform-origin: 0 0;
-  will-change: transform;
+  /* Phase 1 initial state — JS applies transition to opacity:1 / blur(0) */
+  opacity: 0;
+  filter: blur(8px);
+  /* transform-origin top-center keeps horizontal drift zero during scale */
+  transform-origin: 50% 0;
+  will-change: transform, opacity;
 }
 
-/* Char-by-char reveal inside the intro overlay */
+/* Chars need no individual animation — the parent element fades in as one unit */
 .intro-title .char {
   display: inline-block;
-  opacity: 0;
-  animation: char-appear 0.45s ease forwards;
-  animation-delay: calc(var(--d) * 60ms + 100ms);
 }
 
 /* ── Pause hero element animations while intro runs ─────────────────────── */
@@ -356,7 +355,7 @@ body.intro-running .site-title {
 
 .app.intro-visible {
   opacity: 1;
-  transition: opacity 0.4s ease 0s;
+  /* No CSS transition — app reveal timing is controlled entirely by JS */
 }
 
 /* --- Layout --- */
