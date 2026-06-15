@@ -7209,10 +7209,9 @@
     });
   }
 
-  // --- Scroll-reveal via IntersectionObserver ---
+  // --- Scroll-reveal via IntersectionObserver (landing page only) ---
   (function () {
     if (!("IntersectionObserver" in window)) {
-      // Fallback: make everything visible immediately
       document.querySelectorAll(".reveal").forEach(function (el) {
         el.classList.add("visible");
       });
@@ -7229,7 +7228,7 @@
           el.parentElement.querySelectorAll(":scope > .reveal")
         );
         var idx = siblings.indexOf(el);
-        var delay = idx >= 0 ? Math.min(idx, 2) * 100 : 0;
+        var delay = idx >= 0 ? Math.min(idx, 4) * 80 : 0;
 
         setTimeout(function () {
           el.classList.add("visible");
@@ -7237,7 +7236,7 @@
 
         observer.unobserve(el);
       });
-    }, { threshold: 0.15 });
+    }, { threshold: 0.1 });
 
     document.querySelectorAll(".reveal").forEach(function (el) {
       observer.observe(el);

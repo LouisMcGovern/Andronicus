@@ -76,8 +76,8 @@
   --radius-lg: 0.55rem;
   --radius-xl: 0.65rem;
   --font-body: "Source Sans 3", system-ui, sans-serif;
-  --font-display: "DM Serif Display", "Cormorant Garamond", "Times New Roman", Times, serif;
-  --font-tagline: "Outfit", system-ui, sans-serif;
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-tagline: "Space Grotesk", "Outfit", system-ui, sans-serif;
 
   --gap-correct-bg: #16a34a;
   --gap-correct-border: #4ade80;
@@ -207,8 +207,8 @@ body.content-panel-open .main-nav {
 /* --- Scroll-reveal --- */
 .reveal {
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 .reveal.visible {
@@ -223,6 +223,7 @@ body.content-panel-open .main-nav {
     transition: none;
   }
 
+  .home-hero,
   .home-free-banner__btn {
     animation: none;
   }
@@ -343,6 +344,17 @@ body.content-panel-open .panel-toolbar {
   overflow: hidden;
   padding: 2.5rem 1rem 2rem;
   text-align: center;
+  /* Subtle futuristic grid */
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  animation: grid-drift 20s linear infinite;
+}
+
+@keyframes grid-drift {
+  0%   { background-position: 0 0; }
+  100% { background-position: 48px 48px; }
 }
 
 /* Watermark hidden — clean hero */
@@ -379,25 +391,26 @@ body.content-panel-open .panel-toolbar {
 .site-title {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(2.6rem, 8vw, 5.2rem);
-  font-weight: 600;
-  letter-spacing: 0.09em;
+  font-size: clamp(2.8rem, 9vw, 6rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
   color: var(--ink-heading);
 }
 
 .tagline {
-  margin: 0.85rem auto 0;
-  max-width: 30rem;
-  padding: 0.75rem 1.05rem;
-  font-family: var(--font-tagline);
-  font-size: clamp(1rem, 2.5vw, 1.18rem);
+  margin: 0.9rem auto 0;
+  max-width: 32rem;
+  padding: 0.5rem 1rem;
+  font-family: var(--font-display);
+  font-size: clamp(0.95rem, 2.3vw, 1.1rem);
   font-style: normal;
-  font-weight: 600;
-  letter-spacing: 0.035em;
-  line-height: 1.48;
-  color: var(--tagline-text);
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  line-height: 1.5;
+  color: #b0b0b0;
   text-wrap: balance;
-  border-radius: var(--radius-md);
+  border-radius: 0;
   border: none;
   background: transparent;
   box-shadow: none;
@@ -426,8 +439,9 @@ body.content-panel-open .panel-toolbar {
 }
 
 .home-free-banner__text {
-  font-size: 0.98rem;
-  font-weight: 600;
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-family: var(--font-display);
   color: var(--ink-heading);
   flex: 1;
   min-width: 14rem;
@@ -454,8 +468,8 @@ body.content-panel-open .panel-toolbar {
   }
 
   .site-title {
-    font-size: clamp(2.2rem, 11vw, 3rem);
-    letter-spacing: 0.06em;
+    font-size: clamp(2.4rem, 12vw, 3.5rem);
+    letter-spacing: -0.02em;
   }
 
   .home-hero__watermark {
@@ -530,21 +544,21 @@ body.content-panel-open .panel-toolbar {
   min-height: 7.5rem;
   min-width: 0;
   border: 1px solid var(--nav-card-border);
-  border-bottom: 2px solid transparent;
-  border-radius: 0.45rem;
+  border-left: 4px solid transparent;
+  border-radius: 4px;
   background: var(--nav-card-bg);
   box-shadow: var(--nav-card-shadow);
   cursor: pointer;
-  font-family: inherit;
-  transition: border-color 0.25s ease, border-bottom-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease, background 0.25s ease;
+  font-family: var(--font-display);
+  transition: border-color 0.25s ease, border-left-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease, background 0.25s ease;
 }
 
 .nav-card:hover {
   border-color: var(--nav-card-hover-border);
-  border-bottom-color: #059669;
+  border-left-color: #059669;
   background: var(--nav-card-hover-bg);
   box-shadow: var(--nav-card-hover-shadow);
-  transform: translateY(-4px);
+  transform: translateY(-3px);
 }
 
 .nav-card:active {
@@ -680,6 +694,49 @@ body.content-panel-open .panel--content {
   color: var(--text);
 }
 
+/* ── Content area: clean study-app style ────────────────────────────────── */
+body.content-panel-open *,
+.panel--content *,
+.level-article * {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+}
+
+/* Exception: keep explicit letter-spacing on things that need it */
+body.content-panel-open code,
+body.content-panel-open pre {
+  font-family: monospace !important;
+}
+
+body.content-panel-open .tool-panel,
+.panel--content .tool-panel {
+  background: #2a2a2a;
+  border-radius: 12px;
+  padding: 1.25rem 1.35rem;
+  border: 1px solid #383838;
+}
+
+body.content-panel-open .btn-primary {
+  border-radius: 8px;
+}
+
+body.content-panel-open .flashcard-btn {
+  border-radius: 8px;
+}
+
+body.content-panel-open .lh-lesson-card {
+  border-radius: 12px;
+  background: #252525;
+}
+
+/* No grid background in content area */
+body.content-panel-open .home-hero {
+  background-image: none;
+  animation: none;
+}
+/* ────────────────────────────────────────────────────────────────────────── */
+
 .panel--content,
 .level-article {
   background: #1c1c1c;
@@ -723,12 +780,13 @@ body.content-panel-open .panel--content {
 
 .panel h2 {
   font-family: var(--font-display);
-  font-size: clamp(1.45rem, 3.6vw, 1.75rem);
-  font-weight: 400;
+  font-size: clamp(0.85rem, 2vw, 0.95rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   margin: 0 0 0.85rem;
   padding-bottom: 0.45rem;
   border-bottom: 1px solid var(--border);
-  letter-spacing: 0.02em;
   color: var(--ink-heading);
   text-align: center;
 }
@@ -768,39 +826,47 @@ body.content-panel-open .panel--content {
 .home-section-title {
   margin: 0 0 1rem;
   font-family: var(--font-display);
-  font-size: clamp(1.25rem, 3.2vw, 1.55rem);
-  font-weight: 400;
-  letter-spacing: 0.02em;
+  font-size: clamp(0.82rem, 1.8vw, 0.92rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   text-align: center;
   color: var(--ink-heading);
+  padding-top: 1.4rem;
 }
 
-/* Secondary to nav: smaller than other home section headings */
-.home-section-title.home-section-title--why {
-  margin-bottom: 0.75rem;
-  font-family: var(--font-tagline);
-  font-size: clamp(1rem, 2.15vw, 1.18rem);
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  color: var(--text);
-}
-
-.panel--home .home-section-title::after {
+/* Green bar above each section heading */
+.home-section-title::before {
   content: "";
   display: block;
-  width: 2.75rem;
+  width: 2rem;
   height: 2px;
-  margin: 0.55rem auto 0;
   background: #059669;
-  opacity: 0.75;
+  margin: 0 auto 0.85rem;
   border-radius: 1px;
 }
 
+/* Secondary "why" label — smaller, not uppercase */
+.home-section-title.home-section-title--why {
+  margin-bottom: 0.75rem;
+  font-family: var(--font-display);
+  font-size: clamp(0.78rem, 1.8vw, 0.88rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.home-section-title.home-section-title--why::before {
+  display: none;
+}
+
+.panel--home .home-section-title::after {
+  display: none;
+}
+
 .panel--home .home-section-title.home-section-title--why::after {
-  width: 2.25rem;
-  height: 2px;
-  margin-top: 0.45rem;
-  opacity: 0.55;
+  display: none;
 }
 
 .home-section-title--compact {
