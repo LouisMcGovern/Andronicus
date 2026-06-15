@@ -18,7 +18,7 @@
   --readable-body: #dde5ee;
   --muted: #9ca3af;
 
-  --surface: rgba(255, 255, 255, 0.06);
+  --surface: #171717;
   --surface-elevated: #1a1a1a;
 
   --accent: #60a5fa;
@@ -110,7 +110,7 @@ body::before {
   pointer-events: none;
   z-index: 0;
   background:
-    radial-gradient(ellipse 120% 85% at 50% -28%, rgba(255, 255, 255, 0.75), transparent 52%),
+    radial-gradient(ellipse 120% 85% at 50% -28%, rgba(255, 255, 255, 0.03), transparent 52%),
     radial-gradient(ellipse 95% 70% at 100% 100%, rgba(120, 190, 235, 0.45), transparent 48%);
 }
 
@@ -263,9 +263,8 @@ body.content-panel-open .panel-toolbar {
   right: 0;
   z-index: 60;
   margin: 0;
-  /* Leave room for fixed theme toggle (top left) so the back button does not sit underneath it */
-  padding: 0.5rem 0.75rem 0.5rem clamp(6.75rem, 28vw, 9.5rem);
-  background: var(--surface);
+  padding: 0.5rem 0.75rem;
+  background: #111111;
   border-bottom: 1px solid var(--border);
   min-height: auto;
 }
@@ -491,8 +490,8 @@ body.content-panel-open .panel-toolbar {
 }
 
 .home-free-banner {
-  background: rgba(126, 184, 220, 0.1);
-  border-color: rgba(126, 184, 220, 0.4);
+  background: rgba(5, 150, 105, 0.08);
+  border-color: rgba(5, 150, 105, 0.35);
 }
 
 @media (max-width: 600px) {
@@ -710,7 +709,7 @@ body.content-panel-open .panel-toolbar {
   padding: 1.65rem 1.45rem 1.75rem;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-left: 4px solid rgba(126, 184, 220, 0.45);
+  border-left: 4px solid rgba(5, 150, 105, 0.4);
   border-radius: 0.4rem;
   box-shadow: var(--shadow-soft);
 }
@@ -721,18 +720,18 @@ body.content-panel-open .panel--content {
   border: none;
   box-shadow: none;
   min-height: 100dvh;
-  background: linear-gradient(180deg, rgba(240, 248, 255, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
+  background: #0f0f0f;
   color: var(--text);
 }
 
 .panel--content,
 .level-article {
-  background: linear-gradient(180deg, rgba(240, 248, 255, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
+  background: #0f0f0f;
 }
 
 .panel--content,
 .level-article {
-  background: linear-gradient(180deg, rgba(15, 22, 36, 0.98) 0%, rgba(18, 26, 42, 0.96) 100%);
+  background: #0f0f0f;
 }
 
 .content-breadcrumb {
@@ -740,10 +739,10 @@ body.content-panel-open .panel--content {
   align-items: center;
   gap: 0.4rem;
   font-size: 0.82rem;
-  color: var(--muted);
+  color: #a0a0a0;
   padding: 0.5rem 1rem;
-  border-bottom: 1px solid var(--border);
-  background: var(--surface);
+  border-bottom: 1px solid #2a2a2a;
+  background: #111111;
 }
 
 .content-breadcrumb__link {
@@ -1027,7 +1026,7 @@ details[open] .faq-q::after {
   padding: 1.35rem 1.25rem;
   background: var(--glass-fill);
   border: 1px solid var(--glass-border);
-  border-left: 3px solid rgba(126, 184, 220, 0.45);
+  border-left: 3px solid rgba(5, 150, 105, 0.35);
   border-radius: var(--radius-lg);
   box-shadow: none;
   text-align: center;
@@ -1134,7 +1133,7 @@ details[open] .faq-q::after {
 }
 
 .step-card:hover {
-  border-color: rgba(47, 95, 143, 0.3);
+  border-color: rgba(5, 150, 105, 0.35);
   box-shadow: 0 8px 22px rgba(29, 39, 56, 0.07);
 }
 
@@ -1563,7 +1562,7 @@ details[open] .faq-q::after {
   position: fixed;
   inset: 0;
   z-index: 50;
-  background: rgba(8, 40, 65, 0.55);
+  background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   align-items: center;
@@ -1780,8 +1779,8 @@ details[open] .faq-q::after {
 
 .btn-level:hover,
 .btn-level.is-active {
-  border-color: var(--accent);
-  background: var(--accent-soft);
+  border-color: #059669;
+  background: rgba(5, 150, 105, 0.1);
 }
 
 .btn-level:focus-visible {
@@ -1828,8 +1827,8 @@ details[open] .faq-q::after {
   box-sizing: border-box;
   border: none;
   border-radius: var(--radius-sm);
-  border-top: 3px solid color-mix(in srgb, var(--accent) 35%, transparent);
-  background: linear-gradient(180deg, rgba(240, 248, 255, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
+  border-top: 3px solid color-mix(in srgb, var(--accent-warm) 40%, transparent);
+  background: #0f0f0f;
   box-shadow: none;
   overflow: visible;
   color: var(--text);
@@ -2386,7 +2385,7 @@ details[open] .faq-q::after {
 }
 
 .panel--content .lh-lesson-card {
-  border: 1.5px solid rgba(18, 85, 130, 0.18);
+  border: 1.5px solid #2a2a2a;
 }
 
 .panel--content .lh-lesson-card {
@@ -2713,7 +2712,7 @@ details[open] .faq-q::after {
 }
 .lh-hw-cat-reading {
   border-color: #2e7d4f;
-  color: #1f5d3a;
+  color: #6ee7b7;
 }
 .lh-hw-cat-listening {
   border-color: #5b67c4;
@@ -2725,7 +2724,7 @@ details[open] .faq-q::after {
 }
 .lh-hw-cat-writing {
   border-color: #3c7da4;
-  color: #2b5b78;
+  color: #93c5fd;
 }
 .lh-hw-cat-grammar {
   border-color: #7a5db1;
@@ -3191,7 +3190,7 @@ details[open] .faq-q::after {
 }
 
 .panel--content .tool-panel {
-  background: #ffffff;
+  background: #1a1a1a;
 }
 
 .panel--content .tool-panel {
@@ -3260,13 +3259,12 @@ details[open] .faq-q::after {
 .flashcard {
   width: 100%;
   min-height: 42vh;
-  border: 1px solid rgba(18, 85, 130, 0.12);
+  border: 1px solid #2a2a2a;
   border-radius: 0.85rem;
-  background: linear-gradient(160deg, #ffffff 0%, #f0f7fd 100%);
+  background: linear-gradient(160deg, #1e1e1e 0%, #1a1a1a 100%);
   box-shadow:
-    0 4px 6px rgba(12, 55, 90, 0.06),
-    0 12px 28px rgba(12, 55, 90, 0.1),
-    0 1px 0 rgba(255, 255, 255, 0.8) inset;
+    0 4px 6px rgba(0, 0, 0, 0.25),
+    0 12px 28px rgba(0, 0, 0, 0.35);
   cursor: pointer;
   position: relative;
   perspective: 1000px;
@@ -3278,9 +3276,8 @@ details[open] .faq-q::after {
 .flashcard:hover {
   transform: translateY(-2px);
   box-shadow:
-    0 8px 12px rgba(12, 55, 90, 0.08),
-    0 20px 40px rgba(12, 55, 90, 0.13),
-    0 1px 0 rgba(255, 255, 255, 0.8) inset;
+    0 8px 12px rgba(0, 0, 0, 0.3),
+    0 20px 40px rgba(0, 0, 0, 0.45);
 }
 
 .flashcard.is-flipped {
@@ -3429,27 +3426,27 @@ details[open] .faq-q::after {
 }
 
 .flashcard-btn--save-later {
-  background: #fecaca;
+  background: rgba(220, 38, 38, 0.2);
   border-color: #dc2626;
-  color: #7f1d1d;
+  color: #fca5a5;
 }
 
 .flashcard-btn--save-later:hover {
-  background: #fca5a5;
+  background: rgba(220, 38, 38, 0.35);
   border-color: #b91c1c;
-  color: #450a0a;
+  color: #fecaca;
 }
 
 .flashcard-btn--got-it {
   background: rgba(5, 150, 105, 0.15);
   border-color: var(--accent-warm);
-  color: #065f46;
+  color: #34d399;
 }
 
 .flashcard-btn--got-it:hover {
   background: rgba(5, 150, 105, 0.25);
   border-color: var(--accent-warm-hover);
-  color: #064e3b;
+  color: #6ee7b7;
 }
 
 .flashcard-btn--save-later {
@@ -4252,8 +4249,8 @@ details[open] .faq-q::after {
   margin: 0 0 0.85rem;
   padding: 0.75rem 1rem;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(29, 78, 216, 0.25);
-  background: rgba(219, 234, 254, 0.45);
+  border: 1px solid rgba(5, 150, 105, 0.3);
+  background: rgba(5, 150, 105, 0.08);
   font-size: 0.88rem;
   color: var(--text);
 }
@@ -4562,15 +4559,15 @@ details[open] .faq-q::after {
 }
 
 .booking-day-btn:hover {
-  border-color: rgba(47, 122, 154, 0.35);
-  background: var(--surface-elevated);
+  border-color: #2a2a2a;
+  background: #222222;
 }
 
 .booking-day-btn.is-active {
   border-color: var(--accent);
   background: var(--accent-soft);
   color: var(--accent);
-  box-shadow: 0 0 0 1px rgba(47, 122, 154, 0.15);
+  box-shadow: 0 0 0 1px rgba(5, 150, 105, 0.2);
 }
 
 .booking-day-btn:focus-visible {
@@ -4621,7 +4618,7 @@ details[open] .faq-q::after {
 }
 
 .booking-hour-btn:hover {
-  border-color: rgba(47, 122, 154, 0.35);
+  border-color: #2a2a2a;
 }
 
 .booking-hour-btn.is-selected {
@@ -5068,8 +5065,8 @@ details[open] .faq-q::after {
 }
 
 .lh-lesson-section--learn {
-  background: rgba(219, 234, 254, 0.45);
-  border: 1px solid rgba(147, 197, 253, 0.5);
+  background: rgba(96, 165, 250, 0.07);
+  border: 1px solid rgba(96, 165, 250, 0.2);
   border-radius: var(--radius-lg);
   padding: 1.1rem 1.25rem;
   margin-bottom: 1rem;
@@ -5084,8 +5081,8 @@ details[open] .faq-q::after {
 }
 
 .lh-lesson-section--practice {
-  background: rgba(220, 252, 231, 0.45);
-  border: 1px solid rgba(134, 239, 172, 0.5);
+  background: rgba(5, 150, 105, 0.07);
+  border: 1px solid rgba(5, 150, 105, 0.2);
   border-radius: var(--radius-lg);
   padding: 1.1rem 1.25rem;
   margin-bottom: 1rem;
