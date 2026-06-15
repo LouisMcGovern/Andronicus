@@ -8,9 +8,9 @@
 :root {
   color-scheme: dark;
 
-  --bg-deep: #0f0f0f;
-  --page-bg: #0f0f0f;
-  --intro-overlay-bg: #111111;
+  --bg-deep: #141414;
+  --page-bg: #141414;
+  --intro-overlay-bg: #161616;
 
   --ink-heading: #f5f2eb;
   --ink-intro: #f0ede8;
@@ -18,8 +18,8 @@
   --readable-body: #dde5ee;
   --muted: #9ca3af;
 
-  --surface: #171717;
-  --surface-elevated: #1a1a1a;
+  --surface: #1b1b1b;
+  --surface-elevated: #1e1e1e;
 
   --accent: #60a5fa;
   --accent-strong: #93c5fd;
@@ -30,15 +30,15 @@
   --accent-purple: #a78bfa;
   --accent-purple-soft: rgba(167, 139, 250, 0.14);
 
-  --border: #2a2a2a;
+  --border: #303030;
   --shadow: 0 14px 40px rgba(0, 0, 0, 0.5);
   --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.35);
 
   --glass-fill: rgba(255, 255, 255, 0.05);
   --glass-border: rgba(255, 255, 255, 0.1);
 
-  --chrome-bg: #1a1a1a;
-  --chrome-border: #2a2a2a;
+  --chrome-bg: #1e1e1e;
+  --chrome-border: #303030;
   --chrome-btn-border: rgba(255, 255, 255, 0.18);
   --chrome-btn-text: #f0ede8;
   --chrome-btn-hover: rgba(255, 255, 255, 0.07);
@@ -264,7 +264,7 @@ body.content-panel-open .panel-toolbar {
   z-index: 60;
   margin: 0;
   padding: 0.5rem 0.75rem;
-  background: #111111;
+  background: #161616;
   border-bottom: 1px solid var(--border);
   min-height: auto;
 }
@@ -352,9 +352,9 @@ body.content-panel-open .panel-toolbar {
   position: absolute;
   inset: -30%;
   background:
-    radial-gradient(ellipse 55% 55% at 28% 48%, rgba(5, 150, 105, 0.13) 0%, transparent 68%),
-    radial-gradient(ellipse 48% 52% at 72% 52%, rgba(4, 120, 87, 0.09) 0%, transparent 65%),
-    radial-gradient(ellipse 35% 40% at 50% 80%, rgba(16, 185, 129, 0.06) 0%, transparent 60%);
+    radial-gradient(ellipse 55% 55% at 28% 48%, rgba(5, 150, 105, 0.07) 0%, transparent 68%),
+    radial-gradient(ellipse 48% 52% at 72% 52%, rgba(4, 120, 87, 0.05) 0%, transparent 65%),
+    radial-gradient(ellipse 35% 40% at 50% 80%, rgba(16, 185, 129, 0.03) 0%, transparent 60%);
   animation: hero-breathe 9s ease-in-out infinite;
   pointer-events: none;
   z-index: 0;
@@ -362,12 +362,12 @@ body.content-panel-open .panel-toolbar {
 
 @keyframes hero-breathe {
   0%, 100% {
-    opacity: 0.65;
+    opacity: 0.7;
     transform: scale(1);
   }
   50% {
     opacity: 1;
-    transform: scale(1.12);
+    transform: scale(1.08);
   }
 }
 
@@ -440,9 +440,9 @@ body.content-panel-open .panel-toolbar {
   color: var(--tagline-text);
   text-wrap: balance;
   border-radius: var(--radius-md);
-  border: 1px solid var(--tagline-ring);
-  background: var(--tagline-bg);
-  box-shadow: var(--tagline-shadow);
+  border: none;
+  background: transparent;
+  box-shadow: none;
 }
 
 .main-nav {
@@ -720,18 +720,18 @@ body.content-panel-open .panel--content {
   border: none;
   box-shadow: none;
   min-height: 100dvh;
-  background: #0f0f0f;
+  background: #141414;
   color: var(--text);
 }
 
 .panel--content,
 .level-article {
-  background: #0f0f0f;
+  background: #141414;
 }
 
 .panel--content,
 .level-article {
-  background: #0f0f0f;
+  background: #141414;
 }
 
 .content-breadcrumb {
@@ -739,10 +739,10 @@ body.content-panel-open .panel--content {
   align-items: center;
   gap: 0.4rem;
   font-size: 0.82rem;
-  color: #a0a0a0;
+  color: #b0b0b0;
   padding: 0.5rem 1rem;
-  border-bottom: 1px solid #2a2a2a;
-  background: #111111;
+  border-bottom: 1px solid #303030;
+  background: #161616;
 }
 
 .content-breadcrumb__link {
@@ -1828,7 +1828,7 @@ details[open] .faq-q::after {
   border: none;
   border-radius: var(--radius-sm);
   border-top: 3px solid color-mix(in srgb, var(--accent-warm) 40%, transparent);
-  background: #0f0f0f;
+  background: #141414;
   box-shadow: none;
   overflow: visible;
   color: var(--text);
@@ -2385,7 +2385,7 @@ details[open] .faq-q::after {
 }
 
 .panel--content .lh-lesson-card {
-  border: 1.5px solid #2a2a2a;
+  border: 1.5px solid #303030;
 }
 
 .panel--content .lh-lesson-card {
@@ -3190,7 +3190,7 @@ details[open] .faq-q::after {
 }
 
 .panel--content .tool-panel {
-  background: #1a1a1a;
+  background: #1e1e1e;
 }
 
 .panel--content .tool-panel {
@@ -3259,9 +3259,9 @@ details[open] .faq-q::after {
 .flashcard {
   width: 100%;
   min-height: 42vh;
-  border: 1px solid #2a2a2a;
+  border: 1px solid #303030;
   border-radius: 0.85rem;
-  background: linear-gradient(160deg, #1e1e1e 0%, #1a1a1a 100%);
+  background: linear-gradient(160deg, #1e1e1e 0%, #1e1e1e 100%);
   box-shadow:
     0 4px 6px rgba(0, 0, 0, 0.25),
     0 12px 28px rgba(0, 0, 0, 0.35);
@@ -4559,8 +4559,8 @@ details[open] .faq-q::after {
 }
 
 .booking-day-btn:hover {
-  border-color: #2a2a2a;
-  background: #222222;
+  border-color: #303030;
+  background: #252525;
 }
 
 .booking-day-btn.is-active {
@@ -4618,7 +4618,7 @@ details[open] .faq-q::after {
 }
 
 .booking-hour-btn:hover {
-  border-color: #2a2a2a;
+  border-color: #303030;
 }
 
 .booking-hour-btn.is-selected {
