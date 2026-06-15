@@ -7211,8 +7211,11 @@
 
   // --- Scroll-reveal via IntersectionObserver (landing page only) ---
   (function () {
+    var REVEAL_SELECTOR = ".reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-bounce";
+    var REVEAL_SIBLING_SELECTOR = ":scope > .reveal, :scope > .reveal-left, :scope > .reveal-right";
+
     if (!("IntersectionObserver" in window)) {
-      document.querySelectorAll(".reveal").forEach(function (el) {
+      document.querySelectorAll(REVEAL_SELECTOR).forEach(function (el) {
         el.classList.add("visible");
       });
       return;
@@ -7223,12 +7226,15 @@
         if (!entry.isIntersecting) return;
         var el = entry.target;
 
-        // Stagger siblings that share the same direct parent
+        // Stagger siblings of the same reveal family in the same direct parent
+        // (used for nav cards, FAQ items, why-points, etc.)
         var siblings = Array.prototype.slice.call(
-          el.parentElement.querySelectorAll(":scope > .reveal")
+          el.parentElement.querySelectorAll(REVEAL_SIBLING_SELECTOR)
         );
         var idx = siblings.indexOf(el);
-        var delay = idx >= 0 ? Math.min(idx, 4) * 80 : 0;
+        // 80ms stagger, max 6 cards; reveal-scale/bounce use CSS transition-delay so JS delay = 0
+        var isScaleOrBounce = el.classList.contains("reveal-scale") || el.classList.contains("reveal-bounce");
+        var delay = (!isScaleOrBounce && idx >= 0) ? Math.min(idx, 6) * 80 : 0;
 
         setTimeout(function () {
           el.classList.add("visible");
@@ -7238,7 +7244,7 @@
       });
     }, { threshold: 0.1 });
 
-    document.querySelectorAll(".reveal").forEach(function (el) {
+    document.querySelectorAll(REVEAL_SELECTOR).forEach(function (el) {
       observer.observe(el);
     });
   }());

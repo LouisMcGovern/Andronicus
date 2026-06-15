@@ -33,7 +33,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -61,30 +61,30 @@
     </header>
 
     <nav class="main-nav" data-i18n-aria="nav_main_aria" aria-label="Main sections">
-      <div class="home-free-banner">
+      <div class="home-free-banner reveal-left">
         <p class="home-free-banner__text" data-i18n="home_free_banner_text">
           Your first class is free — no commitment, no payment until you decide to continue.
         </p>
         <button type="button" class="btn-primary home-free-banner__btn" data-section="booking" data-i18n="hero_cta_book_now">Claim your free class</button>
       </div>
-      <button type="button" class="nav-card" data-section="about">
+      <button type="button" class="nav-card reveal" data-section="about">
         <span class="nav-card__label" data-i18n="nav_about_label">About the teacher</span>
         <span class="nav-card__hint" data-i18n="nav_about_hint">Who I am and how I teach</span>
       </button>
-      <button type="button" class="nav-card" data-section="process">
+      <button type="button" class="nav-card reveal" data-section="process">
         <span class="nav-card__label" data-i18n="nav_process_label">The process</span>
         <span class="nav-card__hint" data-i18n="nav_process_hint">How grinds work and what to expect</span>
       </button>
-      <button type="button" class="nav-card" data-section="content">
+      <button type="button" class="nav-card reveal" data-section="content">
         <span class="nav-card__label" data-i18n="nav_content_label">Content</span>
         <span class="nav-card__hint" data-i18n="nav_content_hint">Materials by level</span>
       </button>
-      <button type="button" class="nav-card" data-section="booking">
+      <button type="button" class="nav-card reveal" data-section="booking">
         <span class="nav-card__label" data-i18n="nav_booking_label">Booking</span>
         <span class="nav-card__hint" data-i18n="nav_booking_hint">Send a time request</span>
         <span class="nav-card__price" data-i18n="nav_booking_price">€25 per session</span>
       </button>
-      <button type="button" class="nav-card" data-section="account">
+      <button type="button" class="nav-card reveal" data-section="account">
         <span class="nav-card__label" data-i18n="nav_account_label">Student account</span>
         <span class="nav-card__hint" data-i18n="nav_account_hint">Optional login to track practice</span>
       </button>
@@ -100,7 +100,7 @@
         <section class="home-why" aria-labelledby="home-why-heading">
           <h2 id="home-why-heading" class="home-section-title home-section-title--why reveal" data-i18n="why_section_title">Why Choose Andronicus?</h2>
           <ul class="why-points">
-            <li class="why-point reveal">
+            <li class="why-point reveal-left">
               <h3 class="why-point__title" data-i18n="why_3_title">I'm a Student Too</h3>
               <p class="why-point__body" data-i18n="why_3_body">I'm at Trinity College Dublin right now, so I know what it's like to be inside the work, not above it. That changes how I teach — I remember exactly which bits felt hard, which explanations finally clicked, and how to find ten extra minutes when the week is already full.</p>
             </li>
@@ -108,7 +108,7 @@
               <h3 class="why-point__title" data-i18n="why_2_title">You Can See Progress</h3>
               <p class="why-point__body" data-i18n="why_2_body">Every student has a tracking page with real graphs, test results, and notes on class performance. You're not guessing whether you're improving — you can look. Parents see the same view, so there are no surprises at the end of the term.</p>
             </li>
-            <li class="why-point reveal">
+            <li class="why-point reveal-right">
               <h3 class="why-point__title" data-i18n="why_1_title">Small Groups</h3>
               <p class="why-point__body" data-i18n="why_1_body">Maximum four students per class. That's small enough that you can't disappear, that every answer gets a response, and that the lesson can shift if a topic isn't landing. Big classes save money for the teacher; small classes work for the student.</p>
             </li>
@@ -120,7 +120,7 @@
           <div class="testimonial-grid">
             <figure class="testimonial-card reveal">
               <p class="testimonial-card__lang-label" data-i18n="testimonial_label">Testimonial</p>
-              <p class="testimonial-card__mark" aria-hidden="true">&ldquo;</p>
+              <p class="testimonial-card__mark reveal-scale" aria-hidden="true">&ldquo;</p>
               <blockquote class="testimonial-card__quote" data-i18n="testimonial_quote_1">
                 Louis explains things the way a student thinks, not the way a textbook is written. My daughter went from dreading English class to actually enjoying it.
               </blockquote>
@@ -128,7 +128,7 @@
             </figure>
             <figure class="testimonial-card reveal">
               <p class="testimonial-card__lang-label" data-i18n="testimonial_label">Testimonial</p>
-              <p class="testimonial-card__mark" aria-hidden="true">&ldquo;</p>
+              <p class="testimonial-card__mark reveal-scale" aria-hidden="true">&ldquo;</p>
               <blockquote class="testimonial-card__quote" data-i18n="testimonial_quote_2">
                 The small group format means you can't hide. You actually have to speak, and that's what made the difference for my exam.
               </blockquote>
@@ -146,7 +146,7 @@
               <summary class="faq-q" data-i18n="faq_q1">Who are the lessons for?</summary>
               <p class="faq-a" data-i18n="faq_a1">Mostly French-speaking students from collège through lycée and into early university — but anyone whose first language is French and who wants to improve their English is welcome. There are beginner, intermediate, and advanced tracks, and we'll place you sensibly once we talk.</p>
             </details>
-            <details class="faq-item">
+            <details class="faq-item reveal">
               <summary class="faq-q" data-i18n="faq_q2">Where do lessons happen?</summary>
               <p class="faq-a" data-i18n="faq_a2">Lessons are online in small groups. After we agree a slot, I send the join link and what you need. I will be on Zoom Plus so I can use premium features: that helps keep things reliable and simple for students every time they join.</p>
             </details>
@@ -210,17 +210,17 @@
         <p class="process-intro" data-i18n="process_steps_intro"></p>
         <div class="process-steps" role="list">
           <article class="step-card reveal" role="listitem">
-            <span class="step-card__num" aria-hidden="true">1</span>
+            <span class="step-card__num reveal-bounce" aria-hidden="true">1</span>
             <h3 class="step-card__title" data-i18n="process_step_1_title">Get in touch</h3>
             <p class="step-card__body" data-i18n-html="process_step_1_html"></p>
           </article>
           <article class="step-card reveal" role="listitem">
-            <span class="step-card__num" aria-hidden="true">2</span>
+            <span class="step-card__num reveal-bounce" aria-hidden="true">2</span>
             <h3 class="step-card__title" data-i18n="process_step_2_title">Booking</h3>
             <p class="step-card__body" data-i18n-html="process_step_2_html"></p>
           </article>
           <article class="step-card reveal" role="listitem">
-            <span class="step-card__num" aria-hidden="true">3</span>
+            <span class="step-card__num reveal-bounce" aria-hidden="true">3</span>
             <h3 class="step-card__title" data-i18n="process_step_3_title">Pay and attend</h3>
             <p class="step-card__body" data-i18n-html="process_step_3_html"></p>
           </article>
