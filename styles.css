@@ -222,6 +222,11 @@ body.content-panel-open .main-nav {
     transform: none;
     transition: none;
   }
+
+  .home-hero::before,
+  .home-free-banner__btn {
+    animation: none;
+  }
 }
 
 body.content-panel-open .site-footer {
@@ -342,6 +347,31 @@ body.content-panel-open .panel-toolbar {
   text-align: center;
 }
 
+/* Animated warm gradient layer */
+.home-hero::before {
+  content: '';
+  position: absolute;
+  inset: -30%;
+  background:
+    radial-gradient(ellipse 55% 55% at 28% 48%, rgba(5, 150, 105, 0.13) 0%, transparent 68%),
+    radial-gradient(ellipse 48% 52% at 72% 52%, rgba(4, 120, 87, 0.09) 0%, transparent 65%),
+    radial-gradient(ellipse 35% 40% at 50% 80%, rgba(16, 185, 129, 0.06) 0%, transparent 60%);
+  animation: hero-breathe 9s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes hero-breathe {
+  0%, 100% {
+    opacity: 0.65;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+}
+
 .home-hero__watermark {
   position: absolute;
   top: 50%;
@@ -369,12 +399,12 @@ body.content-panel-open .panel-toolbar {
 }
 
 .home-hero__rule {
-  width: 3rem;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  width: 5rem;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, rgba(5, 150, 105, 0.8), var(--accent-warm), rgba(5, 150, 105, 0.8), transparent);
   margin: 1.25rem auto 1.5rem;
   border-radius: 1px;
-  opacity: 0.5;
+  opacity: 0.75;
 }
 
 .brand-card {
@@ -392,9 +422,9 @@ body.content-panel-open .panel-toolbar {
 .site-title {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(2.4rem, 7vw, 4rem);
+  font-size: clamp(2.6rem, 8vw, 5.2rem);
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.09em;
   color: var(--ink-heading);
 }
 
@@ -448,6 +478,16 @@ body.content-panel-open .panel-toolbar {
 
 .home-free-banner__btn {
   margin-top: 0;
+  animation: btn-hero-glow 3.5s ease-in-out infinite;
+}
+
+@keyframes btn-hero-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(5, 150, 105, 0), 0 4px 18px rgba(5, 150, 105, 0.28);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(5, 150, 105, 0.14), 0 6px 24px rgba(5, 150, 105, 0.48);
+  }
 }
 
 .home-free-banner {
@@ -457,7 +497,12 @@ body.content-panel-open .panel-toolbar {
 
 @media (max-width: 600px) {
   .home-hero {
-    padding: 1.75rem 1rem 1.5rem;
+    padding: 2rem 1rem 1.75rem;
+  }
+
+  .site-title {
+    font-size: clamp(2.2rem, 11vw, 3rem);
+    letter-spacing: 0.06em;
   }
 
   .home-hero__watermark {
@@ -478,11 +523,9 @@ body.content-panel-open .panel-toolbar {
     margin-top: 0;
     width: 100%;
     text-align: center;
-    background: #ffffff;
-    color: var(--accent-strong);
-    border: 2px solid var(--accent);
-    font-weight: 700;
     border-radius: 999px;
+    font-size: 1.02rem;
+    padding: 0.8rem 1.5rem;
   }
 }
 
