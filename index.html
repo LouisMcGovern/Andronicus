@@ -25,16 +25,10 @@
     try {
       var _andronicusLang = localStorage.getItem("andronicus_lang");
       document.documentElement.lang = _andronicusLang === "en" ? "en" : "fr";
+    try {
+      document.documentElement.lang = "fr";
     } catch (e) {
       document.documentElement.lang = "fr";
-    }
-    try {
-      document.documentElement.setAttribute(
-        "data-theme",
-        localStorage.getItem("andronicus_theme") === "dark" ? "dark" : "light"
-      );
-    } catch (e) {
-      document.documentElement.setAttribute("data-theme", "light");
     }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -44,10 +38,6 @@
 </head>
 <body>
   <a href="#main-content" class="skip-link" data-i18n="skip_to_content">Skip to content</a>
-  <div class="theme-switch theme-switch--fixed" role="group" data-i18n-aria="theme_aria">
-    <button type="button" class="theme-switch__btn" data-theme-value="light" data-i18n="theme_light" aria-pressed="true">Light</button>
-    <button type="button" class="theme-switch__btn" data-theme-value="dark" data-i18n="theme_dark" aria-pressed="false">Dark</button>
-  </div>
   <div class="lang-switch lang-switch--fixed" role="group" data-i18n-aria="lang_aria">
     <button type="button" class="lang-switch__btn" data-lang="en" data-i18n="lang_en" aria-pressed="false">English</button>
     <button type="button" class="lang-switch__btn is-active" data-lang="fr" data-i18n="lang_fr" aria-pressed="true">Français</button>
