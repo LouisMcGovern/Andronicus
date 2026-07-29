@@ -68,16 +68,12 @@
         <button type="button" class="btn-primary home-free-banner__btn" data-section="booking" data-i18n="hero_cta_book_now">Claim your free class</button>
       </div>
       <button type="button" class="nav-card reveal" data-section="about">
-        <span class="nav-card__label" data-i18n="nav_about_label">About the teacher</span>
+        <span class="nav-card__label" data-i18n="nav_about_label">About me</span>
         <span class="nav-card__hint" data-i18n="nav_about_hint">Who I am and how I teach</span>
       </button>
       <button type="button" class="nav-card reveal" data-section="process">
         <span class="nav-card__label" data-i18n="nav_process_label">The process</span>
         <span class="nav-card__hint" data-i18n="nav_process_hint">How grinds work and what to expect</span>
-      </button>
-      <button type="button" class="nav-card reveal" data-section="content">
-        <span class="nav-card__label" data-i18n="nav_content_label">Content</span>
-        <span class="nav-card__hint" data-i18n="nav_content_hint">Materials by level</span>
       </button>
       <button type="button" class="nav-card reveal" data-section="booking">
         <span class="nav-card__label" data-i18n="nav_booking_label">Booking</span>
@@ -87,6 +83,10 @@
       <button type="button" class="nav-card reveal" data-section="account">
         <span class="nav-card__label" data-i18n="nav_account_label">Student account</span>
         <span class="nav-card__hint" data-i18n="nav_account_hint">Optional login to track practice</span>
+      </button>
+      <button type="button" class="nav-card reveal" data-section="content">
+        <span class="nav-card__label" data-i18n="nav_content_label">Content</span>
+        <span class="nav-card__hint" data-i18n="nav_content_hint">Materials by level</span>
       </button>
     </nav>
 
@@ -177,7 +177,7 @@
       </section>
 
       <section id="panel-about" class="panel hidden">
-        <h2 class="reveal" data-i18n="about_title">About the teacher</h2>
+        <h2 class="reveal" data-i18n="about_title">About me</h2>
         <div class="prose prose--about">
           <p data-i18n-html="about_p1_html"></p>
           <p data-i18n-html="about_p2_html"></p>
@@ -211,17 +211,17 @@
         <div class="process-steps" role="list">
           <article class="step-card reveal" role="listitem">
             <span class="step-card__num reveal-bounce" aria-hidden="true">1</span>
-            <h3 class="step-card__title" data-i18n="process_step_1_title">Get in touch</h3>
+            <h3 class="step-card__title" data-i18n="process_step_1_title">Get to know me</h3>
             <p class="step-card__body" data-i18n-html="process_step_1_html"></p>
           </article>
           <article class="step-card reveal" role="listitem">
             <span class="step-card__num reveal-bounce" aria-hidden="true">2</span>
-            <h3 class="step-card__title" data-i18n="process_step_2_title">Booking</h3>
+            <h3 class="step-card__title" data-i18n="process_step_2_title">Find a weekly slot</h3>
             <p class="step-card__body" data-i18n-html="process_step_2_html"></p>
           </article>
           <article class="step-card reveal" role="listitem">
             <span class="step-card__num reveal-bounce" aria-hidden="true">3</span>
-            <h3 class="step-card__title" data-i18n="process_step_3_title">Pay and attend</h3>
+            <h3 class="step-card__title" data-i18n="process_step_3_title">Show up and pay monthly</h3>
             <p class="step-card__body" data-i18n-html="process_step_3_html"></p>
           </article>
         </div>
@@ -675,6 +675,7 @@
             <button type="button" class="tool-menu__btn" data-admin-tab="progress" data-i18n="admin_tab_progress">Student progress</button>
             <button type="button" class="tool-menu__btn" data-admin-tab="payments" data-i18n="admin_tab_payments">Payments</button>
             <button type="button" class="tool-menu__btn" data-admin-tab="leaderboard" data-i18n="admin_tab_leaderboard">Leaderboard</button>
+            <button type="button" class="tool-menu__btn" data-admin-tab="planner">Class Planner</button>
           </div>
           <div id="admin-bookings-tab" class="admin-tab">
             <div class="account-card account-card--admin">
@@ -760,6 +761,9 @@
                 </table>
               </div>
             </div>
+          </div>
+          <div id="admin-planner-tab" class="admin-tab hidden">
+            <div id="admin-planner-content"></div>
           </div>
         </div>
       </section>

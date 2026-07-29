@@ -5863,3 +5863,118 @@ details[open] .faq-q::after {
   pointer-events: none;
   z-index: 1500;
 }
+
+/* ── Admin Class Planner ──────────────────────────────────────────────────── */
+.planner-header {
+  padding: 1rem 0 0.5rem;
+}
+.planner-title {
+  margin: 0 0 0.3rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--ink-heading);
+}
+.planner-subtitle {
+  margin: 0 0 1.25rem;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.planner-level {
+  margin-bottom: 2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.15rem 1.25rem;
+}
+
+.planner-level__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+}
+.planner-level__label {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--ink-heading);
+  padding-left: 0.65rem;
+}
+.planner-level__count {
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.planner-progress-bar {
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.planner-progress-bar__fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.planner-topic-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.planner-topic-item {
+  border-bottom: 1px solid var(--border);
+}
+.planner-topic-item:last-child {
+  border-bottom: none;
+}
+
+.planner-topic-label {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.55rem 0.3rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  border-radius: var(--radius-sm);
+}
+.planner-topic-label:hover {
+  background: var(--surface-elevated);
+}
+
+.planner-checkbox {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--accent);
+  cursor: pointer;
+  margin-top: 0.15rem;
+}
+
+.planner-topic-num {
+  flex-shrink: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--muted);
+  min-width: 3.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.planner-topic-text {
+  font-size: 0.9rem;
+  color: var(--text);
+  line-height: 1.45;
+}
+
+.planner-topic-item--done .planner-topic-text {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+.planner-topic-item--done .planner-topic-num {
+  opacity: 0.55;
+}
+/* ────────────────────────────────────────────────────────────────────────── */

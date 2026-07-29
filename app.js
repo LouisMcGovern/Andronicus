@@ -306,6 +306,8 @@
   const adminPaymentsTab = document.getElementById("admin-payments-tab");
   const adminLeaderboardTab = document.getElementById("admin-leaderboard-tab");
   const adminLeaderboardTbody = document.getElementById("admin-leaderboard-tbody");
+  const adminPlannerTab = document.getElementById("admin-planner-tab");
+  const adminPlannerContent = document.getElementById("admin-planner-content");
   const adminPaymentForm = document.getElementById("admin-payment-form");
   const adminSendEmailsBtn = document.getElementById("admin-send-emails-btn");
   const adminSendEmailsStatus = document.getElementById("admin-send-emails-status");
@@ -3580,6 +3582,197 @@
     }
   }
 
+  // ── Class Planner ─────────────────────────────────────────────────────────
+  var PLANNER_KEY = "andronicus_planner_v1";
+
+  var PLANNER_CURRICULUM = {
+    beginner: {
+      label: "Beginner",
+      colour: "#2d6ba8",
+      topics: [
+        "Introductions — greetings, name, age, where you're from",
+        "Numbers, dates and times",
+        "The alphabet — spelling and pronunciation",
+        "Present Simple — to be (am / is / are)",
+        "Present Simple — have / has",
+        "Present Simple — regular verbs (positive sentences)",
+        "Present Simple — negatives and questions",
+        "Describing people — physical appearance and personality",
+        "Family vocabulary and relationships",
+        "My home — rooms, furniture and prepositions",
+        "Food and drink — vocabulary",
+        "Food and drink — likes, dislikes and opinions",
+        "Daily routines — adverbs of frequency (always, usually…)",
+        "Days of the week, months and seasons",
+        "Colours, shapes and sizes",
+        "Present Continuous — what are you doing right now?",
+        "Can / Can't — ability and permission",
+        "Telling the time — quarter past, half past, etc.",
+        "Shopping — prices, quantities and polite requests",
+        "Directions — asking and giving (turn left, go straight on…)",
+        "Transport and getting around",
+        "Past Simple — verb to be (was / were)",
+        "Past Simple — regular verbs (-ed endings)",
+        "Past Simple — irregular verbs (group 1: go/went, come/came…)",
+        "Past Simple — irregular verbs (group 2: buy/bought, think/thought…)",
+        "Question words — who, what, where, when, why, how",
+        "Going to — talking about future plans",
+        "The weather — adjectives and describing conditions",
+        "Hobbies and free time activities",
+        "Animals and nature — vocabulary",
+        "Writing a short paragraph about yourself",
+        "Dialogue practice — at the café / restaurant / shop",
+        "Reading comprehension — short simple texts",
+        "Revision and year-end test practice"
+      ]
+    },
+    intermediate: {
+      label: "Intermediate",
+      colour: "#1a5090",
+      topics: [
+        "Narrative tenses review — past simple, past continuous, past perfect",
+        "Present Perfect — experiences and recent events (have you ever…?)",
+        "Present Perfect vs Past Simple — choosing the right tense",
+        "Future forms — will, going to, present continuous for plans",
+        "First Conditional — real and likely situations",
+        "Second Conditional — imaginary / unlikely situations",
+        "Third Conditional — regrets and impossible past hypotheticals",
+        "Mixed Conditionals — combining 2nd and 3rd",
+        "Passive Voice — present simple and past simple",
+        "Passive Voice — advanced forms and when to use passive",
+        "Modal Verbs — obligation and advice (must, have to, should, ought to)",
+        "Modal Verbs — deduction and speculation (must be, can't be, might be)",
+        "Reported Speech — statements and tense changes",
+        "Reported Speech — questions, commands and time expressions",
+        "Relative Clauses — defining vs non-defining",
+        "Articles — a / an / the / zero article rules",
+        "Countable and uncountable nouns",
+        "Comparatives and superlatives — review and extension",
+        "Adjective order (size, colour, origin, material…)",
+        "Linking words — addition, contrast, reason and result",
+        "Formal vs informal writing — register and tone",
+        "Writing a formal email",
+        "Essay writing — argumentative structure (intro, argument, counter, conclusion)",
+        "Writing a letter of complaint",
+        "Reading comprehension — newspaper articles",
+        "Vocabulary — idioms and phrasal verbs (part 1)",
+        "Vocabulary — idioms and phrasal verbs (part 2)",
+        "Speaking — discussion and debate techniques",
+        "Listening skills — inference, gist and detail",
+        "Prepositions — time, place and movement",
+        "Gerunds and infinitives — verb patterns",
+        "Wish / If Only — expressing regrets and wishes",
+        "So / Such / Too / Enough",
+        "Revision and exam technique session"
+      ]
+    },
+    advanced: {
+      label: "Advanced",
+      colour: "#0f3d7a",
+      topics: [
+        "Complex tense review — all forms in context",
+        "Advanced Conditionals — 3rd and mixed in depth",
+        "Inversion — formal and literary use (Not only… / Rarely…)",
+        "Cleft sentences — emphasis and focus (It was… / What I need is…)",
+        "Advanced Passive — causative have / get",
+        "Subjunctive — formal register and fixed phrases",
+        "Discourse Markers — cohesion and coherence in academic writing",
+        "Academic Vocabulary — AWL word families",
+        "Hedging language — expressing certainty, doubt and probability",
+        "Argumentative Essay — planning, structure and academic style",
+        "Discursive Essay — presenting a balanced argument",
+        "Descriptive Writing — literary style and sensory detail",
+        "Narrative Writing — opening, tension, climax and resolution",
+        "Literary Analysis — themes, motifs and symbolism",
+        "Poetry Analysis — form, structure, language and imagery",
+        "Short Story Analysis — character, setting and narrative voice",
+        "Drama Analysis — Shakespeare extracts and theatrical techniques",
+        "Comparative Analysis — comparing two texts",
+        "Language Register — formal, informal, academic, colloquial",
+        "Newspaper Editorial — language analysis and bias",
+        "Advertisement Analysis — persuasive techniques and rhetoric",
+        "Speeches and Rhetoric — ethos, pathos, logos",
+        "Advanced Reading — inference, tone and author's purpose",
+        "Speed Reading and Summarising",
+        "Paraphrasing and Avoiding Plagiarism",
+        "Vocabulary in Context — advanced collocations and connotations",
+        "Idioms and Figurative Language in literary texts",
+        "False Friends — common English/French confusions",
+        "Pronunciation — word stress, weak forms and connected speech",
+        "Interview and Presentation Skills",
+        "Oral Examination Technique and Strategies",
+        "Past Papers — comprehension section",
+        "Past Papers — composition section",
+        "Final Revision and Exam Strategy Session"
+      ]
+    }
+  };
+
+  function loadPlannerState() {
+    try {
+      return JSON.parse(localStorage.getItem(PLANNER_KEY)) || {};
+    } catch (e) { return {}; }
+  }
+
+  function savePlannerState(state) {
+    try { localStorage.setItem(PLANNER_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  function renderAdminPlanner() {
+    if (!adminPlannerContent) return;
+    var state = loadPlannerState();
+    var html = '<div class="planner-header"><h3 class="planner-title">Class Planner — September to May</h3><p class="planner-subtitle">Tick off topics as you teach them. Progress saves automatically.</p></div>';
+
+    Object.keys(PLANNER_CURRICULUM).forEach(function (levelKey) {
+      var level = PLANNER_CURRICULUM[levelKey];
+      var done = level.topics.filter(function (_, i) { return state[levelKey] && state[levelKey][i]; }).length;
+      var total = level.topics.length;
+      var pct = Math.round((done / total) * 100);
+
+      html += '<div class="planner-level">';
+      html += '<div class="planner-level__header">';
+      html += '<span class="planner-level__label" style="border-left:4px solid ' + level.colour + '">' + level.label + '</span>';
+      html += '<span class="planner-level__count">' + done + ' / ' + total + ' topics</span>';
+      html += '</div>';
+      html += '<div class="planner-progress-bar"><div class="planner-progress-bar__fill" style="width:' + pct + '%;background:' + level.colour + '"></div></div>';
+      html += '<ul class="planner-topic-list">';
+
+      level.topics.forEach(function (topic, i) {
+        var checked = state[levelKey] && state[levelKey][i] ? true : false;
+        var itemId = "planner-" + levelKey + "-" + i;
+        html += '<li class="planner-topic-item' + (checked ? " planner-topic-item--done" : "") + '">';
+        html += '<label class="planner-topic-label" for="' + itemId + '">';
+        html += '<input type="checkbox" id="' + itemId + '" class="planner-checkbox" data-level="' + levelKey + '" data-idx="' + i + '"' + (checked ? " checked" : "") + '>';
+        html += '<span class="planner-topic-num">Week ' + (i + 1) + '</span>';
+        html += '<span class="planner-topic-text">' + topic + '</span>';
+        html += '</label>';
+        html += '</li>';
+      });
+
+      html += '</ul></div>';
+    });
+
+    adminPlannerContent.innerHTML = html;
+
+    // Attach checkbox listeners
+    adminPlannerContent.querySelectorAll(".planner-checkbox").forEach(function (cb) {
+      cb.addEventListener("change", function () {
+        var levelKey = cb.getAttribute("data-level");
+        var idx = parseInt(cb.getAttribute("data-idx"), 10);
+        var state = loadPlannerState();
+        if (!state[levelKey]) state[levelKey] = {};
+        if (cb.checked) {
+          state[levelKey][idx] = true;
+        } else {
+          delete state[levelKey][idx];
+        }
+        savePlannerState(state);
+        renderAdminPlanner();
+      });
+    });
+  }
+  // ──────────────────────────────────────────────────────────────────────────
+
   function renderAdminReminderBanner() {
     if (!adminReminderBanner) return;
     adminReminderBanner.innerHTML = "";
@@ -4288,7 +4481,9 @@
         if (adminProgressTab) adminProgressTab.classList.toggle("hidden", tab !== "progress");
         if (adminPaymentsTab) adminPaymentsTab.classList.toggle("hidden", tab !== "payments");
         if (adminLeaderboardTab) adminLeaderboardTab.classList.toggle("hidden", tab !== "leaderboard");
+        if (adminPlannerTab)     adminPlannerTab.classList.toggle("hidden",     tab !== "planner");
         if (tab === "leaderboard") renderAdminLeaderboard();
+        if (tab === "planner")     renderAdminPlanner();
       });
     });
   }

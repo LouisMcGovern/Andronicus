@@ -20,7 +20,7 @@
       theme_dark: "Dark",
       tagline: "Online English grinds for French-speaking students.",
       nav_main_aria: "Main sections",
-      nav_about_label: "About the Teacher",
+      nav_about_label: "About me",
       nav_about_hint: "Who I am and how I teach",
       nav_process_label: "The Process",
       nav_process_hint: "How grinds work and what to expect",
@@ -75,7 +75,7 @@
       contact_section_title: "Rather Talk First?",
       contact_section_html:
         "Call or email and we can sort level and timing in a few minutes. <a href=\"tel:+353833198980\">+353 (83) 319 8980</a> · <a href=\"mailto:louis.f.mcgovern@gmail.com\">louis.f.mcgovern@gmail.com</a>",
-      about_title: "About the Teacher",
+      about_title: "About me",
       about_p1_html:
         "My name is <strong>Louis McGovern</strong>. I am <strong>21</strong> and I study <strong>Business and French</strong> at <strong>Trinity College Dublin</strong> — widely ranked as Ireland's top university.",
       about_p2_html:
@@ -87,16 +87,16 @@
       about_p5_html:
         "To get in touch: <a href=\"tel:+353833198980\">+353 (83) 319 8980</a> · <a href=\"mailto:louis.f.mcgovern@gmail.com\">louis.f.mcgovern@gmail.com</a>",
       process_title: "The Process",
-      process_steps_intro: "Talk → book → join each week.",
-      process_step_1_title: "Get in touch",
+      process_steps_intro: "Three simple steps — that's genuinely all there is to it.",
+      process_step_1_title: "Get to know me",
       process_step_1_html:
-        "<div class=\"step-card__stack\"><p>Call, text, or email — same number for texts.</p><p>Optional 10-minute chat first.</p></div><div class=\"step-card__links\"><a href=\"tel:+353833198980\">+353 (83) 319 8980</a><span class=\"step-card__dot\" aria-hidden=\"true\">·</span><a href=\"mailto:louis.f.mcgovern@gmail.com\">Email</a></div>",
-      process_step_2_title: "Booking",
+        "<div class=\"step-card__stack\"><p>Before anything else, <strong>let's have a quick chat</strong>. Call me, send me a text, or drop me an email — five or ten minutes is enough. I'll explain exactly how the classes work, you can ask anything you like, and we'll figure out together whether it's the right fit. <strong>No pressure, no obligation.</strong></p></div><div class=\"step-card__links\"><a href=\"tel:+353833198980\">📞 +353 (83) 319 8980</a><span class=\"step-card__dot\" aria-hidden=\"true\">·</span><a href=\"mailto:louis.f.mcgovern@gmail.com\">✉️ Email me</a></div>",
+      process_step_2_title: "Find a weekly slot",
       process_step_2_html:
-        "<div class=\"step-card__stack\"><p>Open Booking — menu or button below.</p><p><strong>Choose your English level and the times that work for you</strong>, then send. I confirm by message.</p></div>",
-      process_step_3_title: "Pay and come to grinds",
+        "<div class=\"step-card__stack\"><p>Once you're happy to go ahead, we'll <strong>find one hour during the week that works for both of us</strong>. Classes run on the same day and time every week — no rescheduling confusion, just a fixed slot you can count on.</p></div>",
+      process_step_3_title: "Show up and pay monthly",
       process_step_3_html:
-        "<div class=\"step-card__stack\"><p><strong>Slot confirmed</strong> — pay at the start of each month.</p><p>Join every week on Zoom: one hour, small group.</p></div>",
+        "<div class=\"step-card__stack\"><p>Join your class on Zoom every week — <strong>one hour, small group of up to four students</strong>. At the start of each month I'll let you know how many classes you attended the previous month, and <strong>you pay for exactly those</strong>. No advance payments, no contracts. <strong>€25 per class.</strong></p></div>",
       process_btn_booking: "Open booking form",
       process_actions_hint: "Same form as in the main menu.",
       process_extra_heading: "Fees, Homework, and How It Works",
@@ -572,7 +572,7 @@
       theme_dark: "Sombre",
       tagline: "Cours d’anglais en ligne pour élèves francophones.",
       nav_main_aria: "Sections principales",
-      nav_about_label: "À propos du professeur",
+      nav_about_label: "À propos de moi",
       nav_about_hint: "Qui je suis et comment j’enseigne",
       nav_process_label: "Le déroulement des cours",
       nav_process_hint: "Comment fonctionnent les cours et à quoi s’attendre",
@@ -627,7 +627,7 @@
       contact_section_title: "Envie d’en parler avant ?",
       contact_section_html:
         "Appelez ou écrivez, on règle souvent niveau et créneau en quelques minutes. <a href=\"tel:+353833198980\">+353 (83) 319 8980</a> · <a href=\"mailto:louis.f.mcgovern@gmail.com\">louis.f.mcgovern@gmail.com</a>",
-      about_title: "À propos du professeur",
+      about_title: "À propos de moi",
       about_p1_html:
         "Je m’appelle <strong>Louis McGovern</strong>, j’ai <strong>21 ans</strong>, et je fais <strong>commerce et français</strong> à <strong>Trinity College Dublin</strong>, souvent classée comme la meilleure université d’Irlande dans les grands classements.",
       about_p2_html:
@@ -639,16 +639,16 @@
       about_p5_html:
         "Pour me joindre : <a href=\"tel:+353833198980\">+353 (83) 319 8980</a> · <a href=\"mailto:louis.f.mcgovern@gmail.com\">louis.f.mcgovern@gmail.com</a>",
       process_title: "Le déroulement des cours",
-      process_steps_intro: "On en parle → inscription → cours chaque semaine.",
-      process_step_1_title: "Me contacter",
+      process_steps_intro: "Trois étapes simples — c'est vraiment tout ce qu'il y a à faire.",
+      process_step_1_title: "Apprenons à nous connaître",
       process_step_1_html:
-        "<div class=\"step-card__stack\"><p>Appel, SMS ou mail — le même numéro pour les SMS.</p><p>Échange de dix minutes si vous le souhaitez.</p></div><div class=\"step-card__links\"><a href=\"tel:+353833198980\">+353 (83) 319 8980</a><span class=\"step-card__dot\" aria-hidden=\"true\">·</span><a href=\"mailto:louis.f.mcgovern@gmail.com\">E-mail</a></div>",
-      process_step_2_title: "Inscription",
+        "<div class=\"step-card__stack\"><p>Avant toute chose, <strong>parlons quelques minutes</strong>. Appelez-moi, envoyez-moi un SMS ou un e-mail — cinq à dix minutes suffisent. Je vous explique comment fonctionnent les cours, vous pouvez poser toutes vos questions, et on voit ensemble si c'est la bonne solution. <strong>Sans pression, sans engagement.</strong></p></div><div class=\"step-card__links\"><a href=\"tel:+353833198980\">📞 +353 (83) 319 8980</a><span class=\"step-card__dot\" aria-hidden=\"true\">·</span><a href=\"mailto:louis.f.mcgovern@gmail.com\">✉️ M'envoyer un e-mail</a></div>",
+      process_step_2_title: "Trouver un créneau hebdomadaire",
       process_step_2_html:
-        "<div class=\"step-card__stack\"><p>Ouvrir Inscription — menu ou bouton ci-dessous.</p><p><strong>Choisissez votre niveau d’anglais et les horaires qui vous conviennent</strong>, puis envoyez. Je confirme.</p></div>",
-      process_step_3_title: "Payer et venir aux cours",
+        "<div class=\"step-card__stack\"><p>Une fois que vous souhaitez vous lancer, nous <strong>cherchons ensemble une heure dans la semaine qui convient à tous les deux</strong>. Les cours ont lieu le même jour et à la même heure chaque semaine — pas de confusion, juste un créneau fixe sur lequel vous pouvez compter.</p></div>",
+      process_step_3_title: "Venez en cours et payez chaque mois",
       process_step_3_html:
-        "<div class=\"step-card__stack\"><p><strong>Créneau confirmé</strong> — paiement en début de mois.</p><p>Cours chaque semaine sur Zoom : 1 h, petit groupe.</p></div>",
+        "<div class=\"step-card__stack\"><p>Rejoignez votre cours sur Zoom chaque semaine — <strong>une heure, petit groupe de quatre élèves maximum</strong>. En début de mois, je vous indique le nombre de cours auxquels vous avez assisté le mois précédent, et <strong>vous payez uniquement ceux-là</strong>. Pas de paiement à l'avance, pas de contrat. <strong>25 € par cours.</strong></p></div>",
       process_btn_booking: "Ouvrir le formulaire d’inscription",
       process_actions_hint: "Même formulaire que dans le menu.",
       process_extra_heading: "Tarif, devoirs, et comment ça fonctionne",
