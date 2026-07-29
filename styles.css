@@ -8,9 +8,9 @@
 :root {
   color-scheme: light;
 
-  --bg-deep: #c8daea;
-  --page-bg: #c8daea;
-  --intro-overlay-bg: #ccdaea;
+  --bg-deep: #d4e5f2;
+  --page-bg: #d4e5f2;
+  --intro-overlay-bg: #d8e7f2;
 
   --ink-heading: #0d1b2a;
   --ink-intro: #0d1b2a;
@@ -18,8 +18,8 @@
   --readable-body: #2a3d52;
   --muted: #4a6580;
 
-  --surface: #ccdaea;
-  --surface-elevated: #bad2e8;
+  --surface: #d8e7f2;
+  --surface-elevated: #c8dded;
 
   --accent: #0f3d7a;
   --accent-strong: #1a5090;
@@ -30,15 +30,15 @@
   --accent-purple: #7c3aed;
   --accent-purple-soft: rgba(124, 58, 237, 0.12);
 
-  --border: #8aafc8;
+  --border: #9dbdd4;
   --shadow: 0 8px 28px rgba(13, 27, 42, 0.1);
   --shadow-soft: 0 4px 16px rgba(13, 27, 42, 0.07);
 
   --glass-fill: rgba(13, 27, 42, 0.04);
   --glass-border: rgba(13, 27, 42, 0.1);
 
-  --chrome-bg: #bad2e8;
-  --chrome-border: #8aafc8;
+  --chrome-bg: #c8dded;
+  --chrome-border: #9dbdd4;
   --chrome-btn-border: rgba(13, 27, 42, 0.18);
   --chrome-btn-text: #0d1b2a;
   --chrome-btn-hover: rgba(13, 27, 42, 0.06);
@@ -54,17 +54,17 @@
   --brand-card-border: transparent;
   --brand-card-shadow: none;
 
-  --nav-card-bg: #ccdaea;
-  --nav-card-border: #8aafc8;
+  --nav-card-bg: #d8e7f2;
+  --nav-card-border: #9dbdd4;
   --nav-card-shadow: 0 2px 10px rgba(13, 27, 42, 0.06);
-  --nav-card-hover-bg: #bad2e8;
+  --nav-card-hover-bg: #c8dded;
   --nav-card-hover-border: #0f3d7a;
   --nav-card-hover-shadow: 0 6px 20px rgba(13, 27, 42, 0.1);
 
-  --process-extra-bg: #ccdaea;
-  --process-extra-border: #8aafc8;
+  --process-extra-bg: #d8e7f2;
+  --process-extra-border: #9dbdd4;
 
-  --flashcard-face-bg: #ccdaea;
+  --flashcard-face-bg: #d8e7f2;
   --elevated-stroke: rgba(13, 27, 42, 0.12);
 
   --overlay-scrim: rgba(13, 27, 42, 0.5);
@@ -79,7 +79,7 @@
   --font-display: "Playfair Display", Georgia, serif;
   --font-tagline: "DM Sans", system-ui, sans-serif;
 
-  --gap-correct-bg: #b8d0e8;
+  --gap-correct-bg: #c6dded;
   --gap-correct-border: #0f3d7a;
   --gap-correct-text: #061525;
   --gap-wrong-bg: #fde8e8;
@@ -283,7 +283,7 @@ body.content-panel-open .panel-toolbar {
   z-index: 60;
   margin: 0;
   padding: 0.5rem 0.75rem;
-  background: #ccdaea;
+  background: #d8e7f2;
   border-bottom: 1px solid var(--border);
   min-height: auto;
 }
@@ -296,7 +296,7 @@ body.content-panel-open .panel-toolbar {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #b8d0e8; /* warm parchment — matches hero panel */
+  background: #c6dded; /* warm parchment — matches hero panel */
   pointer-events: none;
   transition: opacity 0.4s ease;
 }
@@ -376,7 +376,7 @@ body.intro-running .site-title {
   overflow: hidden;
   padding: 2.5rem 1rem 2rem;
   text-align: center;
-  background: #b8d0e8;
+  background: #c6dded;
 }
 
 /* Watermark hidden — clean hero */
@@ -558,8 +558,8 @@ body.intro-running .site-title {
   flex-wrap: wrap;
   gap: 0.75rem;
   padding: 0.85rem 1.15rem;
-  background: #b8d0e8;
-  border: 1px solid #8aafc8;
+  background: #c6dded;
+  border: 1px solid #9dbdd4;
   border-left: 4px solid #0f3d7a;
   border-radius: var(--radius-lg);
   margin: 0.75rem 0;
@@ -760,7 +760,7 @@ body.intro-running .site-title {
 .nav-card[data-section="booking"] .nav-card__label,
 .nav-card[data-section="booking"] .nav-card__hint,
 .nav-card[data-section="booking"] .nav-card__price {
-  color: #c8daea;
+  color: #d4e5f2;
 }
 
 .nav-card[data-section="booking"]:hover {
@@ -771,7 +771,7 @@ body.intro-running .site-title {
 .nav-card[data-section="booking"]:hover .nav-card__label,
 .nav-card[data-section="booking"]:hover .nav-card__hint,
 .nav-card[data-section="booking"]:hover .nav-card__price {
-  color: #c8daea;
+  color: #d4e5f2;
 }
 
 .nav-card__label {
@@ -843,7 +843,7 @@ body.content-panel-open .panel--content {
   border: none;
   box-shadow: none;
   min-height: 100dvh;
-  background: #c8daea;
+  background: #d4e5f2;
   color: var(--text);
 }
 
@@ -864,10 +864,10 @@ body.content-panel-open pre {
 
 body.content-panel-open .tool-panel,
 .panel--content .tool-panel {
-  background: #bad2e8;
+  background: #c8dded;
   border-radius: 12px;
   padding: 1.25rem 1.35rem;
-  border: 1px solid #8aafc8;
+  border: 1px solid #9dbdd4;
 }
 
 body.content-panel-open .btn-primary {
@@ -880,7 +880,7 @@ body.content-panel-open .flashcard-btn {
 
 body.content-panel-open .lh-lesson-card {
   border-radius: 12px;
-  background: #ccdaea;
+  background: #d8e7f2;
 }
 
 /* No grid background in content area */
@@ -892,12 +892,12 @@ body.content-panel-open .home-hero {
 
 .panel--content,
 .level-article {
-  background: #c8daea;
+  background: #d4e5f2;
 }
 
 .panel--content,
 .level-article {
-  background: #c8daea;
+  background: #d4e5f2;
 }
 
 .content-breadcrumb {
@@ -907,8 +907,8 @@ body.content-panel-open .home-hero {
   font-size: 0.82rem;
   color: #4a6580;
   padding: 0.5rem 1rem;
-  border-bottom: 1px solid #8aafc8;
-  background: #ccdaea;
+  border-bottom: 1px solid #9dbdd4;
+  background: #d8e7f2;
 }
 
 .content-breadcrumb__link {
@@ -1536,7 +1536,7 @@ details[open] .faq-q::after {
 }
 
 .booking-sync-warning {
-  color: #b8d0e8;
+  color: #c6dded;
 }
 
 .booking-success-note {
@@ -2064,7 +2064,7 @@ details[open] .faq-q::after {
   border: none;
   border-radius: var(--radius-sm);
   border-top: 3px solid color-mix(in srgb, var(--accent-warm) 40%, transparent);
-  background: #c8daea;
+  background: #d4e5f2;
   box-shadow: none;
   overflow: visible;
   color: var(--text);
@@ -2621,7 +2621,7 @@ details[open] .faq-q::after {
 }
 
 .panel--content .lh-lesson-card {
-  border: 1.5px solid #8aafc8;
+  border: 1.5px solid #9dbdd4;
 }
 
 .panel--content .lh-lesson-card {
@@ -3426,7 +3426,7 @@ details[open] .faq-q::after {
 }
 
 .panel--content .tool-panel {
-  background: #ccdaea;
+  background: #d8e7f2;
 }
 
 .panel--content .tool-panel {
@@ -3495,9 +3495,9 @@ details[open] .faq-q::after {
 .flashcard {
   width: 100%;
   min-height: 42vh;
-  border: 1px solid #8aafc8;
+  border: 1px solid #9dbdd4;
   border-radius: 0.85rem;
-  background: linear-gradient(160deg, #ccdaea 0%, #ccdaea 100%);
+  background: linear-gradient(160deg, #d8e7f2 0%, #d8e7f2 100%);
   box-shadow:
     0 4px 6px rgba(0, 0, 0, 0.25),
     0 12px 28px rgba(0, 0, 0, 0.35);
@@ -3647,7 +3647,7 @@ details[open] .faq-q::after {
 }
 
 .flashcard-btn {
-  border: 1px solid #8aafc8;
+  border: 1px solid #9dbdd4;
   background: var(--surface-elevated);
   color: #4a6580;
   border-radius: 0.25rem;
@@ -3712,7 +3712,7 @@ details[open] .faq-q::after {
 .flashcard-btn--got-it:hover {
   background: rgba(52, 211, 153, 0.28);
   border-color: var(--accent-warm-hover);
-  color: #c8daea;
+  color: #d4e5f2;
 }
 
 .flashcard-progress {
@@ -4175,8 +4175,8 @@ details[open] .faq-q::after {
 .flashcard-complete-overlay__inner {
   max-width: 26rem;
   width: 100%;
-  background: #ccdaea;
-  border: 1px solid #8aafc8;
+  background: #d8e7f2;
+  border: 1px solid #9dbdd4;
   border-radius: 16px;
   padding: 1.35rem 1.5rem;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
@@ -4801,8 +4801,8 @@ details[open] .faq-q::after {
 }
 
 .booking-day-btn:hover {
-  border-color: #8aafc8;
-  background: #ccdaea;
+  border-color: #9dbdd4;
+  background: #d8e7f2;
 }
 
 .booking-day-btn.is-active {
@@ -4860,7 +4860,7 @@ details[open] .faq-q::after {
 }
 
 .booking-hour-btn:hover {
-  border-color: #8aafc8;
+  border-color: #9dbdd4;
 }
 
 .booking-hour-btn.is-selected {
@@ -4989,7 +4989,7 @@ details[open] .faq-q::after {
   border: none;
   border-radius: 4px;
   background: #0f3d7a;
-  color: #c8daea;
+  color: #d4e5f2;
   font-family: var(--font-tagline);
   font-size: 0.98rem;
   font-weight: 600;
@@ -5014,7 +5014,7 @@ details[open] .faq-q::after {
   gap: 0.35rem;
   padding: 0.45rem 0.9rem;
   min-height: 2.25rem;
-  border: 1px solid #8aafc8;
+  border: 1px solid #9dbdd4;
   border-radius: var(--radius-md);
   background: transparent;
   color: #4a6580;
