@@ -176,9 +176,6 @@
     if (navPrice) navPrice.textContent = I18n.t("nav_booking_price");
     const bookingCallout = document.querySelector(".booking-price-callout");
     if (bookingCallout) bookingCallout.textContent = I18n.t("booking_price_callout");
-    document.querySelectorAll(".teacher-figure__caption").forEach(function (cap, i) {
-      cap.textContent = I18n.t("teacher_caption_" + (i + 1));
-    });
     document.querySelectorAll(".btn-level").forEach(function (btn) {
       const level = btn.getAttribute("data-level");
       const desc = btn.querySelector(".btn-level__desc");

@@ -135,9 +135,6 @@
       testimonial_quote_2:
         "The small group format means you can't hide. You actually have to speak, and that's what made the difference for my exam.",
       testimonial_attr_2: "Intermediate student, Lycée, Paris",
-      teacher_caption_1: "Louis McGovern — studying Business and French at Trinity College Dublin.",
-      teacher_caption_2:
-        "Teaching approach: structured sessions, real conversation, and consistent feedback.",
       content_password_title: "Enter Password",
       content_password_intro: "Enter the password your teacher gave you.",
       content_password_close_aria: "Cancel and return to levels",
@@ -687,9 +684,6 @@
       testimonial_quote_2:
         "Le format en petits groupes fait qu'on ne peut pas se cacher. On doit vraiment parler, et c'est ce qui a fait la différence pour mon examen.",
       testimonial_attr_2: "Élève intermédiaire, Lycée, Paris",
-      teacher_caption_1: "Louis McGovern — étudiant en commerce et en français à Trinity College Dublin.",
-      teacher_caption_2:
-        "Ma façon d'enseigner : des séances structurées, de vraies conversations et des retours réguliers.",
       content_password_title: "Saisir le mot de passe",
       content_password_intro: "Entrez le mot de passe que votre professeur vous a donné.",
       content_password_close_aria: "Annuler et revenir au choix des niveaux",
