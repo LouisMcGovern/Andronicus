@@ -305,6 +305,7 @@
   const adminLeaderboardTbody = document.getElementById("admin-leaderboard-tbody");
   const adminPlannerTab = document.getElementById("admin-planner-tab");
   const adminPlannerContent = document.getElementById("admin-planner-content");
+  const adminWritingTab = document.getElementById("admin-writing-tab");
   const adminPaymentForm = document.getElementById("admin-payment-form");
   const adminSendEmailsBtn = document.getElementById("admin-send-emails-btn");
   const adminSendEmailsStatus = document.getElementById("admin-send-emails-status");
@@ -357,6 +358,9 @@
   let bookings = [];
   let paymentChecklist = [];
   let supabaseClient = null;
+  let writingState = { user: null, loading: false, loaded: false, error: "", byTask: {} };
+  let writingEditor = null;
+  let adminWriting = { loading: false, loaded: false, error: "", rows: [], filter: "todo", openId: null, dirty: false };
   let userCloudSyncTimer = null;
   let userCloudSyncInFlight = false;
   let userCloudSyncQueued = false;
@@ -2491,6 +2495,7 @@
       loadPayments();
     }
     renderAdminPanel();
+    void fetchAdminWriting();
   }
 
   function persistActiveUser() {
@@ -2634,6 +2639,1306 @@
   function refreshAllHomeworkPanels() {
     homeworkPanelRenderers.forEach(function (renderFn) {
       renderFn();
+    });
+  }
+
+  /* ------------------------------------------------------------------
+   * Writing homework: students type answers, the teacher corrects them.
+   * Stored in Supabase table writing_submissions (see supabase/migrations).
+   * ------------------------------------------------------------------ */
+
+  const WRITING_LOCAL_PREFIX = "andronicus_writing_draft_v1|";
+  /** Largest single insertion we accept from the keyboard (predictive text inserts whole words). */
+  const WRITING_MAX_KEYBOARD_INSERT = 24;
+
+
+  function writingLevelLabel(level) {
+    const key = "level_" + String(level || "");
+    const label = I18n.t(key);
+    return label === key ? String(level || "") : label;
+  }
+
+  function writingTaskText(item) {
+    if (!item) return "";
+    return I18n.getLang() === "fr" && item.fr ? item.fr : item.en || item.fr || "";
+  }
+
+  function writingWordCount(text) {
+    const words = String(text || "").trim().split(/\s+/).filter(Boolean);
+    return words.length;
+  }
+
+  function writingWordsLabel(n) {
+    return n === 1 ? I18n.t("writing_words_one") : I18n.t("writing_words", { n: String(n) });
+  }
+
+  function writingFormatDate(iso) {
+    if (!iso) return "";
+    try {
+      return new Date(iso).toLocaleString(I18n.getLang() === "fr" ? "fr-FR" : "en-IE", {
+        day: "numeric",
+        month: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } catch (e) {
+      return String(iso);
+    }
+  }
+
+  function escapeHtmlText(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function plainTextToCorrectionHtml(text) {
+    return escapeHtmlText(text).replace(/\r\n?/g, "\n").replace(/\n/g, "<br>");
+  }
+
+  /**
+   * Keep only text, line breaks and the two correction marks. Everything else is unwrapped,
+   * so student text or anything pasted into the teacher editor can never become live HTML.
+   */
+  function sanitizeCorrectionHtml(html) {
+    const tpl = document.createElement("template");
+    tpl.innerHTML = String(html || "");
+    const out = document.createElement("div");
+
+    function lastIsBreak(parent) {
+      const last = parent.lastChild;
+      return !last || (last.nodeType === 1 && last.tagName === "BR");
+    }
+
+    function walk(src, parent) {
+      Array.prototype.forEach.call(src.childNodes, function (child) {
+        if (child.nodeType === 3) {
+          parent.appendChild(document.createTextNode(child.nodeValue));
+          return;
+        }
+        if (child.nodeType !== 1) return;
+        const tag = child.tagName.toLowerCase();
+        if (tag === "script" || tag === "style" || tag === "template") return;
+        if (tag === "br") {
+          parent.appendChild(document.createElement("br"));
+          return;
+        }
+        if (tag === "span" && (child.classList.contains("wc-err") || child.classList.contains("wc-fix"))) {
+          const span = document.createElement("span");
+          span.className = child.classList.contains("wc-err") ? "wc-err" : "wc-fix";
+          walk(child, span);
+          if (span.childNodes.length) parent.appendChild(span);
+          return;
+        }
+        if (tag === "div" || tag === "p") {
+          if (!lastIsBreak(parent)) parent.appendChild(document.createElement("br"));
+          walk(child, parent);
+          return;
+        }
+        walk(child, parent);
+      });
+    }
+
+    walk(tpl.content, out);
+    return out.innerHTML;
+  }
+
+  function buildCorrectionLegend() {
+    const legend = document.createElement("p");
+    legend.className = "wr-legend";
+    const err = document.createElement("span");
+    err.className = "wc-err";
+    err.textContent = I18n.t("writing_legend_err");
+    const fix = document.createElement("span");
+    fix.className = "wc-fix";
+    fix.textContent = I18n.t("writing_legend_fix");
+    legend.appendChild(err);
+    legend.appendChild(document.createTextNode("  "));
+    legend.appendChild(fix);
+    return legend;
+  }
+
+  /* ---------- Student data ---------- */
+
+  function writingLocalKey(username, taskId) {
+    return WRITING_LOCAL_PREFIX + username + "|" + taskId;
+  }
+
+  function readWritingLocal(username, taskId) {
+    try {
+      const raw = localStorage.getItem(writingLocalKey(username, taskId));
+      const parsed = raw ? JSON.parse(raw) : null;
+      return parsed && typeof parsed.text === "string" ? parsed : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function writeWritingLocal(username, taskId, text) {
+    try {
+      localStorage.setItem(
+        writingLocalKey(username, taskId),
+        JSON.stringify({ text: String(text || ""), at: new Date().toISOString() })
+      );
+    } catch (e) {}
+  }
+
+  function clearWritingLocal(username, taskId) {
+    try {
+      localStorage.removeItem(writingLocalKey(username, taskId));
+    } catch (e) {}
+  }
+
+  function writingAttemptsFor(taskId) {
+    if (!activeUsername || writingState.user !== activeUsername) return [];
+    return writingState.byTask[taskId] || [];
+  }
+
+  function writingTaskSummary(taskId) {
+    const attempts = writingAttemptsFor(taskId);
+    let draft = null;
+    let lastSent = null;
+    attempts.forEach(function (a) {
+      if (a.status === "draft") draft = a;
+      else lastSent = a;
+    });
+    return { attempts: attempts, draft: draft, lastSent: lastSent };
+  }
+
+  async function loadStudentWriting(force) {
+    const user = getActiveUser();
+    if (!user || !activeUsername) {
+      writingState = { user: null, loading: false, loaded: false, error: "", byTask: {} };
+      return;
+    }
+    if (
+      !force &&
+      writingState.user === activeUsername &&
+      (writingState.loaded || writingState.loading)
+    ) {
+      return;
+    }
+    const username = activeUsername;
+    if (writingState.user !== username) {
+      writingState = { user: username, loading: false, loaded: false, error: "", byTask: {} };
+    }
+    if (!isSupabaseConfigured() || !getSupabaseClient()) {
+      writingState.loaded = true;
+      writingState.error = "offline";
+      return;
+    }
+    writingState.loading = true;
+    try {
+      const { data, error } = await getSupabaseClient().rpc("student_list_writing", {
+        p_username: username,
+        p_password: String(user.password || ""),
+      });
+      if (error) throw error;
+      if (activeUsername !== username) return;
+      const byTask = {};
+      (data || []).forEach(function (row) {
+        if (!byTask[row.task_id]) byTask[row.task_id] = [];
+        byTask[row.task_id].push(row);
+      });
+      Object.keys(byTask).forEach(function (k) {
+        byTask[k].sort(function (a, b) {
+          return a.attempt - b.attempt;
+        });
+      });
+      writingState.byTask = byTask;
+      writingState.error = "";
+    } catch (err) {
+      console.error(err);
+      if (activeUsername === username) writingState.error = "load";
+    }
+    if (activeUsername !== username) return;
+    writingState.loading = false;
+    writingState.loaded = true;
+    refreshAllHomeworkPanels();
+    if (writingEditor && writingEditor.isOpen()) writingEditor.refresh();
+  }
+
+  async function saveStudentWriting(level, item, text, submit) {
+    const user = getActiveUser();
+    if (!user || !activeUsername) throw new Error("signin");
+    if (!isSupabaseConfigured() || !getSupabaseClient()) throw new Error("offline");
+    const { data, error } = await getSupabaseClient().rpc("student_save_writing", {
+      p_username: activeUsername,
+      p_password: String(user.password || ""),
+      p_level: level,
+      p_task_id: item.id,
+      p_task_text: item.en || item.fr || "",
+      p_body: text,
+      p_submit: !!submit,
+    });
+    if (error) throw error;
+    return Array.isArray(data) ? data[0] : data;
+  }
+
+  /** Extra row under each Writing homework item: status badge + open button. */
+  function buildWritingHomeworkRow(level, item) {
+    const row = document.createElement("div");
+    row.className = "lh-writing-row";
+    const user = getActiveUser();
+    const summary = writingTaskSummary(item.id);
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "lh-writing-row__btn";
+    btn.disabled = !user;
+    if (summary.draft) btn.textContent = I18n.t("writing_btn_continue");
+    else if (summary.lastSent) btn.textContent = I18n.t("writing_btn_open");
+    else btn.textContent = I18n.t("writing_btn_start");
+    btn.addEventListener("click", function () {
+      openWritingEditor(level, item);
+    });
+    row.appendChild(btn);
+
+    let badgeKey = "";
+    let badgeMod = "";
+    if (summary.draft) {
+      badgeKey = "writing_badge_draft";
+      badgeMod = "draft";
+    } else if (summary.lastSent && summary.lastSent.status === "corrected") {
+      badgeKey = "writing_badge_corrected";
+      badgeMod = "corrected";
+    } else if (summary.lastSent) {
+      badgeKey = "writing_badge_submitted";
+      badgeMod = "submitted";
+    }
+    if (badgeKey) {
+      const badge = document.createElement("span");
+      badge.className = "lh-writing-row__badge lh-writing-row__badge--" + badgeMod;
+      badge.textContent = I18n.t(badgeKey);
+      row.appendChild(badge);
+    }
+    if (!user) {
+      const hint = document.createElement("span");
+      hint.className = "lh-writing-row__hint";
+      hint.textContent = I18n.t("writing_signin");
+      row.appendChild(hint);
+    }
+    return row;
+  }
+
+  /* ---------- Paste protection ---------- */
+
+  function guardAgainstPaste(textarea, onBlocked) {
+    const blockedTypes = {
+      insertFromPaste: 1,
+      insertFromPasteAsQuotation: 1,
+      insertFromDrop: 1,
+      insertFromYank: 1,
+      insertReplacementText: 1,
+    };
+    let lastValue = textarea.value;
+    let lastSelStart = textarea.selectionStart;
+    let lastSelEnd = textarea.selectionEnd;
+
+    function remember() {
+      lastValue = textarea.value;
+      lastSelStart = textarea.selectionStart;
+      lastSelEnd = textarea.selectionEnd;
+    }
+
+    textarea.addEventListener("paste", function (e) {
+      e.preventDefault();
+      onBlocked();
+    });
+    textarea.addEventListener("drop", function (e) {
+      e.preventDefault();
+      onBlocked();
+    });
+    textarea.addEventListener("dragover", function (e) {
+      e.preventDefault();
+    });
+    textarea.addEventListener("contextmenu", function (e) {
+      e.preventDefault();
+    });
+    textarea.addEventListener("beforeinput", function (e) {
+      if (blockedTypes[e.inputType]) {
+        e.preventDefault();
+        onBlocked();
+        return;
+      }
+      remember();
+    });
+    textarea.addEventListener("keydown", remember);
+    // Safety net for browsers or extensions that slip text in without a paste event.
+    textarea.addEventListener("input", function (e) {
+      const grew = textarea.value.length - lastValue.length + (lastSelEnd - lastSelStart);
+      const isTyping =
+        !e.inputType || e.inputType === "insertText" || e.inputType === "insertCompositionText";
+      if (grew > WRITING_MAX_KEYBOARD_INSERT && (isTyping || blockedTypes[e.inputType] || e.inputType === "insertFromPaste")) {
+        textarea.value = lastValue;
+        try {
+          textarea.setSelectionRange(lastSelStart, lastSelStart);
+        } catch (err) {}
+        onBlocked();
+        return;
+      }
+      remember();
+    });
+    return { reset: remember };
+  }
+
+  /* ---------- Student editor overlay ---------- */
+
+  function createWritingEditor() {
+    const overlay = document.createElement("div");
+    overlay.className = "wr-overlay hidden";
+    overlay.setAttribute("role", "dialog");
+    overlay.setAttribute("aria-modal", "true");
+    overlay.innerHTML =
+      '<div class="wr-shell">' +
+      '  <header class="wr-top">' +
+      '    <div class="wr-top__text">' +
+      '      <p class="wr-kicker"></p>' +
+      '      <h2 class="wr-task" id="wr-task-title"></h2>' +
+      "    </div>" +
+      '    <button type="button" class="wr-close"></button>' +
+      "  </header>" +
+      '  <p class="wr-banner hidden" role="status"></p>' +
+      '  <section class="wr-history hidden">' +
+      '    <h3 class="wr-history__title"></h3>' +
+      '    <div class="wr-history__list"></div>' +
+      "  </section>" +
+      '  <section class="wr-waiting hidden">' +
+      '    <p class="wr-waiting__title"></p>' +
+      '    <p class="wr-waiting__text"></p>' +
+      '    <button type="button" class="btn-primary wr-new-attempt"></button>' +
+      "  </section>" +
+      '  <section class="wr-compose hidden">' +
+      '    <div class="wr-compose__head">' +
+      '      <span class="wr-attempt"></span>' +
+      '      <span class="wr-count"></span>' +
+      "    </div>" +
+      '    <textarea class="wr-paper" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false" aria-labelledby="wr-task-title"></textarea>' +
+      '    <p class="wr-hint"></p>' +
+      '    <p class="wr-msg" aria-live="polite"></p>' +
+      '    <div class="wr-actions">' +
+      '      <button type="button" class="flashcard-btn wr-save"></button>' +
+      '      <button type="button" class="btn-primary wr-submit"></button>' +
+      "    </div>" +
+      "  </section>" +
+      "</div>";
+    document.body.appendChild(overlay);
+
+    const el = {
+      kicker: overlay.querySelector(".wr-kicker"),
+      task: overlay.querySelector(".wr-task"),
+      close: overlay.querySelector(".wr-close"),
+      banner: overlay.querySelector(".wr-banner"),
+      history: overlay.querySelector(".wr-history"),
+      historyTitle: overlay.querySelector(".wr-history__title"),
+      historyList: overlay.querySelector(".wr-history__list"),
+      waiting: overlay.querySelector(".wr-waiting"),
+      waitingTitle: overlay.querySelector(".wr-waiting__title"),
+      waitingText: overlay.querySelector(".wr-waiting__text"),
+      newAttempt: overlay.querySelector(".wr-new-attempt"),
+      compose: overlay.querySelector(".wr-compose"),
+      attempt: overlay.querySelector(".wr-attempt"),
+      count: overlay.querySelector(".wr-count"),
+      paper: overlay.querySelector(".wr-paper"),
+      hint: overlay.querySelector(".wr-hint"),
+      msg: overlay.querySelector(".wr-msg"),
+      save: overlay.querySelector(".wr-save"),
+      submit: overlay.querySelector(".wr-submit"),
+    };
+
+    let ctx = null; // { level, item, username, composing, dirty, busy }
+    let autosaveTimer = null;
+    let msgTimer = null;
+
+    function setMsg(text, kind) {
+      if (msgTimer) clearTimeout(msgTimer);
+      el.msg.textContent = text || "";
+      el.msg.className = "wr-msg" + (kind ? " wr-msg--" + kind : "");
+    }
+
+    const pasteGuard = guardAgainstPaste(el.paper, function () {
+      setMsg(I18n.t("writing_paste_blocked"), "warn");
+      msgTimer = setTimeout(function () {
+        if (el.msg.classList.contains("wr-msg--warn")) setMsg("");
+      }, 3500);
+    });
+
+    function updateCount() {
+      el.count.textContent = writingWordsLabel(writingWordCount(el.paper.value));
+    }
+
+    function nextAttemptNumber(summary) {
+      if (summary.draft) return summary.draft.attempt;
+      let max = 0;
+      summary.attempts.forEach(function (a) {
+        if (a.attempt > max) max = a.attempt;
+      });
+      return max + 1;
+    }
+
+    function renderHistory(summary) {
+      const sent = summary.attempts.filter(function (a) {
+        return a.status !== "draft";
+      });
+      el.historyList.innerHTML = "";
+      el.history.classList.toggle("hidden", sent.length === 0);
+      if (!sent.length) return;
+      el.historyTitle.textContent = I18n.t("writing_history_title");
+      const newest = sent[sent.length - 1];
+      sent
+        .slice()
+        .reverse()
+        .forEach(function (a) {
+          const det = document.createElement("details");
+          det.className = "wr-attempt-card wr-attempt-card--" + a.status;
+          if (a === newest) det.open = true;
+          const sum = document.createElement("summary");
+          const name = document.createElement("strong");
+          name.textContent = I18n.t("writing_attempt", { n: String(a.attempt) });
+          const st = document.createElement("span");
+          st.className = "wr-attempt-card__status";
+          st.textContent = I18n.t(
+            a.status === "corrected" ? "writing_status_corrected" : "writing_status_submitted"
+          );
+          const when = document.createElement("span");
+          when.className = "wr-attempt-card__when";
+          when.textContent = a.submitted_at
+            ? I18n.t("writing_sent_on", { date: writingFormatDate(a.submitted_at) })
+            : "";
+          sum.appendChild(name);
+          sum.appendChild(st);
+          sum.appendChild(when);
+          det.appendChild(sum);
+
+          const page = document.createElement("div");
+          page.className = "wr-sheet";
+          if (a.status === "corrected" && a.correction_html) {
+            page.innerHTML = sanitizeCorrectionHtml(a.correction_html);
+            det.appendChild(page);
+            det.appendChild(buildCorrectionLegend());
+          } else {
+            page.textContent = a.body || "";
+            det.appendChild(page);
+          }
+          if (a.status === "corrected" && a.teacher_note) {
+            const note = document.createElement("div");
+            note.className = "wr-note";
+            const h = document.createElement("p");
+            h.className = "wr-note__title";
+            h.textContent = I18n.t("writing_teacher_note");
+            const p = document.createElement("p");
+            p.className = "wr-note__text";
+            p.textContent = a.teacher_note;
+            note.appendChild(h);
+            note.appendChild(p);
+            det.appendChild(note);
+          }
+          el.historyList.appendChild(det);
+        });
+    }
+
+    function showCompose(summary, initialText) {
+      ctx.composing = true;
+      el.waiting.classList.add("hidden");
+      el.compose.classList.remove("hidden");
+      el.attempt.textContent = I18n.t("writing_attempt", { n: String(nextAttemptNumber(summary)) });
+      el.paper.value = initialText || "";
+      pasteGuard.reset();
+      updateCount();
+    }
+
+    function showWaiting(summary) {
+      ctx.composing = false;
+      el.compose.classList.add("hidden");
+      el.waiting.classList.remove("hidden");
+      const last = summary.lastSent;
+      const corrected = last && last.status === "corrected";
+      el.waitingTitle.textContent = I18n.t(
+        corrected ? "writing_corrected_title" : "writing_sent_title",
+        { n: String(last ? last.attempt : 1) }
+      );
+      el.waitingText.textContent = corrected ? "" : I18n.t("writing_sent_waiting");
+      el.waitingText.classList.toggle("hidden", corrected);
+      el.newAttempt.textContent = I18n.t("writing_new_attempt");
+    }
+
+    function showBanner(text) {
+      el.banner.textContent = text || "";
+      el.banner.classList.toggle("hidden", !text);
+    }
+
+    /** Re-read state from writingState. Keeps whatever the student is currently typing. */
+    function render(opts) {
+      if (!ctx) return;
+      const summary = writingTaskSummary(ctx.item.id);
+      el.kicker.textContent = I18n.t("writing_kicker", { level: writingLevelLabel(ctx.level) });
+      el.task.textContent = writingTaskText(ctx.item);
+      el.close.textContent = I18n.t("writing_close");
+      el.hint.textContent = I18n.t("writing_no_paste");
+      el.paper.placeholder = I18n.t("writing_placeholder");
+      el.save.textContent = I18n.t("writing_save");
+      el.submit.textContent = I18n.t("writing_submit");
+      renderHistory(summary);
+
+      if (writingState.error === "offline") showBanner(I18n.t("writing_offline"));
+      else if (writingState.error === "load") showBanner(I18n.t("writing_load_failed"));
+      else if (!opts || !opts.keepBanner) showBanner("");
+
+      if (ctx.composing && opts && opts.keepText) {
+        el.attempt.textContent = I18n.t("writing_attempt", { n: String(nextAttemptNumber(summary)) });
+        return;
+      }
+
+      const local = readWritingLocal(ctx.username, ctx.item.id);
+      if (summary.draft) {
+        let text = summary.draft.body || "";
+        const draftAt = summary.draft.updated_at ? Date.parse(summary.draft.updated_at) : 0;
+        if (local && local.text && local.text !== text && Date.parse(local.at) > draftAt) {
+          text = local.text;
+          ctx.dirty = true;
+          showBanner(I18n.t("writing_restored_local"));
+        }
+        showCompose(summary, text);
+      } else if (summary.lastSent && !(local && local.text.trim())) {
+        if (ctx.composing) showCompose(summary, el.paper.value);
+        else showWaiting(summary);
+      } else {
+        const text = local ? local.text : "";
+        if (text) {
+          ctx.dirty = true;
+          showBanner(I18n.t("writing_restored_local"));
+        }
+        showCompose(summary, text);
+      }
+    }
+
+    async function save(submit) {
+      if (!ctx || ctx.busy) return false;
+      const text = el.paper.value;
+      if (submit && !text.trim()) {
+        setMsg(I18n.t("writing_submit_empty"), "warn");
+        return false;
+      }
+      if (submit) {
+        const n = nextAttemptNumber(writingTaskSummary(ctx.item.id));
+        if (!window.confirm(I18n.t("writing_submit_confirm", { n: String(n) }))) return false;
+      }
+      ctx.busy = true;
+      el.save.disabled = true;
+      el.submit.disabled = true;
+      setMsg(I18n.t("writing_saving"));
+      const thisCtx = ctx;
+      try {
+        await saveStudentWriting(thisCtx.level, thisCtx.item, text, submit);
+        if (submit) {
+          clearWritingLocal(thisCtx.username, thisCtx.item.id);
+          markWritingHomeworkDone(thisCtx.level, thisCtx.item.id);
+          thisCtx.composing = false;
+        }
+        thisCtx.dirty = false;
+        if (ctx === thisCtx) {
+          setMsg(
+            I18n.t("writing_saved_at", {
+              time: new Date().toLocaleTimeString(I18n.getLang() === "fr" ? "fr-FR" : "en-IE", {
+                hour: "2-digit",
+                minute: "2-digit",
+              }),
+            }),
+            "ok"
+          );
+        }
+        await loadStudentWriting(true);
+        return true;
+      } catch (err) {
+        console.error(err);
+        if (ctx === thisCtx) setMsg(I18n.t("writing_save_failed"), "error");
+        return false;
+      } finally {
+        thisCtx.busy = false;
+        el.save.disabled = false;
+        el.submit.disabled = false;
+      }
+    }
+
+    function scheduleAutosave() {
+      if (autosaveTimer) clearTimeout(autosaveTimer);
+      autosaveTimer = setTimeout(function () {
+        if (ctx && ctx.dirty && el.paper.value.trim()) void save(false);
+      }, 20000);
+    }
+
+    async function close() {
+      if (!ctx) return;
+      if (autosaveTimer) clearTimeout(autosaveTimer);
+      if (ctx.composing && ctx.dirty && el.paper.value.trim()) {
+        await save(false);
+      }
+      ctx = null;
+      overlay.classList.add("hidden");
+      document.body.classList.remove("wr-open");
+      refreshAllHomeworkPanels();
+    }
+
+    el.paper.addEventListener("input", function () {
+      if (!ctx) return;
+      ctx.dirty = true;
+      updateCount();
+      writeWritingLocal(ctx.username, ctx.item.id, el.paper.value);
+      scheduleAutosave();
+    });
+    el.save.addEventListener("click", function () {
+      void save(false);
+    });
+    el.submit.addEventListener("click", function () {
+      void save(true);
+    });
+    el.close.addEventListener("click", function () {
+      void close();
+    });
+    el.newAttempt.addEventListener("click", function () {
+      if (!ctx) return;
+      setMsg("");
+      showCompose(writingTaskSummary(ctx.item.id), "");
+      el.paper.focus();
+    });
+    overlay.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        void close();
+      }
+    });
+    window.addEventListener("beforeunload", function (e) {
+      if (ctx && ctx.dirty && el.paper.value.trim()) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    });
+
+    return {
+      open: function (level, item) {
+        if (!getActiveUser() || !activeUsername) return;
+        ctx = { level: level, item: item, username: activeUsername, composing: false, dirty: false, busy: false };
+        setMsg("");
+        overlay.classList.remove("hidden");
+        document.body.classList.add("wr-open");
+        overlay.scrollTop = 0;
+        render();
+        if (ctx.composing) el.paper.focus();
+        else el.close.focus();
+        void loadStudentWriting(false);
+      },
+      refresh: function () {
+        render({ keepText: true, keepBanner: true });
+      },
+      isOpen: function () {
+        return !!ctx;
+      },
+      close: close,
+    };
+  }
+
+  function openWritingEditor(level, item) {
+    if (!writingEditor) writingEditor = createWritingEditor();
+    writingEditor.open(level, item);
+  }
+
+  function markWritingHomeworkDone(level, taskId) {
+    const user = getActiveUser();
+    if (!user) return;
+    const hub = ensureLearningHub(ensureStats(user));
+    if (!hub.homeworkChecklist[level]) hub.homeworkChecklist[level] = {};
+    if (hub.homeworkChecklist[level][taskId]) return;
+    hub.homeworkChecklist[level][taskId] = true;
+    hub.homeworkChecklistDates[level + "|" + taskId] = new Date().toISOString();
+    saveUsers();
+  }
+
+  /* ---------- Admin: Writing corrections tab ---------- */
+
+
+  function adminWritingCounts() {
+    let todo = 0;
+    let done = 0;
+    adminWriting.rows.forEach(function (r) {
+      if (r.status === "corrected") done += 1;
+      else todo += 1;
+    });
+    return { todo: todo, done: done, all: adminWriting.rows.length };
+  }
+
+  function updateAdminWritingTabBadge() {
+    const btn = document.querySelector('#admin-dashboard [data-admin-tab="writing"]');
+    if (!btn) return;
+    const n = adminWritingCounts().todo;
+    let badge = btn.querySelector(".admin-tab-badge");
+    if (!n) {
+      if (badge) badge.remove();
+      return;
+    }
+    if (!badge) {
+      badge = document.createElement("span");
+      badge.className = "admin-tab-badge";
+      btn.appendChild(badge);
+    }
+    badge.textContent = String(n);
+  }
+
+  function adminWritingSecret() {
+    return String(getSupabaseConfig().adminApiSecret || "");
+  }
+
+  async function fetchAdminWriting() {
+    if (!adminUnlocked) return;
+    if (!isSupabaseConfigured() || !hasAdminApiSecret() || !getSupabaseClient()) {
+      adminWriting.loaded = true;
+      adminWriting.error = I18n.t("admin_writing_no_cloud");
+      renderAdminWriting();
+      return;
+    }
+    if (adminWriting.loading) return;
+    adminWriting.loading = true;
+    if (!adminWriting.openId) renderAdminWriting();
+    try {
+      const { data, error } = await getSupabaseClient().rpc("admin_list_writing", {
+        p_secret: adminWritingSecret(),
+      });
+      if (error) throw error;
+      adminWriting.rows = data || [];
+      adminWriting.error = "";
+    } catch (err) {
+      console.error(err);
+      adminWriting.error = I18n.t("admin_writing_failed", { err: (err && err.message) || String(err) });
+    }
+    adminWriting.loading = false;
+    adminWriting.loaded = true;
+    updateAdminWritingTabBadge();
+    // Never rebuild the screen under the teacher while a correction is open.
+    if (!adminWriting.openId) renderAdminWriting();
+  }
+
+  function adminWritingStudentName(r) {
+    return (r.full_name || "").trim() || r.username;
+  }
+
+  function renderAdminWriting() {
+    const host = document.getElementById("admin-writing-content");
+    if (!host) return;
+    if (adminWriting.openId) {
+      const row = adminWriting.rows.find(function (r) {
+        return r.id === adminWriting.openId;
+      });
+      if (row) {
+        renderAdminWritingCorrection(host, row);
+        return;
+      }
+      adminWriting.openId = null;
+    }
+    renderAdminWritingList(host);
+  }
+
+  function renderAdminWritingList(host) {
+    host.innerHTML = "";
+    const card = document.createElement("div");
+    card.className = "account-card account-card--admin";
+    const h = document.createElement("h3");
+    h.textContent = I18n.t("admin_writing_heading");
+    card.appendChild(h);
+
+    if (adminWriting.error) {
+      const err = document.createElement("p");
+      err.className = "form-error";
+      err.textContent = adminWriting.error;
+      card.appendChild(err);
+    }
+
+    const counts = adminWritingCounts();
+    const filters = document.createElement("div");
+    filters.className = "admin-writing-filters";
+    [
+      ["todo", "admin_writing_filter_todo", counts.todo],
+      ["done", "admin_writing_filter_done", counts.done],
+      ["all", "admin_writing_filter_all", counts.all],
+    ].forEach(function (f) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "admin-writing-filter" + (adminWriting.filter === f[0] ? " is-active" : "");
+      b.textContent = I18n.t(f[1], { n: String(f[2]) });
+      b.addEventListener("click", function () {
+        adminWriting.filter = f[0];
+        renderAdminWriting();
+      });
+      filters.appendChild(b);
+    });
+    const refresh = document.createElement("button");
+    refresh.type = "button";
+    refresh.className = "btn-text admin-writing-refresh";
+    refresh.textContent = I18n.t("admin_refresh_cloud");
+    refresh.addEventListener("click", function () {
+      void fetchAdminWriting();
+    });
+    filters.appendChild(refresh);
+    card.appendChild(filters);
+
+    const rows = adminWriting.rows.filter(function (r) {
+      if (adminWriting.filter === "todo") return r.status !== "corrected";
+      if (adminWriting.filter === "done") return r.status === "corrected";
+      return true;
+    });
+
+    if (adminWriting.loading && !adminWriting.rows.length) {
+      const p = document.createElement("p");
+      p.className = "field-hint";
+      p.textContent = I18n.t("admin_writing_loading");
+      card.appendChild(p);
+      host.appendChild(card);
+      return;
+    }
+    if (!rows.length) {
+      const p = document.createElement("p");
+      p.className = "field-hint";
+      p.textContent = I18n.t("admin_writing_empty");
+      card.appendChild(p);
+      host.appendChild(card);
+      return;
+    }
+
+    const wrap = document.createElement("div");
+    wrap.className = "admin-table-scroll";
+    const table = document.createElement("table");
+    table.className = "admin-table admin-writing-table";
+    const thead = document.createElement("thead");
+    const htr = document.createElement("tr");
+    [
+      "admin_writing_col_student",
+      "admin_col_level",
+      "admin_writing_col_task",
+      "admin_writing_col_attempt",
+      "admin_writing_col_sent",
+      "admin_writing_col_status",
+      "admin_col_actions",
+    ].forEach(function (k) {
+      const th = document.createElement("th");
+      th.textContent = I18n.t(k);
+      htr.appendChild(th);
+    });
+    thead.appendChild(htr);
+    table.appendChild(thead);
+    const tbody = document.createElement("tbody");
+    rows.forEach(function (r) {
+      const tr = document.createElement("tr");
+      const cells = [
+        adminWritingStudentName(r),
+        writingLevelLabel(r.level),
+        r.task_text || r.task_id,
+        String(r.attempt),
+        writingFormatDate(r.submitted_at),
+      ];
+      cells.forEach(function (txt, i) {
+        const td = document.createElement("td");
+        td.textContent = txt;
+        if (i === 2) td.className = "admin-writing-table__task";
+        tr.appendChild(td);
+      });
+      const stTd = document.createElement("td");
+      const st = document.createElement("span");
+      st.className = "admin-writing-status admin-writing-status--" + r.status;
+      st.textContent = I18n.t(
+        r.status === "corrected" ? "writing_status_corrected" : "writing_status_submitted"
+      );
+      stTd.appendChild(st);
+      tr.appendChild(stTd);
+      const actTd = document.createElement("td");
+      const open = document.createElement("button");
+      open.type = "button";
+      open.className = r.status === "corrected" ? "flashcard-btn" : "flashcard-btn admin-writing-open--todo";
+      open.textContent = I18n.t(
+        r.status === "corrected" ? "admin_writing_open_view" : "admin_writing_open_correct"
+      );
+      open.addEventListener("click", function () {
+        adminWriting.openId = r.id;
+        adminWriting.dirty = false;
+        renderAdminWriting();
+        const top = document.getElementById("admin-writing-tab");
+        if (top && top.scrollIntoView) top.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+      actTd.appendChild(open);
+      tr.appendChild(actTd);
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    wrap.appendChild(table);
+    card.appendChild(wrap);
+    host.appendChild(card);
+  }
+
+  function unwrapCorrectionMarks(root) {
+    root.querySelectorAll(".wc-fix").forEach(function (n) {
+      n.remove();
+    });
+    root.querySelectorAll(".wc-err").forEach(function (n) {
+      while (n.firstChild) n.parentNode.insertBefore(n.firstChild, n);
+      n.remove();
+    });
+  }
+
+  function renderAdminWritingCorrection(host, row) {
+    host.innerHTML = "";
+    const card = document.createElement("div");
+    card.className = "account-card account-card--admin admin-writing-correct";
+
+    const back = document.createElement("button");
+    back.type = "button";
+    back.className = "btn-text";
+    back.textContent = "← " + I18n.t("admin_writing_back");
+    back.addEventListener("click", function () {
+      if (adminWriting.dirty && !window.confirm(I18n.t("admin_writing_unsaved_confirm"))) return;
+      adminWriting.openId = null;
+      adminWriting.dirty = false;
+      renderAdminWriting();
+    });
+    card.appendChild(back);
+
+    const h = document.createElement("h3");
+    h.textContent = adminWritingStudentName(row) + " · " + I18n.t("writing_attempt", { n: String(row.attempt) });
+    card.appendChild(h);
+
+    const meta = document.createElement("p");
+    meta.className = "field-hint";
+    meta.textContent =
+      writingLevelLabel(row.level) +
+      " · " +
+      I18n.t("writing_sent_on", { date: writingFormatDate(row.submitted_at) }) +
+      " · " +
+      writingWordsLabel(writingWordCount(row.body));
+    card.appendChild(meta);
+
+    const task = document.createElement("p");
+    task.className = "admin-writing-task";
+    task.textContent = row.task_text || row.task_id;
+    card.appendChild(task);
+
+    const others = adminWriting.rows.filter(function (r) {
+      return r.username === row.username && r.task_id === row.task_id && r.id !== row.id;
+    });
+    if (others.length) {
+      const o = document.createElement("p");
+      o.className = "admin-writing-others";
+      o.appendChild(document.createTextNode(I18n.t("admin_writing_other_attempts") + " "));
+      others
+        .sort(function (a, b) {
+          return a.attempt - b.attempt;
+        })
+        .forEach(function (r) {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.className = "btn-text";
+          b.textContent =
+            I18n.t("writing_attempt", { n: String(r.attempt) }) +
+            (r.status === "corrected" ? " ✓" : "");
+          b.addEventListener("click", function () {
+            if (adminWriting.dirty && !window.confirm(I18n.t("admin_writing_unsaved_confirm"))) return;
+            adminWriting.openId = r.id;
+            adminWriting.dirty = false;
+            renderAdminWriting();
+          });
+          o.appendChild(b);
+        });
+      card.appendChild(o);
+    }
+
+    const orig = document.createElement("details");
+    orig.className = "admin-writing-original";
+    const origSum = document.createElement("summary");
+    origSum.textContent = I18n.t("admin_writing_original");
+    const origSheet = document.createElement("div");
+    origSheet.className = "wr-sheet";
+    origSheet.textContent = row.body || "";
+    orig.appendChild(origSum);
+    orig.appendChild(origSheet);
+    card.appendChild(orig);
+
+    const help = document.createElement("p");
+    help.className = "field-hint";
+    help.textContent = I18n.t("admin_writing_help");
+    card.appendChild(help);
+
+    // Toolbar
+    const bar = document.createElement("div");
+    bar.className = "admin-writing-toolbar";
+    const markBtn = document.createElement("button");
+    markBtn.type = "button";
+    markBtn.className = "flashcard-btn admin-writing-tool--err";
+    markBtn.textContent = I18n.t("admin_writing_mark");
+    const fixInput = document.createElement("input");
+    fixInput.type = "text";
+    fixInput.className = "admin-writing-fix-input";
+    fixInput.placeholder = I18n.t("admin_writing_fix_placeholder");
+    const fixBtn = document.createElement("button");
+    fixBtn.type = "button";
+    fixBtn.className = "flashcard-btn admin-writing-tool--fix";
+    fixBtn.textContent = I18n.t("admin_writing_mark_fix");
+    const unmarkBtn = document.createElement("button");
+    unmarkBtn.type = "button";
+    unmarkBtn.className = "flashcard-btn";
+    unmarkBtn.textContent = I18n.t("admin_writing_unmark");
+    const resetBtn = document.createElement("button");
+    resetBtn.type = "button";
+    resetBtn.className = "btn-text";
+    resetBtn.textContent = I18n.t("admin_writing_reset");
+    [markBtn, fixInput, fixBtn, unmarkBtn, resetBtn].forEach(function (n) {
+      bar.appendChild(n);
+    });
+    card.appendChild(bar);
+
+    const toolMsg = document.createElement("p");
+    toolMsg.className = "admin-writing-toolmsg";
+    toolMsg.setAttribute("aria-live", "polite");
+    card.appendChild(toolMsg);
+
+    // Editable sheet
+    const editor = document.createElement("div");
+    editor.className = "wr-sheet wr-sheet--edit";
+    editor.contentEditable = "true";
+    editor.spellcheck = false;
+    editor.setAttribute("role", "textbox");
+    editor.setAttribute("aria-multiline", "true");
+    editor.innerHTML = sanitizeCorrectionHtml(
+      row.correction_html || plainTextToCorrectionHtml(row.body)
+    );
+    card.appendChild(editor);
+    card.appendChild(buildCorrectionLegend());
+
+    const noteLabel = document.createElement("label");
+    noteLabel.className = "admin-writing-note-label";
+    noteLabel.textContent = I18n.t("admin_writing_note_label");
+    const note = document.createElement("textarea");
+    note.className = "admin-writing-note";
+    note.rows = 4;
+    note.value = row.teacher_note || "";
+    noteLabel.appendChild(note);
+    card.appendChild(noteLabel);
+
+    const actions = document.createElement("div");
+    actions.className = "admin-writing-actions";
+    const saveBtn = document.createElement("button");
+    saveBtn.type = "button";
+    saveBtn.className = "flashcard-btn";
+    saveBtn.textContent = I18n.t("admin_writing_save");
+    const sendBtn = document.createElement("button");
+    sendBtn.type = "button";
+    sendBtn.className = "btn-primary";
+    sendBtn.textContent = I18n.t(row.status === "corrected" ? "admin_writing_resend" : "admin_writing_send");
+    actions.appendChild(saveBtn);
+    actions.appendChild(sendBtn);
+    card.appendChild(actions);
+    const status = document.createElement("p");
+    status.className = "field-hint admin-writing-status-msg";
+    status.setAttribute("aria-live", "polite");
+    card.appendChild(status);
+
+    // A saved correction that is still private shows its state.
+    if (row.status !== "corrected" && row.correction_html) {
+      status.textContent = I18n.t("admin_writing_saved");
+    }
+
+    host.appendChild(card);
+
+    // --- behaviour ---
+    let savedRange = null;
+    function rememberSelection() {
+      const sel = window.getSelection();
+      if (!sel || !sel.rangeCount) return;
+      const r = sel.getRangeAt(0);
+      if (editor.contains(r.commonAncestorContainer)) savedRange = r.cloneRange();
+    }
+    document.addEventListener("selectionchange", function onSel() {
+      if (!editor.isConnected) {
+        document.removeEventListener("selectionchange", onSel);
+        return;
+      }
+      rememberSelection();
+    });
+    function markDirty() {
+      adminWriting.dirty = true;
+      status.textContent = "";
+    }
+    editor.addEventListener("input", markDirty);
+    editor.addEventListener("paste", function (e) {
+      e.preventDefault();
+      const text = (e.clipboardData && e.clipboardData.getData("text/plain")) || "";
+      if (!text) return;
+      if (!document.execCommand || !document.execCommand("insertText", false, text)) {
+        const sel = window.getSelection();
+        if (!sel || !sel.rangeCount) return;
+        const r = sel.getRangeAt(0);
+        r.deleteContents();
+        r.insertNode(document.createTextNode(text));
+        r.collapse(false);
+      }
+      markDirty();
+    });
+    // Keep the editor's selection when pressing toolbar buttons.
+    [markBtn, fixBtn, unmarkBtn].forEach(function (b) {
+      b.addEventListener("mousedown", function (e) {
+        e.preventDefault();
+      });
+    });
+
+    function flash(text) {
+      toolMsg.textContent = text || "";
+    }
+
+    function usableRange() {
+      rememberSelection();
+      if (!savedRange || savedRange.collapsed) return null;
+      if (!editor.contains(savedRange.commonAncestorContainer)) return null;
+      return savedRange;
+    }
+
+    function placeCaretAfter(node) {
+      const sel = window.getSelection();
+      if (!sel) return;
+      const r = document.createRange();
+      r.setStartAfter(node);
+      r.collapse(true);
+      sel.removeAllRanges();
+      sel.addRange(r);
+      savedRange = null;
+    }
+
+    function mark(withFix) {
+      const range = usableRange();
+      if (!range) {
+        flash(I18n.t("admin_writing_select_first"));
+        return;
+      }
+      const fixText = fixInput.value.trim();
+      if (withFix && !fixText) {
+        flash(I18n.t("admin_writing_fix_needed"));
+        fixInput.focus();
+        return;
+      }
+      // Don't nest marks: if the selection sits inside one, mark the whole existing one.
+      const inside = range.commonAncestorContainer.nodeType === 1
+        ? range.commonAncestorContainer.closest(".wc-err, .wc-fix")
+        : range.commonAncestorContainer.parentElement && range.commonAncestorContainer.parentElement.closest(".wc-err, .wc-fix");
+      if (inside && editor.contains(inside)) {
+        range.selectNode(inside);
+      }
+      const frag = range.extractContents();
+      const tmp = document.createElement("div");
+      tmp.appendChild(frag);
+      unwrapCorrectionMarks(tmp);
+      const err = document.createElement("span");
+      err.className = "wc-err";
+      while (tmp.firstChild) err.appendChild(tmp.firstChild);
+      if (!err.textContent) {
+        flash(I18n.t("admin_writing_select_first"));
+        return;
+      }
+      range.insertNode(err);
+      let last = err;
+      if (withFix) {
+        const fix = document.createElement("span");
+        fix.className = "wc-fix";
+        fix.textContent = fixText;
+        err.parentNode.insertBefore(fix, err.nextSibling);
+        last = fix;
+        fixInput.value = "";
+      }
+      editor.normalize();
+      placeCaretAfter(last);
+      flash("");
+      markDirty();
+    }
+
+    markBtn.addEventListener("click", function () {
+      mark(false);
+    });
+    fixBtn.addEventListener("click", function () {
+      mark(true);
+    });
+    fixInput.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        mark(true);
+      }
+    });
+    unmarkBtn.addEventListener("click", function () {
+      const range = usableRange();
+      if (!range) {
+        flash(I18n.t("admin_writing_select_first"));
+        return;
+      }
+      let changed = false;
+      editor.querySelectorAll(".wc-err, .wc-fix").forEach(function (n) {
+        if (!range.intersectsNode(n)) return;
+        changed = true;
+        if (n.classList.contains("wc-fix")) {
+          n.remove();
+        } else {
+          while (n.firstChild) n.parentNode.insertBefore(n.firstChild, n);
+          n.remove();
+        }
+      });
+      editor.normalize();
+      if (changed) markDirty();
+      flash("");
+    });
+    resetBtn.addEventListener("click", function () {
+      if (!window.confirm(I18n.t("admin_writing_reset_confirm"))) return;
+      editor.innerHTML = plainTextToCorrectionHtml(row.body);
+      markDirty();
+    });
+    note.addEventListener("input", markDirty);
+
+    async function persist(send) {
+      if (send && !window.confirm(I18n.t("admin_writing_send_confirm", { name: adminWritingStudentName(row) }))) {
+        return;
+      }
+      const sb = getSupabaseClient();
+      if (!sb || !hasAdminApiSecret()) {
+        status.textContent = I18n.t("admin_writing_no_cloud");
+        return;
+      }
+      const html = sanitizeCorrectionHtml(editor.innerHTML);
+      saveBtn.disabled = true;
+      sendBtn.disabled = true;
+      status.textContent = I18n.t("writing_saving");
+      try {
+        const { error } = await sb.rpc("admin_save_writing_correction", {
+          p_secret: adminWritingSecret(),
+          p_id: row.id,
+          p_correction_html: html,
+          p_teacher_note: note.value,
+          p_send: !!send,
+        });
+        if (error) throw error;
+        row.correction_html = html;
+        row.teacher_note = note.value;
+        if (send) {
+          row.status = "corrected";
+          row.corrected_at = new Date().toISOString();
+          sendBtn.textContent = I18n.t("admin_writing_resend");
+        }
+        adminWriting.dirty = false;
+        status.textContent = I18n.t(send ? "admin_writing_sent" : "admin_writing_saved");
+        updateAdminWritingTabBadge();
+      } catch (err) {
+        console.error(err);
+        status.textContent = I18n.t("admin_writing_failed", { err: (err && err.message) || String(err) });
+      } finally {
+        saveBtn.disabled = false;
+        sendBtn.disabled = false;
+      }
+    }
+    saveBtn.addEventListener("click", function () {
+      void persist(false);
+    });
+    sendBtn.addEventListener("click", function () {
+      void persist(true);
     });
   }
 
@@ -4461,6 +5766,7 @@
     adminLogoutBtn.addEventListener("click", function () {
       adminUnlocked = false;
       adminViewingStudent = null;
+      adminWriting = { loading: false, loaded: false, error: "", rows: [], filter: "todo", openId: null, dirty: false };
       if (adminPasswordInput) adminPasswordInput.value = "";
       renderAdminPanel();
     });
@@ -4470,6 +5776,17 @@
     adminTabs.forEach(function (tabBtn) {
       tabBtn.addEventListener("click", function () {
         const tab = tabBtn.getAttribute("data-admin-tab");
+        if (
+          tab !== "writing" &&
+          adminWriting.dirty &&
+          !window.confirm(I18n.t("admin_writing_unsaved_confirm"))
+        ) {
+          return;
+        }
+        if (tab !== "writing") {
+          adminWriting.openId = null;
+          adminWriting.dirty = false;
+        }
         if (tab !== "progress") adminViewingStudent = null;
         adminTabs.forEach(function (b) {
           b.classList.toggle("is-active", b === tabBtn);
@@ -4479,8 +5796,13 @@
         if (adminPaymentsTab) adminPaymentsTab.classList.toggle("hidden", tab !== "payments");
         if (adminLeaderboardTab) adminLeaderboardTab.classList.toggle("hidden", tab !== "leaderboard");
         if (adminPlannerTab)     adminPlannerTab.classList.toggle("hidden",     tab !== "planner");
+        if (adminWritingTab)     adminWritingTab.classList.toggle("hidden",     tab !== "writing");
         if (tab === "leaderboard") renderAdminLeaderboard();
         if (tab === "planner")     renderAdminPlanner();
+        if (tab === "writing") {
+          renderAdminWriting();
+          void fetchAdminWriting();
+        }
       });
     });
   }
@@ -5305,6 +6627,7 @@
             : {};
         const cLang = I18n.getLang();
         const hwCategories = ["Vocab", "Grammar", "Reading", "Listening", "Speaking", "Writing"];
+        if (user) void loadStudentWriting(false);
 
         function homeworkLevelDoneCount() {
           if (!hub || !hub.homeworkChecklist || !hub.homeworkChecklist[level]) return 0;
@@ -5442,6 +6765,9 @@
             label.appendChild(cb);
             label.appendChild(text);
             li.appendChild(label);
+            if (item.category === "Writing") {
+              li.appendChild(buildWritingHomeworkRow(level, item));
+            }
             catList.appendChild(li);
           }
           catSec.appendChild(catList);

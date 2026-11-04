@@ -25,8 +25,6 @@
     try {
       var _andronicusLang = localStorage.getItem("andronicus_lang");
       document.documentElement.lang = _andronicusLang === "en" ? "en" : "fr";
-    try {
-      document.documentElement.lang = "fr";
     } catch (e) {
       document.documentElement.lang = "fr";
     }
@@ -661,6 +659,7 @@
             <button type="button" class="tool-menu__btn" data-admin-tab="payments" data-i18n="admin_tab_payments">Payments</button>
             <button type="button" class="tool-menu__btn" data-admin-tab="leaderboard" data-i18n="admin_tab_leaderboard">Leaderboard</button>
             <button type="button" class="tool-menu__btn" data-admin-tab="planner">Class Planner</button>
+            <button type="button" class="tool-menu__btn" data-admin-tab="writing" data-i18n="admin_tab_writing">Writing</button>
           </div>
           <div id="admin-bookings-tab" class="admin-tab">
             <div class="account-card account-card--admin">
@@ -749,6 +748,9 @@
           </div>
           <div id="admin-planner-tab" class="admin-tab hidden">
             <div id="admin-planner-content"></div>
+          </div>
+          <div id="admin-writing-tab" class="admin-tab hidden">
+            <div id="admin-writing-content"></div>
           </div>
         </div>
       </section>

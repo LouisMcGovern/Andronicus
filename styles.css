@@ -5914,3 +5914,606 @@ details[open] .faq-q::after {
   opacity: 0.55;
 }
 /* ────────────────────────────────────────────────────────────────────────── */
+
+/* ==========================================================================
+   Writing homework – student editor + teacher corrections
+   ========================================================================== */
+
+.lh-writing-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin: 0.55rem 0 0.1rem 1.75rem;
+}
+
+.lh-writing-row__btn {
+  border: 1px solid #0f3d7a;
+  background: #0f3d7a;
+  color: #f4f8fc;
+  border-radius: 0.3rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.lh-writing-row__btn:hover {
+  background: #1a5090;
+}
+
+.lh-writing-row__btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.lh-writing-row__badge {
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  background: var(--surface-elevated);
+}
+
+.lh-writing-row__badge--submitted {
+  border-color: #3c7da4;
+  color: #1a5090;
+  background: #e3eef8;
+}
+
+.lh-writing-row__badge--corrected {
+  border-color: #2f8a5b;
+  color: #1d6a43;
+  background: #e2f4ea;
+}
+
+.lh-writing-row__hint {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.lh-hw-checklist__item.is-done[data-category="writing"] {
+  opacity: 1;
+}
+
+.lh-hw-checklist__item.is-done[data-category="writing"] .lh-hw-checklist__label {
+  opacity: 0.6;
+}
+
+/* Full-screen writing overlay */
+body.wr-open {
+  overflow: hidden;
+}
+
+.wr-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  overflow-y: auto;
+  background: #e9eff5;
+  padding: 1.25rem 1rem 3rem;
+}
+
+.wr-shell {
+  max-width: 54rem;
+  margin: 0 auto;
+}
+
+.wr-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.wr-kicker {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #3c7da4;
+}
+
+.wr-task {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.15rem, 2.6vw, 1.5rem);
+  line-height: 1.35;
+  color: #0d1b2a;
+}
+
+.wr-close {
+  flex-shrink: 0;
+  border: 1px solid #9dbdd4;
+  background: #ffffff;
+  color: #0d1b2a;
+  border-radius: 0.3rem;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.wr-close:hover {
+  border-color: #0f3d7a;
+}
+
+.wr-banner {
+  margin: 0 0 1rem;
+  padding: 0.6rem 0.85rem;
+  border-radius: 0.3rem;
+  background: #e3eef8;
+  border: 1px solid #9dbdd4;
+  color: #0f3d7a;
+  font-size: 0.9rem;
+}
+
+.wr-compose__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.4rem;
+  font-size: 0.85rem;
+  color: #4a6580;
+}
+
+.wr-attempt {
+  font-weight: 700;
+  color: #0d1b2a;
+}
+
+/* The blank page */
+.wr-paper,
+.wr-sheet {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 14pt;
+  line-height: 1.6;
+  color: #111111;
+  background: #ffffff;
+  border: 1px solid #c5d3df;
+  border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(13, 27, 42, 0.06), 0 8px 24px rgba(13, 27, 42, 0.08);
+}
+
+.wr-paper {
+  display: block;
+  width: 100%;
+  min-height: 60vh;
+  padding: 2.25rem 2.5rem;
+  resize: vertical;
+  outline: none;
+  -webkit-user-drag: none;
+}
+
+.wr-paper:focus {
+  border-color: #0f3d7a;
+}
+
+.wr-paper::placeholder {
+  color: #9aa7b3;
+  font-style: italic;
+}
+
+.wr-sheet {
+  padding: 1.5rem 1.75rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.wr-hint {
+  margin: 0.55rem 0 0;
+  font-size: 0.82rem;
+  color: #4a6580;
+}
+
+.wr-msg {
+  min-height: 1.3em;
+  margin: 0.35rem 0 0;
+  font-size: 0.88rem;
+  color: #4a6580;
+}
+
+.wr-msg--ok {
+  color: #1d6a43;
+}
+
+.wr-msg--warn {
+  color: #b74848;
+  font-weight: 600;
+}
+
+.wr-msg--error {
+  color: #b74848;
+  font-weight: 600;
+}
+
+.wr-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.wr-actions .btn-primary,
+.wr-waiting .btn-primary {
+  margin-top: 0;
+}
+
+.wr-actions .flashcard-btn {
+  padding: 0.6rem 1rem;
+  font-size: 0.92rem;
+  background: #ffffff;
+}
+
+.wr-waiting {
+  margin-bottom: 1.25rem;
+  padding: 1rem 1.15rem;
+  background: #ffffff;
+  border: 1px solid #c5d3df;
+  border-radius: 0.3rem;
+}
+
+.wr-waiting__title {
+  margin: 0 0 0.35rem;
+  font-weight: 700;
+  color: #0d1b2a;
+}
+
+.wr-waiting__text {
+  margin: 0 0 0.85rem;
+  color: #4a6580;
+  font-size: 0.92rem;
+}
+
+/* Attempt history */
+.wr-history {
+  margin-bottom: 1.25rem;
+}
+
+.wr-history__title {
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #4a6580;
+}
+
+.wr-attempt-card {
+  margin-bottom: 0.6rem;
+  background: #f6f9fc;
+  border: 1px solid #c5d3df;
+  border-left: 3px solid #3c7da4;
+  border-radius: 0 0.3rem 0.3rem 0;
+  padding: 0.55rem 0.85rem;
+}
+
+.wr-attempt-card--corrected {
+  border-left-color: #2f8a5b;
+}
+
+.wr-attempt-card summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.75rem;
+  cursor: pointer;
+  color: #0d1b2a;
+}
+
+.wr-attempt-card__status {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #1a5090;
+}
+
+.wr-attempt-card--corrected .wr-attempt-card__status {
+  color: #1d6a43;
+}
+
+.wr-attempt-card__when {
+  font-size: 0.8rem;
+  color: #4a6580;
+}
+
+.wr-attempt-card .wr-sheet {
+  margin-top: 0.65rem;
+}
+
+.wr-note {
+  margin-top: 0.65rem;
+  padding: 0.6rem 0.85rem;
+  background: #eaf2fb;
+  border-radius: 0.3rem;
+}
+
+.wr-note__title {
+  margin: 0 0 0.2rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #0f3d7a;
+}
+
+.wr-note__text {
+  margin: 0;
+  white-space: pre-wrap;
+  color: #0d1b2a;
+}
+
+/* Correction marks (shared by student view and teacher editor) */
+.wc-err {
+  background: #fde2e2;
+  color: #a12626;
+  text-decoration: line-through;
+  text-decoration-color: #c0392b;
+  border-radius: 2px;
+}
+
+.wc-fix {
+  background: #dff3e7;
+  color: #17643c;
+  font-weight: 700;
+  border-radius: 2px;
+  margin-left: 0.15em;
+  padding: 0 0.1em;
+}
+
+.wr-legend {
+  margin: 0.45rem 0 0;
+  font-size: 0.82rem;
+}
+
+.wr-legend .wc-err,
+.wr-legend .wc-fix {
+  padding: 0 0.35em;
+}
+
+/* Admin writing tab */
+.admin-tab-badge {
+  display: inline-block;
+  min-width: 1.3rem;
+  margin-left: 0.4rem;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background: #b74848;
+  color: #ffffff;
+  font-size: 0.72rem;
+  line-height: 1.3rem;
+  text-align: center;
+}
+
+.admin-writing-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.25rem 0 0.85rem;
+}
+
+.admin-writing-filter {
+  border: 1px solid var(--border);
+  background: var(--surface-elevated);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.84rem;
+  cursor: pointer;
+}
+
+.admin-writing-filter.is-active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.admin-writing-refresh {
+  margin-left: auto;
+}
+
+.admin-table-scroll {
+  overflow-x: auto;
+}
+
+.admin-writing-table__task {
+  max-width: 22rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.admin-writing-status {
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: #1a5090;
+}
+
+.admin-writing-status--corrected {
+  color: #1d6a43;
+}
+
+.admin-writing-open--todo {
+  border-color: #0f3d7a;
+  color: #0f3d7a;
+  font-weight: 600;
+}
+
+.admin-writing-task {
+  margin: 0.5rem 0 0.75rem;
+  padding: 0.6rem 0.85rem;
+  background: var(--surface-elevated);
+  border-left: 3px solid #3c7da4;
+  font-family: var(--font-display);
+  color: var(--text);
+}
+
+.admin-writing-others {
+  margin: 0 0 0.6rem;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.admin-writing-others .btn-text {
+  margin-right: 0.5rem;
+}
+
+.admin-writing-original {
+  margin-bottom: 0.85rem;
+}
+
+.admin-writing-original summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.admin-writing-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0;
+  background: var(--surface);
+}
+
+.admin-writing-toolbar .flashcard-btn {
+  padding: 0.45rem 0.8rem;
+  font-weight: 600;
+}
+
+.admin-writing-tool--err {
+  border-color: #d98a8a;
+  color: #a12626;
+  background: #fdeeee;
+}
+
+.admin-writing-tool--fix {
+  border-color: #82c3a0;
+  color: #17643c;
+  background: #eaf7ef;
+}
+
+.account-card input.admin-writing-fix-input,
+.admin-writing-fix-input {
+  flex: 1 1 12rem;
+  min-width: 10rem;
+  margin: 0;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 1rem;
+  background: #ffffff;
+  color: #111111;
+}
+
+.admin-writing-toolmsg {
+  min-height: 1.2em;
+  margin: 0 0 0.35rem;
+  font-size: 0.85rem;
+  color: #b74848;
+}
+
+.wr-sheet--edit {
+  min-height: 14rem;
+  outline: none;
+  cursor: text;
+}
+
+.wr-sheet--edit:focus {
+  border-color: #0f3d7a;
+}
+
+.admin-writing-note-label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.admin-writing-note {
+  display: block;
+  width: 100%;
+  margin-top: 0.35rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  font: inherit;
+  font-weight: 400;
+  background: #ffffff;
+  color: #111111;
+  resize: vertical;
+}
+
+.admin-writing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.85rem;
+}
+
+.admin-writing-actions .btn-primary {
+  margin-top: 0;
+}
+
+.admin-writing-actions .flashcard-btn {
+  padding: 0.6rem 1rem;
+  font-size: 0.92rem;
+}
+
+.admin-writing-status-msg {
+  text-align: right;
+}
+
+@media (max-width: 640px) {
+  .wr-overlay {
+    padding: 0.85rem 0.6rem 2.5rem;
+  }
+  .wr-paper {
+    padding: 1.25rem 1.1rem;
+    min-height: 55vh;
+  }
+  .wr-sheet {
+    padding: 1rem 1.1rem;
+  }
+  .lh-writing-row {
+    margin-left: 0;
+  }
+  .wr-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+}
+
+/* The content area forces system-ui on everything (!important); the writing page must stay Times New Roman. */
+body .wr-overlay .wr-paper,
+body .wr-overlay .wr-sheet,
+body .wr-overlay .wr-sheet *,
+body .admin-surface .wr-sheet,
+body .admin-surface .wr-sheet *,
+body .admin-surface .admin-writing-fix-input {
+  font-family: "Times New Roman", Times, serif !important;
+}
+
+body .wr-overlay .wr-kicker,
+body .wr-overlay .wr-history__title {
+  text-transform: uppercase !important;
+  letter-spacing: 0.07em !important;
+}
