@@ -6517,3 +6517,377 @@ body .wr-overlay .wr-history__title {
   text-transform: uppercase !important;
   letter-spacing: 0.07em !important;
 }
+
+/* ==========================================================================
+   Vocabulary – stepping-stone path
+   ========================================================================== */
+
+.vp-card {
+  background: #ffffff;
+  border: 1px solid #c5d3df;
+  border-radius: 0.5rem;
+  padding: 1.1rem 1.2rem 1rem;
+  box-shadow: 0 1px 2px rgba(13, 27, 42, 0.05);
+}
+
+.vp-card.is-complete {
+  border-color: #2f8a5b;
+  box-shadow: 0 0 0 2px rgba(47, 138, 91, 0.25);
+}
+
+.vp-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.vp-title {
+  margin: 0;
+  font-size: 1.15rem;
+  color: #0d1b2a;
+}
+
+.vp-meta {
+  margin: 0.2rem 0 0;
+  font-size: 0.88rem;
+  color: #4a6580;
+}
+
+.vp-level {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  white-space: nowrap;
+}
+
+.vp-level__lab {
+  font-size: 0.75rem;
+  color: #4a6580;
+  margin-right: 0.2rem;
+}
+
+.vp-level__dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: #d6e2ec;
+}
+
+.vp-level__dot.is-on {
+  background: #0f3d7a;
+}
+
+.vp-bar {
+  height: 0.4rem;
+  margin: 0.8rem 0 0;
+  border-radius: 999px;
+  background: #e3ecf4;
+  overflow: hidden;
+}
+
+.vp-bar__fill {
+  height: 100%;
+  width: 0;
+  background: #0f3d7a;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.vp-card.is-complete .vp-bar__fill {
+  background: #2f8a5b;
+}
+
+/* The river and its stones */
+.vp-river {
+  margin: 0.9rem 0 0.4rem;
+  padding: 1.6rem 0.5rem 1rem;
+  border-radius: 0.4rem;
+  background: linear-gradient(180deg, #e4eef7 0%, #cfe0ef 100%);
+  overflow: hidden;
+}
+
+.vp-stones {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: clamp(0.35rem, 1.6vw, 0.9rem);
+}
+
+.vp-stone {
+  position: relative;
+  flex: 0 0 auto;
+  width: clamp(2.3rem, 7vw, 3.4rem);
+  height: clamp(1.5rem, 4.4vw, 2.1rem);
+  border-radius: 50%;
+  background: #b9cadb;
+  box-shadow: inset 0 -3px 0 rgba(13, 27, 42, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vp-stone:nth-child(odd) {
+  transform: translateY(-0.35rem);
+}
+
+.vp-stone__num {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #4a6580;
+}
+
+.vp-stone.is-crossed {
+  background: #bfe3cf;
+}
+
+.vp-stone.is-crossed .vp-stone__num {
+  color: #1d6a43;
+}
+
+.vp-stone.is-here {
+  background: #0f3d7a;
+  width: clamp(2.8rem, 8.5vw, 4rem);
+  height: clamp(1.8rem, 5.2vw, 2.5rem);
+}
+
+.vp-stone.is-here .vp-stone__num {
+  color: #ffffff;
+}
+
+.vp-stone.is-goal {
+  background: #2f8a5b;
+}
+
+.vp-stone.is-goal .vp-stone__num {
+  font-size: 0.95rem;
+}
+
+.vp-me {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-left: -0.55rem;
+  margin-bottom: 0.15rem;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 3px solid #0f3d7a;
+  box-shadow: 0 2px 4px rgba(13, 27, 42, 0.25);
+}
+
+.vp-me.is-landing {
+  animation: vp-hop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes vp-hop {
+  0% {
+    transform: translate(-2.4rem, 0.2rem) scale(0.9);
+  }
+  55% {
+    transform: translate(-1rem, -1.1rem) scale(1.05);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vp-me.is-landing {
+    animation: none;
+  }
+}
+
+.vp-pending {
+  margin: 0.35rem 0 0;
+  font-size: 0.84rem;
+  color: #1a5090;
+}
+
+/* Question */
+.vp-play {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.vp-instruction {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #4a6580;
+}
+
+.vp-word {
+  margin: 0.35rem 0 1rem;
+  font-size: clamp(1.5rem, 4.5vw, 2.1rem);
+  font-weight: 700;
+  line-height: 1.25;
+  color: #0d1b2a;
+  overflow-wrap: anywhere;
+}
+
+.vp-word.is-review {
+  color: #1a5090;
+}
+
+.vp-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+  max-width: 36rem;
+  margin: 0 auto;
+}
+
+.vp-option {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 3.1rem;
+  padding: 0.6rem 0.85rem;
+  border: 1.5px solid #c5d3df;
+  border-radius: 0.4rem;
+  background: #f7fafc;
+  color: #0d1b2a;
+  font-size: 1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.vp-option:hover:not(:disabled) {
+  border-color: #0f3d7a;
+  background: #ffffff;
+}
+
+.vp-option:disabled {
+  cursor: default;
+}
+
+.vp-option__key {
+  flex: 0 0 auto;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 0.25rem;
+  background: #e3ecf4;
+  color: #4a6580;
+  font-size: 0.78rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vp-option.is-correct {
+  border-color: #2f8a5b;
+  background: #e2f4ea;
+}
+
+.vp-option.is-correct .vp-option__key {
+  background: #2f8a5b;
+  color: #ffffff;
+}
+
+.vp-option.is-wrong {
+  border-color: #c0392b;
+  background: #fdeeee;
+}
+
+.vp-option.is-wrong .vp-option__key {
+  background: #c0392b;
+  color: #ffffff;
+}
+
+.vp-feedback {
+  min-height: 1.4em;
+  margin: 0.85rem auto 0;
+  max-width: 36rem;
+  font-size: 0.95rem;
+  color: #4a6580;
+}
+
+.vp-feedback--ok {
+  color: #1d6a43;
+  font-weight: 600;
+}
+
+.vp-feedback--wrong {
+  color: #a12626;
+  font-weight: 600;
+}
+
+.vp-continue {
+  margin-top: 0.75rem;
+}
+
+/* Lap complete */
+.vp-done {
+  margin-top: 1rem;
+  padding: 1.25rem 1rem;
+  text-align: center;
+  border-radius: 0.4rem;
+  background: #e2f4ea;
+}
+
+.vp-done__badge {
+  display: inline-block;
+  margin: 0;
+  padding: 0.2rem 0.75rem;
+  border-radius: 999px;
+  background: #2f8a5b;
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.vp-done__title {
+  margin: 0.65rem 0 0.35rem;
+  font-size: 1.3rem;
+  color: #17643c;
+}
+
+.vp-done__text {
+  margin: 0 auto;
+  max-width: 34rem;
+  color: #2a3d52;
+}
+
+.vp-foot {
+  margin: 1rem 0 0;
+  font-size: 0.8rem;
+  color: #4a6580;
+  text-align: center;
+}
+
+/* Completed section shows green on the level menu and tab */
+.level-landing__card[data-tool="vocab"].is-complete {
+  border-color: #2f8a5b !important;
+  box-shadow: 0 0 0 2px rgba(47, 138, 91, 0.35);
+  background: #e9f6ef;
+}
+
+.level-landing__card[data-tool="vocab"].is-complete .level-landing__card__progress {
+  color: #17643c;
+  font-weight: 700;
+}
+
+.learning-hub__tab[data-tool="vocab"].is-complete {
+  border-color: #2f8a5b;
+  color: #17643c;
+}
+
+.learning-hub__tab[data-tool="vocab"].is-complete.is-active {
+  background: #e2f4ea;
+}
+
+@media (max-width: 540px) {
+  .vp-card {
+    padding: 0.9rem 0.8rem;
+  }
+  .vp-top {
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .vp-options {
+    grid-template-columns: 1fr;
+  }
+}

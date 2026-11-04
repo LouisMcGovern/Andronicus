@@ -358,12 +358,15 @@
   let bookings = [];
   let paymentChecklist = [];
   let supabaseClient = null;
+  let vocabPathRenderers = [];
   let writingState = { user: null, loading: false, loaded: false, error: "", byTask: {} };
   let writingEditor = null;
   let adminWriting = { loading: false, loaded: false, error: "", rows: [], filter: "todo", openId: null, dirty: false };
   let userCloudSyncTimer = null;
   let userCloudSyncInFlight = false;
   let userCloudSyncQueued = false;
+  let userCloudSyncPendingSince = 0;
+  const USER_CLOUD_SYNC_MAX_WAIT = 5000;
 
   const EXERCISE_TOPIC_FR = {
     "Possessive adjectives (my/your/his/her/our/their)": "Les adjectifs possessifs",
@@ -2358,9 +2361,75 @@
     const user = getActiveUser();
     if (!user || !activeUsername) return;
     if (userCloudSyncTimer) clearTimeout(userCloudSyncTimer);
+    if (!userCloudSyncPendingSince) userCloudSyncPendingSince = Date.now();
+    // Debounce bursts of saves, but never hold changes back for more than a few seconds.
+    const waited = Date.now() - userCloudSyncPendingSince;
+    const delay = waited >= USER_CLOUD_SYNC_MAX_WAIT ? 0 : 1200;
     userCloudSyncTimer = setTimeout(function () {
+      userCloudSyncTimer = null;
+      userCloudSyncPendingSince = 0;
       void flushActiveUserCloudSync();
-    }, 1200);
+    }, delay);
+  }
+
+  /** Last-chance save when the tab is hidden or closed (keepalive lets the request outlive the page). */
+  function flushActiveUserCloudSyncOnExit() {
+    if (!userCloudSyncTimer || !isSupabaseConfigured()) return;
+    const user = getActiveUser();
+    if (!user || !activeUsername || !user.password) return;
+    clearTimeout(userCloudSyncTimer);
+    userCloudSyncTimer = null;
+    userCloudSyncPendingSince = 0;
+    const c = getSupabaseConfig();
+    try {
+      fetch(String(c.supabaseUrl).replace(/\/+$/, "") + "/rest/v1/rpc/student_upsert_account", {
+        method: "POST",
+        keepalive: true,
+        headers: {
+          "Content-Type": "application/json",
+          apikey: c.supabaseAnonKey,
+          Authorization: "Bearer " + c.supabaseAnonKey,
+        },
+        body: JSON.stringify({
+          p_username: activeUsername,
+          p_password: String(user.password || ""),
+          p_full_name: String(user.fullName || ""),
+          p_parent_email: String(user.parentEmail || ""),
+          p_stats: user.stats && typeof user.stats === "object" ? user.stats : {},
+        }),
+      }).catch(function () {});
+    } catch (e) {}
+  }
+
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "hidden") flushActiveUserCloudSyncOnExit();
+  });
+  window.addEventListener("pagehide", flushActiveUserCloudSyncOnExit);
+
+  /**
+   * The cloud copy normally wins when a student signs in, but if this device has
+   * walked further along a vocabulary path (e.g. the tab closed before syncing),
+   * keep the local progress for that level.
+   */
+  function keepFurthestVocabPath(localUser, cloudUser) {
+    if (!localUser || !cloudUser) return cloudUser;
+    const localPaths = localUser.stats && localUser.stats.learningHub && localUser.stats.learningHub.vocabPath;
+    if (!localPaths || typeof localPaths !== "object") return cloudUser;
+    if (!cloudUser.stats || typeof cloudUser.stats !== "object") cloudUser.stats = {};
+    if (!cloudUser.stats.learningHub || typeof cloudUser.stats.learningHub !== "object") {
+      cloudUser.stats.learningHub = {};
+    }
+    const cloudHub = cloudUser.stats.learningHub;
+    if (!cloudHub.vocabPath || typeof cloudHub.vocabPath !== "object") cloudHub.vocabPath = {};
+    Object.keys(localPaths).forEach(function (lvl) {
+      const l = localPaths[lvl];
+      const c = cloudHub.vocabPath[lvl];
+      if (!l) return;
+      const lScore = (l.completedLaps || 0) * 1e6 + (l.answered || 0);
+      const cScore = c ? (c.completedLaps || 0) * 1e6 + (c.answered || 0) : -1;
+      if (lScore > cScore) cloudHub.vocabPath[lvl] = l;
+    });
+    return cloudUser;
   }
 
   async function flushActiveUserCloudSync() {
@@ -2596,10 +2665,10 @@
       return I18n.t("learning_landing_flashcards_progress", { n: String(n) });
     }
     if (tool === "vocab") {
-      const n = (stats.quizSessionLog || []).filter(function (s) {
-        return s.level === lvl;
-      }).length;
-      return I18n.t("learning_landing_vocab_progress", { n: String(n) });
+      const vp = vocabPathProgress(lvl);
+      if (!vp) return "";
+      if (vp.completed) return I18n.t("vocab_path_card_done");
+      return I18n.t("vocab_path_card_progress", { n: String(vp.correct), t: String(vp.total) });
     }
     return "";
   }
@@ -2608,8 +2677,13 @@
     const user = getActiveUser();
     const stats = user ? ensureStats(user) : null;
     const lh = user ? ensureLearningHub(stats) : null;
+    const vocabDone = vocabPathCompleted(lvl);
+    root.querySelectorAll('.learning-hub__tab[data-tool="vocab"]').forEach(function (tab) {
+      tab.classList.toggle("is-complete", vocabDone);
+    });
     root.querySelectorAll(".level-landing__card[data-tool]").forEach(function (card) {
       const tool = card.getAttribute("data-tool");
+      if (tool === "vocab") card.classList.toggle("is-complete", vocabDone);
       let prog = card.querySelector(".level-landing__card__progress");
       const text =
         user && stats && lh && tool !== "progress"
@@ -2640,6 +2714,638 @@
     homeworkPanelRenderers.forEach(function (renderFn) {
       renderFn();
     });
+    vocabPathRenderers.forEach(function (renderFn) {
+      renderFn();
+    });
+  }
+
+  /* ------------------------------------------------------------------
+   * Vocabulary: stepping-stone path.
+   * Every word of the level (from its flashcard decks) is one stone, ordered
+   * from easiest to hardest. A correct answer moves the student on; a wrong
+   * answer sends the word to the back of the line. Answering every word once
+   * completes the lap (the section turns green); the next lap repeats them.
+   * ------------------------------------------------------------------ */
+
+  const VOCAB_PATH_SESSION_SIZE = 20;
+  const VOCAB_PATH_WINDOW_BEFORE = 3;
+  const VOCAB_PATH_WINDOW_AFTER = 5;
+  const vocabBankCache = {};
+  const vocabGuestState = {};
+  const vocabStreakBumped = {};
+
+  function vocabNormalize(s) {
+    return String(s || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .replace(/\([^)]*\)/g, " ")
+      .replace(/[^a-z0-9 ]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function vocabSimilarity(a, b) {
+    const x = vocabNormalize(a);
+    const y = vocabNormalize(b);
+    if (!x.length || !y.length) return 0;
+    if (x === y) return 1;
+    let prev = [];
+    for (let j = 0; j <= y.length; j += 1) prev.push(j);
+    for (let i = 1; i <= x.length; i += 1) {
+      const cur = [i];
+      for (let j = 1; j <= y.length; j += 1) {
+        cur.push(
+          Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (x[i - 1] === y[j - 1] ? 0 : 1))
+        );
+      }
+      prev = cur;
+    }
+    return 1 - prev[y.length] / Math.max(x.length, y.length);
+  }
+
+  /** Small deterministic hash so a word keeps the same question style within a lap. */
+  function vocabHash(s) {
+    let h = 2166136261;
+    const str = String(s);
+    for (let i = 0; i < str.length; i += 1) {
+      h ^= str.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    return (h >>> 0) / 4294967295;
+  }
+
+  function buildVocabBank(level) {
+    if (vocabBankCache[level]) return vocabBankCache[level];
+    const decks = (learningData[level] && learningData[level].flashcards) || {};
+    const words = [];
+    const byKey = {};
+    Object.keys(decks).forEach(function (deckName, deckIndex) {
+      if (deckName === "Master 1000") return;
+      (decks[deckName] || []).forEach(function (card, idx) {
+        if (!card || !card.front || !card.back) return;
+        const en = String(card.front).trim();
+        const fr = String(card.back).trim();
+        const key = vocabNormalize(en);
+        if (!key || byKey[key]) return;
+        // Identical in both languages (e.g. "Menu" = "Menu") – nothing to learn.
+        if (key === vocabNormalize(fr)) return;
+        const wordCount = en.split(/\s+/).length;
+        const sim = vocabSimilarity(en, fr);
+        // Short, single words and French look-alikes first; long phrases last.
+        const score = en.length * (1 - 0.6 * sim) + 4 * (wordCount - 1) + deckIndex * 0.8 + idx * 0.01;
+        const w = { key: key, en: en, fr: fr, deck: deckName, len: en.length, score: score };
+        byKey[key] = w;
+        words.push(w);
+      });
+    });
+    const order = words
+      .slice()
+      .sort(function (a, b) {
+        return a.score - b.score;
+      })
+      .map(function (w) {
+        return w.key;
+      });
+    const rank = {};
+    order.forEach(function (k, i) {
+      rank[k] = i;
+    });
+    const bank = {
+      words: words,
+      byKey: byKey,
+      order: order,
+      rank: rank,
+      sig: order.length + "|" + (order[0] || "") + "|" + (order[order.length - 1] || ""),
+    };
+    vocabBankCache[level] = bank;
+    return bank;
+  }
+
+  function freshVocabPathState(bank) {
+    return {
+      v: 1,
+      sig: bank.sig,
+      lap: 1,
+      pos: 0,
+      back: [],
+      correct: 0,
+      wrong: 0,
+      lapDone: false,
+      completedLaps: 0,
+      completedAt: "",
+      answered: 0,
+      sessionCorrect: 0,
+      sessionAnswered: 0,
+    };
+  }
+
+  function getVocabPathState(level) {
+    const bank = buildVocabBank(level);
+    const user = getActiveUser();
+    let holder;
+    if (user) {
+      const lh = ensureLearningHub(ensureStats(user));
+      if (!lh.vocabPath || typeof lh.vocabPath !== "object") lh.vocabPath = {};
+      holder = lh.vocabPath;
+    } else {
+      holder = vocabGuestState;
+    }
+    let st = holder[level];
+    if (!st || st.v !== 1) {
+      st = freshVocabPathState(bank);
+      holder[level] = st;
+    }
+    if (st.sig !== bank.sig) {
+      // The word list changed since this was saved: keep progress, drop words that no longer exist.
+      st.sig = bank.sig;
+      st.pos = Math.min(st.pos || 0, bank.order.length);
+      st.back = (st.back || []).filter(function (k) {
+        return !!bank.byKey[k];
+      });
+      st.correct = Math.min(st.correct || 0, bank.order.length);
+    }
+    if (!Array.isArray(st.back)) st.back = [];
+    return st;
+  }
+
+  function vocabPathCompleted(level) {
+    const user = getActiveUser();
+    if (!user) return false;
+    const lh = ensureLearningHub(ensureStats(user));
+    const st = lh.vocabPath && lh.vocabPath[level];
+    return !!(st && st.completedLaps > 0);
+  }
+
+  function vocabPathProgress(level) {
+    const user = getActiveUser();
+    if (!user) return null;
+    const lh = ensureLearningHub(ensureStats(user));
+    const st = lh.vocabPath && lh.vocabPath[level];
+    const total = buildVocabBank(level).order.length;
+    return {
+      correct: st ? st.correct || 0 : 0,
+      total: total,
+      completed: !!(st && st.completedLaps > 0),
+      lap: st ? st.lap || 1 : 1,
+    };
+  }
+
+  function vocabPathHeadKey(st, bank) {
+    if (st.pos < bank.order.length) return { key: bank.order[st.pos], from: "main" };
+    if (st.back.length) return { key: st.back[0], from: "back" };
+    return null;
+  }
+
+  /** 0 → very first stone, 1 → hardest word of the level. */
+  function vocabDifficulty(bank, key) {
+    const n = bank.order.length;
+    if (n < 2) return 0;
+    return (bank.rank[key] || 0) / (n - 1);
+  }
+
+  function shuffleInPlace(arr) {
+    for (let i = arr.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const t = arr[i];
+      arr[i] = arr[j];
+      arr[j] = t;
+    }
+    return arr;
+  }
+
+  function buildVocabPathQuestion(bank, key, lap) {
+    const word = bank.byKey[key];
+    const t = vocabDifficulty(bank, key);
+    // Early on: see the English, pick the French. Gradually more "say it in English".
+    const toEnglish = vocabHash(key + "|" + lap) < 0.15 + 0.6 * t;
+    const answerField = toEnglish ? "en" : "fr";
+    const optionCount = t < 0.12 ? 3 : 4;
+
+    let pool = bank.words.filter(function (w) {
+      return w.key !== key;
+    });
+    if (t >= 0.33) {
+      const sameDeck = pool.filter(function (w) {
+        return w.deck === word.deck;
+      });
+      if (sameDeck.length >= 6) pool = sameDeck;
+    }
+    if (t >= 0.66) {
+      pool = pool
+        .slice()
+        .sort(function (a, b) {
+          return Math.abs(a.len - word.len) - Math.abs(b.len - word.len);
+        })
+        .slice(0, 10);
+    }
+    pool = shuffleInPlace(pool.slice());
+
+    const answer = word[answerField];
+    const seen = {};
+    seen[vocabNormalize(answer)] = true;
+    const options = [answer];
+    for (let i = 0; i < pool.length && options.length < optionCount; i += 1) {
+      const text = pool[i][answerField];
+      const norm = vocabNormalize(text);
+      if (!norm || seen[norm]) continue;
+      seen[norm] = true;
+      options.push(text);
+    }
+    return {
+      key: key,
+      word: word,
+      toEnglish: toEnglish,
+      prompt: toEnglish ? word.fr : word.en,
+      answer: answer,
+      options: shuffleInPlace(options),
+      difficulty: t,
+    };
+  }
+
+  function vocabDifficultyStep(t) {
+    return Math.min(5, 1 + Math.floor(t * 5));
+  }
+
+  /** Builds the whole Vocabulary panel for one level. Returns a render() to refresh on login/logout. */
+  function mountVocabPath(root, level, panel, onLevelProgressChange) {
+    const bank = buildVocabBank(level);
+    const total = bank.order.length;
+
+    panel.innerHTML = "";
+    const shell = document.createElement("div");
+    shell.className = "lh-vocab vp";
+
+    const header = document.createElement("div");
+    header.className = "lh-vocab__header";
+    const stBox = document.createElement("div");
+    stBox.className = "lh-chip lh-chip--streak";
+    stBox.innerHTML =
+      '<span class="lh-chip__lab">' +
+      I18n.t("learning_hub_streak") +
+      '</span> <span class="lh-vocab__streak-val">0</span>';
+    header.appendChild(stBox);
+    shell.appendChild(header);
+
+    const card = document.createElement("section");
+    card.className = "vp-card";
+    card.innerHTML =
+      '<div class="vp-top">' +
+      '  <div class="vp-top__text">' +
+      '    <h3 class="vp-title"></h3>' +
+      '    <p class="vp-meta"></p>' +
+      "  </div>" +
+      '  <div class="vp-level" aria-hidden="true"></div>' +
+      "</div>" +
+      '<div class="vp-bar"><div class="vp-bar__fill"></div></div>' +
+      '<div class="vp-river" aria-hidden="true"><div class="vp-stones"></div></div>' +
+      '<p class="vp-pending hidden"></p>' +
+      '<div class="vp-play">' +
+      '  <p class="vp-instruction"></p>' +
+      '  <p class="vp-word"></p>' +
+      '  <div class="vp-options" role="group"></div>' +
+      '  <p class="vp-feedback" aria-live="polite"></p>' +
+      '  <button type="button" class="btn-primary vp-continue hidden"></button>' +
+      "</div>" +
+      '<div class="vp-done hidden">' +
+      '  <p class="vp-done__badge"></p>' +
+      '  <h3 class="vp-done__title"></h3>' +
+      '  <p class="vp-done__text"></p>' +
+      '  <button type="button" class="btn-primary vp-next-lap"></button>' +
+      "</div>" +
+      '<p class="vp-foot"></p>';
+    shell.appendChild(card);
+    panel.appendChild(shell);
+
+    const el = {
+      title: card.querySelector(".vp-title"),
+      meta: card.querySelector(".vp-meta"),
+      level: card.querySelector(".vp-level"),
+      barFill: card.querySelector(".vp-bar__fill"),
+      stones: card.querySelector(".vp-stones"),
+      pending: card.querySelector(".vp-pending"),
+      play: card.querySelector(".vp-play"),
+      instruction: card.querySelector(".vp-instruction"),
+      word: card.querySelector(".vp-word"),
+      options: card.querySelector(".vp-options"),
+      feedback: card.querySelector(".vp-feedback"),
+      cont: card.querySelector(".vp-continue"),
+      done: card.querySelector(".vp-done"),
+      doneBadge: card.querySelector(".vp-done__badge"),
+      doneTitle: card.querySelector(".vp-done__title"),
+      doneText: card.querySelector(".vp-done__text"),
+      nextLap: card.querySelector(".vp-next-lap"),
+      foot: card.querySelector(".vp-foot"),
+    };
+
+    let current = null; // question on screen
+    let answered = false;
+    let busy = false;
+
+    function refreshStreakChip() {
+      const user = getActiveUser();
+      const v = stBox.querySelector(".lh-vocab__streak-val");
+      if (!v) return;
+      v.textContent = user ? String(ensureLearningHub(ensureStats(user)).streak || 0) : "0";
+    }
+
+    function renderStones(st, hop) {
+      el.stones.innerHTML = "";
+      const here = st.lapDone ? total : st.correct;
+      const from = Math.max(0, here - VOCAB_PATH_WINDOW_BEFORE);
+      const to = Math.min(total, here + VOCAB_PATH_WINDOW_AFTER);
+      for (let i = from; i <= to; i += 1) {
+        const stone = document.createElement("div");
+        let cls = "vp-stone";
+        if (i < here) cls += " is-crossed";
+        else if (i === here) cls += " is-here";
+        if (i === total) cls += " is-goal";
+        stone.className = cls;
+        const num = document.createElement("span");
+        num.className = "vp-stone__num";
+        num.textContent = i === total ? "🏁" : String(i + 1);
+        stone.appendChild(num);
+        if (i === here) {
+          const me = document.createElement("span");
+          me.className = "vp-me" + (hop ? " is-landing" : "");
+          stone.appendChild(me);
+        }
+        el.stones.appendChild(stone);
+      }
+    }
+
+    function renderHeader(st) {
+      el.title.textContent = I18n.t("vocab_path_title");
+      const shown = Math.min(st.correct + (st.lapDone ? 0 : 1), total);
+      el.meta.textContent =
+        (st.lapDone
+          ? I18n.t("vocab_path_meta_done", { t: String(total) })
+          : I18n.t("vocab_path_meta", { n: String(shown), t: String(total) })) +
+        " · " +
+        I18n.t("vocab_path_lap", { n: String(st.lap) });
+      el.barFill.style.width = (total ? Math.round((st.correct / total) * 100) : 0) + "%";
+      el.pending.classList.toggle("hidden", !st.back.length || st.lapDone);
+      el.pending.textContent =
+        st.back.length === 1
+          ? I18n.t("vocab_path_pending_one")
+          : I18n.t("vocab_path_pending", { n: String(st.back.length) });
+      card.classList.toggle("is-complete", st.completedLaps > 0);
+      el.foot.textContent = getActiveUser()
+        ? I18n.t("vocab_path_autosave")
+        : I18n.t("vocab_path_guest");
+    }
+
+    function renderLevelDots(t) {
+      const step = vocabDifficultyStep(t);
+      el.level.innerHTML = "";
+      const lab = document.createElement("span");
+      lab.className = "vp-level__lab";
+      lab.textContent = I18n.t("vocab_path_difficulty");
+      el.level.appendChild(lab);
+      for (let i = 1; i <= 5; i += 1) {
+        const d = document.createElement("span");
+        d.className = "vp-level__dot" + (i <= step ? " is-on" : "");
+        el.level.appendChild(d);
+      }
+    }
+
+    function showDone(st) {
+      current = null;
+      el.play.classList.add("hidden");
+      el.done.classList.remove("hidden");
+      el.doneBadge.textContent = I18n.t("vocab_path_done_badge");
+      el.doneTitle.textContent = I18n.t("vocab_path_done_title", { t: String(total) });
+      el.doneText.textContent = I18n.t("vocab_path_done_text");
+      el.nextLap.textContent = I18n.t("vocab_path_next_lap", { n: String(st.lap + 1) });
+      renderLevelDots(1);
+    }
+
+    function render(opts) {
+      const st = getVocabPathState(level);
+      refreshStreakChip();
+      renderHeader(st);
+      renderStones(st, opts && opts.hop);
+      if (!total) {
+        el.play.classList.add("hidden");
+        el.done.classList.add("hidden");
+        return;
+      }
+      if (st.lapDone) {
+        showDone(st);
+        return;
+      }
+      el.done.classList.add("hidden");
+      el.play.classList.remove("hidden");
+      const head = vocabPathHeadKey(st, bank);
+      if (!head) return;
+      current = buildVocabPathQuestion(bank, head.key, st.lap);
+      current.from = head.from;
+      answered = false;
+      busy = false;
+      renderLevelDots(current.difficulty);
+      el.instruction.textContent = I18n.t(
+        current.toEnglish ? "vocab_path_ask_en" : "vocab_path_ask_fr"
+      );
+      el.word.textContent = current.prompt;
+      el.word.classList.toggle("is-review", head.from === "back");
+      el.feedback.textContent =
+        head.from === "back" ? I18n.t("vocab_path_review_hint") : "";
+      el.feedback.className = "vp-feedback";
+      el.cont.classList.add("hidden");
+      el.options.innerHTML = "";
+      current.options.forEach(function (opt, i) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "vp-option";
+        const k = document.createElement("span");
+        k.className = "vp-option__key";
+        k.textContent = String(i + 1);
+        const tx = document.createElement("span");
+        tx.className = "vp-option__text";
+        tx.textContent = opt;
+        b.appendChild(k);
+        b.appendChild(tx);
+        b.addEventListener("click", function () {
+          choose(opt, b);
+        });
+        el.options.appendChild(b);
+      });
+    }
+
+    function recordProgressSession(st) {
+      if (st.sessionAnswered < VOCAB_PATH_SESSION_SIZE) return;
+      const c = st.sessionCorrect;
+      const n = st.sessionAnswered;
+      st.sessionCorrect = 0;
+      st.sessionAnswered = 0;
+      recordQuizSummary(level, "path", c, n);
+    }
+
+    function trackTopic(deck, ok) {
+      const user = getActiveUser();
+      if (!user) return;
+      const lh = ensureLearningHub(ensureStats(user));
+      if (!lh.vocabTopic[deck]) lh.vocabTopic[deck] = { c: 0, w: 0 };
+      if (ok) lh.vocabTopic[deck].c += 1;
+      else lh.vocabTopic[deck].w += 1;
+    }
+
+    function choose(opt, btn) {
+      if (answered || !current) return;
+      answered = true;
+      haptic(4);
+      const st = getVocabPathState(level);
+      const ok = vocabNormalize(opt) === vocabNormalize(current.answer);
+      const user = getActiveUser();
+      if (user && !vocabStreakBumped[level + "|" + activeUsername]) {
+        vocabStreakBumped[level + "|" + activeUsername] = true;
+        bumpLearningStreak(level);
+      }
+
+      Array.from(el.options.querySelectorAll(".vp-option")).forEach(function (b) {
+        b.disabled = true;
+        const text = b.querySelector(".vp-option__text").textContent;
+        if (vocabNormalize(text) === vocabNormalize(current.answer)) b.classList.add("is-correct");
+      });
+
+      st.answered = (st.answered || 0) + 1;
+      st.sessionAnswered = (st.sessionAnswered || 0) + 1;
+      trackTopic(current.word.deck, ok);
+
+      if (ok) {
+        if (current.from === "main") st.pos += 1;
+        else st.back.shift();
+        st.correct += 1;
+        st.sessionCorrect = (st.sessionCorrect || 0) + 1;
+        playElementAnimation(btn, "answer-correct-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)");
+        el.feedback.textContent = I18n.t("vocab_path_correct");
+        el.feedback.className = "vp-feedback vp-feedback--ok";
+        let finishedLap = false;
+        if (st.pos >= total && !st.back.length) {
+          finishedLap = true;
+          st.lapDone = true;
+          st.completedLaps = (st.completedLaps || 0) + 1;
+          if (!st.completedAt) st.completedAt = new Date().toISOString();
+        }
+        recordProgressSession(st);
+        if (user) saveUsers();
+        busy = true;
+        setTimeout(function () {
+          render({ hop: true });
+          if (finishedLap) {
+            celebrateVocabLap(card);
+            if (onLevelProgressChange) onLevelProgressChange();
+          }
+        }, 650);
+      } else {
+        btn.classList.add("is-wrong");
+        playElementAnimation(btn, "shake 0.35s ease");
+        if (current.from === "main") {
+          st.pos += 1;
+          st.back.push(current.key);
+        } else {
+          st.back.push(st.back.shift());
+        }
+        st.wrong = (st.wrong || 0) + 1;
+        if (user) {
+          const lh = ensureLearningHub(ensureStats(user));
+          lh.savedWords = lh.savedWords || [];
+          lh.savedWords.push({
+            q: current.prompt,
+            a: current.answer,
+            topic: current.word.deck,
+            at: new Date().toISOString(),
+          });
+          if (lh.savedWords.length > 24) lh.savedWords = lh.savedWords.slice(-24);
+        }
+        recordProgressSession(st);
+        if (user) saveUsers();
+        el.feedback.textContent = I18n.t("vocab_path_wrong", {
+          prompt: current.prompt,
+          answer: current.answer,
+        });
+        el.feedback.className = "vp-feedback vp-feedback--wrong";
+        el.cont.textContent = I18n.t("vocab_path_continue");
+        el.cont.classList.remove("hidden");
+        el.cont.focus();
+        renderHeader(st);
+      }
+    }
+
+    el.cont.addEventListener("click", function () {
+      render();
+    });
+
+    el.nextLap.addEventListener("click", function () {
+      const st = getVocabPathState(level);
+      st.lap = (st.lap || 1) + 1;
+      st.pos = 0;
+      st.back = [];
+      st.correct = 0;
+      st.wrong = 0;
+      st.lapDone = false;
+      if (getActiveUser()) saveUsers();
+      render();
+    });
+
+    // Number keys pick an answer, Enter continues — only while this panel is on screen.
+    document.addEventListener("keydown", function (e) {
+      if (panel.classList.contains("hidden") || !panel.offsetParent) return;
+      const tag = (e.target && e.target.tagName) || "";
+      if (tag === "INPUT" || tag === "TEXTAREA" || (e.target && e.target.isContentEditable)) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (!answered && current && /^[1-4]$/.test(e.key)) {
+        const btns = el.options.querySelectorAll(".vp-option");
+        const b = btns[Number(e.key) - 1];
+        if (b) {
+          e.preventDefault();
+          b.click();
+        }
+      } else if (e.key === "Enter" && !el.cont.classList.contains("hidden") && document.activeElement !== el.cont) {
+        e.preventDefault();
+        el.cont.click();
+      }
+    });
+
+    window.addEventListener("andronicus:streakchange", function (ev) {
+      if (ev.detail && ev.detail.level === level) refreshStreakChip();
+    });
+
+    render();
+    return {
+      render: function () {
+        if (busy) return;
+        render();
+      },
+    };
+  }
+
+  function celebrateVocabLap(container) {
+    const overlay = document.createElement("div");
+    overlay.className = "streak-celebration";
+    for (let i = 0; i < 28; i += 1) {
+      const particle = document.createElement("span");
+      particle.className = "confetti-particle";
+      particle.style.left = 5 + Math.random() * 90 + "%";
+      particle.style.animationDelay = Math.random() * 0.6 + "s";
+      particle.style.background =
+        STREAK_CONFETTI_COLORS[Math.floor(Math.random() * STREAK_CONFETTI_COLORS.length)];
+      overlay.appendChild(particle);
+    }
+    const emoji = document.createElement("div");
+    emoji.className = "streak-celebration__emoji";
+    emoji.setAttribute("aria-hidden", "true");
+    emoji.textContent = "🏁";
+    const heading = document.createElement("h2");
+    heading.textContent = I18n.t("vocab_path_celebrate");
+    overlay.appendChild(emoji);
+    overlay.appendChild(heading);
+    document.body.appendChild(overlay);
+    haptic([6, 30, 6, 30, 6]);
+    setTimeout(function () {
+      if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+    }, 2800);
+    if (container && container.scrollIntoView) container.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   /* ------------------------------------------------------------------
@@ -5723,7 +6429,7 @@
       persistActiveUser();
       const latestCloudUser = await fetchCloudUser(name, pass);
       if (latestCloudUser) {
-        users[name] = latestCloudUser;
+        users[name] = keepFurthestVocabPath(users[name], latestCloudUser);
         saveUsers();
       } else {
         scheduleActiveUserCloudSync();
@@ -6786,469 +7492,10 @@
       homeworkPanelRenderers.push(renderHomeworkPanel);
       renderHomeworkPanel();
 
-      vocabPanel.innerHTML = "";
-      const vocShell = document.createElement("div");
-      vocShell.className = "lh-vocab";
-      const vocHeader = document.createElement("div");
-      vocHeader.className = "lh-vocab__header";
-      const stBox = document.createElement("div");
-      stBox.className = "lh-chip lh-chip--streak";
-      stBox.innerHTML =
-        '<span class="lh-chip__lab">' +
-        I18n.t("learning_hub_streak") +
-        '</span> <span class="lh-vocab__streak-val">0</span>';
-      vocHeader.appendChild(stBox);
-      vocShell.appendChild(vocHeader);
-
-      const topicRow = document.createElement("div");
-      topicRow.className = "lh-pill-row is-collapsed";
-      let activeTopicFilter = "all";
-      let filterExpanded = false;
-      const topicSet = {};
-      (data.vocabQuiz || []).forEach(function (q) {
-        if (q.topic) topicSet[q.topic] = true;
+      const vocabPath = mountVocabPath(root, level, vocabPanel, function () {
+        refreshLandingCardProgress(root, level, data);
       });
-      const filterToggle = document.createElement("button");
-      filterToggle.type = "button";
-      filterToggle.className = "lh-filter-toggle";
-      filterToggle.setAttribute("aria-expanded", "false");
-      const filterToggleLabel = document.createElement("span");
-      filterToggleLabel.className = "lh-filter-toggle__label";
-      const filterToggleChevron = document.createElement("span");
-      filterToggleChevron.className = "lh-filter-toggle__chevron";
-      filterToggleChevron.setAttribute("aria-hidden", "true");
-      filterToggleChevron.textContent = "▼";
-      const filterToggleDot = document.createElement("span");
-      filterToggleDot.className = "lh-filter-toggle__dot";
-      filterToggle.appendChild(filterToggleLabel);
-      filterToggle.appendChild(filterToggleChevron);
-      filterToggle.appendChild(filterToggleDot);
-      const filterWrap = document.createElement("div");
-      filterWrap.className = "lh-filter-wrap";
-      function updateFilterToggleUI() {
-        filterToggleLabel.textContent = filterExpanded
-          ? I18n.t("learning_vocab_filter_hide")
-          : I18n.t("learning_vocab_filter_show");
-        topicRow.classList.toggle("is-collapsed", !filterExpanded);
-        filterToggle.classList.toggle("is-expanded", filterExpanded);
-        filterToggle.setAttribute("aria-expanded", filterExpanded ? "true" : "false");
-        filterToggleDot.classList.toggle("is-visible", activeTopicFilter !== "all");
-      }
-      filterToggle.addEventListener("click", function () {
-        filterExpanded = !filterExpanded;
-        updateFilterToggleUI();
-      });
-      function makePill(label, value) {
-        const b = document.createElement("button");
-        b.type = "button";
-        b.className = "lh-pill" + (value === activeTopicFilter ? " is-active" : "");
-        if (value === "all") b.setAttribute("data-lh-all-topic", "1");
-        b.textContent = label;
-        b.addEventListener("click", function () {
-          activeTopicFilter = value;
-          Array.from(topicRow.querySelectorAll(".lh-pill")).forEach(function (p) {
-            p.classList.remove("is-active");
-          });
-          b.classList.add("is-active");
-          updateFilterToggleUI();
-          startQuiz(currentMode);
-        });
-        return b;
-      }
-      topicRow.appendChild(makePill(I18n.t("learning_hub_topic_all"), "all"));
-      Object.keys(topicSet)
-        .sort()
-        .forEach(function (t) {
-          topicRow.appendChild(makePill(t, t));
-        });
-      filterWrap.appendChild(filterToggle);
-      filterWrap.appendChild(topicRow);
-      vocShell.appendChild(filterWrap);
-      updateFilterToggleUI();
-
-      const quizWrap = document.createElement("div");
-      quizWrap.className = "lh-vocab-quiz resource-item";
-      const quizTitle = document.createElement("h4");
-      quizTitle.textContent = I18n.t("learning_vocab_quiz_title");
-      const variantRow = document.createElement("div");
-      variantRow.className = "lh-variant-row";
-      let activeVariant = "mc";
-      ["mc", "match", "speed"].forEach(function (vk) {
-        const vb = document.createElement("button");
-        vb.type = "button";
-        vb.setAttribute("data-variant", vk);
-        vb.className = "lh-variant-btn" + (vk === activeVariant ? " is-active" : "");
-        vb.textContent = I18n.t("learning_vocab_variant_" + vk);
-        vb.addEventListener("click", function () {
-          activeVariant = vk;
-          Array.from(variantRow.querySelectorAll(".lh-variant-btn")).forEach(function (x, j) {
-            x.classList.toggle("is-active", ["mc", "match", "speed"][j] === vk);
-          });
-          if (remainingQuestions.length) renderQuiz();
-        });
-        variantRow.appendChild(vb);
-      });
-      const quizQuestion = document.createElement("p");
-      quizQuestion.className = "vocab-quiz__question lh-vocab-q";
-      const quizCounter = document.createElement("p");
-      quizCounter.className = "lh-gap-score vocab-quiz__counter lh-muted";
-      const quizOptions = document.createElement("div");
-      quizOptions.className = "vocab-quiz__options lh-vocab-options";
-      const quizFeedback = document.createElement("p");
-      quizFeedback.className = "vocab-quiz__feedback";
-      const saveWordBtn = document.createElement("button");
-      saveWordBtn.type = "button";
-      saveWordBtn.className = "flashcard-btn lh-save-word hidden";
-      saveWordBtn.textContent = I18n.t("learning_vocab_save_word");
-      const quizNext = document.createElement("button");
-      quizNext.type = "button";
-      quizNext.className = "flashcard-btn lh-primary-btn";
-      quizNext.textContent = I18n.t("learning_vocab_next");
-      quizNext.disabled = true;
-      quizWrap.appendChild(quizTitle);
-      quizWrap.appendChild(variantRow);
-      quizWrap.appendChild(quizQuestion);
-      quizWrap.appendChild(quizOptions);
-      quizWrap.appendChild(quizFeedback);
-      quizWrap.appendChild(saveWordBtn);
-      quizWrap.appendChild(quizNext);
-      vocShell.appendChild(quizWrap);
-
-      const quizModeWrap = document.createElement("div");
-      quizModeWrap.className = "tool-menu lh-difficulty";
-      ["easy", "medium", "hard"].forEach(function (mode, idx) {
-        const modeBtn = document.createElement("button");
-        modeBtn.type = "button";
-        modeBtn.className = "tool-menu__btn" + (idx === 0 ? " is-active" : "");
-        modeBtn.textContent = I18n.t("learning_vocab_mode_" + mode);
-        modeBtn.setAttribute("data-mode", mode);
-        quizModeWrap.appendChild(modeBtn);
-      });
-      quizWrap.insertBefore(quizModeWrap, quizQuestion);
-      quizWrap.insertBefore(quizCounter, quizQuestion);
-
-      const summary = document.createElement("div");
-      summary.className = "vocab-summary lh-vocab-summary hidden";
-      const resultsCard = document.createElement("div");
-      resultsCard.className = "lh-quiz-results";
-      const resultsPct = document.createElement("div");
-      resultsPct.className = "lh-quiz-results__pct";
-      const resultsScore = document.createElement("p");
-      resultsScore.className = "lh-muted lh-quiz-results__score";
-      const resultsBest = document.createElement("p");
-      resultsBest.className = "lh-quiz-best hidden";
-      const resultsMsg = document.createElement("p");
-      resultsMsg.className = "lh-quiz-results__msg";
-      const resultsActions = document.createElement("div");
-      resultsActions.className = "lh-quiz-results__actions";
-      const resultsRetryBtn = document.createElement("button");
-      resultsRetryBtn.type = "button";
-      resultsRetryBtn.className = "flashcard-btn lh-primary-btn";
-      resultsRetryBtn.textContent = I18n.t("learning_vocab_results_retry");
-      const resultsLevelUpBtn = document.createElement("button");
-      resultsLevelUpBtn.type = "button";
-      resultsLevelUpBtn.className = "flashcard-btn";
-      resultsLevelUpBtn.textContent = I18n.t("learning_vocab_results_level_up");
-      resultsActions.appendChild(resultsRetryBtn);
-      resultsActions.appendChild(resultsLevelUpBtn);
-      resultsCard.appendChild(resultsPct);
-      resultsCard.appendChild(resultsScore);
-      resultsCard.appendChild(resultsBest);
-      resultsCard.appendChild(resultsMsg);
-      resultsCard.appendChild(resultsActions);
-      summary.appendChild(resultsCard);
-      quizWrap.appendChild(summary);
-
-      let quizScore = 0;
-      let quizAnswered = false;
-      let lastQuizCorrect = null;
-      let currentQuestion = null;
-      let currentMode = "easy";
-      let remainingQuestions = [];
-      let askedCount = 0;
-      let sessionQuestionTotal = 0;
-      let sessionRecorded = false;
-      const wrongByTopic = {};
-      const wrongAnswers = [];
-
-      function questionsForMode(mode) {
-        return (data.vocabQuiz || []).filter(function (q) {
-          if (q.difficulty !== mode) return false;
-          if (activeTopicFilter !== "all" && q.topic !== activeTopicFilter) return false;
-          return true;
-        });
-      }
-
-      function randomPickIndex(listLength) {
-        return Math.floor(Math.random() * listLength);
-      }
-
-      function trackVocabAnswer(topic, wasCorrect) {
-        const user = getActiveUser();
-        if (!user || !topic) return;
-        const stats = ensureStats(user);
-        const lh = ensureLearningHub(stats);
-        if (!lh.vocabTopic[topic]) lh.vocabTopic[topic] = { c: 0, w: 0 };
-        if (wasCorrect) lh.vocabTopic[topic].c += 1;
-        else lh.vocabTopic[topic].w += 1;
-        saveUsers();
-      }
-
-      function quizNextMode(mode) {
-        if (mode === "easy") return "medium";
-        if (mode === "medium") return "hard";
-        return null;
-      }
-
-      function setQuizModeActive(mode) {
-        Array.from(quizModeWrap.querySelectorAll("[data-mode]")).forEach(function (b) {
-          b.classList.toggle("is-active", b.getAttribute("data-mode") === mode);
-        });
-      }
-
-      function updateQuizCounter() {
-        if (summary.classList.contains("hidden") && sessionQuestionTotal > 0 && askedCount > 0) {
-          quizCounter.classList.remove("hidden");
-          quizCounter.textContent = I18n.t("learning_vocab_question_counter", {
-            current: String(askedCount),
-            total: String(sessionQuestionTotal),
-          });
-        } else {
-          quizCounter.classList.add("hidden");
-        }
-      }
-
-      function updateResultsCard(totalCount) {
-        const pct = totalCount ? Math.round((quizScore / totalCount) * 100) : 0;
-        resultsPct.textContent = String(pct) + "%";
-        resultsScore.textContent = I18n.t("learning_vocab_results_score", {
-          score: String(quizScore),
-          total: String(totalCount),
-        });
-        let msgKey = "learning_vocab_results_msg_review";
-        if (pct >= 80) msgKey = "learning_vocab_results_msg_excellent";
-        else if (pct >= 60) msgKey = "learning_vocab_results_msg_good";
-        resultsMsg.textContent = I18n.t(msgKey);
-        resultsRetryBtn.textContent = I18n.t("learning_vocab_results_retry");
-        resultsLevelUpBtn.textContent = I18n.t("learning_vocab_results_level_up");
-        resultsLevelUpBtn.disabled = !quizNextMode(currentMode);
-      }
-
-      function renderMissedQuestions() {
-        const existing = resultsCard.querySelector(".lh-quiz-missed");
-        if (existing) existing.remove();
-        if (!wrongAnswers.length) return;
-        const missed = document.createElement("details");
-        missed.className = "lh-quiz-missed";
-        const missedSummary = document.createElement("summary");
-        missedSummary.textContent = I18n.t("learning_vocab_missed_summary", {
-          count: String(wrongAnswers.length),
-        });
-        const list = document.createElement("div");
-        list.className = "lh-quiz-missed__list";
-        wrongAnswers.forEach(function (item) {
-          const row = document.createElement("div");
-          row.className = "lh-quiz-missed__row";
-          const qSpan = document.createElement("span");
-          qSpan.className = "lh-quiz-missed__q";
-          qSpan.textContent = item.question;
-          const aSpan = document.createElement("span");
-          aSpan.className = "lh-quiz-missed__answer";
-          aSpan.textContent = item.answer;
-          row.appendChild(qSpan);
-          row.appendChild(aSpan);
-          list.appendChild(row);
-        });
-        missed.appendChild(missedSummary);
-        missed.appendChild(list);
-        resultsCard.insertBefore(missed, resultsActions);
-      }
-
-      function updateResultsBestLine(pct, previousBest) {
-        resultsBest.className = "lh-quiz-best hidden";
-        resultsBest.textContent = "";
-        if (previousBest == null) return;
-        if (pct > previousBest) {
-          resultsBest.className = "lh-quiz-best lh-quiz-best--new-record";
-          resultsBest.textContent = I18n.t("learning_vocab_results_new_record", {
-            pct: String(pct),
-          });
-          haptic([6, 30, 6, 30, 6]);
-        } else if (previousBest > pct) {
-          resultsBest.className = "lh-quiz-best";
-          resultsBest.textContent = I18n.t("learning_vocab_results_best", {
-            pct: String(previousBest),
-          });
-        }
-      }
-
-      function showSummary(totalCount) {
-        quizCounter.classList.add("hidden");
-        quizQuestion.classList.add("hidden");
-        quizOptions.classList.add("hidden");
-        quizFeedback.classList.add("hidden");
-        quizNext.classList.add("hidden");
-        saveWordBtn.classList.add("hidden");
-        summary.classList.remove("hidden");
-        const pct = totalCount ? Math.round((quizScore / totalCount) * 100) : 0;
-        const quizKey = level + " " + currentMode;
-        let previousBest = null;
-        const summaryUser = getActiveUser();
-        if (summaryUser) {
-          const summaryStats = ensureStats(summaryUser);
-          if (
-            summaryStats.quizBest &&
-            Object.prototype.hasOwnProperty.call(summaryStats.quizBest, quizKey)
-          ) {
-            previousBest = summaryStats.quizBest[quizKey];
-          }
-        }
-        if (!sessionRecorded) {
-          recordQuizSummary(level, currentMode, quizScore, totalCount);
-          sessionRecorded = true;
-        }
-        updateResultsCard(totalCount);
-        updateResultsBestLine(pct, previousBest);
-        renderMissedQuestions();
-        refreshStreakHeader();
-      }
-
-      function renderQuiz() {
-        saveWordBtn.classList.add("hidden");
-        if (!remainingQuestions.length) {
-          showSummary(askedCount);
-          return;
-        }
-        quizQuestion.classList.remove("hidden");
-        quizOptions.classList.remove("hidden");
-        quizFeedback.classList.remove("hidden");
-        quizNext.classList.remove("hidden");
-        summary.classList.add("hidden");
-
-        const pickIdx = randomPickIndex(remainingQuestions.length);
-        currentQuestion = remainingQuestions.splice(pickIdx, 1)[0];
-        askedCount += 1;
-        quizAnswered = false;
-        lastQuizCorrect = null;
-        quizNext.disabled = true;
-        updateQuizCounter();
-        quizQuestion.textContent = currentQuestion.question;
-        quizFeedback.textContent = I18n.t("learning_vocab_choose_prompt", {
-          score: String(quizScore),
-          round: String(askedCount - 1),
-        });
-        quizOptions.innerHTML = "";
-        const shuffledOptions = currentQuestion.options.slice().sort(function () {
-          return Math.random() - 0.5;
-        });
-        shuffledOptions.forEach(function (opt) {
-          const btn = document.createElement("button");
-          btn.type = "button";
-          btn.className = "flashcard-btn vocab-quiz__option lh-option-btn";
-          btn.textContent = opt;
-          btn.addEventListener("click", function () {
-            if (quizAnswered) return;
-            haptic(4);
-            quizAnswered = true;
-            const correct = opt === currentQuestion.answer;
-            trackVocabAnswer(currentQuestion.topic, correct);
-            if (correct) {
-              quizScore += 1;
-              lastQuizCorrect = true;
-              btn.classList.add("is-correct");
-              playElementAnimation(btn, "answer-correct-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)");
-              quizFeedback.textContent = I18n.t("learning_vocab_correct_feedback", {
-                score: String(quizScore),
-                round: String(askedCount),
-              });
-            } else {
-              lastQuizCorrect = false;
-              btn.classList.add("is-wrong");
-              playElementAnimation(btn, "shake 0.35s ease");
-              wrongByTopic[currentQuestion.topic] = (wrongByTopic[currentQuestion.topic] || 0) + 1;
-              wrongAnswers.push({
-                question: currentQuestion.question,
-                answer: currentQuestion.answer,
-              });
-              quizFeedback.textContent = I18n.t("learning_vocab_wrong_feedback", {
-                answer: currentQuestion.answer,
-                score: String(quizScore),
-                round: String(askedCount),
-              });
-              const user = getActiveUser();
-              if (user) {
-                const lh = ensureLearningHub(ensureStats(user));
-                lh.savedWords = lh.savedWords || [];
-                lh.savedWords.push({
-                  q: currentQuestion.question,
-                  a: currentQuestion.answer,
-                  topic: currentQuestion.topic,
-                  at: new Date().toISOString(),
-                });
-                if (lh.savedWords.length > 24) lh.savedWords = lh.savedWords.slice(-24);
-                saveUsers();
-              }
-              saveWordBtn.classList.remove("hidden");
-            }
-            Array.from(quizOptions.querySelectorAll("button")).forEach(function (b) {
-              if (b.textContent === currentQuestion.answer) b.classList.add("is-correct");
-            });
-            quizNext.disabled = false;
-            refreshStreakHeader();
-          });
-          quizOptions.appendChild(btn);
-        });
-      }
-
-      function startQuiz(mode) {
-        currentMode = mode;
-        quizScore = 0;
-        askedCount = 0;
-        quizAnswered = false;
-        lastQuizCorrect = null;
-        sessionRecorded = false;
-        Object.keys(wrongByTopic).forEach(function (key) {
-          delete wrongByTopic[key];
-        });
-        wrongAnswers.length = 0;
-        remainingQuestions = questionsForMode(mode).slice();
-        sessionQuestionTotal = remainingQuestions.length;
-        renderQuiz();
-      }
-
-      Array.from(quizModeWrap.querySelectorAll("[data-mode]")).forEach(function (modeBtn) {
-        modeBtn.addEventListener("click", function () {
-          const mode = modeBtn.getAttribute("data-mode");
-          Array.from(quizModeWrap.querySelectorAll("[data-mode]")).forEach(function (b) {
-            b.classList.toggle("is-active", b === modeBtn);
-          });
-          startQuiz(mode);
-        });
-      });
-
-      quizNext.addEventListener("click", function () {
-        if (!quizAnswered) return;
-        renderQuiz();
-      });
-
-      resultsRetryBtn.addEventListener("click", function () {
-        startQuiz(currentMode);
-      });
-
-      resultsLevelUpBtn.addEventListener("click", function () {
-        const next = quizNextMode(currentMode);
-        if (!next) return;
-        setQuizModeActive(next);
-        startQuiz(next);
-      });
-
-      saveWordBtn.addEventListener("click", function () {
-        saveWordBtn.classList.add("hidden");
-      });
-
-      vocabPanel.appendChild(vocShell);
-      startQuiz("easy");
-      refreshStreakHeader();
+      vocabPathRenderers.push(vocabPath.render);
 
       function parseGapLine(line) {
         if (!line || line.indexOf("___") < 0) return null;
@@ -8696,7 +8943,7 @@
     if (activeUsername && users[activeUsername] && users[activeUsername].password) {
       const cloudUser = await fetchCloudUser(activeUsername, users[activeUsername].password);
       if (cloudUser) {
-        users[activeUsername] = cloudUser;
+        users[activeUsername] = keepFurthestVocabPath(users[activeUsername], cloudUser);
         saveUsers();
       } else {
         scheduleActiveUserCloudSync();
