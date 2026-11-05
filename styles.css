@@ -8203,3 +8203,10 @@ body.wr-open .pts {
 .wg.is-finished .wg__actions {
   display: none;
 }
+
+.wg__earned {
+  margin: -0.3rem 0 0.7rem;
+  text-align: center;
+  font-weight: 700;
+  color: var(--wg-good);
+}

@@ -8810,6 +8810,21 @@
           },
           loadState: readWordGameState,
           saveState: writeWordGameState,
+          signedIn: function () {
+            return !!getActiveUser();
+          },
+          pointsAvailable: function () {
+            const user = getActiveUser();
+            return user ? vocabPointsFromStats(ensureStats(user)) : 0;
+          },
+          addPoints: function (n) {
+            const user = getActiveUser();
+            if (!user) return;
+            const stats = ensureStats(user);
+            const lh = ensureLearningHub(stats);
+            lh.vocabPoints = Math.max(0, vocabPointsFromStats(stats) + n);
+            renderPointsBadge({ bump: n > 0 });
+          },
         });
         learningToolsLangRefreshers.push(wordGameView.render);
       }

@@ -27,8 +27,11 @@
     return e;
   }
 
+  var ROUND_POINTS = 5;
+  var HINT_COST = 1;
+
   function freshState() {
-    return { round: 0, best: 0, found: {}, hints: {}, bonusFound: {}, bonusTotal: 0 };
+    return { round: 0, best: 0, paid: 0, found: {}, hints: {}, bonusFound: {}, bonusTotal: 0 };
   }
 
   function normalise(s) {
@@ -40,6 +43,7 @@
     st.hints = s.hints && typeof s.hints === "object" ? s.hints : {};
     st.bonusFound = s.bonusFound && typeof s.bonusFound === "object" ? s.bonusFound : {};
     st.bonusTotal = Math.max(0, Math.floor(+s.bonusTotal || 0));
+    st.paid = Math.max(0, Math.floor(+s.paid || 0));
     var max = DATA.rounds.length - 1;
     if (st.round > max) st.round = max;
     if (st.best > max) st.best = max;
@@ -131,6 +135,7 @@
         round = parseRound(DATA.rounds[state.round], state.round);
         shuffled = round.letters.slice();
       }
+      root.classList.remove("is-finished");
       build();
       renderHead();
       renderGrid();
@@ -404,9 +409,15 @@
         say("✓ " + word.toUpperCase() + (tr ? " — " + tr : ""), "good");
         if (isComplete()) {
           if (state.best <= state.round && state.round < DATA.rounds.length - 1) state.best = state.round + 1;
+          var earned = 0;
+          if (round.idx >= (state.paid || 0) && api.signedIn && api.signedIn()) {
+            api.addPoints(ROUND_POINTS);
+            state.paid = round.idx + 1;
+            earned = ROUND_POINTS;
+          }
           save();
           setTimeout(function () {
-            showDone(true);
+            showDone(true, false, earned);
           }, 700);
         }
         return;
@@ -441,6 +452,15 @@
     }
 
     function giveHint() {
+      if (isComplete()) return;
+      if (!api.signedIn || !api.signedIn()) {
+        say(t("wg_hint_signin"), "info");
+        return;
+      }
+      if (api.pointsAvailable() < HINT_COST) {
+        say(t("wg_hint_no_points"), "bad");
+        return;
+      }
       var map = cellMap();
       var hidden = Object.keys(map).filter(function (k) {
         return !map[k].shown && !map[k].hint;
@@ -461,6 +481,8 @@
         }
       }
       hintList().push(target || hidden[0]);
+      api.addPoints(-HINT_COST);
+      say(t("wg_hint_used"), "info");
       save();
       renderGrid();
     }
@@ -478,7 +500,7 @@
         }
         renderWheel();
       });
-      var hint = el("button", "wg__act", "💡 " + t("wg_hint"));
+      var hint = el("button", "wg__act", "💡 " + t("wg_hint_cost"));
       hint.type = "button";
       hint.addEventListener("click", giveHint);
       var words = el("button", "wg__act", "📖 " + t("wg_words"));
@@ -493,16 +515,19 @@
       actions.appendChild(bonus);
     }
 
-    function showDone(celebrate, listOnly) {
+    function showDone(celebrate, listOnly, earned) {
       var complete = isComplete();
       doneEl.innerHTML = "";
       doneEl.classList.remove("hidden");
       root.classList.toggle("is-finished", complete && !listOnly);
       var card = el("div", "wg__donecard");
       if (complete && !listOnly) {
-        card.appendChild(el("p", "wg__donetitle", celebrate ? "🎉 " + t("wg_done_title") : "✅ " + t("wg_done_again")));
+        card.appendChild(el("p", "wg__donetitle", celebrate ? t("wg_done_title") : t("wg_done_again")));
+        if (earned) card.appendChild(el("p", "wg__earned", t("wg_points_earned", { n: String(earned) })));
+        else if (celebrate && !(api.signedIn && api.signedIn()))
+          card.appendChild(el("p", "wg__sub", t("wg_points_signin")));
       } else {
-        card.appendChild(el("p", "wg__donetitle", "📖 " + t("wg_words")));
+        card.appendChild(el("p", "wg__donetitle", t("wg_words")));
       }
       var f = foundList();
       var list = el("ul", "wg__wordlist");
@@ -521,7 +546,7 @@
       card.appendChild(list);
       var bl = bonusList();
       if (bl.length) {
-        card.appendChild(el("p", "wg__bonushead", "✨ " + t("wg_bonus_words")));
+        card.appendChild(el("p", "wg__bonushead", t("wg_bonus_words")));
         var bul = el("ul", "wg__wordlist wg__wordlist--bonus");
         bl.forEach(function (w) {
           var li = el("li", "is-got");
