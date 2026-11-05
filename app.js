@@ -176,7 +176,7 @@
     if (bannerText) bannerText.textContent = I18n.t("home_free_banner_text");
     const bannerBtn = document.querySelector(".home-free-banner__btn");
     if (bannerBtn) bannerBtn.textContent = I18n.t("hero_cta_book_now");
-    const navPrice = document.querySelector(".nav-card__price");
+    const navPrice = document.querySelector('.nav-card[data-section="booking"] .nav-card__price');
     if (navPrice) navPrice.textContent = I18n.t("nav_booking_price");
     const bookingCallout = document.querySelector(".booking-price-callout");
     if (bookingCallout) bookingCallout.textContent = I18n.t("booking_price_callout");

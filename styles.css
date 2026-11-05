@@ -752,25 +752,25 @@ body.intro-running .site-title {
   color: var(--accent-strong);
 }
 
-.nav-card[data-section="booking"] {
+.nav-card--featured {
   background: linear-gradient(135deg, var(--accent-warm) 0%, var(--accent-warm-hover) 100%);
   border-color: var(--accent-warm-hover);
 }
 
-.nav-card[data-section="booking"] .nav-card__label,
-.nav-card[data-section="booking"] .nav-card__hint,
-.nav-card[data-section="booking"] .nav-card__price {
+.nav-card--featured .nav-card__label,
+.nav-card--featured .nav-card__hint,
+.nav-card--featured .nav-card__price {
   color: #d4e5f2;
 }
 
-.nav-card[data-section="booking"]:hover {
+.nav-card--featured:hover {
   background: linear-gradient(135deg, var(--accent-warm-hover) 0%, var(--accent-warm) 100%);
   border-color: var(--accent-warm-hover);
 }
 
-.nav-card[data-section="booking"]:hover .nav-card__label,
-.nav-card[data-section="booking"]:hover .nav-card__hint,
-.nav-card[data-section="booking"]:hover .nav-card__price {
+.nav-card--featured:hover .nav-card__label,
+.nav-card--featured:hover .nav-card__hint,
+.nav-card--featured:hover .nav-card__price {
   color: #d4e5f2;
 }
 
