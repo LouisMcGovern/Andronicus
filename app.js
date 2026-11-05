@@ -26,6 +26,8 @@
   const STREAK_CONFETTI_COLORS = ["#1d4ed8", "#059669", "#7c3aed", "#f59e0b", "#ef4444"];
 
   const LANDING_TOOL_ICONS = {
+    leaderboard:
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M17 5h2a2 2 0 0 1 0 4h-2"/><path d="M7 5H5a2 2 0 0 0 0 4h2"/></svg>',
     verbs:
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg>',
     flashcards:
@@ -3256,6 +3258,151 @@
     if (document.visibilityState === "visible" && activeUsername) void loadStudentPoints(true);
   });
 
+
+  /* ------------------------------------------------------------------
+   * Leaderboard: one list for all levels, ranked by total points.
+   * Data comes from the Supabase function student_leaderboard (logged-in students only).
+   * ------------------------------------------------------------------ */
+
+  let leaderboardCache = { at: 0, user: null, rows: null, error: "" };
+  const LEADERBOARD_MAX_AGE_MS = 30 * 1000;
+
+  async function fetchLeaderboard(force) {
+    const user = getActiveUser();
+    if (!user || !activeUsername) return { rows: null, error: "signin" };
+    if (
+      !force &&
+      leaderboardCache.user === activeUsername &&
+      leaderboardCache.rows &&
+      Date.now() - leaderboardCache.at < LEADERBOARD_MAX_AGE_MS
+    ) {
+      return leaderboardCache;
+    }
+    const sb = getSupabaseClient();
+    if (!sb) return { rows: null, error: "offline" };
+    // Push this student's latest points first so their own row is up to date.
+    if (userCloudSyncTimer) {
+      clearTimeout(userCloudSyncTimer);
+      userCloudSyncTimer = null;
+      userCloudSyncPendingSince = 0;
+      await flushActiveUserCloudSync();
+    }
+    const username = activeUsername;
+    try {
+      const { data, error } = await sb.rpc("student_leaderboard", {
+        p_username: username,
+        p_password: String(user.password || ""),
+      });
+      if (error) throw error;
+      leaderboardCache = { at: Date.now(), user: username, rows: data || [], error: "" };
+    } catch (err) {
+      if (!isMissingFunctionError(err)) console.error(err);
+      leaderboardCache = {
+        at: 0,
+        user: username,
+        rows: null,
+        error: isMissingFunctionError(err) ? "missing" : "load",
+      };
+    }
+    return leaderboardCache;
+  }
+
+  function mountLeaderboard(panel) {
+    panel.innerHTML = "";
+    const shell = document.createElement("div");
+    shell.className = "lb";
+    shell.innerHTML =
+      '<div class="lb-head">' +
+      '  <div><h3 class="lb-title"></h3><p class="lb-sub"></p></div>' +
+      '  <button type="button" class="flashcard-btn lb-refresh"></button>' +
+      "</div>" +
+      '<p class="lb-me hidden"></p>' +
+      '<p class="lb-msg hidden"></p>' +
+      '<ol class="lb-list"></ol>';
+    panel.appendChild(shell);
+    const el = {
+      title: shell.querySelector(".lb-title"),
+      sub: shell.querySelector(".lb-sub"),
+      refresh: shell.querySelector(".lb-refresh"),
+      me: shell.querySelector(".lb-me"),
+      msg: shell.querySelector(".lb-msg"),
+      list: shell.querySelector(".lb-list"),
+    };
+    let state = { rows: null, error: "", loading: false };
+
+    function medal(rank) {
+      return rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : "";
+    }
+
+    function render() {
+      el.title.textContent = I18n.t("lb_title");
+      el.sub.textContent = I18n.t("lb_sub");
+      el.refresh.textContent = I18n.t("lb_refresh");
+      el.refresh.disabled = state.loading;
+      el.list.innerHTML = "";
+      el.me.classList.add("hidden");
+      let msg = "";
+      if (!getActiveUser()) msg = I18n.t("lb_signin");
+      else if (state.loading && !state.rows) msg = I18n.t("admin_writing_loading");
+      else if (state.error === "missing") msg = I18n.t("lb_missing");
+      else if (state.error) msg = I18n.t("lb_error");
+      else if (state.rows && !state.rows.length) msg = I18n.t("lb_empty");
+      el.msg.textContent = msg;
+      el.msg.classList.toggle("hidden", !msg);
+      el.refresh.classList.toggle("hidden", !getActiveUser());
+      if (msg || !state.rows) return;
+
+      const total = state.rows.length;
+      state.rows.forEach(function (r) {
+        const li = document.createElement("li");
+        li.className = "lb-row" + (r.is_me ? " is-me" : "") + (r.rank <= 3 ? " is-top" : "");
+        const rank = document.createElement("span");
+        rank.className = "lb-rank";
+        rank.textContent = medal(r.rank) || String(r.rank);
+        rank.setAttribute("aria-label", I18n.t("lb_rank_aria", { n: String(r.rank) }));
+        const name = document.createElement("span");
+        name.className = "lb-name";
+        name.textContent = r.display_name + (r.is_me ? " " + I18n.t("lb_you") : "");
+        const lvl = document.createElement("span");
+        lvl.className = "lb-level" + (r.level ? " lb-level--" + r.level : "");
+        lvl.textContent = r.level ? I18n.t("level_" + r.level) : "—";
+        const pts = document.createElement("span");
+        pts.className = "lb-pts";
+        pts.textContent = formatPoints(r.points);
+        li.appendChild(rank);
+        li.appendChild(name);
+        li.appendChild(lvl);
+        li.appendChild(pts);
+        el.list.appendChild(li);
+        if (r.is_me) {
+          const ordinal = I18n.getLang() === "fr" ? (r.rank === 1 ? "1er" : r.rank + "e") : "#" + r.rank;
+          el.me.textContent = I18n.t("lb_me", { rank: ordinal, total: String(total), pts: formatPoints(r.points) });
+          el.me.classList.remove("hidden");
+        }
+      });
+    }
+
+    async function load(force) {
+      if (!getActiveUser()) {
+        state = { rows: null, error: "", loading: false };
+        render();
+        return;
+      }
+      state.loading = true;
+      render();
+      const res = await fetchLeaderboard(force);
+      state = { rows: res.rows, error: res.error || "", loading: false };
+      render();
+    }
+
+    el.refresh.addEventListener("click", function () {
+      void load(true);
+    });
+
+    render();
+    return { render: render, load: load };
+  }
+
   /* ---------- Admin: points ---------- */
 
   async function fetchAdminPoints() {
@@ -5593,6 +5740,7 @@
       homework: "learning_tab_homework",
       progress: "learning_tab_progress",
       verbs: "learning_tab_verbs",
+      leaderboard: "lb_title",
     }[tool];
     return key ? I18n.t(key) : tool;
   }
@@ -7889,6 +8037,8 @@
       const homeworkPanel = root.querySelector('[data-tool-panel="homework"]');
       const progressPanel = root.querySelector('[data-tool-panel="progress"]');
       const verbsPanel = root.querySelector('[data-tool-panel="verbs"]');
+      const leaderboardPanel = root.querySelector('[data-tool-panel="leaderboard"]');
+      let leaderboardView = null;
 
       function activateTab(name) {
         workspaceTabs.forEach(function (b) {
@@ -7901,6 +8051,7 @@
         });
         if (name === "progress") renderProgressPanel();
         if (name === "homework") renderHomeworkPanel();
+        if (name === "leaderboard" && leaderboardView) void leaderboardView.load(false);
         refreshStreakHeader();
         updateContentBreadcrumb();
       }
@@ -8486,6 +8637,18 @@
           }
         });
         learningToolsLangRefreshers.push(verbsView.render);
+      }
+
+      if (leaderboardPanel) {
+        leaderboardView = mountLeaderboard(leaderboardPanel);
+        learningToolsLangRefreshers.push(leaderboardView.render);
+        vocabPathRenderers.push(function () {
+          if (!leaderboardPanel.classList.contains("hidden") && !hubWorkspace.classList.contains("hidden")) {
+            void leaderboardView.load(false);
+          } else {
+            leaderboardView.render();
+          }
+        });
       }
 
       function parseGapLine(line) {
