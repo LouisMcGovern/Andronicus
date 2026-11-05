@@ -26,6 +26,8 @@
   const STREAK_CONFETTI_COLORS = ["#1d4ed8", "#059669", "#7c3aed", "#f59e0b", "#ef4444"];
 
   const LANDING_TOOL_ICONS = {
+    verbs:
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg>',
     flashcards:
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>',
     vocab:
@@ -2241,6 +2243,191 @@
   learningData.intermediate.vocabQuiz = buildFiftyVocabQuestions(intermediateQuizSeeds);
   learningData.advanced.vocabQuiz = buildFiftyVocabQuestions(advancedQuizSeeds);
 
+  /* ------------------------------------------------------------------
+   * Irregular verbs: searchable table (English or French) by tense,
+   * plus an "Irregular verbs" flashcard deck in every level.
+   * ------------------------------------------------------------------ */
+
+  const IRREGULAR_DECK_NAME = "Irregular verbs";
+  const VERB_TENSES = ["all", "past", "present_perfect", "past_perfect"];
+
+  function irregularVerbList() {
+    const raw = (typeof window !== "undefined" && window.ANDRONICUS_IRREGULAR_VERBS) || [];
+    const seen = {};
+    return raw
+      .filter(function (r) {
+        if (!Array.isArray(r) || r.length < 4 || seen[r[0]]) return false;
+        seen[r[0]] = true;
+        return true;
+      })
+      .map(function (r) {
+        return { base: r[0], past: r[1], pp: r[2], fr: r[3] };
+      })
+      .sort(function (a, b) {
+        return a.base.localeCompare(b.base);
+      });
+  }
+
+  function firstForm(form) {
+    return String(form || "").split("/")[0];
+  }
+
+  function verbExample(v, tense) {
+    if (tense === "past") {
+      if (v.base === "be") return "I was · you were";
+      return "I " + firstForm(v.past);
+    }
+    if (tense === "present_perfect") return "I have " + firstForm(v.pp) + " · she has " + firstForm(v.pp);
+    if (tense === "past_perfect") return "I had " + firstForm(v.pp);
+    return "";
+  }
+
+  function verbSearchText(v) {
+    return vocabNormalize([v.base, v.past.replace(/\//g, " "), v.pp.replace(/\//g, " "), v.fr].join(" "));
+  }
+
+  (function addIrregularVerbFlashcards() {
+    const verbs = irregularVerbList();
+    if (!verbs.length) return;
+    const deck = verbs.map(function (v) {
+      return { front: v.base + " – " + v.past + " – " + v.pp, back: v.fr };
+    });
+    ["beginner", "intermediate", "advanced"].forEach(function (lvl) {
+      if (learningData[lvl] && learningData[lvl].flashcards) {
+        learningData[lvl].flashcards[IRREGULAR_DECK_NAME] = deck.slice();
+      }
+    });
+  })();
+
+  function mountIrregularVerbs(level, panel, openFlashcardDeck) {
+    const verbs = irregularVerbList();
+    const searchIndex = verbs.map(verbSearchText);
+    let tense = "all";
+    let query = "";
+
+    panel.innerHTML = "";
+    const shell = document.createElement("div");
+    shell.className = "iv";
+    shell.innerHTML =
+      '<div class="iv-head">' +
+      '  <div><h3 class="iv-title"></h3><p class="iv-count"></p></div>' +
+      '  <button type="button" class="flashcard-btn iv-cards"></button>' +
+      "</div>" +
+      '<div class="iv-controls">' +
+      '  <div class="iv-tenses" role="group"></div>' +
+      '  <label class="iv-search"><span class="iv-search__lab"></span><input type="search" class="iv-search__input" autocomplete="off" spellcheck="false" /></label>' +
+      "</div>" +
+      '<p class="iv-hint"></p>' +
+      '<div class="iv-table-wrap"><table class="iv-table"><thead><tr></tr></thead><tbody></tbody></table></div>' +
+      '<p class="iv-none hidden"></p>';
+    panel.appendChild(shell);
+
+    const el = {
+      title: shell.querySelector(".iv-title"),
+      count: shell.querySelector(".iv-count"),
+      cards: shell.querySelector(".iv-cards"),
+      tenses: shell.querySelector(".iv-tenses"),
+      searchLab: shell.querySelector(".iv-search__lab"),
+      search: shell.querySelector(".iv-search__input"),
+      hint: shell.querySelector(".iv-hint"),
+      headRow: shell.querySelector(".iv-table thead tr"),
+      body: shell.querySelector(".iv-table tbody"),
+      none: shell.querySelector(".iv-none"),
+    };
+
+    function columns() {
+      if (tense === "all") {
+        return [
+          ["verbs_col_base", function (v) { return v.base; }, "iv-base"],
+          ["verbs_col_past", function (v) { return v.past; }, ""],
+          ["verbs_col_pp", function (v) { return v.pp; }, ""],
+          ["verbs_col_fr", function (v) { return v.fr; }, "iv-fr"],
+        ];
+      }
+      const formKey = tense === "past" ? "verbs_col_past" : "verbs_col_pp";
+      return [
+        ["verbs_col_base", function (v) { return v.base; }, "iv-base"],
+        [formKey, function (v) { return tense === "past" ? v.past : v.pp; }, ""],
+        ["verbs_col_example", function (v) { return verbExample(v, tense); }, "iv-example"],
+        ["verbs_col_fr", function (v) { return v.fr; }, "iv-fr"],
+      ];
+    }
+
+    function renderTable() {
+      const cols = columns();
+      el.headRow.innerHTML = "";
+      cols.forEach(function (c) {
+        const th = document.createElement("th");
+        th.scope = "col";
+        th.textContent = I18n.t(c[0]);
+        el.headRow.appendChild(th);
+      });
+      const q = vocabNormalize(query);
+      const frag = document.createDocumentFragment();
+      let shown = 0;
+      verbs.forEach(function (v, i) {
+        if (q && searchIndex[i].indexOf(q) < 0) return;
+        shown += 1;
+        const tr = document.createElement("tr");
+        cols.forEach(function (c) {
+          const td = document.createElement("td");
+          if (c[2]) td.className = c[2];
+          td.textContent = c[1](v);
+          tr.appendChild(td);
+        });
+        frag.appendChild(tr);
+      });
+      el.body.innerHTML = "";
+      el.body.appendChild(frag);
+      el.count.textContent = q
+        ? I18n.t("verbs_count_filtered", { n: String(shown), t: String(verbs.length) })
+        : I18n.t("verbs_count", { n: String(verbs.length) });
+      el.none.classList.toggle("hidden", shown > 0);
+      el.none.textContent = shown ? "" : I18n.t("verbs_none", { q: query.trim() });
+      el.headRow.parentNode.parentNode.classList.toggle("hidden", shown === 0);
+    }
+
+    function renderChrome() {
+      el.title.textContent = I18n.t("learning_tab_verbs");
+      el.cards.textContent = I18n.t("verbs_flashcards_btn");
+      el.searchLab.textContent = I18n.t("verbs_search_label");
+      el.search.placeholder = I18n.t("verbs_search_ph");
+      el.hint.textContent = I18n.t("verbs_hint");
+      el.tenses.setAttribute("aria-label", I18n.t("verbs_tense_label"));
+      el.tenses.innerHTML = "";
+      VERB_TENSES.forEach(function (t) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "tool-menu__btn iv-tense" + (t === tense ? " is-active" : "");
+        b.setAttribute("aria-pressed", t === tense ? "true" : "false");
+        b.textContent = I18n.t("verbs_tense_" + t);
+        b.addEventListener("click", function () {
+          tense = t;
+          renderChrome();
+          renderTable();
+        });
+        el.tenses.appendChild(b);
+      });
+    }
+
+    el.search.addEventListener("input", function () {
+      query = el.search.value;
+      renderTable();
+    });
+    el.cards.addEventListener("click", function () {
+      if (openFlashcardDeck) openFlashcardDeck(IRREGULAR_DECK_NAME);
+    });
+
+    renderChrome();
+    renderTable();
+    return {
+      render: function () {
+        renderChrome();
+        renderTable();
+      },
+    };
+  }
+
   function loadUsers() {
     try {
       const raw = localStorage.getItem(USERS_KEY);
@@ -3451,7 +3638,7 @@
     const words = [];
     const byKey = {};
     Object.keys(decks).forEach(function (deckName, deckIndex) {
-      if (deckName === "Master 1000") return;
+      if (deckName === "Master 1000" || deckName === IRREGULAR_DECK_NAME) return;
       (decks[deckName] || []).forEach(function (card, idx) {
         if (!card || !card.front || !card.back) return;
         const en = String(card.front).trim();
@@ -5405,6 +5592,7 @@
       grammar: "learning_tab_grammar",
       homework: "learning_tab_homework",
       progress: "learning_tab_progress",
+      verbs: "learning_tab_verbs",
     }[tool];
     return key ? I18n.t(key) : tool;
   }
@@ -7700,6 +7888,7 @@
       const grammarPanel = root.querySelector('[data-tool-panel="grammar"]');
       const homeworkPanel = root.querySelector('[data-tool-panel="homework"]');
       const progressPanel = root.querySelector('[data-tool-panel="progress"]');
+      const verbsPanel = root.querySelector('[data-tool-panel="verbs"]');
 
       function activateTab(name) {
         workspaceTabs.forEach(function (b) {
@@ -8285,6 +8474,19 @@
         refreshLandingCardProgress(root, level, data);
       });
       vocabPathRenderers.push(vocabPath.render);
+      learningToolsLangRefreshers.push(vocabPath.render);
+
+      if (verbsPanel) {
+        const verbsView = mountIrregularVerbs(level, verbsPanel, function (deckName) {
+          enterSection("flashcards");
+          const sel = root.querySelector('[data-tool-panel="flashcards"] select.flashcard-topic');
+          if (sel && sel.value !== deckName) {
+            sel.value = deckName;
+            sel.dispatchEvent(new Event("change"));
+          }
+        });
+        learningToolsLangRefreshers.push(verbsView.render);
+      }
 
       function parseGapLine(line) {
         if (!line || line.indexOf("___") < 0) return null;
@@ -9019,7 +9221,9 @@
       }
 
       function flashcardDeckOptionLabel(name) {
-        return name === "Master 1000" ? I18n.t("flashcard_full_deck_name") : name;
+        if (name === "Master 1000") return I18n.t("flashcard_full_deck_name");
+        if (name === IRREGULAR_DECK_NAME) return I18n.t("learning_tab_verbs");
+        return name;
       }
 
       let activeTopic = defaultFlashcardTopic(topicNames);
@@ -9513,22 +9717,9 @@
       });
 
       learningToolsLangRefreshers.push(function () {
-        quizTitle.textContent = I18n.t("learning_vocab_quiz_title");
-        quizNext.textContent = I18n.t("learning_vocab_next");
-        Array.from(quizModeWrap.querySelectorAll("[data-mode]")).forEach(function (mb) {
-          const mode = mb.getAttribute("data-mode");
-          if (mode) mb.textContent = I18n.t("learning_vocab_mode_" + mode);
+        root.querySelectorAll(".lh-chip--streak .lh-chip__lab").forEach(function (lab) {
+          lab.textContent = I18n.t("learning_hub_streak");
         });
-        const allTopicPill = topicRow.querySelector('[data-lh-all-topic="1"]');
-        if (allTopicPill) allTopicPill.textContent = I18n.t("learning_hub_topic_all");
-        updateFilterToggleUI();
-        variantRow.querySelectorAll("[data-variant]").forEach(function (vb) {
-          const vk = vb.getAttribute("data-variant");
-          if (vk) vb.textContent = I18n.t("learning_vocab_variant_" + vk);
-        });
-        saveWordBtn.textContent = I18n.t("learning_vocab_save_word");
-        const stLab = stBox.querySelector(".lh-chip__lab");
-        if (stLab) stLab.textContent = I18n.t("learning_hub_streak");
         const streakHintEl = root.querySelector(".lh-streak-hint");
         if (streakHintEl) streakHintEl.innerHTML = streakHintHtml();
         root.querySelectorAll("[data-learning-chrome]").forEach(function (el) {
@@ -9567,36 +9758,11 @@
         if (!completeOverlay.classList.contains("hidden") && lastCompleteStats) {
           updateCompleteOverlay(lastCompleteStats);
         }
-        if (!summary.classList.contains("hidden")) {
-          updateResultsCard(askedCount);
-          renderMissedQuestions();
-        }
         refreshExercisesPanel();
         renderHomeworkPanel();
         renderProgressPanel();
         refreshLandingCardProgress(root, level, data);
         refreshStreakHeader();
-        if (currentQuestion && askedCount > 0 && summary.classList.contains("hidden")) {
-          updateQuizCounter();
-          quizQuestion.textContent = currentQuestion.question;
-          if (!quizAnswered) {
-            quizFeedback.textContent = I18n.t("learning_vocab_choose_prompt", {
-              score: String(quizScore),
-              round: String(askedCount - 1),
-            });
-          } else if (lastQuizCorrect === true) {
-            quizFeedback.textContent = I18n.t("learning_vocab_correct_feedback", {
-              score: String(quizScore),
-              round: String(askedCount),
-            });
-          } else if (lastQuizCorrect === false) {
-            quizFeedback.textContent = I18n.t("learning_vocab_wrong_feedback", {
-              answer: currentQuestion.answer,
-              score: String(quizScore),
-              round: String(askedCount),
-            });
-          }
-        }
         renderCard();
       });
   }

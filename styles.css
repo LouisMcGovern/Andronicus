@@ -7289,3 +7289,149 @@ body.wr-open .pts {
   border: 1px solid var(--border);
   box-shadow: var(--shadow-soft);
 }
+
+/* ==========================================================================
+   Irregular verbs
+   ========================================================================== */
+
+.iv-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.iv-title {
+  margin: 0;
+  font-size: 1.15rem;
+  color: #0d1b2a;
+}
+
+.iv-count {
+  margin: 0.2rem 0 0;
+  font-size: 0.88rem;
+  color: #4a6580;
+}
+
+.iv-cards {
+  padding: 0.5rem 0.9rem;
+  font-weight: 600;
+  background: #ffffff;
+}
+
+.iv-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem 1rem;
+  margin: 1rem 0 0.5rem;
+}
+
+.iv-tenses {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.iv-search {
+  flex: 1 1 15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #4a6580;
+}
+
+.iv-search__input {
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid #9dbdd4;
+  border-radius: 0.3rem;
+  background: #ffffff;
+  color: #0d1b2a;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.iv-search__input:focus {
+  outline: 2px solid #0f3d7a;
+  outline-offset: 1px;
+}
+
+.iv-hint {
+  margin: 0 0 0.6rem;
+  font-size: 0.8rem;
+  color: #4a6580;
+}
+
+.iv-table-wrap {
+  max-height: 70vh;
+  overflow: auto;
+  border: 1px solid #c5d3df;
+  border-radius: 0.4rem;
+  background: #ffffff;
+}
+
+.iv-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.iv-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 0.55rem 0.7rem;
+  background: #e3ecf4;
+  color: #0d1b2a;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.iv-table td {
+  padding: 0.5rem 0.7rem;
+  border-top: 1px solid #e3ecf4;
+  color: #0d1b2a;
+  vertical-align: top;
+}
+
+.iv-table tbody tr:nth-child(even) td {
+  background: #f7fafc;
+}
+
+.iv-table td.iv-base {
+  font-weight: 700;
+}
+
+.iv-table td.iv-fr,
+.iv-table td.iv-example {
+  color: #4a6580;
+}
+
+.iv-table td.iv-example {
+  font-style: italic;
+}
+
+.iv-none {
+  margin: 0.75rem 0 0;
+  color: #4a6580;
+}
+
+@media (max-width: 540px) {
+  .iv-table {
+    font-size: 0.88rem;
+  }
+  .iv-table th,
+  .iv-table td {
+    padding: 0.45rem 0.5rem;
+  }
+  .iv-cards {
+    width: 100%;
+  }
+}
