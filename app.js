@@ -333,9 +333,22 @@
   let bookingActiveDayIndex = null;
   /**
    * @type {{ dayIndex: number; hour: number }[]}
-   * dayIndex: Mon=0 … Sun=6; hour is wall-clock 9–20 in France (Europe/Paris local time).
+   * dayIndex: Mon=0 … Sun=6; hour is the start hour (24h) in France (Europe/Paris local time).
    */
   let bookingSlotSelections = [];
+
+  /**
+   * Weekly one-to-one slots, in France (Paris) time. Key = start hour (24h); each class lasts one hour.
+   * "open" = can be requested, "full" = shown as sold out. Leave a day or hour out to hide it.
+   * To open or close a slot later, just change it here.
+   */
+  const BOOKING_SCHEDULE = {
+    0: { 18: "full", 19: "open", 20: "open", 21: "open" }, // Monday
+    1: { 17: "open", 18: "open", 19: "open", 21: "open" }, // Tuesday
+    2: { 17: "open", 18: "open", 19: "open", 21: "open" }, // Wednesday
+    3: { 17: "full", 18: "full", 19: "full", 20: "full" }, // Thursday
+    4: { 17: "full", 18: "full", 19: "full", 20: "full" }, // Friday
+  };
 
   const INTRO_MS = 1200;
   /** Large decks use a random sample so one session can finish in a class period. */
@@ -6679,8 +6692,31 @@
     btn.addEventListener("click", showLevelPicker);
   });
 
+  function bookingHourRange(hour) {
+    return I18n.t("booking_hour_range", { start: String(hour), end: String(hour + 1) });
+  }
+
   function bookingFormatSlot(dayIndex, hour) {
-    return bookingDayLabels[dayIndex] + " " + hour + ":00";
+    return bookingDayLabels[dayIndex] + " " + bookingHourRange(hour);
+  }
+
+  function bookingDayHours(dayIndex) {
+    const day = BOOKING_SCHEDULE[dayIndex] || {};
+    return Object.keys(day)
+      .map(Number)
+      .sort(function (a, b) {
+        return a - b;
+      });
+  }
+
+  function bookingSlotOpen(dayIndex, hour) {
+    return !!(BOOKING_SCHEDULE[dayIndex] && BOOKING_SCHEDULE[dayIndex][hour] === "open");
+  }
+
+  function bookingDayHasOpenSlot(dayIndex) {
+    return bookingDayHours(dayIndex).some(function (h) {
+      return bookingSlotOpen(dayIndex, h);
+    });
   }
 
   function bookingTimesUnknownSelected() {
@@ -6747,11 +6783,22 @@
     bookingDayGrid.innerHTML = "";
     if (bookingTimesUnknownSelected()) return;
     bookingDayLabels.forEach(function (label, i) {
+      if (!bookingDayHours(i).length) return;
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "booking-day-btn";
-      btn.textContent = label;
       btn.dataset.dayIndex = String(i);
+      const name = document.createElement("span");
+      name.className = "booking-day-btn__name";
+      name.textContent = label;
+      btn.appendChild(name);
+      if (!bookingDayHasOpenSlot(i)) {
+        btn.classList.add("is-full");
+        const tag = document.createElement("span");
+        tag.className = "booking-day-btn__tag";
+        tag.textContent = I18n.t("booking_sold_out");
+        btn.appendChild(tag);
+      }
       if (bookingActiveDayIndex === i) btn.classList.add("is-active");
       btn.addEventListener("click", function () {
         bookingActiveDayIndex = i;
@@ -6769,11 +6816,28 @@
     bookingHoursGrid.innerHTML = "";
     if (bookingTimesUnknownSelected()) return;
     if (bookingActiveDayIndex === null) return;
-    for (let h = 9; h <= 20; h++) {
+    bookingDayHours(bookingActiveDayIndex).forEach(function (h) {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "booking-hour-btn";
-      btn.textContent = I18n.t("booking_hour_format", { hour: String(h) });
+      const range = document.createElement("span");
+      range.className = "booking-hour-btn__range";
+      range.textContent = bookingHourRange(h);
+      btn.appendChild(range);
+      if (!bookingSlotOpen(bookingActiveDayIndex, h)) {
+        btn.classList.add("is-full");
+        btn.disabled = true;
+        const tag = document.createElement("span");
+        tag.className = "booking-hour-btn__tag";
+        tag.textContent = I18n.t("booking_sold_out");
+        btn.appendChild(tag);
+        btn.setAttribute(
+          "aria-label",
+          bookingHourRange(h) + " – " + I18n.t("booking_sold_out")
+        );
+        bookingHoursGrid.appendChild(btn);
+        return;
+      }
       if (bookingIsSelected(bookingActiveDayIndex, h)) btn.classList.add("is-selected");
       (function (hour) {
         btn.addEventListener("click", function () {
@@ -6790,6 +6854,12 @@
         });
       })(h);
       bookingHoursGrid.appendChild(btn);
+    });
+    if (!bookingDayHasOpenSlot(bookingActiveDayIndex)) {
+      const note = document.createElement("p");
+      note.className = "booking-hours-full-note";
+      note.textContent = I18n.t("booking_day_full_note");
+      bookingHoursGrid.appendChild(note);
     }
   }
 
@@ -6835,9 +6905,15 @@
       bookingSlotSelections = [];
       bookingActiveDayIndex = null;
     }
-    if (bookingActiveDayIndex !== null && bookingActiveDayIndex >= bookingDayLabels.length) {
+    if (
+      bookingActiveDayIndex !== null &&
+      (bookingActiveDayIndex >= bookingDayLabels.length || !bookingDayHours(bookingActiveDayIndex).length)
+    ) {
       bookingActiveDayIndex = null;
     }
+    bookingSlotSelections = bookingSlotSelections.filter(function (sel) {
+      return bookingSlotOpen(sel.dayIndex, sel.hour);
+    });
     if (bookingCalendar) {
       bookingCalendar.classList.toggle("hidden", bookingTimesUnknownSelected());
     }

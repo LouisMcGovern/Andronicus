@@ -11,7 +11,7 @@
     en: {
       meta_title: "Andronicus · English Grinds",
       meta_description:
-        "Online English grinds for French-speaking students. Small groups, weekly structure, progress checks. Louis McGovern, Trinity College Dublin.",
+        "One-to-one online English grinds for French-speaking students. Weekly structure, progress checks. Louis McGovern, Trinity College Dublin.",
       lang_aria: "Language",
       lang_en: "English",
       lang_fr: "French",
@@ -43,9 +43,9 @@
       skip_to_content: "Skip to content",
       hero_cta_book: "Book a free class",
       why_section_title: "Why Choose Andronicus?",
-      why_1_title: "Small Groups",
+      why_1_title: "One-to-One Classes",
       why_1_body:
-        "Maximum four students per class. That's small enough that you can't disappear, that every answer gets a response, and that the lesson can shift if a topic isn't landing. Big classes save money for the teacher; small classes work for the student.",
+        "Every class is one-to-one. There's nowhere to hide and no waiting for a turn to speak: the student talks for the whole hour, every answer gets a response, and the lesson moves at their pace – slowing down when a topic isn't landing, moving on when it is.",
       why_2_title: "You Can See Progress",
       why_2_body:
         "Every student has a tracking page with real graphs, test results, and notes on class performance. You're not guessing whether you're improving — you can look. Parents see the same view, so there are no surprises at the end of the term.",
@@ -59,7 +59,7 @@
         "Mostly French-speaking students from collège through lycée and into early university — but anyone whose first language is French and who wants to improve their English is welcome. There are beginner, intermediate, and advanced tracks, and we'll place you sensibly once we talk.",
       faq_q2: "Where do lessons happen?",
       faq_a2:
-        "Lessons are online in small groups. After we agree a slot, I send the join link and what you need. I will be on Zoom Plus so I can use premium features: that helps keep things reliable and simple for students every time they join.",
+        "Lessons are online and one-to-one. After we agree a slot, I send the join link and what you need. I will be on Zoom Plus so I can use premium features: that helps keep things reliable and simple for students every time they join.",
       faq_q3: "How does booking work?",
       faq_a3:
         "You send times that suit you. That is only a request until I reply by email or message with a definite slot.",
@@ -96,12 +96,12 @@
         "<div class=\"step-card__stack\"><p>Once you're happy to go ahead, we'll <strong>find one hour during the week that works for both of us</strong>. Classes run on the same day and time every week — no rescheduling confusion, just a fixed slot you can count on.</p></div>",
       process_step_3_title: "Show up and pay monthly",
       process_step_3_html:
-        "<div class=\"step-card__stack\"><p>Join your class on Zoom every week — <strong>one hour, small group of up to four students</strong>. At the start of each month I'll let you know how many classes you attended the previous month, and <strong>you pay for exactly those</strong>. No advance payments, no contracts. <strong>€25 per class.</strong></p></div>",
+        "<div class=\"step-card__stack\"><p>Join your class on Zoom every week — <strong>one hour, just you and me</strong>. At the start of each month I'll let you know how many classes you attended the previous month, and <strong>you pay for exactly those</strong>. No advance payments, no contracts. <strong>€25 per class.</strong></p></div>",
       process_btn_booking: "Open booking form",
       process_actions_hint: "Same form as in the main menu.",
       process_extra_heading: "Fees, Homework, and How It Works",
       process_p1_html:
-        "Each class is <strong>one hour</strong>. It costs <strong>€25 per student per session</strong>. There are <strong>at most four students</strong>, so everyone can speak and get feedback.",
+        "Each class is <strong>one hour</strong>. It costs <strong>€25 per session</strong>. Every class is <strong>one-to-one</strong>, so the student speaks for the whole hour and gets feedback on everything.",
       process_p2_html:
         "I track how each student moves forward with simple <strong>progress graphs</strong>, plus short tests and how you join in during class.",
       process_p3_html:
@@ -109,7 +109,7 @@
       process_zoom_plus_html:
         "I will be using <strong>Zoom Plus</strong> so I can access premium features: that supports a more reliable connection and a simpler join flow for students each week.",
       process_p4_html:
-        "Classes run on <strong>Zoom</strong> in small groups. If anything is unclear after our chat, you can always message me before you use the booking form.",
+        "Classes run one-to-one on <strong>Zoom</strong>. If anything is unclear after our chat, you can always message me before you use the booking form.",
       process_p5_html:
         "<strong>Contact:</strong> <a href=\"tel:+353833198980\">+353 (83) 319 8980</a> · <a href=\"mailto:louis.f.mcgovern@gmail.com\">louis.f.mcgovern@gmail.com</a>",
       content_intro:
@@ -170,7 +170,7 @@
         "<strong>Extension:</strong> long-form reading (non-fiction or literary extracts) with vocabulary journals.",
       booking_title: "Booking",
       booking_intro_html:
-        "Classes start in <strong>September 2026</strong> and run <strong>each week</strong> through the school year, with <strong>homework</strong> when it helps. There are breaks around holidays (for example <strong>Christmas</strong>) and I tell everyone the dates in advance. Pick every hour you can honestly make each week: it makes grouping easier. The usual slot should work most weeks, but real life happens. Pay at the <strong>start of the month</strong>. Miss a class with fair warning (ideally when you pay, or at least <strong>three days before</strong>) and you are not charged for that hour.",
+        "Classes start in <strong>September 2026</strong> and run <strong>each week</strong> through the school year, with <strong>homework</strong> when it helps. There are breaks around holidays (for example <strong>Christmas</strong>) and I tell everyone the dates in advance. Pick every available hour you can honestly make each week: it makes it easier to find you a fixed slot. The usual slot should work most weeks, but real life happens. Pay at the <strong>start of the month</strong>. Miss a class with fair warning (ideally when you pay, or at least <strong>three days before</strong>) and you are not charged for that hour.",
       booking_parent_name_label: "Parent name",
       booking_parent_email_label: "Parent email address",
       booking_parent_email_ph: "parent@example.com",
@@ -185,12 +185,12 @@
       booking_request_note_html:
         "<strong>This form is only a request.</strong> Your place is fixed once I have answered you by email or message.",
       booking_price_callout:
-        "Each session is €25 per student. Maximum four students per class. Your first session is free.",
+        "Each one-to-one session is €25. Your first session is free.",
       booking_level_empty: "Select level",
       booking_level_unknown: "I do not know yet",
       booking_slots_legend: "Preferred times (France · Paris time)",
       booking_slots_hint:
-        "Hours are in France (Paris) local time. Pick a weekday, then tap the hours that work. Add other days if you need. I confirm by email.",
+        "Hours are in France (Paris) local time. Pick a weekday, then tap the available hours that work. Greyed-out hours are already taken. Add other days if you need. I confirm by email.",
       booking_times_unknown_label: "I do not know yet",
       booking_pick_day: "1 · Choose a day",
       booking_times_for: "Times for {day}",
@@ -646,6 +646,9 @@
       booking_parent_fallback: "Parent",
       ui_remove_symbol: "×",
       booking_hour_format: "{hour}:00",
+      booking_hour_range: "{start}:00–{end}:00",
+      booking_sold_out: "Sold out",
+      booking_day_full_note: "All slots on this day are taken. Please choose another day.",
       account_metric_flash_accuracy: "Flashcard accuracy: {correct}/{attempts} ({pct})",
       account_metric_quiz_sessions: "Quiz sessions completed: {n}",
       account_metric_exercises_done: "Completed exercises: {n}",
@@ -654,7 +657,7 @@
     fr: {
       meta_title: "Andronicus · Cours d’anglais",
       meta_description:
-        "Cours d’anglais en ligne pour élèves francophones. Petits groupes, cadre clair, suivi des progrès. Louis McGovern, Trinity College Dublin.",
+        "Cours particuliers d’anglais en ligne pour élèves francophones. Cadre clair, suivi des progrès. Louis McGovern, Trinity College Dublin.",
       lang_aria: "Langue",
       lang_en: "Anglais",
       lang_fr: "Français",
@@ -686,9 +689,9 @@
       skip_to_content: "Aller au contenu",
       hero_cta_book: "Réserver un cours gratuit",
       why_section_title: "Pourquoi choisir Andronicus ?",
-      why_1_title: "Petits groupes",
+      why_1_title: "Cours particuliers",
       why_1_body:
-        "Quatre étudiants maximum par classe. C'est assez petit pour qu'on ne puisse pas s'effacer, pour que chaque réponse reçoive une réaction, et pour que le cours puisse s'adapter si un sujet ne passe pas. Les grandes classes font gagner du temps à l'enseignant ; les petites classes font progresser l'étudiant.",
+        "Chaque cours se fait en tête-à-tête. Impossible de se cacher, et pas besoin d'attendre son tour pour parler : l'élève s'exprime pendant toute l'heure, chaque réponse reçoit un retour, et le cours avance à son rythme – on ralentit quand un sujet ne passe pas, on avance quand tout va bien.",
       why_2_title: "Des progrès visibles",
       why_2_body:
         "Chaque étudiant dispose d'une page de suivi avec de vrais graphiques, des résultats de tests, et des notes sur la participation en classe. Pas besoin de deviner si vous progressez — il suffit de regarder. Les parents voient la même page, donc aucune surprise à la fin du trimestre.",
@@ -702,7 +705,7 @@
         "Principalement des élèves francophones, du collège au lycée et jusqu'au début des études supérieures — mais toute personne dont la langue maternelle est le français et qui souhaite progresser en anglais est la bienvenue. Il existe des parcours débutant, intermédiaire et avancé, et nous vous placerons correctement après en avoir discuté.",
       faq_q2: "Où ont lieu les cours ?",
       faq_a2:
-        "Les cours sont en ligne, en petits groupes. Une fois le créneau convenu, j’envoie le lien de connexion et le nécessaire. Je passerai à Zoom Plus pour accéder aux fonctions premium : cela renforce la fiabilité et simplifie la connexion pour les élèves à chaque cours.",
+        "Les cours sont en ligne et particuliers. Une fois le créneau convenu, j’envoie le lien de connexion et le nécessaire. Je passerai à Zoom Plus pour accéder aux fonctions premium : cela renforce la fiabilité et simplifie la connexion pour les élèves à chaque cours.",
       faq_q3: "Comment fonctionne l’inscription ?",
       faq_a3:
         "Vous proposez des horaires possibles. Tant que je ne vous ai pas répondu, ce n’est qu’une demande, pas une place garantie.",
@@ -739,12 +742,12 @@
         "<div class=\"step-card__stack\"><p>Une fois que vous souhaitez vous lancer, nous <strong>cherchons ensemble une heure dans la semaine qui convient à tous les deux</strong>. Les cours ont lieu le même jour et à la même heure chaque semaine — pas de confusion, juste un créneau fixe sur lequel vous pouvez compter.</p></div>",
       process_step_3_title: "Venez en cours et payez chaque mois",
       process_step_3_html:
-        "<div class=\"step-card__stack\"><p>Rejoignez votre cours sur Zoom chaque semaine — <strong>une heure, petit groupe de quatre élèves maximum</strong>. En début de mois, je vous indique le nombre de cours auxquels vous avez assisté le mois précédent, et <strong>vous payez uniquement ceux-là</strong>. Pas de paiement à l'avance, pas de contrat. <strong>25 € par cours.</strong></p></div>",
+        "<div class=\"step-card__stack\"><p>Rejoignez votre cours sur Zoom chaque semaine — <strong>une heure, en tête-à-tête</strong>. En début de mois, je vous indique le nombre de cours auxquels vous avez assisté le mois précédent, et <strong>vous payez uniquement ceux-là</strong>. Pas de paiement à l'avance, pas de contrat. <strong>25 € par cours.</strong></p></div>",
       process_btn_booking: "Ouvrir le formulaire d’inscription",
       process_actions_hint: "Même formulaire que dans le menu.",
       process_extra_heading: "Tarif, devoirs, et comment ça fonctionne",
       process_p1_html:
-        "Chaque séance dure <strong>une heure</strong>. C’est <strong>25 € par élève et par cours</strong>. Il y a <strong>au plus quatre élèves</strong>, pour que chacun puisse prendre la parole et recevoir des retours.",
+        "Chaque séance dure <strong>une heure</strong>. C’est <strong>25 € par cours</strong>. Chaque cours est <strong>particulier</strong> : l’élève parle pendant toute l’heure et reçoit des retours sur tout.",
       process_p2_html:
         "Je suis la progression avec des <strong>graphiques simples</strong>, des petits contrôles, et la façon dont vous participez en cours.",
       process_p3_html:
@@ -752,7 +755,7 @@
       process_zoom_plus_html:
         "J’adopterai <strong>Zoom Plus</strong> pour accéder aux fonctions premium : une connexion plus fiable et une invitation plus simple pour les élèves chaque semaine.",
       process_p4_html:
-        "Les cours ont lieu sur <strong>Zoom</strong> en petits groupes. Si quelque chose n’est pas clair après notre échange, vous pouvez m’écrire avant de remplir le formulaire d’inscription.",
+        "Les cours particuliers ont lieu sur <strong>Zoom</strong>. Si quelque chose n’est pas clair après notre échange, vous pouvez m’écrire avant de remplir le formulaire d’inscription.",
       process_p5_html:
         "<strong>Contact :</strong> <a href=\"tel:+353833198980\">+353 (83) 319 8980</a> · <a href=\"mailto:louis.f.mcgovern@gmail.com\">louis.f.mcgovern@gmail.com</a>.",
       content_intro:
@@ -813,7 +816,7 @@
         "<strong>Approfondissement :</strong> lecture longue (non-fiction ou extraits littéraires) et carnets de vocabulaire.",
       booking_title: "Inscription",
       booking_intro_html:
-        "Les cours commencent en <strong>septembre 2026</strong>, <strong>une séance par semaine</strong> pendant l’année scolaire, avec des <strong>devoirs</strong> quand ça aide. Il y a des pauses aux vacances (par exemple à <strong>Noël</strong>) et je préviens tout le monde des dates. Cochez toutes les plages où vous êtes vraiment libres : ça simplifie les groupes. Le créneau habituel doit marcher la plupart du temps, mais la vie arrive. Paiement en <strong>début de mois</strong>. Si vous ne pouvez pas venir, prévenez (idéalement au paiement, ou au moins <strong>trois jours avant</strong>) et ce cours n’est pas facturé.",
+        "Les cours commencent en <strong>septembre 2026</strong>, <strong>une séance par semaine</strong> pendant l’année scolaire, avec des <strong>devoirs</strong> quand ça aide. Il y a des pauses aux vacances (par exemple à <strong>Noël</strong>) et je préviens tout le monde des dates. Cochez toutes les plages disponibles où vous êtes vraiment libres : cela aide à vous trouver un créneau fixe. Le créneau habituel doit marcher la plupart du temps, mais la vie arrive. Paiement en <strong>début de mois</strong>. Si vous ne pouvez pas venir, prévenez (idéalement au paiement, ou au moins <strong>trois jours avant</strong>) et ce cours n’est pas facturé.",
       booking_parent_name_label: "Nom du parent",
       booking_parent_email_label: "Adresse e-mail du parent",
       booking_parent_email_ph: "parent@exemple.com",
@@ -828,12 +831,12 @@
       booking_request_note_html:
         "<strong>Ce formulaire ne fait qu’une demande.</strong> La place est sûre seulement quand je vous ai répondu par mail ou message.",
       booking_price_callout:
-        "Chaque séance coûte 25 € par élève. Quatre élèves maximum par cours. La première séance est gratuite.",
+        "Chaque cours particulier coûte 25 €. La première séance est gratuite.",
       booking_level_empty: "Choisir un niveau",
       booking_level_unknown: "Je ne sais pas encore",
       booking_slots_legend: "Créneaux souhaités (heure de Paris)",
       booking_slots_hint:
-        "Les heures sont en heure locale de Paris. Choisissez un jour, puis les créneaux qui vous vont. Ajoutez d’autres jours si besoin. Je confirme par mail.",
+        "Les heures sont en heure locale de Paris. Choisissez un jour, puis les créneaux disponibles qui vous vont. Les heures grisées sont déjà prises. Ajoutez d’autres jours si besoin. Je confirme par mail.",
       booking_times_unknown_label: "Je ne sais pas encore",
       booking_pick_day: "1 · Choisir un jour",
       booking_times_for: "Créneaux pour {day}",
@@ -1294,6 +1297,9 @@
       booking_parent_fallback: "Parent",
       ui_remove_symbol: "×",
       booking_hour_format: "{hour} h",
+      booking_hour_range: "{start} h – {end} h",
+      booking_sold_out: "Complet",
+      booking_day_full_note: "Tous les créneaux de ce jour sont pris. Choisissez un autre jour.",
       account_metric_flash_accuracy: "Précision cartes : {correct}/{attempts} ({pct})",
       account_metric_quiz_sessions: "Sessions de quiz : {n}",
       account_metric_exercises_done: "Exercices terminés : {n}",
