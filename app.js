@@ -306,6 +306,7 @@
   const adminPlannerTab = document.getElementById("admin-planner-tab");
   const adminPlannerContent = document.getElementById("admin-planner-content");
   const adminWritingTab = document.getElementById("admin-writing-tab");
+  const adminPointsTab = document.getElementById("admin-points-tab");
   const adminPaymentForm = document.getElementById("admin-payment-form");
   const adminSendEmailsBtn = document.getElementById("admin-send-emails-btn");
   const adminSendEmailsStatus = document.getElementById("admin-send-emails-status");
@@ -372,6 +373,9 @@
   let paymentChecklist = [];
   let supabaseClient = null;
   let vocabPathRenderers = [];
+  let pointsState = { user: null, loading: false, loaded: false, awards: [] };
+  let pointsBadge = null;
+  let adminPoints = { loading: false, loaded: false, error: "", awards: [], flash: "" };
   let writingState = { user: null, loading: false, loaded: false, error: "", byTask: {} };
   let writingEditor = null;
   let adminWriting = { loading: false, loaded: false, error: "", rows: [], filter: "todo", openId: null, dirty: false };
@@ -2496,6 +2500,7 @@
     adminStudentsLoading = false;
     adminStudentsFetched = true;
     renderAdminPanel();
+    renderAdminPoints();
   }
 
   async function refreshAdminCloudData() {
@@ -2578,6 +2583,7 @@
     }
     renderAdminPanel();
     void fetchAdminWriting();
+    void fetchAdminPoints();
   }
 
   function persistActiveUser() {
@@ -2730,6 +2736,657 @@
     vocabPathRenderers.forEach(function (renderFn) {
       renderFn();
     });
+  }
+
+  /* ------------------------------------------------------------------
+   * Points. Vocabulary: 1 point per stepping stone (stored in stats.learningHub.vocabPoints).
+   * Teacher points (manual or for corrected writing) live in Supabase table point_awards.
+   * ------------------------------------------------------------------ */
+
+  const POINTS_REFRESH_MS = 3 * 60 * 1000;
+  const POINTS_TOAST_KEY = "andronicus_points_toasted_v1";
+
+  /** Vocabulary points from saved stats. Older progress (before points existed) is counted once. */
+  function vocabPointsFromStats(stats) {
+    const lh = stats && stats.learningHub;
+    if (!lh) return 0;
+    if (typeof lh.vocabPoints === "number" && isFinite(lh.vocabPoints)) return Math.max(0, lh.vocabPoints);
+    let n = 0;
+    const paths = lh.vocabPath || {};
+    Object.keys(paths).forEach(function (lvl) {
+      const st = paths[lvl];
+      if (!st || !learningData[lvl]) return;
+      const total = buildVocabBank(lvl).order.length;
+      n += Math.max(0, (st.lap || 1) - 1) * total + Math.max(0, st.correct || 0);
+    });
+    return n;
+  }
+
+  function addVocabPoint() {
+    const user = getActiveUser();
+    if (!user) return;
+    const stats = ensureStats(user);
+    const lh = ensureLearningHub(stats);
+    lh.vocabPoints = vocabPointsFromStats(stats) + 1;
+    renderPointsBadge({ bump: true });
+  }
+
+  function teacherPointsTotal(awards) {
+    return (awards || []).reduce(function (sum, a) {
+      return sum + (Number(a.points) || 0);
+    }, 0);
+  }
+
+  function pointsForSubmission(awards, submissionId) {
+    if (!submissionId) return 0;
+    const a = (awards || []).find(function (x) {
+      return x.submission_id === submissionId;
+    });
+    return a ? Number(a.points) || 0 : 0;
+  }
+
+  function formatPoints(n) {
+    const v = Number(n) || 0;
+    return Math.abs(v) === 1 ? I18n.t("points_one", { n: String(v) }) : I18n.t("points_many", { n: String(v) });
+  }
+
+  function formatSignedPoints(n) {
+    const v = Number(n) || 0;
+    return (v > 0 ? "+" : "") + formatPoints(v);
+  }
+
+  function isMissingFunctionError(err) {
+    const m = String((err && (err.message || err.code)) || "");
+    return /PGRST202|could not find the function|does not exist/i.test(m);
+  }
+
+  /* ---------- Student: data ---------- */
+
+  async function loadStudentPoints(force) {
+    const user = getActiveUser();
+    if (!user || !activeUsername) {
+      pointsState = { user: null, loading: false, loaded: false, awards: [] };
+      renderPointsBadge();
+      return;
+    }
+    if (pointsState.user !== activeUsername) {
+      pointsState = { user: activeUsername, loading: false, loaded: false, awards: [] };
+    }
+    if (pointsState.loading || (!force && pointsState.loaded)) return;
+    const sb = getSupabaseClient();
+    if (!sb) {
+      pointsState.loaded = true;
+      renderPointsBadge();
+      return;
+    }
+    const username = activeUsername;
+    pointsState.loading = true;
+    try {
+      const { data, error } = await sb.rpc("student_list_points", {
+        p_username: username,
+        p_password: String(user.password || ""),
+      });
+      if (error) throw error;
+      if (activeUsername !== username) return;
+      pointsState.awards = data || [];
+    } catch (err) {
+      if (!isMissingFunctionError(err)) console.error(err);
+    }
+    if (activeUsername !== username) return;
+    pointsState.loading = false;
+    pointsState.loaded = true;
+    renderPointsBadge();
+    maybeToastNewPoints();
+    if (writingEditor && writingEditor.isOpen()) writingEditor.refresh();
+  }
+
+  async function markStudentPointsSeen() {
+    const user = getActiveUser();
+    const sb = getSupabaseClient();
+    if (!user || !sb) return;
+    const unseen = pointsState.awards.some(function (a) {
+      return !a.seen_at;
+    });
+    if (!unseen) return;
+    pointsState.awards.forEach(function (a) {
+      if (!a.seen_at) a.seen_at = new Date().toISOString();
+    });
+    renderPointsBadge();
+    try {
+      await sb.rpc("student_mark_points_seen", {
+        p_username: activeUsername,
+        p_password: String(user.password || ""),
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  /* ---------- Student: corner badge ---------- */
+
+  function readToasted() {
+    try {
+      return JSON.parse(localStorage.getItem(POINTS_TOAST_KEY) || "[]");
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function writeToasted(ids) {
+    try {
+      localStorage.setItem(POINTS_TOAST_KEY, JSON.stringify(ids.slice(-200)));
+    } catch (e) {}
+  }
+
+  function awardLabel(a) {
+    if (a.source === "writing") return I18n.t("points_from_writing");
+    return I18n.t("points_from_teacher");
+  }
+
+  function ensurePointsBadge() {
+    if (pointsBadge) return pointsBadge;
+    const wrap = document.createElement("div");
+    wrap.className = "pts hidden";
+    wrap.innerHTML =
+      '<div class="pts-pop hidden" role="dialog" aria-modal="false">' +
+      '  <div class="pts-pop__head"><p class="pts-pop__title"></p><button type="button" class="pts-pop__close" aria-label="×">×</button></div>' +
+      '  <p class="pts-pop__total"></p>' +
+      '  <dl class="pts-pop__split"></dl>' +
+      '  <p class="pts-pop__hist-title"></p>' +
+      '  <ul class="pts-pop__list"></ul>' +
+      "</div>" +
+      '<div class="pts-toast hidden" role="status"></div>' +
+      '<button type="button" class="pts-btn" aria-haspopup="dialog">' +
+      '  <span class="pts-btn__star" aria-hidden="true">★</span>' +
+      '  <span class="pts-btn__num">0</span>' +
+      '  <span class="pts-btn__lab"></span>' +
+      '  <span class="pts-btn__dot hidden" aria-hidden="true"></span>' +
+      "</button>";
+    document.body.appendChild(wrap);
+    const el = {
+      wrap: wrap,
+      btn: wrap.querySelector(".pts-btn"),
+      num: wrap.querySelector(".pts-btn__num"),
+      lab: wrap.querySelector(".pts-btn__lab"),
+      dot: wrap.querySelector(".pts-btn__dot"),
+      pop: wrap.querySelector(".pts-pop"),
+      title: wrap.querySelector(".pts-pop__title"),
+      close: wrap.querySelector(".pts-pop__close"),
+      total: wrap.querySelector(".pts-pop__total"),
+      split: wrap.querySelector(".pts-pop__split"),
+      histTitle: wrap.querySelector(".pts-pop__hist-title"),
+      list: wrap.querySelector(".pts-pop__list"),
+      toast: wrap.querySelector(".pts-toast"),
+    };
+    let toastTimer = null;
+
+    function open() {
+      hideToast();
+      renderPointsBadge();
+      el.pop.classList.remove("hidden");
+      el.btn.setAttribute("aria-expanded", "true");
+      void loadStudentPoints(true).then(markStudentPointsSeen);
+    }
+    function close() {
+      el.pop.classList.add("hidden");
+      el.btn.setAttribute("aria-expanded", "false");
+    }
+    function hideToast() {
+      if (toastTimer) clearTimeout(toastTimer);
+      el.toast.classList.add("hidden");
+    }
+    el.btn.addEventListener("click", function () {
+      if (el.pop.classList.contains("hidden")) open();
+      else close();
+    });
+    el.close.addEventListener("click", close);
+    el.toast.addEventListener("click", open);
+    document.addEventListener("click", function (e) {
+      if (!el.pop.classList.contains("hidden") && !wrap.contains(e.target)) close();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !el.pop.classList.contains("hidden")) close();
+    });
+
+    pointsBadge = {
+      el: el,
+      close: close,
+      toast: function (text) {
+        el.toast.textContent = text;
+        el.toast.classList.remove("hidden");
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(hideToast, 7000);
+      },
+    };
+    return pointsBadge;
+  }
+
+  function renderPointsBadge(opts) {
+    const user = getActiveUser();
+    const b = ensurePointsBadge();
+    const el = b.el;
+    if (!user) {
+      el.wrap.classList.add("hidden");
+      b.close();
+      return;
+    }
+    const stats = ensureStats(user);
+    const vocab = vocabPointsFromStats(stats);
+    const teacher = pointsState.user === activeUsername ? teacherPointsTotal(pointsState.awards) : 0;
+    const total = vocab + teacher;
+    el.wrap.classList.remove("hidden");
+    el.num.textContent = String(total);
+    el.lab.textContent = Math.abs(total) === 1 ? I18n.t("points_word_one") : I18n.t("points_word");
+    el.btn.setAttribute("aria-label", I18n.t("points_badge_aria", { n: String(total) }));
+    const unseen = pointsState.awards.some(function (a) {
+      return !a.seen_at;
+    });
+    el.dot.classList.toggle("hidden", !unseen);
+    if (opts && opts.bump) playElementAnimation(el.btn, "pts-bump 0.4s ease");
+
+    el.title.textContent = I18n.t("points_title");
+    el.close.setAttribute("aria-label", I18n.t("writing_close"));
+    el.total.textContent = formatPoints(total);
+    el.split.innerHTML = "";
+    [
+      [I18n.t("points_split_vocab"), vocab],
+      [I18n.t("points_split_teacher"), teacher],
+    ].forEach(function (row) {
+      const dt = document.createElement("dt");
+      dt.textContent = row[0];
+      const dd = document.createElement("dd");
+      dd.textContent = String(row[1]);
+      el.split.appendChild(dt);
+      el.split.appendChild(dd);
+    });
+    el.histTitle.textContent = I18n.t("points_history_title");
+    el.list.innerHTML = "";
+    const recent = pointsState.awards.slice(0, 8);
+    if (!recent.length) {
+      const li = document.createElement("li");
+      li.className = "pts-pop__empty";
+      li.textContent = I18n.t("points_history_empty");
+      el.list.appendChild(li);
+    }
+    recent.forEach(function (a) {
+      const li = document.createElement("li");
+      li.className = "pts-pop__item" + (a.seen_at ? "" : " is-new");
+      const top = document.createElement("div");
+      top.className = "pts-pop__item-top";
+      const amt = document.createElement("strong");
+      amt.className = "pts-pop__amt" + (a.points < 0 ? " is-neg" : "");
+      amt.textContent = formatSignedPoints(a.points);
+      const src = document.createElement("span");
+      src.className = "pts-pop__src";
+      src.textContent = awardLabel(a) + " · " + writingFormatDate(a.created_at);
+      top.appendChild(amt);
+      top.appendChild(src);
+      li.appendChild(top);
+      if (a.message) {
+        const msg = document.createElement("p");
+        msg.className = "pts-pop__msg";
+        msg.textContent = a.message;
+        li.appendChild(msg);
+      }
+      el.list.appendChild(li);
+    });
+  }
+
+  function maybeToastNewPoints() {
+    const unseen = pointsState.awards.filter(function (a) {
+      return !a.seen_at;
+    });
+    if (!unseen.length) return;
+    const toasted = readToasted();
+    const fresh = unseen.filter(function (a) {
+      return toasted.indexOf(a.id) < 0;
+    });
+    if (!fresh.length) return;
+    writeToasted(toasted.concat(fresh.map(function (a) {
+      return a.id;
+    })));
+    const sum = teacherPointsTotal(fresh);
+    const first = fresh[0];
+    const text =
+      fresh.length === 1 && first.message
+        ? I18n.t("points_toast_msg", { pts: formatSignedPoints(sum), msg: first.message })
+        : I18n.t("points_toast", { pts: formatSignedPoints(sum) });
+    ensurePointsBadge().toast(text);
+  }
+
+  function syncPointsForActiveUser() {
+    if (pointsState.user !== activeUsername) {
+      pointsState = { user: activeUsername || null, loading: false, loaded: false, awards: [] };
+    }
+    renderPointsBadge();
+    if (activeUsername) void loadStudentPoints(false);
+  }
+
+  setInterval(function () {
+    if (activeUsername && document.visibilityState === "visible") void loadStudentPoints(true);
+  }, POINTS_REFRESH_MS);
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible" && activeUsername) void loadStudentPoints(true);
+  });
+
+  /* ---------- Admin: points ---------- */
+
+  async function fetchAdminPoints() {
+    if (!adminUnlocked || adminPoints.loading) return;
+    const sb = getSupabaseClient();
+    if (!sb || !hasAdminApiSecret()) {
+      adminPoints.loaded = true;
+      adminPoints.error = I18n.t("admin_points_no_cloud");
+      renderAdminPoints();
+      return;
+    }
+    adminPoints.loading = true;
+    try {
+      const { data, error } = await sb.rpc("admin_list_points", { p_secret: adminWritingSecret() });
+      if (error) throw error;
+      adminPoints.awards = data || [];
+      adminPoints.error = "";
+    } catch (err) {
+      console.error(err);
+      adminPoints.error = isMissingFunctionError(err)
+        ? I18n.t("admin_points_missing_sql")
+        : I18n.t("admin_writing_failed", { err: (err && err.message) || String(err) });
+    }
+    adminPoints.loading = false;
+    adminPoints.loaded = true;
+    renderAdminPoints();
+  }
+
+  async function adminAwardPoints(username, points, message, submissionId) {
+    const sb = getSupabaseClient();
+    if (!sb || !hasAdminApiSecret()) throw new Error(I18n.t("admin_points_no_cloud"));
+    const { error } = await sb.rpc("admin_award_points", {
+      p_secret: adminWritingSecret(),
+      p_username: username,
+      p_points: points,
+      p_message: message || "",
+      p_submission_id: submissionId || null,
+    });
+    if (error) throw error;
+  }
+
+  function adminPointsRows() {
+    const teacherBy = {};
+    adminPoints.awards.forEach(function (a) {
+      teacherBy[a.username] = (teacherBy[a.username] || 0) + (Number(a.points) || 0);
+    });
+    const names = {};
+    Object.keys(users).forEach(function (u) {
+      names[u] = true;
+    });
+    Object.keys(teacherBy).forEach(function (u) {
+      names[u] = true;
+    });
+    return Object.keys(names)
+      .map(function (u) {
+        const usr = users[u];
+        const vocab = usr ? vocabPointsFromStats(usr.stats || {}) : 0;
+        const teacher = teacherBy[u] || 0;
+        return {
+          username: u,
+          name: (usr && (usr.fullName || "").trim()) || u,
+          vocab: vocab,
+          teacher: teacher,
+          total: vocab + teacher,
+        };
+      })
+      .sort(function (a, b) {
+        return b.total - a.total || a.name.localeCompare(b.name);
+      });
+  }
+
+  function renderAdminPoints() {
+    const host = document.getElementById("admin-points-content");
+    if (!host || !adminUnlocked) return;
+    const tab = document.getElementById("admin-points-tab");
+    if (tab && tab.classList.contains("hidden")) return;
+    const keep = {
+      user: (host.querySelector(".admin-points-user") || {}).value,
+      pts: (host.querySelector(".admin-points-amount") || {}).value,
+      msg: (host.querySelector(".admin-points-msg") || {}).value,
+    };
+    host.innerHTML = "";
+    const rows = adminPointsRows();
+
+    // Send points
+    const form = document.createElement("form");
+    form.className = "account-card account-card--admin admin-points-form";
+    const h = document.createElement("h3");
+    h.textContent = I18n.t("admin_points_send_heading");
+    form.appendChild(h);
+    if (adminPoints.error) {
+      const err = document.createElement("p");
+      err.className = "form-error";
+      err.textContent = adminPoints.error;
+      form.appendChild(err);
+    }
+    const grid = document.createElement("div");
+    grid.className = "admin-points-form__grid";
+    const userLab = document.createElement("label");
+    userLab.textContent = I18n.t("admin_points_student");
+    const sel = document.createElement("select");
+    sel.className = "admin-points-user";
+    const opt0 = document.createElement("option");
+    opt0.value = "";
+    opt0.textContent = I18n.t("admin_points_choose");
+    sel.appendChild(opt0);
+    rows
+      .slice()
+      .sort(function (a, b) {
+        return a.name.localeCompare(b.name);
+      })
+      .forEach(function (r) {
+        const o = document.createElement("option");
+        o.value = r.username;
+        o.textContent = r.name === r.username ? r.name : r.name + " (" + r.username + ")";
+        sel.appendChild(o);
+      });
+    sel.value = keep.user || "";
+    userLab.appendChild(sel);
+    const ptsLab = document.createElement("label");
+    ptsLab.textContent = I18n.t("admin_points_amount");
+    const pts = document.createElement("input");
+    pts.type = "number";
+    pts.step = "1";
+    pts.min = "-10000";
+    pts.max = "10000";
+    pts.className = "admin-points-amount";
+    pts.value = keep.pts || "10";
+    ptsLab.appendChild(pts);
+    grid.appendChild(userLab);
+    grid.appendChild(ptsLab);
+    form.appendChild(grid);
+    const msgLab = document.createElement("label");
+    msgLab.className = "admin-points-msg-label";
+    msgLab.textContent = I18n.t("admin_points_message");
+    const msg = document.createElement("textarea");
+    msg.className = "admin-points-msg";
+    msg.rows = 3;
+    msg.maxLength = 2000;
+    msg.placeholder = I18n.t("admin_points_message_ph");
+    msg.value = keep.msg || "";
+    msgLab.appendChild(msg);
+    form.appendChild(msgLab);
+    const hint = document.createElement("p");
+    hint.className = "field-hint";
+    hint.textContent = I18n.t("admin_points_hint");
+    form.appendChild(hint);
+    const send = document.createElement("button");
+    send.type = "submit";
+    send.className = "btn-primary";
+    send.textContent = I18n.t("admin_points_send");
+    form.appendChild(send);
+    const status = document.createElement("p");
+    status.className = "field-hint admin-points-status";
+    status.setAttribute("aria-live", "polite");
+    status.textContent = adminPoints.flash || "";
+    adminPoints.flash = "";
+    form.appendChild(status);
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const username = sel.value;
+      const n = Math.trunc(Number(pts.value));
+      if (!username) {
+        status.textContent = I18n.t("admin_points_need_student");
+        return;
+      }
+      if (!n || !isFinite(n) || Math.abs(n) > 10000) {
+        status.textContent = I18n.t("admin_points_need_amount");
+        return;
+      }
+      const row = rows.find(function (r) {
+        return r.username === username;
+      });
+      if (!window.confirm(I18n.t("admin_points_confirm", { pts: formatSignedPoints(n), name: row ? row.name : username }))) {
+        return;
+      }
+      send.disabled = true;
+      status.textContent = I18n.t("writing_saving");
+      try {
+        await adminAwardPoints(username, n, msg.value.trim(), null);
+        msg.value = "";
+        adminPoints.flash = I18n.t("admin_points_sent", { pts: formatSignedPoints(n), name: row ? row.name : username });
+        await fetchAdminPoints();
+      } catch (err) {
+        console.error(err);
+        status.textContent = I18n.t("admin_writing_failed", { err: (err && err.message) || String(err) });
+        send.disabled = false;
+      }
+    });
+    host.appendChild(form);
+
+    // Everyone's points
+    const card = document.createElement("div");
+    card.className = "account-card account-card--admin";
+    const h2 = document.createElement("h3");
+    h2.textContent = I18n.t("admin_points_table_heading");
+    card.appendChild(h2);
+    if ((!adminPoints.loaded || adminStudentsLoading) && !rows.length) {
+      const p = document.createElement("p");
+      p.className = "field-hint";
+      p.textContent = I18n.t("admin_writing_loading");
+      card.appendChild(p);
+    } else if (!rows.length) {
+      const p = document.createElement("p");
+      p.className = "field-hint";
+      p.textContent = I18n.t("admin_writing_empty");
+      card.appendChild(p);
+    } else {
+      const wrap = document.createElement("div");
+      wrap.className = "admin-table-scroll";
+      const table = document.createElement("table");
+      table.className = "admin-table admin-points-table";
+      const thead = document.createElement("thead");
+      const htr = document.createElement("tr");
+      ["admin_lb_col_rank", "admin_writing_col_student", "admin_points_col_vocab", "admin_points_col_teacher", "admin_points_col_total", "admin_col_actions"].forEach(function (k) {
+        const th = document.createElement("th");
+        th.textContent = I18n.t(k);
+        htr.appendChild(th);
+      });
+      thead.appendChild(htr);
+      table.appendChild(thead);
+      const tbody = document.createElement("tbody");
+      rows.forEach(function (r, i) {
+        const tr = document.createElement("tr");
+        [String(i + 1), r.name, String(r.vocab), String(r.teacher), String(r.total)].forEach(function (txt, ci) {
+          const td = document.createElement("td");
+          td.textContent = txt;
+          if (ci === 4) td.className = "admin-points-table__total";
+          if (ci === 1 && r.name !== r.username) {
+            const small = document.createElement("span");
+            small.className = "admin-points-table__user";
+            small.textContent = r.username;
+            td.appendChild(small);
+          }
+          tr.appendChild(td);
+        });
+        const act = document.createElement("td");
+        const give = document.createElement("button");
+        give.type = "button";
+        give.className = "flashcard-btn";
+        give.textContent = I18n.t("admin_points_give");
+        give.addEventListener("click", function () {
+          sel.value = r.username;
+          form.scrollIntoView({ behavior: "smooth", block: "start" });
+          pts.focus();
+        });
+        act.appendChild(give);
+        tr.appendChild(act);
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      wrap.appendChild(table);
+      card.appendChild(wrap);
+    }
+    host.appendChild(card);
+
+    // History
+    const histCard = document.createElement("div");
+    histCard.className = "account-card account-card--admin";
+    const h3 = document.createElement("h3");
+    h3.textContent = I18n.t("admin_points_history_heading");
+    histCard.appendChild(h3);
+    const awards = adminPoints.awards.slice(0, 40);
+    if (!awards.length) {
+      const p = document.createElement("p");
+      p.className = "field-hint";
+      p.textContent = adminPoints.loaded ? I18n.t("admin_writing_empty") : I18n.t("admin_writing_loading");
+      histCard.appendChild(p);
+    } else {
+      const list = document.createElement("ul");
+      list.className = "admin-points-history";
+      awards.forEach(function (a) {
+        const li = document.createElement("li");
+        const usr = users[a.username];
+        const who = (usr && (usr.fullName || "").trim()) || a.username;
+        const top = document.createElement("div");
+        top.className = "admin-points-history__top";
+        const amt = document.createElement("strong");
+        amt.className = "pts-pop__amt" + (a.points < 0 ? " is-neg" : "");
+        amt.textContent = formatSignedPoints(a.points);
+        const meta = document.createElement("span");
+        meta.className = "admin-points-history__meta";
+        meta.textContent =
+          who + " · " + awardLabel(a) + " · " + writingFormatDate(a.created_at) + " · " +
+          I18n.t(a.seen_at ? "admin_points_seen" : "admin_points_unseen");
+        const del = document.createElement("button");
+        del.type = "button";
+        del.className = "btn-text admin-points-history__del";
+        del.textContent = I18n.t("admin_points_undo");
+        del.addEventListener("click", async function () {
+          if (!window.confirm(I18n.t("admin_points_undo_confirm", { pts: formatSignedPoints(a.points), name: who }))) return;
+          try {
+            const { error } = await getSupabaseClient().rpc("admin_delete_points", {
+              p_secret: adminWritingSecret(),
+              p_id: a.id,
+            });
+            if (error) throw error;
+            await fetchAdminPoints();
+          } catch (err) {
+            console.error(err);
+            window.alert(I18n.t("admin_writing_failed", { err: (err && err.message) || String(err) }));
+          }
+        });
+        top.appendChild(amt);
+        top.appendChild(meta);
+        top.appendChild(del);
+        li.appendChild(top);
+        if (a.message) {
+          const m = document.createElement("p");
+          m.className = "admin-points-history__msg";
+          m.textContent = a.message;
+          li.appendChild(m);
+        }
+        list.appendChild(li);
+      });
+      histCard.appendChild(list);
+    }
+    host.appendChild(histCard);
   }
 
   /* ------------------------------------------------------------------
@@ -3229,6 +3886,7 @@
       trackTopic(current.word.deck, ok);
 
       if (ok) {
+        addVocabPoint();
         if (current.from === "main") st.pos += 1;
         else st.back.shift();
         st.correct += 1;
@@ -3832,6 +4490,13 @@
           sum.appendChild(name);
           sum.appendChild(st);
           sum.appendChild(when);
+          const earned = a.status === "corrected" ? pointsForSubmission(pointsState.awards, a.id) : 0;
+          if (earned) {
+            const chip = document.createElement("span");
+            chip.className = "wr-attempt-card__pts";
+            chip.textContent = "★ " + formatSignedPoints(earned);
+            sum.appendChild(chip);
+          }
           det.appendChild(sum);
 
           const page = document.createElement("div");
@@ -4442,6 +5107,35 @@
     noteLabel.appendChild(note);
     card.appendChild(noteLabel);
 
+    const ptsLabel = document.createElement("label");
+    ptsLabel.className = "admin-writing-points-label";
+    ptsLabel.textContent = I18n.t("admin_writing_points_label");
+    const ptsInput = document.createElement("input");
+    ptsInput.type = "number";
+    ptsInput.step = "1";
+    ptsInput.min = "0";
+    ptsInput.max = "10000";
+    ptsInput.className = "admin-writing-points";
+    ptsInput.placeholder = "0";
+    let ptsTouched = false;
+    function fillPoints() {
+      if (ptsTouched) return;
+      const existing = pointsForSubmission(adminPoints.awards, row.id);
+      ptsInput.value = existing ? String(existing) : "";
+    }
+    fillPoints();
+    if (!adminPoints.loaded) void fetchAdminPoints().then(fillPoints);
+    ptsInput.addEventListener("input", function () {
+      ptsTouched = true;
+      markDirty();
+    });
+    ptsLabel.appendChild(ptsInput);
+    card.appendChild(ptsLabel);
+    const ptsHint = document.createElement("p");
+    ptsHint.className = "field-hint";
+    ptsHint.textContent = I18n.t("admin_writing_points_hint");
+    card.appendChild(ptsHint);
+
     const actions = document.createElement("div");
     actions.className = "admin-writing-actions";
     const saveBtn = document.createElement("button");
@@ -4644,6 +5338,13 @@
           row.status = "corrected";
           row.corrected_at = new Date().toISOString();
           sendBtn.textContent = I18n.t("admin_writing_resend");
+          if (ptsTouched) {
+            const n = Math.max(0, Math.min(10000, Math.trunc(Number(ptsInput.value) || 0)));
+            const taskNote = String(row.task_text || row.task_id || "").slice(0, 160);
+            await adminAwardPoints(row.username, n, taskNote, row.id);
+            ptsTouched = false;
+            void fetchAdminPoints();
+          }
         }
         adminWriting.dirty = false;
         status.textContent = I18n.t(send ? "admin_writing_sent" : "admin_writing_saved");
@@ -5472,6 +6173,7 @@
   }
 
   function renderAccountPanel() {
+    syncPointsForActiveUser();
     if (!accountAuth || !accountDashboard) return;
     const user = getActiveUser();
     if (!user) {
@@ -6489,6 +7191,7 @@
       adminUnlocked = false;
       adminViewingStudent = null;
       adminWriting = { loading: false, loaded: false, error: "", rows: [], filter: "todo", openId: null, dirty: false };
+      adminPoints = { loading: false, loaded: false, error: "", awards: [], flash: "" };
       if (adminPasswordInput) adminPasswordInput.value = "";
       renderAdminPanel();
     });
@@ -6519,11 +7222,18 @@
         if (adminLeaderboardTab) adminLeaderboardTab.classList.toggle("hidden", tab !== "leaderboard");
         if (adminPlannerTab)     adminPlannerTab.classList.toggle("hidden",     tab !== "planner");
         if (adminWritingTab)     adminWritingTab.classList.toggle("hidden",     tab !== "writing");
+        if (adminPointsTab)      adminPointsTab.classList.toggle("hidden",      tab !== "points");
+        if (tab === "points") {
+          renderAdminPoints();
+          if (!adminStudentsFetched && !adminStudentsLoading) void fetchAdminStudents();
+          void fetchAdminPoints();
+        }
         if (tab === "leaderboard") renderAdminLeaderboard();
         if (tab === "planner")     renderAdminPlanner();
         if (tab === "writing") {
           renderAdminWriting();
           void fetchAdminWriting();
+          void fetchAdminPoints();
         }
       });
     });
