@@ -1405,9 +1405,10 @@
     },
   };
 
+  /* French by default on every visit. Choosing English only lasts for the current browser tab. */
   function getLang() {
     try {
-      return localStorage.getItem(STORAGE_KEY) === "en" ? "en" : "fr";
+      return sessionStorage.getItem(STORAGE_KEY) === "en" ? "en" : "fr";
     } catch (e) {
       return "fr";
     }
@@ -1416,7 +1417,9 @@
   function setLang(lang) {
     const next = lang === "fr" ? "fr" : "en";
     if (next === getLang()) return;
-    localStorage.setItem(STORAGE_KEY, next);
+    try {
+      sessionStorage.setItem(STORAGE_KEY, next);
+    } catch (e) {}
     apply();
     global.dispatchEvent(new CustomEvent("andronicus:langchange"));
   }
