@@ -123,7 +123,7 @@
       process_p5_html:
         "<strong>Contact:</strong> <a href=\"tel:+353833198980\">+353 (83) 319 8980</a> · <a href=\"mailto:louis.f.mcgovern@gmail.com\">louis.f.mcgovern@gmail.com</a>",
       content_intro:
-        "Choose your level. Content is uploaded by English level, and the password is required each time. If you would like access, <strong>contact me</strong> and we can arrange a <strong>10-minute chat</strong>.",
+        "Choose your level. Everything is free and open to everyone: <strong>create an account</strong> to save your progress, earn points and appear on the <strong>leaderboard</strong>.",
       content_levels_aria: "English level",
       level_beginner: "Beginner",
       level_intermediate: "Intermediate",
@@ -850,7 +850,7 @@
       process_p5_html:
         "<strong>Contact :</strong> <a href=\"tel:+353833198980\">+353 (83) 319 8980</a> · <a href=\"mailto:louis.f.mcgovern@gmail.com\">louis.f.mcgovern@gmail.com</a>",
       content_intro:
-        "Choisissez votre niveau. Le contenu est classé par niveau d’anglais, et le mot de passe est demandé à chaque fois. Pour obtenir l’accès, <strong>contactez-moi</strong> et nous pourrons organiser un <strong>échange de dix minutes</strong>.",
+        "Choisis ton niveau. Tout est gratuit et ouvert à tous : <strong>crée un compte</strong> pour enregistrer ta progression, gagner des points et apparaître dans le <strong>classement</strong>.",
       content_levels_aria: "Niveau d’anglais",
       level_beginner: "Débutant",
       level_intermediate: "Intermédiaire",

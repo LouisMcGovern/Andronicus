@@ -224,7 +224,6 @@
     });
   });
 
-  const CONTENT_PASSWORD = "123";
 
   const introOverlay = document.getElementById("intro-overlay");
   const app = document.getElementById("app");
@@ -7688,43 +7687,33 @@
     forceInitialHomeView();
   });
 
+  /* The content section is open to everyone: choosing a level opens it straight away. */
+  function openContentLevel(level) {
+    window.scrollTo({ top: 0, behavior: "instant" });
+    pendingLevel = null;
+    contentPasswordOverlay.classList.add("hidden");
+    levelPicker.classList.add("hidden");
+    document.querySelectorAll(".btn-level").forEach((b) => b.classList.remove("is-active"));
+    document.querySelectorAll(".level-article").forEach((art) => art.classList.add("hidden"));
+    const btn = document.querySelector('.btn-level[data-level="' + level + '"]');
+    if (btn) btn.classList.add("is-active");
+    const article = document.getElementById("content-" + level);
+    if (article) {
+      article.classList.remove("hidden");
+      resetHubToLanding(article.querySelector(".learning-hub"));
+      recordLastLevel(level);
+    }
+    updateContentBreadcrumb();
+  }
+
   contentPasswordForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    const val = (contentPasswordInput.value || "").trim();
-    if (val === CONTENT_PASSWORD && pendingLevel) {
-      window.scrollTo({ top: 0, behavior: "instant" });
-      contentPasswordError.classList.add("hidden");
-      contentPasswordOverlay.classList.add("hidden");
-      contentPasswordInput.value = "";
-      levelPicker.classList.add("hidden");
-      document.querySelectorAll(".btn-level").forEach((b) => b.classList.remove("is-active"));
-      document.querySelectorAll(".level-article").forEach((art) => art.classList.add("hidden"));
-      const btn = document.querySelector('.btn-level[data-level="' + pendingLevel + '"]');
-      if (btn) btn.classList.add("is-active");
-      const article = document.getElementById("content-" + pendingLevel);
-      if (article) {
-        article.classList.remove("hidden");
-        resetHubToLanding(article.querySelector(".learning-hub"));
-        recordLastLevel(pendingLevel);
-      }
-      pendingLevel = null;
-      updateContentBreadcrumb();
-    } else {
-      contentPasswordError.classList.remove("hidden");
-    }
   });
 
   document.querySelectorAll(".btn-level").forEach((btn) => {
     btn.addEventListener("click", () => {
       const level = btn.getAttribute("data-level");
-      pendingLevel = level;
-      contentPasswordForLevel.textContent = I18n.t("content_opening", {
-        level: I18n.t("level_" + level),
-      });
-      contentPasswordError.classList.add("hidden");
-      contentPasswordInput.value = "";
-      contentPasswordOverlay.classList.remove("hidden");
-      contentPasswordInput.focus();
+      if (level) openContentLevel(level);
     });
   });
 
