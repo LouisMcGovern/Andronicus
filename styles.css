@@ -7840,3 +7840,366 @@ body.wr-open .pts {
     padding-left: 0.9rem;
   }
 }
+
+/* ---------- Word wheel game ---------- */
+.wg {
+  --wg-accent: #0f3d7a;
+  --wg-good: #1f8a44;
+  max-width: 34rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.wg__head {
+  width: 100%;
+  text-align: center;
+}
+
+.wg__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.wg__title {
+  white-space: nowrap;
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  font-size: 1.25rem;
+  color: var(--ink-heading);
+}
+
+.wg__of {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.wg__navbtn {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface-elevated);
+  color: var(--ink-heading);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.wg__navbtn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.wg__sub {
+  margin: 0.35rem 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.wg__grid {
+  display: grid;
+  gap: 3px;
+  justify-content: center;
+  margin: 0.25rem 0;
+}
+
+.wg__cell {
+  width: var(--wg-cell);
+  height: var(--wg-cell);
+  border-radius: 0.35rem;
+  border: none;
+  padding: 0;
+  background: #f4f8fc;
+  box-shadow: inset 0 0 0 1px rgba(13, 27, 42, 0.12);
+  font: 700 calc(var(--wg-cell) * 0.55) / 1 inherit;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+}
+
+.wg__cell.is-shown {
+  background: var(--wg-accent);
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.wg__cell.is-hint {
+  color: var(--wg-accent);
+  background: #fff4cf;
+}
+
+.wg__cell.is-new {
+  animation: wg-pop 0.45s ease;
+  background: var(--wg-good);
+}
+
+@keyframes wg-pop {
+  0% { transform: scale(0.6); }
+  60% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+.wg__mid {
+  position: relative;
+  width: 100%;
+  height: 2.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wg__mid .wg__msg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.2;
+}
+
+.wg__mid .wg__preview {
+  position: relative;
+  z-index: 1;
+}
+
+.wg__mid .wg__preview:not(.is-active):not(.is-shake) {
+  visibility: hidden;
+}
+
+.wg__def {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 0.7rem;
+  padding: 0.6rem 2.2rem 0.6rem 0.9rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.wg__defrow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.6rem;
+  align-items: baseline;
+  padding: 0.15rem 0;
+}
+
+.wg__defrow strong {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--wg-accent);
+}
+
+.wg__defclose {
+  position: absolute;
+  top: 0.3rem;
+  right: 0.4rem;
+  border: none;
+  background: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  color: var(--muted);
+}
+
+.wg__msg {
+  min-height: 1.4rem;
+  margin: 0;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.wg__msg.is-good { color: var(--wg-good); }
+.wg__msg.is-bad { color: #c0392b; }
+.wg__msg.is-bonus { color: #8a5a00; }
+
+.wg__preview {
+  min-height: 2.4rem;
+  padding: 0.2rem 1rem;
+  border-radius: 999px;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #fff;
+  background: transparent;
+  transition: background 0.15s ease;
+}
+
+.wg__preview.is-active {
+  background: var(--wg-accent);
+}
+
+.wg__preview.is-shake {
+  animation: wg-shake 0.35s ease;
+}
+
+@keyframes wg-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+.wg__wheel {
+  position: relative;
+  width: min(70vw, 16rem, 36vh);
+  min-width: 12rem;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 40%, #ffffff 0%, #e6eff8 70%);
+  box-shadow: inset 0 0 0 2px rgba(15, 61, 122, 0.15), var(--shadow-soft);
+  touch-action: none;
+  cursor: pointer;
+}
+
+.wg__lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.wg__lines polyline {
+  fill: none;
+  stroke: var(--wg-accent);
+  stroke-width: 3.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.75;
+}
+
+.wg__letter {
+  position: absolute;
+  width: 22%;
+  height: 22%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(1.4rem, 7vw, 2rem);
+  font-weight: 800;
+  color: var(--ink-heading);
+  transition: background 0.1s ease, color 0.1s ease;
+  pointer-events: none;
+}
+
+.wg__letter.is-on {
+  background: var(--wg-accent);
+  color: #fff;
+}
+
+.wg__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.wg__act {
+  border: 1px solid var(--border);
+  background: var(--surface-elevated);
+  color: var(--ink-heading);
+  border-radius: 999px;
+  padding: 0.45rem 0.75rem;
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.wg__bonuscount {
+  width: 100%;
+  margin: 0;
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.wg__done {
+  width: 100%;
+}
+
+.wg__donecard {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  padding: 1rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.wg__donetitle {
+  margin: 0 0 0.6rem;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--ink-heading);
+  text-align: center;
+}
+
+.wg__wordlist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.3rem;
+}
+
+.wg__wordlist li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.6rem;
+  align-items: baseline;
+  padding: 0.35rem 0.55rem;
+  border-radius: 0.45rem;
+  background: #f2f6fa;
+}
+
+.wg__wordlist li strong {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--wg-accent);
+  min-width: 5.5rem;
+}
+
+.wg__wordlist li.is-missing {
+  opacity: 0.55;
+}
+
+.wg__wordlist--bonus li {
+  background: #fff7e0;
+}
+
+.wg__bonushead {
+  margin: 0.8rem 0 0.4rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #8a5a00;
+}
+
+.wg__donebtns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 0.9rem;
+}
+
+.wg.is-finished .wg__wheel,
+.wg.is-finished .wg__preview,
+.wg.is-finished .wg__actions {
+  display: none;
+}

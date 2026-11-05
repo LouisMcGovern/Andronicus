@@ -38,6 +38,8 @@
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
     homework:
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
+    words:
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="6.5" r="1.3"/><circle cx="17.2" cy="10.3" r="1.3"/><circle cx="15.2" cy="16.4" r="1.3"/><circle cx="8.8" cy="16.4" r="1.3"/><circle cx="6.8" cy="10.3" r="1.3"/><path d="M12 7.8l4 2.4-1.6 4.9"/></svg>',
     progress:
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
   };
@@ -2855,6 +2857,35 @@
     return n;
   }
 
+  const WORDGAME_KEY = "andronicus_wordgame_v1";
+  function readWordGameState() {
+    let local = null;
+    try {
+      local = JSON.parse(localStorage.getItem(WORDGAME_KEY) || "null");
+    } catch (e) {
+      local = null;
+    }
+    const user = getActiveUser();
+    const remote = user ? ensureLearningHub(ensureStats(user)).wordGame : null;
+    if (remote && (!local || (remote.best || 0) >= (local.best || 0))) return remote;
+    return local || {};
+  }
+  function writeWordGameState(st) {
+    const copy = JSON.parse(JSON.stringify(st));
+    try {
+      localStorage.setItem(WORDGAME_KEY, JSON.stringify(copy));
+    } catch (e) {}
+    const user = getActiveUser();
+    if (user) {
+      ensureLearningHub(ensureStats(user)).wordGame = copy;
+      saveUsers();
+    }
+    document.querySelectorAll(".learning-hub[data-learning-level]").forEach(function (hub) {
+      const lvl = hub.getAttribute("data-learning-level");
+      if (learningData[lvl]) refreshLandingCardProgress(hub, lvl, learningData[lvl]);
+    });
+  }
+
   function countHomeworkCompleted(lh, lvl, checklist) {
     const done = (lh.homeworkChecklist && lh.homeworkChecklist[lvl]) || {};
     return (checklist || []).reduce(function (acc, item) {
@@ -2875,6 +2906,13 @@
       return I18n.t("learning_landing_homework_progress", {
         n: String(countHomeworkCompleted(lh, lvl, checklist)),
         t: String(checklist.length),
+      });
+    }
+    if (tool === "words") {
+      const wg = readWordGameState();
+      return I18n.t("learning_landing_words_progress", {
+        n: String(Math.min((wg.round || 0) + 1, window.AndronicusWordGame ? window.AndronicusWordGame.count() : 1)),
+        t: String(window.AndronicusWordGame ? window.AndronicusWordGame.count() : 0),
       });
     }
     if (tool === "flashcards") {
@@ -3003,9 +3041,11 @@
       const text =
         tool === "homework" && !hasClassAccess()
           ? I18n.t("hw_card_locked")
-          : user && stats && lh && tool !== "progress"
+          : tool === "words"
             ? landingCardProgressText(tool, lvl, data, stats, lh)
-            : "";
+            : user && stats && lh && tool !== "progress"
+              ? landingCardProgressText(tool, lvl, data, stats, lh)
+              : "";
       if (!text) {
         if (prog) prog.remove();
         return;
@@ -5849,6 +5889,7 @@
       homework: "learning_tab_homework",
       progress: "learning_tab_progress",
       verbs: "learning_tab_verbs",
+      words: "learning_tab_words",
       leaderboard: "lb_title",
     }[tool];
     return key ? I18n.t(key) : tool;
@@ -8148,6 +8189,8 @@
       const verbsPanel = root.querySelector('[data-tool-panel="verbs"]');
       const leaderboardPanel = root.querySelector('[data-tool-panel="leaderboard"]');
       let leaderboardView = null;
+      let wordGameView = null;
+      const wordsPanelEl = root.querySelector('[data-tool-panel="words"]');
 
       function activateTab(name) {
         workspaceTabs.forEach(function (b) {
@@ -8161,6 +8204,15 @@
         if (name === "progress") renderProgressPanel();
         if (name === "homework") renderHomeworkPanel();
         if (name === "leaderboard" && leaderboardView) void leaderboardView.load(false);
+        if (name === "words" && wordGameView) {
+          wordGameView.render();
+          if (window.innerWidth < 700) {
+            setTimeout(function () {
+              const top = wordsPanelEl.getBoundingClientRect().top + window.scrollY - 70;
+              window.scrollTo({ top: Math.max(0, top), behavior: "instant" });
+            }, 0);
+          }
+        }
         refreshStreakHeader();
         updateContentBreadcrumb();
       }
@@ -8748,6 +8800,18 @@
           }
         });
         learningToolsLangRefreshers.push(verbsView.render);
+      }
+
+      const wordsPanel = root.querySelector('[data-tool-panel="words"]');
+      if (wordsPanel && window.AndronicusWordGame) {
+        wordGameView = window.AndronicusWordGame.mount(wordsPanel, {
+          t: function (k, vars) {
+            return I18n.t(k, vars);
+          },
+          loadState: readWordGameState,
+          saveState: writeWordGameState,
+        });
+        learningToolsLangRefreshers.push(wordGameView.render);
       }
 
       if (leaderboardPanel) {
