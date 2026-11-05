@@ -7675,3 +7675,21 @@ body.wr-open .pts {
   border-color: #166534;
   color: #ffffff;
 }
+
+/* Grammar topic cards: title only, "Start here" on its own line */
+.lh-ex-topic-card .lh-topic-card__start-here {
+  position: static;
+  align-self: flex-start;
+}
+
+.lh-ex-topic-card .lh-topic-card__title {
+  font-size: 1.05rem;
+  line-height: 1.35;
+}
+
+.lh-ex-topic-card,
+.lh-ex-topic-card.lh-topic-card--done {
+  min-height: 4.25rem;
+  gap: 0.35rem;
+  justify-content: center;
+}

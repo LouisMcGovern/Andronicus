@@ -9001,11 +9001,6 @@
         const card = document.createElement("button");
         card.type = "button";
         card.className = "lh-topic-card lh-ex-topic-card" + (done ? " lh-topic-card--done" : "");
-        const num = document.createElement("span");
-        num.className = "lh-topic-num";
-        num.textContent = String(i + 1);
-        num.setAttribute("aria-hidden", "true");
-        card.appendChild(num);
         if (i < 3 && !done) {
           const startHere = document.createElement("span");
           startHere.className = "lh-topic-card__start-here";
@@ -9042,12 +9037,6 @@
         h.className = "lh-topic-card__title";
         h.textContent = exerciseTopicLabel(ex);
         card.appendChild(h);
-        if (ex.subtitle || EXERCISE_SUBTITLE_FR[ex.topic]) {
-          const sub = document.createElement("p");
-          sub.className = "lh-topic-card__subtitle";
-          sub.textContent = exerciseSubtitleLabel(ex);
-          card.appendChild(sub);
-        }
         card.addEventListener("click", function () {
           openExLesson(i);
         });
