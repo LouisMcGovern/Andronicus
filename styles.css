@@ -7726,3 +7726,117 @@ body.wr-open .pts {
 .iv-table td.iv-conj {
   font-weight: 500;
 }
+
+/* Weekly homework (weeks 1–30) */
+.lh-hw-week-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.lh-hw-week {
+  border: 1px solid var(--elevated-stroke, var(--border));
+  border-radius: 0.6rem;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.lh-hw-week.is-done {
+  background: #eef8f0;
+  border-color: #b8dfc1;
+}
+
+.lh-hw-week__summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  padding: 0.7rem 0.9rem;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.lh-hw-week__summary::-webkit-details-marker {
+  display: none;
+}
+
+.lh-hw-week__summary::before {
+  content: "▸";
+  font-size: 0.8rem;
+  color: var(--ink-muted, #667);
+  transition: transform 0.15s ease;
+}
+
+.lh-hw-week__details[open] > .lh-hw-week__summary::before {
+  transform: rotate(90deg);
+}
+
+.lh-hw-week__num {
+  font-weight: 700;
+  color: var(--ink-heading);
+  min-width: 5.5rem;
+}
+
+.lh-hw-week__tag {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: var(--surface-subtle, #f1f3f6);
+  color: var(--ink-heading);
+}
+
+.lh-hw-week[data-type="write"] .lh-hw-week__tag {
+  background: #fff1dc;
+  color: #7a4a00;
+}
+
+.lh-hw-week[data-type="practice"] .lh-hw-week__tag {
+  background: #e6f0ff;
+  color: #1d4380;
+}
+
+.lh-hw-week__done {
+  margin-left: auto;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #1f7a35;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.lh-hw-week__body {
+  padding: 0 0.9rem 0.85rem 2.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.lh-hw-week__text {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.lh-hw-week__tick {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.lh-hw-week__tick input {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+@media (max-width: 520px) {
+  .lh-hw-week__body {
+    padding-left: 0.9rem;
+  }
+}

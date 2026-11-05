@@ -715,43 +715,6 @@
           tasks: ["Write 10 useful message phrases in English.", "Create a short online safety poster in English."],
         },
       ],
-      homeworkChecklist: [
-        { id: "hw-b-01", category: "Vocab", en: "Make 10 flashcards by hand: English on one side, French on the other. Use any words you've learned.", fr: "Fabrique 10 cartes en papier : anglais d'un côté, français de l'autre. Choisis n'importe quels mots que tu connais." },
-        { id: "hw-b-02", category: "Vocab", en: "Memorise 15 words from one flashcard deck and ask a parent or friend to test you.", fr: "Apprends par cœur 15 mots d'un paquet de cartes mémoire et demande à un parent ou un ami de te tester." },
-        { id: "hw-b-03", category: "Reading", en: "Find an English word on something around your house (cereal box, t-shirt, app) and write what it means.", fr: "Trouve un mot anglais quelque part chez toi (boîte de céréales, T-shirt, application) et écris ce qu'il veut dire." },
-        { id: "hw-b-04", category: "Vocab", en: "Write the alphabet in English and say each letter out loud three times.", fr: "Écris l'alphabet en anglais et prononce chaque lettre à voix haute, trois fois." },
-        { id: "hw-b-05", category: "Listening", en: "Listen to one English song you already like and write down 5 words you hear.", fr: "Écoute une chanson en anglais que tu aimes déjà et note 5 mots que tu entends." },
-        { id: "hw-b-06", category: "Reading", en: "Read the names of 5 countries in English and write the French version next to each.", fr: "Lis les noms de 5 pays en anglais et écris leur version française à côté de chacun." },
-        { id: "hw-b-07", category: "Speaking", en: "Say out loud: your name, your age, where you live, and one thing you like. In English.", fr: "Dis à voix haute : ton prénom, ton âge, où tu habites, et une chose que tu aimes. En anglais." },
-        { id: "hw-b-08", category: "Vocab", en: "Learn the days of the week and the months of the year in English. Write them out from memory.", fr: "Apprends les jours de la semaine et les mois de l'année en anglais, puis écris-les de mémoire." },
-        { id: "hw-b-09", category: "Writing", en: "Write 5 sentences about what you do every morning. Use Present Simple.", fr: "Écris 5 phrases sur ce que tu fais tous les matins. Utilise le Present Simple." },
-        { id: "hw-b-10", category: "Grammar", en: "Conjugate the verb \"to be\" in Present Simple for all six pronouns (I am, you are…). Write it out.", fr: "Conjugue le verbe « to be » au Present Simple pour les six pronoms (I am, you are…). Écris-les." },
-        { id: "hw-b-11", category: "Reading", en: "Read a short children's book or comic strip in English. Don't translate. Just understand what's happening.", fr: "Lis un petit livre pour enfants ou une bande dessinée en anglais. Ne traduis pas. Essaie juste de comprendre l'histoire." },
-        { id: "hw-b-12", category: "Listening", en: "Watch one Disney or Pixar clip in English with French subtitles. Write down 3 phrases you heard.", fr: "Regarde un extrait Disney ou Pixar en anglais avec les sous-titres français. Note 3 phrases que tu as entendues." },
-        { id: "hw-b-13", category: "Speaking", en: "Record yourself saying 10 sentences about your family. Play it back and listen for mistakes.", fr: "Enregistre-toi en disant 10 phrases sur ta famille. Réécoute-toi et repère tes erreurs." },
-        { id: "hw-b-14", category: "Writing", en: "Write 5 sentences about what you are doing right now. Use Present Continuous (am/is/are + verb-ing).", fr: "Écris 5 phrases sur ce que tu es en train de faire maintenant. Utilise le Present Continuous (am/is/are + verbe-ing)." },
-        { id: "hw-b-15", category: "Vocab", en: "Pick a topic (sports, food, school) and write 20 English words on it. Translate each into French.", fr: "Choisis un thème (sport, nourriture, école) et écris 20 mots anglais sur ce thème. Traduis chacun en français." },
-        { id: "hw-b-16", category: "Grammar", en: "Write 10 questions in English using \"Do\" or \"Does\" (e.g., \"Do you like pizza?\").", fr: "Écris 10 questions en anglais avec « Do » ou « Does » (par exemple : « Do you like pizza? »)." },
-        { id: "hw-b-17", category: "Listening", en: "Listen to an English song with the lyrics in front of you and underline every verb you see.", fr: "Écoute une chanson en anglais en suivant les paroles, et souligne tous les verbes que tu vois." },
-        { id: "hw-b-18", category: "Reading", en: "Read an English Wikipedia article on a topic you like (Simple English version). Write 5 things you learned.", fr: "Lis un article Wikipédia en anglais (version Simple English) sur un sujet qui te plaît. Note 5 choses que tu as apprises." },
-        { id: "hw-b-19", category: "Writing", en: "Describe your bedroom in 8 English sentences. Use \"There is\" and \"There are.\"", fr: "Décris ta chambre en 8 phrases en anglais. Utilise « There is » et « There are »." },
-        { id: "hw-b-20", category: "Speaking", en: "Have a 2-minute conversation with someone (or pretend) about your weekend. Only English.", fr: "Tiens une conversation de 2 minutes avec quelqu'un (ou fais semblant) sur ton week-end. Uniquement en anglais." },
-        { id: "hw-b-21", category: "Grammar", en: "Write 10 sentences in Present Simple (routines) and 10 in Present Continuous (now). Mix them up.", fr: "Écris 10 phrases au Present Simple (routines) et 10 au Present Continuous (maintenant). Mélange-les." },
-        { id: "hw-b-22", category: "Reading", en: "Read the back of an English movie/show DVD or poster. Write a French summary in 3 sentences.", fr: "Lis le résumé au dos d'un DVD ou d'une affiche de film/série en anglais. Écris un résumé en français en 3 phrases." },
-        { id: "hw-b-23", category: "Writing", en: "Write a short email (5–8 sentences) introducing yourself to a pen pal.", fr: "Écris un court e-mail (5 à 8 phrases) pour te présenter à un correspondant." },
-        { id: "hw-b-24", category: "Listening", en: "Watch one English-speaking YouTuber for 5 minutes. Don't pause. Note 5 new words afterwards.", fr: "Regarde un youtubeur anglophone pendant 5 minutes, sans mettre en pause. Note 5 nouveaux mots à la fin." },
-        { id: "hw-b-25", category: "Speaking", en: "Order an imaginary meal in English. Include the dish, drink, and \"please\" / \"thank you.\"", fr: "Commande un repas imaginaire en anglais. Précise le plat, la boisson, et n'oublie pas « please » et « thank you »." },
-        { id: "hw-b-26", category: "Vocab", en: "Learn 30 irregular past tense verbs (go/went, eat/ate…) and write them in 3 columns: base / past / French.", fr: "Apprends 30 verbes irréguliers au past tense (go/went, eat/ate…) et écris-les en 3 colonnes : base / past / français." },
-        { id: "hw-b-27", category: "Writing", en: "Write a 100-word diary entry about yesterday. Use Past Simple.", fr: "Écris une page de journal intime de 100 mots sur ta journée d'hier. Utilise le Past Simple." },
-        { id: "hw-b-28", category: "Grammar", en: "Rewrite 10 affirmative sentences as negative AND as questions. (E.g., \"She plays football.\" → \"She doesn't play football.\" / \"Does she play football?\")", fr: "Réécris 10 phrases affirmatives en version négative ET en question. (Ex. : « She plays football. » → « She doesn't play football. » / « Does she play football? »)" },
-        { id: "hw-b-29", category: "Reading", en: "Read a short news article in simple English (News in Levels, BBC Learning English). Summarise in French.", fr: "Lis un court article d'actualité en anglais simple (News in Levels, BBC Learning English). Fais-en un résumé en français." },
-        { id: "hw-b-30", category: "Listening", en: "Watch a 10-minute English video (no subtitles). Write 5 sentences in English about what happened.", fr: "Regarde une vidéo en anglais de 10 minutes (sans sous-titres). Écris 5 phrases en anglais sur ce qui s'est passé." },
-        { id: "hw-b-31", category: "Speaking", en: "Give a 1-minute spoken presentation in English about your favourite hobby. Record it.", fr: "Fais une présentation orale d'une minute en anglais sur ton loisir préféré. Enregistre-toi." },
-        { id: "hw-b-32", category: "Writing", en: "Write a 150-word story using at least 8 Past Simple verbs. Give it a title.", fr: "Écris une histoire de 150 mots avec au moins 8 verbes au Past Simple. Donne-lui un titre." },
-        { id: "hw-b-33", category: "Grammar", en: "Learn the difference between \"much / many / a lot of\" and write 9 sentences correctly using each.", fr: "Apprends la différence entre « much », « many » et « a lot of », puis écris 9 phrases correctes en utilisant chacun." },
-        { id: "hw-b-34", category: "Reading", en: "Read the first chapter of an English children's novel (Roald Dahl, Diary of a Wimpy Kid). Write 10 questions you have about it.", fr: "Lis le premier chapitre d'un roman jeunesse en anglais (Roald Dahl, Le Journal d'un dégonflé). Écris 10 questions que tu te poses dessus." },
-        { id: "hw-b-35", category: "Writing", en: "Write a letter to your future self in English (150+ words). Mix past, present, and future tenses.", fr: "Écris en anglais une lettre à la personne que tu seras dans dix ans (150 mots minimum). Mélange les temps passé, présent et futur." },
-      ],
       exercises: [
         {
           topic: "Possessive adjectives (my/your/his/her/our/their)",
@@ -1241,43 +1204,6 @@
           focus: "Explain problems, propose solutions, and justify choices.",
           tasks: ["Write 10 solution phrases.", "Complete a case-study response in 140 words."],
         },
-      ],
-      homeworkChecklist: [
-        { id: "hw-i-01", category: "Vocab", en: "Make 20 flashcards of phrasal verbs (look up, give up, find out, etc.) with French equivalents.", fr: "Fabrique 20 cartes de phrasal verbs (look up, give up, find out, etc.) avec leur équivalent français." },
-        { id: "hw-i-02", category: "Reading", en: "Read a children's chapter book in English (Roald Dahl, Diary of a Wimpy Kid). Write a 50-word summary.", fr: "Lis un livre jeunesse en anglais (Roald Dahl, Le Journal d'un dégonflé). Rédige un résumé de 50 mots." },
-        { id: "hw-i-03", category: "Grammar", en: "Conjugate 15 verbs in Past Simple. Include at least 8 irregular verbs.", fr: "Conjugue 15 verbes au Past Simple. Inclus au moins 8 verbes irréguliers." },
-        { id: "hw-i-04", category: "Vocab", en: "Learn 25 advanced everyday words (anyway, although, however, etc.) and use each in a sentence.", fr: "Apprends 25 mots du quotidien plus avancés (anyway, although, however, etc.) et utilise chacun dans une phrase." },
-        { id: "hw-i-05", category: "Writing", en: "Write a 100-word paragraph comparing two things you know well (two friends, two films, two cities).", fr: "Écris un paragraphe de 100 mots qui compare deux choses que tu connais bien (deux amis, deux films, deux villes)." },
-        { id: "hw-i-06", category: "Listening", en: "Watch a 15-minute English YouTube vlog without subtitles. Write what you remember.", fr: "Regarde un vlog YouTube en anglais de 15 minutes sans sous-titres. Écris ce dont tu te souviens." },
-        { id: "hw-i-07", category: "Speaking", en: "Record a 1-minute monologue about your week. Include past, present, and future tenses.", fr: "Enregistre un monologue d'une minute sur ta semaine. Inclus du passé, du présent et du futur." },
-        { id: "hw-i-08", category: "Reading", en: "Read a short English news article and write 5 questions you still have about it.", fr: "Lis un court article d'actualité en anglais et écris 5 questions que tu te poses encore dessus." },
-        { id: "hw-i-09", category: "Grammar", en: "Write 8 sentences using Present Perfect (have/has + past participle).", fr: "Écris 8 phrases avec le Present Perfect (have/has + participe passé)." },
-        { id: "hw-i-10", category: "Listening", en: "Watch an English-language film with French subtitles. Note 10 idioms or phrases you found interesting.", fr: "Regarde un film en anglais avec les sous-titres français. Note 10 expressions ou phrases qui t'ont marqué." },
-        { id: "hw-i-11", category: "Speaking", en: "Phone-call roleplay: book a restaurant in English. At least 5 exchanges.", fr: "Jeu de rôle au téléphone : réserve une table au restaurant en anglais. Au moins 5 échanges." },
-        { id: "hw-i-12", category: "Writing", en: "Write a formal email asking a teacher for an extension on homework.", fr: "Écris un e-mail formel à un professeur pour demander un délai supplémentaire pour un devoir." },
-        { id: "hw-i-13", category: "Grammar", en: "Write 10 sentences with \"since\" and \"for\" using Present Perfect.", fr: "Écris 10 phrases avec « since » et « for » en utilisant le Present Perfect." },
-        { id: "hw-i-14", category: "Reading", en: "Read a 1-page English short story. Underline every word you don't know and look up at least 5.", fr: "Lis une nouvelle en anglais d'une page. Souligne tous les mots que tu ne connais pas et cherches-en au moins 5." },
-        { id: "hw-i-15", category: "Vocab", en: "Learn 20 collocations (make/do, take/have a shower, do business…) and write sentences for each.", fr: "Apprends 20 collocations (make/do, take/have a shower, do business…) et écris une phrase pour chacune." },
-        { id: "hw-i-16", category: "Speaking", en: "Give a 2-minute spoken summary of a film you saw recently, in English.", fr: "Fais un résumé oral de 2 minutes en anglais d'un film que tu as vu récemment." },
-        { id: "hw-i-17", category: "Writing", en: "Write a 150-word opinion paragraph: \"Is social media good or bad for teenagers?\"", fr: "Écris un paragraphe d'opinion de 150 mots : « Les réseaux sociaux sont-ils bons ou mauvais pour les adolescents ? »" },
-        { id: "hw-i-18", category: "Listening", en: "Listen to one BBC Learning English podcast episode. Write 8 sentences about what you heard.", fr: "Écoute un épisode de podcast BBC Learning English. Écris 8 phrases sur ce que tu as entendu." },
-        { id: "hw-i-19", category: "Grammar", en: "Write 5 First Conditional sentences (\"If X, Y will…\") and 5 Second Conditional (\"If X, Y would…\").", fr: "Écris 5 phrases au First Conditional (« If X, Y will… ») et 5 au Second Conditional (« If X, Y would… »)." },
-        { id: "hw-i-20", category: "Reading", en: "Read an English Wikipedia article (full version, not Simple English). Note 3 things that surprised you.", fr: "Lis un article Wikipédia en anglais (version normale, pas Simple English). Note 3 choses qui t'ont surpris." },
-        { id: "hw-i-21", category: "Writing", en: "Describe a place you love in 200 words. Use at least 3 different senses (sight, sound, smell, etc.).", fr: "Décris en 200 mots un endroit que tu aimes. Fais appel à au moins trois sens différents (vue, ouïe, odorat, etc.)." },
-        { id: "hw-i-22", category: "Speaking", en: "Argue both sides of a topic for 1 minute each: \"Should homework be banned?\"", fr: "Défends le pour pendant une minute, puis le contre pendant une minute, sur ce sujet : « Faut-il interdire les devoirs ? »" },
-        { id: "hw-i-23", category: "Vocab", en: "Learn 15 words for expressing opinions (in my view, arguably, frankly, allegedly…) and use each.", fr: "Apprends 15 mots pour exprimer une opinion (in my view, arguably, frankly, allegedly…) et utilise chacun dans une phrase." },
-        { id: "hw-i-24", category: "Listening", en: "Listen to an English song and transcribe the chorus from memory. Compare with the official lyrics.", fr: "Écoute une chanson en anglais et transcris le refrain de mémoire. Compare ensuite avec les paroles officielles." },
-        { id: "hw-i-25", category: "Writing", en: "Write a 250-word movie review: plot summary, what you liked, what you didn't.", fr: "Écris une critique de film de 250 mots : résumé du scénario, ce que tu as aimé, ce qui t'a déplu." },
-        { id: "hw-i-26", category: "Speaking", en: "Phone-call roleplay: complain to a hotel about a noisy room. Negotiate a solution. At least 8 exchanges.", fr: "Jeu de rôle au téléphone : adresse une plainte à un hôtel à propos d'une chambre bruyante. Négocie une solution. Au moins 8 échanges." },
-        { id: "hw-i-27", category: "Grammar", en: "Rewrite 10 active sentences in the passive voice (e.g., \"Shakespeare wrote Hamlet\" → \"Hamlet was written by Shakespeare\").", fr: "Réécris 10 phrases actives à la voix passive (ex. : « Shakespeare wrote Hamlet » → « Hamlet was written by Shakespeare »)." },
-        { id: "hw-i-28", category: "Reading", en: "Read a 2-page English short story. Write a 50-word reaction in English.", fr: "Lis une nouvelle de 2 pages en anglais. Écris une réaction de 50 mots en anglais." },
-        { id: "hw-i-29", category: "Vocab", en: "Learn 25 phrasal verbs from a single topic (work, travel, friendship) with example sentences.", fr: "Apprends 25 phrasal verbs autour d'un seul thème (travail, voyage, amitié) avec une phrase d'exemple pour chacun." },
-        { id: "hw-i-30", category: "Listening", en: "Watch a 30-minute English-language episode without subtitles. Summarise the plot in 5 English sentences.", fr: "Regarde un épisode de 30 minutes en anglais sans sous-titres. Résume l'intrigue en 5 phrases en anglais." },
-        { id: "hw-i-31", category: "Grammar", en: "Write 5 Reported Speech sentences (e.g., She said: \"I am tired.\" → She said that she was tired.).", fr: "Écris 5 phrases au discours rapporté (ex. : She said: « I am tired. » → She said that she was tired.)." },
-        { id: "hw-i-32", category: "Writing", en: "Write a 300-word personal essay: \"The moment I learned something important.\"", fr: "Écris un essai personnel de 300 mots : « Le moment où j'ai appris quelque chose d'important. »" },
-        { id: "hw-i-33", category: "Speaking", en: "Have a real 5-minute conversation in English with someone (a teacher, an online language partner). Reflect on what was hard.", fr: "Tiens une vraie conversation de 5 minutes en anglais avec quelqu'un (un professeur, un partenaire linguistique en ligne). Réfléchis ensuite à ce qui a été difficile." },
-        { id: "hw-i-34", category: "Reading", en: "Read the first chapter of an English young-adult novel (The Hunger Games, Percy Jackson). Write 10 questions about it.", fr: "Lis le premier chapitre d'un roman jeunesse en anglais (The Hunger Games, Percy Jackson). Écris 10 questions dessus." },
-        { id: "hw-i-35", category: "Writing", en: "Write a 250-word formal letter to a local newspaper about an issue you care about.", fr: "Écris une lettre formelle de 250 mots à un journal local sur un sujet qui te tient à cœur." },
       ],
       exercises: [
         {
@@ -2044,6 +1970,23 @@
       ],
     },
   };
+
+  (function attachWeeklyHomework() {
+    var hw = window.ANDRONICUS_HOMEWORK || {};
+    ["beginner", "intermediate", "advanced"].forEach(function (lvl) {
+      if (!learningData[lvl]) return;
+      learningData[lvl].homeworkChecklist = (hw[lvl] || []).map(function (t) {
+        return {
+          id: t.id,
+          week: t.week,
+          type: t.type,
+          category: t.type === "write" ? "Writing" : "Task",
+          en: t.en,
+          fr: t.fr,
+        };
+      });
+    });
+  })();
 
   function buildMasterDeck(seedPairs, total) {
     const cards = [];
@@ -6496,7 +6439,13 @@
       studentLevel && learningData[studentLevel] && learningData[studentLevel].homeworkChecklist
         ? learningData[studentLevel].homeworkChecklist
         : [];
-    const hwDoneIds = studentHomeworkDoneIds(stats, studentLevel || "");
+    const hwKnownIds = Object.create(null);
+    hwAllItems.forEach(function (item) {
+      if (item && item.id) hwKnownIds[item.id] = true;
+    });
+    const hwDoneIds = studentHomeworkDoneIds(stats, studentLevel || "").filter(function (id) {
+      return hwKnownIds[id];
+    });
     const secHw = document.createElement("section");
     secHw.className = "admin-detail-section";
     const hHw = document.createElement("h4");
@@ -6519,13 +6468,17 @@
       if (hwDoneIds.length) {
         const idToLabel = Object.create(null);
         hwAllItems.forEach(function (item) {
-          if (item && item.id) idToLabel[item.id] = item.en || item.fr || item.id;
+          if (item && item.id)
+            idToLabel[item.id] =
+              (item.week ? I18n.t("learning_homework_week", { n: String(item.week) }) + " · " : "") +
+              (I18n.getLang() === "fr" ? item.fr || item.en : item.en || item.fr) ||
+              item.id;
         });
         const ul = document.createElement("ul");
         ul.className = "admin-detail-list";
         hwDoneIds.forEach(function (id) {
           const li = document.createElement("li");
-          li.textContent = idToLabel[id] ? id + " · " + idToLabel[id] : id;
+          li.textContent = idToLabel[id] || id;
           ul.appendChild(li);
         });
         secHw.appendChild(ul);
@@ -8581,6 +8534,7 @@
         progressPanel.appendChild(wrap);
       }
 
+      const openHwWeeks = Object.create(null);
       function renderHomeworkPanel() {
         homeworkPanel.innerHTML = "";
 
@@ -8622,46 +8576,24 @@
             ? hub.homeworkChecklist[level]
             : {};
         const cLang = I18n.getLang();
-        const hwCategories = ["Vocab", "Grammar", "Reading", "Listening", "Speaking", "Writing"];
         if (user) void loadStudentWriting(false);
 
-        function homeworkLevelDoneCount() {
-          if (!hub || !hub.homeworkChecklist || !hub.homeworkChecklist[level]) return 0;
-          return Object.keys(hub.homeworkChecklist[level]).length;
-        }
-
-        function countCategoryDone(items) {
-          return items.reduce(function (acc, item) {
-            if (!item || !item.id) return acc;
-            return acc + (levelDone[item.id] ? 1 : 0);
-          }, 0);
-        }
-
-        function buildOverallHwProgress(doneCount, total) {
-          const pct = total ? Math.round((doneCount / total) * 100) : 0;
-          const wrap = document.createElement("div");
-          wrap.className = "lh-hw-checklist__overall";
-          const track = document.createElement("div");
-          track.className = "lh-hw-overall-bar-track";
-          const fill = document.createElement("div");
-          fill.className = "lh-hw-overall-bar-fill";
-          fill.style.width = String(pct) + "%";
-          fill.style.backgroundColor = levelColor.accent;
-          track.appendChild(fill);
-          wrap.appendChild(track);
-          const stat = document.createElement("p");
-          stat.className = "lh-hw-overall-stat";
-          stat.textContent = I18n.t("learning_homework_overall_progress", {
-            n: String(doneCount),
-            t: String(total),
-            pct: String(pct),
+        const weeks = data.homeworkChecklist
+          .filter(function (item) {
+            return item && item.id;
+          })
+          .slice()
+          .sort(function (x, y) {
+            return (x.week || 0) - (y.week || 0);
           });
-          wrap.appendChild(stat);
-          return wrap;
-        }
+        const doneCount = weeks.reduce(function (acc, item) {
+          return acc + (levelDone[item.id] ? 1 : 0);
+        }, 0);
+        const total = weeks.length;
+        const pct = total ? Math.round((doneCount / total) * 100) : 0;
 
         const cwrap = document.createElement("section");
-        cwrap.className = "lh-hw-checklist";
+        cwrap.className = "lh-hw-checklist lh-hw-weeks";
 
         const cTitle = document.createElement("h3");
         cTitle.className = "lh-hw-section__title";
@@ -8673,102 +8605,120 @@
         cIntro.textContent = I18n.t("learning_homework_checklist_intro");
         cwrap.appendChild(cIntro);
 
-        const totalDone = homeworkLevelDoneCount();
-        const totalItems = data.homeworkChecklist.length;
-        cwrap.appendChild(buildOverallHwProgress(totalDone, totalItems));
-
-        const grouped = Object.create(null);
-        hwCategories.forEach(function (cat) {
-          grouped[cat] = [];
+        const overall = document.createElement("div");
+        overall.className = "lh-hw-checklist__overall";
+        const track = document.createElement("div");
+        track.className = "lh-hw-overall-bar-track";
+        const fill = document.createElement("div");
+        fill.className = "lh-hw-overall-bar-fill";
+        fill.style.width = String(pct) + "%";
+        fill.style.backgroundColor = levelColor.accent;
+        track.appendChild(fill);
+        overall.appendChild(track);
+        const stat = document.createElement("p");
+        stat.className = "lh-hw-overall-stat";
+        stat.textContent = I18n.t("learning_homework_overall_progress", {
+          n: String(doneCount),
+          t: String(total),
+          pct: String(pct),
         });
-        for (let gi = 0; gi < data.homeworkChecklist.length; gi++) {
-          let item = data.homeworkChecklist[gi];
-          if (!item || !item.id) continue;
-          const cat = item.category || "Vocab";
-          if (!grouped[cat]) grouped[cat] = [];
-          grouped[cat].push(item);
+        overall.appendChild(stat);
+        cwrap.appendChild(overall);
+
+        let firstOpen = -1;
+        for (let wi = 0; wi < weeks.length; wi++) {
+          if (!levelDone[weeks[wi].id]) {
+            firstOpen = wi;
+            break;
+          }
         }
 
-        for (let ci = 0; ci < hwCategories.length; ci++) {
-          const cat = hwCategories[ci];
-          const items = grouped[cat];
-          if (!items || !items.length) continue;
+        const list = document.createElement("ol");
+        list.className = "lh-hw-week-list";
+        weeks.forEach(function (item, idx) {
+          const isDone = !!levelDone[item.id];
+          const li = document.createElement("li");
+          li.className = "lh-hw-week" + (isDone ? " is-done" : "");
+          li.setAttribute("data-type", item.type || "class");
 
-          const catDone = countCategoryDone(items);
-          const catTotal = items.length;
-          const catComplete = catDone >= catTotal;
+          const det = document.createElement("details");
+          det.className = "lh-hw-week__details";
+          if (idx === firstOpen || openHwWeeks[item.id]) det.open = true;
+          det.addEventListener("toggle", function () {
+            if (det.open) openHwWeeks[item.id] = true;
+            else delete openHwWeeks[item.id];
+          });
 
-          const catSec = document.createElement("section");
-          catSec.className = "lh-hw-category";
-
-          const catHead = document.createElement("div");
-          catHead.className = "lh-hw-category__head";
-          const catTitle = document.createElement("h4");
-          catTitle.className = "lh-hw-category__title";
-          catTitle.textContent = homeworkCategoryLabel(cat);
-          catHead.appendChild(catTitle);
-          if (catComplete) {
-            const doneBadge = document.createElement("span");
-            doneBadge.className = "lh-hw-category__done-badge";
-            doneBadge.textContent = I18n.t("learning_homework_done");
-            catHead.appendChild(doneBadge);
+          const sum = document.createElement("summary");
+          sum.className = "lh-hw-week__summary";
+          const wk = document.createElement("span");
+          wk.className = "lh-hw-week__num";
+          wk.textContent = I18n.t("learning_homework_week", { n: String(item.week || idx + 1) });
+          sum.appendChild(wk);
+          const tag = document.createElement("span");
+          tag.className = "lh-hw-week__tag";
+          tag.textContent = I18n.t("learning_homework_type_" + (item.type || "class"));
+          sum.appendChild(tag);
+          if (isDone) {
+            const badge = document.createElement("span");
+            badge.className = "lh-hw-week__done";
+            badge.textContent = "✓ " + I18n.t("learning_homework_done");
+            sum.appendChild(badge);
           }
-          catSec.appendChild(catHead);
+          det.appendChild(sum);
 
-          const catList = document.createElement("ol");
-          catList.className = "lh-hw-checklist__list lh-hw-category__list";
-          for (let ii = 0; ii < items.length; ii++) {
-            let item = items[ii];
-            if (!item || !item.id) continue;
+          const body = document.createElement("div");
+          body.className = "lh-hw-week__body";
+          const text = document.createElement("p");
+          text.className = "lh-hw-week__text";
+          text.textContent = cLang === "fr" && item.fr ? item.fr : item.en || item.fr || "";
+          body.appendChild(text);
 
-            const renderUser = getActiveUser();
-            const renderHub = renderUser ? ensureLearningHub(ensureStats(renderUser)) : null;
-            const doneAtRender =
-              (renderHub && renderHub.homeworkChecklist && renderHub.homeworkChecklist[level]) || {};
+          if (item.category === "Writing") {
+            body.appendChild(buildWritingHomeworkRow(level, item));
+          }
 
-            const li = document.createElement("li");
-            li.className = "lh-hw-checklist__item" + (doneAtRender[item.id] ? " is-done" : "");
-            li.setAttribute("data-category", (item.category || "Vocab").toLowerCase());
-            const label = document.createElement("label");
-            label.className = "lh-hw-checklist__label lh-hw-checklist__label--in-category";
-            const cb = document.createElement("input");
-            cb.type = "checkbox";
-            cb.className = "lh-hw-checklist__cb";
-            cb.checked = !!doneAtRender[item.id];
-            console.log("[hw checkbox] getActiveUser()", getActiveUser());
-            cb.disabled = getActiveUser() === null;
-            cb.addEventListener("change", function () {
-              const user = getActiveUser();
-              if (!user) {
-                cb.checked = false;
-                return;
-              }
-              const st = ensureStats(user);
-              const hub = ensureLearningHub(st);
-              if (!hub.homeworkChecklist) hub.homeworkChecklist = {};
-              if (!hub.homeworkChecklist[level]) hub.homeworkChecklist[level] = {};
-              if (cb.checked) {
-                hub.homeworkChecklist[level][item.id] = true;
-              } else {
-                delete hub.homeworkChecklist[level][item.id];
-              }
-              saveUsers();
-              renderHomeworkPanel();
-            });
-            const text = document.createElement("span");
-            text.className = "lh-hw-checklist__text";
-            text.textContent = cLang === "fr" && item.fr ? item.fr : item.en || item.fr || "";
-            label.appendChild(cb);
-            label.appendChild(text);
-            li.appendChild(label);
-            if (item.category === "Writing") {
-              li.appendChild(buildWritingHomeworkRow(level, item));
+          const label = document.createElement("label");
+          label.className = "lh-hw-week__tick";
+          const cb = document.createElement("input");
+          cb.type = "checkbox";
+          cb.className = "lh-hw-checklist__cb";
+          cb.checked = isDone;
+          cb.disabled = !user;
+          cb.addEventListener("change", function () {
+            const u = getActiveUser();
+            if (!u) {
+              cb.checked = false;
+              return;
             }
-            catList.appendChild(li);
-          }
-          catSec.appendChild(catList);
-          cwrap.appendChild(catSec);
-        }
+            const h = ensureLearningHub(ensureStats(u));
+            if (!h.homeworkChecklist) h.homeworkChecklist = {};
+            if (!h.homeworkChecklist[level]) h.homeworkChecklist[level] = {};
+            if (!h.homeworkChecklistDates) h.homeworkChecklistDates = {};
+            if (cb.checked) {
+              h.homeworkChecklist[level][item.id] = true;
+              h.homeworkChecklistDates[level + "|" + item.id] = new Date().toISOString();
+              delete openHwWeeks[item.id];
+            } else {
+              delete h.homeworkChecklist[level][item.id];
+              delete h.homeworkChecklistDates[level + "|" + item.id];
+              openHwWeeks[item.id] = true;
+            }
+            saveUsers();
+            renderHomeworkPanel();
+            refreshLandingCardProgress(root, level, data);
+          });
+          const lt = document.createElement("span");
+          lt.textContent = I18n.t("learning_homework_mark_week_done");
+          label.appendChild(cb);
+          label.appendChild(lt);
+          body.appendChild(label);
+
+          det.appendChild(body);
+          li.appendChild(det);
+          list.appendChild(li);
+        });
+        cwrap.appendChild(list);
 
         if (!user) {
           const cNotice = document.createElement("p");
