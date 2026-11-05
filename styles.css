@@ -7578,3 +7578,73 @@ body.wr-open .pts {
     min-width: 0;
   }
 }
+
+/* Homework lock (class students only) */
+.hw-lock {
+  max-width: 32rem;
+  margin: 1rem auto;
+  padding: 1.5rem 1.25rem;
+  text-align: center;
+  background: #ffffff;
+  border: 1px solid #c5d3df;
+  border-radius: 0.5rem;
+}
+
+.hw-lock__icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.hw-lock__title {
+  margin: 0.6rem 0 0.4rem;
+  font-size: 1.15rem;
+  color: #0d1b2a;
+}
+
+.hw-lock__text,
+.hw-lock__note {
+  margin: 0 0 0.9rem;
+  color: #4a6580;
+  font-size: 0.93rem;
+}
+
+.hw-lock__form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 0.6rem;
+}
+
+.hw-lock__label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-align: left;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #4a6580;
+}
+
+.hw-lock__input {
+  width: 11rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid #9dbdd4;
+  border-radius: 0.3rem;
+  font-size: 1rem;
+}
+
+.hw-lock .btn-primary.hw-lock__btn {
+  margin-top: 0;
+}
+
+.hw-lock .form-error {
+  flex-basis: 100%;
+  margin: 0.2rem 0 0;
+}
+
+.hw-lock__join {
+  margin: 1.1rem 0 0;
+  font-size: 0.88rem;
+  color: #4a6580;
+}

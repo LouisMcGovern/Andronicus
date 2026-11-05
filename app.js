@@ -2880,6 +2880,102 @@
     return "";
   }
 
+  /* Homework is a class-only feature: students unlock it once with the class code. */
+  const CLASS_CODE = "123";
+
+  function hasClassAccess() {
+    const user = getActiveUser();
+    if (!user) return false;
+    return ensureLearningHub(ensureStats(user)).classAccess === true;
+  }
+
+  function renderHomeworkLock(panel, onUnlocked) {
+    panel.innerHTML = "";
+    const box = document.createElement("div");
+    box.className = "hw-lock";
+    const icon = document.createElement("div");
+    icon.className = "hw-lock__icon";
+    icon.setAttribute("aria-hidden", "true");
+    icon.textContent = "🔒";
+    const title = document.createElement("h3");
+    title.className = "hw-lock__title";
+    title.textContent = I18n.t("hw_lock_title");
+    const text = document.createElement("p");
+    text.className = "hw-lock__text";
+    text.textContent = I18n.t("hw_lock_text");
+    box.appendChild(icon);
+    box.appendChild(title);
+    box.appendChild(text);
+
+    if (!getActiveUser()) {
+      const p = document.createElement("p");
+      p.className = "hw-lock__note";
+      p.textContent = I18n.t("hw_lock_signin");
+      const go = document.createElement("button");
+      go.type = "button";
+      go.className = "btn-primary hw-lock__btn";
+      go.textContent = I18n.t("hw_lock_signin_btn");
+      go.addEventListener("click", function () {
+        openSection("account");
+      });
+      box.appendChild(p);
+      box.appendChild(go);
+    } else {
+      const form = document.createElement("form");
+      form.className = "hw-lock__form";
+      const label = document.createElement("label");
+      label.className = "hw-lock__label";
+      label.textContent = I18n.t("hw_lock_label");
+      const input = document.createElement("input");
+      input.type = "password";
+      input.className = "hw-lock__input";
+      input.autocomplete = "off";
+      label.appendChild(input);
+      const btn = document.createElement("button");
+      btn.type = "submit";
+      btn.className = "btn-primary hw-lock__btn";
+      btn.textContent = I18n.t("hw_lock_btn");
+      const err = document.createElement("p");
+      err.className = "form-error hidden";
+      err.setAttribute("role", "alert");
+      form.appendChild(label);
+      form.appendChild(btn);
+      form.appendChild(err);
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if ((input.value || "").trim() !== CLASS_CODE) {
+          err.textContent = I18n.t("hw_lock_wrong");
+          err.classList.remove("hidden");
+          input.select();
+          return;
+        }
+        const user = getActiveUser();
+        if (!user) return;
+        ensureLearningHub(ensureStats(user)).classAccess = true;
+        saveUsers();
+        refreshAllLandingCardProgress();
+        if (onUnlocked) onUnlocked();
+      });
+      box.appendChild(form);
+    }
+
+    const join = document.createElement("p");
+    join.className = "hw-lock__join";
+    const joinText = document.createElement("span");
+    joinText.textContent = I18n.t("hw_lock_join") + " ";
+    const joinBtn = document.createElement("button");
+    joinBtn.type = "button";
+    joinBtn.className = "btn-text";
+    joinBtn.textContent = I18n.t("hw_lock_join_btn");
+    joinBtn.addEventListener("click", function () {
+      openSection("booking");
+    });
+    join.appendChild(joinText);
+    join.appendChild(joinBtn);
+    box.appendChild(join);
+    panel.appendChild(box);
+  }
+
   function refreshLandingCardProgress(root, lvl, data) {
     const user = getActiveUser();
     const stats = user ? ensureStats(user) : null;
@@ -2893,9 +2989,11 @@
       if (tool === "vocab") card.classList.toggle("is-complete", vocabDone);
       let prog = card.querySelector(".level-landing__card__progress");
       const text =
-        user && stats && lh && tool !== "progress"
-          ? landingCardProgressText(tool, lvl, data, stats, lh)
-          : "";
+        tool === "homework" && !hasClassAccess()
+          ? I18n.t("hw_card_locked")
+          : user && stats && lh && tool !== "progress"
+            ? landingCardProgressText(tool, lvl, data, stats, lh)
+            : "";
       if (!text) {
         if (prog) prog.remove();
         return;
@@ -8416,6 +8514,11 @@
 
       function renderHomeworkPanel() {
         homeworkPanel.innerHTML = "";
+
+        if (!hasClassAccess()) {
+          renderHomeworkLock(homeworkPanel, renderHomeworkPanel);
+          return;
+        }
 
         if (!Array.isArray(data.homeworkChecklist) || data.homeworkChecklist.length === 0) {
           const unavailable = document.createElement("p");
