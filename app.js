@@ -96,9 +96,9 @@
     emoji.setAttribute("aria-hidden", "true");
     emoji.textContent = "🔥";
     const heading = document.createElement("h2");
-    heading.textContent = String(days) + " jours de suite !";
+    heading.textContent = I18n.t("streak_days_title", { n: String(days) });
     const subline = document.createElement("p");
-    subline.textContent = "Continue comme ça !";
+    subline.textContent = I18n.t("streak_keep_going");
     overlay.appendChild(emoji);
     overlay.appendChild(heading);
     overlay.appendChild(subline);
@@ -117,7 +117,7 @@
     check.setAttribute("aria-hidden", "true");
     const title = document.createElement("div");
     title.className = "topic-complete-flash__title";
-    title.textContent = "Topic terminé !";
+    title.textContent = I18n.t("topic_complete_title");
     const name = document.createElement("div");
     name.className = "topic-complete-flash__name";
     name.textContent = topicName;
@@ -401,7 +401,7 @@
     "Present perfect vs past simple": "Present perfect vs past simple",
     "Relative clauses (who/which/that)": "Propositions relatives",
     "Modal verbs for advice and obligation": "Modaux (conseil et obligation)",
-    "Conditionals (0, 1st, 2nd)": "Conditionnels (0, 1er, 2e)",
+    "Conditionals (0, 1st, 2nd)": "Les conditionnels (types 0, 1 et 2)",
     "Reported speech": "Discours indirect",
     "Passive voice in context": "Voix passive",
     "Comparatives and superlatives for argument writing": "Comparatif et superlatif",
@@ -410,14 +410,14 @@
     "Error correction and redrafting": "Correction et réécriture",
     "Possessive adjectives in advanced writing": "Adjectifs possessifs (écriture avancée)",
     "Cleft and inversion practice": "Phrases clivées et inversion",
-    "Hedging and academic caution": "Atténuation académique",
+    "Hedging and academic caution": "La prudence dans l’écrit académique",
     "Nominalisation for formal writing": "Nominalisation",
     "Paraphrasing and synonym control": "Paraphrase et synonymes",
-    "Complex sentence cohesion": "Cohésion de phrases complexes",
+    "Complex sentence cohesion": "La cohésion des phrases complexes",
     "Advanced punctuation and clarity": "Ponctuation avancée",
     "Synthesis writing from two sources": "Synthèse de deux sources",
     "Timed high-level speaking response": "Oral chronométré",
-    "Abstract topic essay planning": "Plan de dissertation",
+    "Abstract topic essay planning": "Plan d’un essai sur un sujet abstrait",
     "Source comparison and reliability": "Comparaison de sources",
   };
 
@@ -714,7 +714,7 @@
       ],
       homeworkChecklist: [
         { id: "hw-b-01", category: "Vocab", en: "Make 10 flashcards by hand: English on one side, French on the other. Use any words you've learned.", fr: "Fabrique 10 cartes en papier : anglais d'un côté, français de l'autre. Choisis n'importe quels mots que tu connais." },
-        { id: "hw-b-02", category: "Vocab", en: "Memorise 15 words from one flashcard deck and ask a parent or friend to test you.", fr: "Apprends 15 mots d'un paquet de flashcards par cœur et demande à un parent ou un ami de te tester." },
+        { id: "hw-b-02", category: "Vocab", en: "Memorise 15 words from one flashcard deck and ask a parent or friend to test you.", fr: "Apprends par cœur 15 mots d'un paquet de cartes mémoire et demande à un parent ou un ami de te tester." },
         { id: "hw-b-03", category: "Reading", en: "Find an English word on something around your house (cereal box, t-shirt, app) and write what it means.", fr: "Trouve un mot anglais quelque part chez toi (boîte de céréales, T-shirt, application) et écris ce qu'il veut dire." },
         { id: "hw-b-04", category: "Vocab", en: "Write the alphabet in English and say each letter out loud three times.", fr: "Écris l'alphabet en anglais et prononce chaque lettre à voix haute, trois fois." },
         { id: "hw-b-05", category: "Listening", en: "Listen to one English song you already like and write down 5 words you hear.", fr: "Écoute une chanson en anglais que tu aimes déjà et note 5 mots que tu entends." },
@@ -727,27 +727,27 @@
         { id: "hw-b-12", category: "Listening", en: "Watch one Disney or Pixar clip in English with French subtitles. Write down 3 phrases you heard.", fr: "Regarde un extrait Disney ou Pixar en anglais avec les sous-titres français. Note 3 phrases que tu as entendues." },
         { id: "hw-b-13", category: "Speaking", en: "Record yourself saying 10 sentences about your family. Play it back and listen for mistakes.", fr: "Enregistre-toi en disant 10 phrases sur ta famille. Réécoute-toi et repère tes erreurs." },
         { id: "hw-b-14", category: "Writing", en: "Write 5 sentences about what you are doing right now. Use Present Continuous (am/is/are + verb-ing).", fr: "Écris 5 phrases sur ce que tu es en train de faire maintenant. Utilise le Present Continuous (am/is/are + verbe-ing)." },
-        { id: "hw-b-15", category: "Vocab", en: "Pick a topic (sports, food, school) and write 20 English words on it. Translate each into French.", fr: "Choisis un thème (sport, nourriture, école) et écris-y 20 mots anglais. Traduis chacun en français." },
+        { id: "hw-b-15", category: "Vocab", en: "Pick a topic (sports, food, school) and write 20 English words on it. Translate each into French.", fr: "Choisis un thème (sport, nourriture, école) et écris 20 mots anglais sur ce thème. Traduis chacun en français." },
         { id: "hw-b-16", category: "Grammar", en: "Write 10 questions in English using \"Do\" or \"Does\" (e.g., \"Do you like pizza?\").", fr: "Écris 10 questions en anglais avec « Do » ou « Does » (par exemple : « Do you like pizza? »)." },
         { id: "hw-b-17", category: "Listening", en: "Listen to an English song with the lyrics in front of you and underline every verb you see.", fr: "Écoute une chanson en anglais en suivant les paroles, et souligne tous les verbes que tu vois." },
         { id: "hw-b-18", category: "Reading", en: "Read an English Wikipedia article on a topic you like (Simple English version). Write 5 things you learned.", fr: "Lis un article Wikipédia en anglais (version Simple English) sur un sujet qui te plaît. Note 5 choses que tu as apprises." },
-        { id: "hw-b-19", category: "Writing", en: "Describe your bedroom in 8 English sentences. Use \"There is\" and \"There are.\"", fr: "Décris ta chambre en 8 phrases anglaises. Utilise « There is » et « There are »." },
+        { id: "hw-b-19", category: "Writing", en: "Describe your bedroom in 8 English sentences. Use \"There is\" and \"There are.\"", fr: "Décris ta chambre en 8 phrases en anglais. Utilise « There is » et « There are »." },
         { id: "hw-b-20", category: "Speaking", en: "Have a 2-minute conversation with someone (or pretend) about your weekend. Only English.", fr: "Tiens une conversation de 2 minutes avec quelqu'un (ou fais semblant) sur ton week-end. Uniquement en anglais." },
         { id: "hw-b-21", category: "Grammar", en: "Write 10 sentences in Present Simple (routines) and 10 in Present Continuous (now). Mix them up.", fr: "Écris 10 phrases au Present Simple (routines) et 10 au Present Continuous (maintenant). Mélange-les." },
         { id: "hw-b-22", category: "Reading", en: "Read the back of an English movie/show DVD or poster. Write a French summary in 3 sentences.", fr: "Lis le résumé au dos d'un DVD ou d'une affiche de film/série en anglais. Écris un résumé en français en 3 phrases." },
-        { id: "hw-b-23", category: "Writing", en: "Write a short email (5–8 sentences) introducing yourself to a pen pal.", fr: "Écris un court email (5 à 8 phrases) pour te présenter à un correspondant." },
-        { id: "hw-b-24", category: "Listening", en: "Watch one English-speaking YouTuber for 5 minutes. Don't pause. Note 5 new words afterwards.", fr: "Regarde un YouTubeur anglophone pendant 5 minutes. Sans mettre en pause. Note 5 nouveaux mots à la fin." },
+        { id: "hw-b-23", category: "Writing", en: "Write a short email (5–8 sentences) introducing yourself to a pen pal.", fr: "Écris un court e-mail (5 à 8 phrases) pour te présenter à un correspondant." },
+        { id: "hw-b-24", category: "Listening", en: "Watch one English-speaking YouTuber for 5 minutes. Don't pause. Note 5 new words afterwards.", fr: "Regarde un youtubeur anglophone pendant 5 minutes, sans mettre en pause. Note 5 nouveaux mots à la fin." },
         { id: "hw-b-25", category: "Speaking", en: "Order an imaginary meal in English. Include the dish, drink, and \"please\" / \"thank you.\"", fr: "Commande un repas imaginaire en anglais. Précise le plat, la boisson, et n'oublie pas « please » et « thank you »." },
         { id: "hw-b-26", category: "Vocab", en: "Learn 30 irregular past tense verbs (go/went, eat/ate…) and write them in 3 columns: base / past / French.", fr: "Apprends 30 verbes irréguliers au past tense (go/went, eat/ate…) et écris-les en 3 colonnes : base / past / français." },
-        { id: "hw-b-27", category: "Writing", en: "Write a 100-word diary entry about yesterday. Use Past Simple.", fr: "Écris un texte de journal intime de 100 mots sur ta journée d'hier. Utilise le Past Simple." },
+        { id: "hw-b-27", category: "Writing", en: "Write a 100-word diary entry about yesterday. Use Past Simple.", fr: "Écris une page de journal intime de 100 mots sur ta journée d'hier. Utilise le Past Simple." },
         { id: "hw-b-28", category: "Grammar", en: "Rewrite 10 affirmative sentences as negative AND as questions. (E.g., \"She plays football.\" → \"She doesn't play football.\" / \"Does she play football?\")", fr: "Réécris 10 phrases affirmatives en version négative ET en question. (Ex. : « She plays football. » → « She doesn't play football. » / « Does she play football? »)" },
         { id: "hw-b-29", category: "Reading", en: "Read a short news article in simple English (News in Levels, BBC Learning English). Summarise in French.", fr: "Lis un court article d'actualité en anglais simple (News in Levels, BBC Learning English). Fais-en un résumé en français." },
         { id: "hw-b-30", category: "Listening", en: "Watch a 10-minute English video (no subtitles). Write 5 sentences in English about what happened.", fr: "Regarde une vidéo en anglais de 10 minutes (sans sous-titres). Écris 5 phrases en anglais sur ce qui s'est passé." },
-        { id: "hw-b-31", category: "Speaking", en: "Give a 1-minute spoken presentation in English about your favourite hobby. Record it.", fr: "Fais une présentation orale d'une minute en anglais sur ton hobby préféré. Enregistre-toi." },
+        { id: "hw-b-31", category: "Speaking", en: "Give a 1-minute spoken presentation in English about your favourite hobby. Record it.", fr: "Fais une présentation orale d'une minute en anglais sur ton loisir préféré. Enregistre-toi." },
         { id: "hw-b-32", category: "Writing", en: "Write a 150-word story using at least 8 Past Simple verbs. Give it a title.", fr: "Écris une histoire de 150 mots avec au moins 8 verbes au Past Simple. Donne-lui un titre." },
         { id: "hw-b-33", category: "Grammar", en: "Learn the difference between \"much / many / a lot of\" and write 9 sentences correctly using each.", fr: "Apprends la différence entre « much », « many » et « a lot of », puis écris 9 phrases correctes en utilisant chacun." },
         { id: "hw-b-34", category: "Reading", en: "Read the first chapter of an English children's novel (Roald Dahl, Diary of a Wimpy Kid). Write 10 questions you have about it.", fr: "Lis le premier chapitre d'un roman jeunesse en anglais (Roald Dahl, Le Journal d'un dégonflé). Écris 10 questions que tu te poses dessus." },
-        { id: "hw-b-35", category: "Writing", en: "Write a letter to your future self in English (150+ words). Mix past, present, and future tenses.", fr: "Écris une lettre à ton toi du futur en anglais (150 mots minimum). Mélange les temps passé, présent et futur." },
+        { id: "hw-b-35", category: "Writing", en: "Write a letter to your future self in English (150+ words). Mix past, present, and future tenses.", fr: "Écris en anglais une lettre à la personne que tu seras dans dix ans (150 mots minimum). Mélange les temps passé, présent et futur." },
       ],
       exercises: [
         {
@@ -774,7 +774,7 @@
           topic: "Present simple vs present continuous",
           subtitle: "I eat / I am eating",
           introFr:
-            "En anglais il y a deux présents. Le Present Simple pour les habitudes et les faits, le Present Continuous pour ce qui se passe en ce moment.\n\nFormule Present Simple : sujet + verbe (+ s à la 3e personne).\nFormule Present Continuous : sujet + am/is/are + verbe-ing.\n\n|||EXAMPLES|||\nI eat lunch at 1pm every day.\nRight now I am eating lunch.\nShe plays football on Saturdays.\nLook, she is playing football now.",
+            "En anglais il y a deux présents. Le Present Simple sert pour les habitudes et les vérités générales, le Present Continuous pour ce qui se passe en ce moment.\n\nFormule Present Simple : sujet + verbe (+ s à la 3e personne).\nFormule Present Continuous : sujet + am/is/are + verbe-ing.\n\n|||EXAMPLES|||\nI eat lunch at 1pm every day.\nRight now I am eating lunch.\nShe plays football on Saturdays.\nLook, she is playing football now.",
           examples: [
             "1) I usually ___ at 7. (wake up) -> wake up",
             "2) Right now she ___ English. (study) -> is studying",
@@ -803,7 +803,7 @@
           topic: "There is / there are",
           subtitle: "There is a… / There are…",
           introFr:
-            "On utilise \"there is\" pour parler d'une seule chose qui existe quelque part, et \"there are\" pour plusieurs choses. C'est l'équivalent de \"il y a\" en français mais ça ne change pas selon le genre.\n\nFormule : There is + nom singulier. There are + nom pluriel. Is there / Are there pour les questions.\n\n|||EXAMPLES|||\nThere is a book on the table.\nThere are three windows in my room.\nIs there a supermarket near here?\nAre there any students in the classroom?",
+            "On utilise \"there is\" pour parler d'une seule chose qui existe quelque part, et \"there are\" pour plusieurs choses. C'est l'équivalent de « il y a », mais contrairement au français, la forme change selon que ce qui suit est au singulier ou au pluriel.\n\nFormule : There is + nom singulier. There are + nom pluriel. Is there / Are there pour les questions.\n\n|||EXAMPLES|||\nThere is a book on the table.\nThere are three windows in my room.\nIs there a supermarket near here?\nAre there any students in the classroom?",
           examples: [
             "1) ___ a book on the table. (There is) -> There is",
             "2) ___ two windows in my room. (There are) -> There are",
@@ -823,7 +823,7 @@
           topic: "Question forms (do/does/is/are)",
           subtitle: "Do, Does, Is, Are",
           introFr:
-            "En anglais, pour poser une question au Present Simple, il faut ajouter Do ou Does au début. Does s'utilise avec he, she, it. Do s'utilise avec I, you, we, they. Avec le verbe to be on inverse juste le sujet et le verbe.\n\nFormule : Do/Does + sujet + verbe de base ?\n\n|||EXAMPLES|||\nDo you like English?\nDoes she live in Paris?\nAre you tired?\nIs he at school today?",
+            "En anglais, pour poser une question au Present Simple, il faut ajouter Do ou Does au début. Does s'utilise avec he, she, it. Do s'utilise avec I, you, we, they. Avec le verbe to be, on inverse simplement le sujet et le verbe.\n\nFormule : Do/Does + sujet + verbe de base ?\n\n|||EXAMPLES|||\nDo you like English?\nDoes she live in Paris?\nAre you tired?\nIs he at school today?",
           examples: [
             "1) ___ you like English? (Do) -> Do",
             "2) Where ___ she live? (does) -> does",
@@ -843,7 +843,7 @@
           topic: "Articles (a / an / the)",
           subtitle: "a, an, the",
           introFr:
-            "En anglais il y a trois articles. A s'utilise devant un mot qui commence par une consonne pour quelque chose de non précis. An s'utilise devant un mot qui commence par une voyelle. The s'utilise quand on parle de quelque chose de précis ou déjà mentionné. Contrairement au français il n'y a pas de genre masculin ou féminin.\n\nFormule : a + consonne, an + voyelle, the + nom précis.\n\n|||EXAMPLES|||\nI have a dog and a cat.\nShe is eating an apple.\nThe dog is sleeping on the sofa.\nCan you close the window please?",
+            "En anglais il y a trois articles. A s'utilise devant un mot qui commence par un son de consonne, pour quelque chose de non précis. An s'utilise devant un son de voyelle (an apple, an hour). The s'utilise quand on parle de quelque chose de précis ou déjà mentionné. Contrairement au français, il n'y a ni masculin ni féminin.\n\nFormule : a + consonne, an + voyelle, the + nom précis.\n\n|||EXAMPLES|||\nI have a dog and a cat.\nShe is eating an apple.\nThe dog is sleeping on the sofa.\nCan you close the window please?",
           examples: [
             "1) I ate ___ apple for lunch. (an) -> an",
             "2) She is ___ teacher at our school. (a) -> a",
@@ -883,7 +883,7 @@
           topic: "Countable and uncountable nouns",
           subtitle: "many, much, some, a lot of",
           introFr:
-            "Les noms comptables sont des choses qu'on peut compter et ont un pluriel. Les noms incomptables sont des choses qu'on ne peut pas compter et n'ont jamais de pluriel ni de a ou an devant eux.\n\nFormule comptable : a/an + nom, ou nom + s au pluriel.\nFormule incomptable : some/much/a lot of + nom sans pluriel.\n\n|||EXAMPLES|||\nI have two apples.\nI need some water.\nThere are many students.\nThere isn't much time.",
+            "Les noms dénombrables désignent des choses que l'on peut compter : ils ont un pluriel. Les noms indénombrables désignent des choses que l'on ne peut pas compter : ils n'ont jamais de pluriel et ne prennent ni a ni an.\n\nFormule dénombrable : a/an + nom, ou nom + s au pluriel.\nFormule indénombrable : some/much/a lot of + nom sans pluriel.\n\n|||EXAMPLES|||\nI have two apples.\nI need some water.\nThere are many students.\nThere isn't much time.",
           examples: [
             "1) We need ___ apples for the recipe. (some) -> some",
             "2) There isn't ___ sugar left. (much) -> much",
@@ -903,7 +903,7 @@
           topic: "Can / can't for ability",
           subtitle: "I can swim / She can't drive",
           introFr:
-            "Can exprime la capacité, ce qu'on est capable de faire. Il est identique pour tous les sujets, on ne le conjugue jamais. Le négatif est cannot ou can't. Pour les questions on inverse juste can et le sujet.\n\nFormule positive : sujet + can + verbe de base.\nFormule négative : sujet + can't + verbe de base.\nQuestion : Can + sujet + verbe de base ?\n\n|||EXAMPLES|||\nI can swim very well.\nShe can't drive yet.\nCan you speak English?\nHe can play the guitar.",
+            "Can exprime la capacité, ce qu'on est capable de faire. Il est identique pour tous les sujets, on ne le conjugue jamais. La forme négative est cannot ou can't. Pour les questions, on inverse simplement can et le sujet.\n\nFormule positive : sujet + can + verbe de base.\nFormule négative : sujet + can't + verbe de base.\nQuestion : Can + sujet + verbe de base ?\n\n|||EXAMPLES|||\nI can swim very well.\nShe can't drive yet.\nCan you speak English?\nHe can play the guitar.",
           examples: [
             "1) I ___ swim very well. (can) -> can",
             "2) She ___ drive yet. (can't) -> can't",
@@ -923,7 +923,7 @@
           topic: "Past simple regular/irregular verbs",
           subtitle: "went, played, saw, didn't",
           introFr:
-            "Le Past Simple s'utilise pour parler d'une action terminée dans le passé. Les verbes réguliers prennent -ed à la fin. Les verbes irréguliers changent complètement et doivent être mémorisés. Pour le négatif et les questions on utilise toujours did plus la base verbale.\n\nFormule : sujet + verbe passé. Négatif : sujet + didn't + base. Question : Did + sujet + base ?\n\n|||EXAMPLES|||\nI walked to school yesterday.\nShe went to London last year.\nWe didn't watch the film.\nDid you eat breakfast this morning?",
+            "Le Past Simple s'utilise pour parler d'une action terminée dans le passé. Les verbes réguliers prennent -ed à la fin. Les verbes irréguliers changent complètement et doivent être mémorisés. Pour la forme négative et les questions, on utilise toujours did + la base verbale.\n\nFormule : sujet + verbe passé. Négatif : sujet + didn't + base. Question : Did + sujet + base ?\n\n|||EXAMPLES|||\nI walked to school yesterday.\nShe went to London last year.\nWe didn't watch the film.\nDid you eat breakfast this morning?",
           examples: [
             "1) Yesterday I ___ to school on foot. (went) -> went",
             "2) We ___ football after class. (played) -> played",
@@ -947,7 +947,7 @@
           topic: "Object pronouns (me/you/him/her/us/them)",
           subtitle: "me, him, her, us, them",
           introFr:
-            "En anglais les pronoms sujets remplacent celui qui fait l'action et les pronoms compléments remplacent celui qui reçoit l'action. Le pronom complément se place toujours après le verbe ou après une préposition.\n\nFormule : verbe + pronom complément.\nListe : me, you, him, her, us, them.\n\n|||EXAMPLES|||\nMy teacher helped me a lot.\nI called him yesterday.\nShe gave the book to her.\nCan you help us please?",
+            "En anglais, les pronoms sujets désignent la personne qui fait l'action, et les pronoms compléments celle qui la reçoit. Le pronom complément se place toujours après le verbe ou après une préposition.\n\nFormule : verbe + pronom complément.\nListe : me, you, him, her, us, them.\n\n|||EXAMPLES|||\nMy teacher helped me a lot.\nI called him yesterday.\nShe gave the book to her.\nCan you help us please?",
           examples: [
             "1) My teacher helped ___. (me) -> me",
             "2) I called ___ yesterday. (him) -> him",
@@ -969,7 +969,7 @@
           topic: "Future forms (going to / will)",
           subtitle: "going to / will",
           introFr:
-            "En anglais il y a deux façons principales de parler du futur. Going to s'utilise pour un plan décidé à l'avance ou une prédiction basée sur ce qu'on voit. Will s'utilise pour une décision spontanée, une promesse ou une prédiction basée sur une opinion.\n\nFormule going to : sujet + am/is/are + going to + verbe de base.\nFormule will : sujet + will + verbe de base.\n\n|||EXAMPLES|||\nI am going to study tonight, I planned it.\nIt will rain tomorrow I think.\nI will help you, don't worry.\nShe is going to visit her grandmother this weekend.",
+            "En anglais, il y a deux façons principales de parler du futur. Going to s'utilise pour un projet décidé à l'avance ou une prédiction fondée sur ce que l'on voit. Will s'utilise pour une décision spontanée, une promesse ou une prédiction fondée sur une opinion.\n\nFormule going to : sujet + am/is/are + going to + verbe de base.\nFormule will : sujet + will + verbe de base.\n\n|||EXAMPLES|||\nI am going to study tonight, I planned it.\nIt will rain tomorrow I think.\nI will help you, don't worry.\nShe is going to visit her grandmother this weekend.",
           examples: [
             "1) I ___ study tonight after dinner. (am going to) -> am going to",
             "2) I think it ___ rain later. (will) -> will",
@@ -1240,7 +1240,7 @@
         },
       ],
       homeworkChecklist: [
-        { id: "hw-i-01", category: "Vocab", en: "Make 20 flashcards of phrasal verbs (look up, give up, find out, etc.) with French equivalents.", fr: "Fabrique 20 flashcards de phrasal verbs (look up, give up, find out, etc.) avec leur équivalent français." },
+        { id: "hw-i-01", category: "Vocab", en: "Make 20 flashcards of phrasal verbs (look up, give up, find out, etc.) with French equivalents.", fr: "Fabrique 20 cartes de phrasal verbs (look up, give up, find out, etc.) avec leur équivalent français." },
         { id: "hw-i-02", category: "Reading", en: "Read a children's chapter book in English (Roald Dahl, Diary of a Wimpy Kid). Write a 50-word summary.", fr: "Lis un livre jeunesse en anglais (Roald Dahl, Le Journal d'un dégonflé). Rédige un résumé de 50 mots." },
         { id: "hw-i-03", category: "Grammar", en: "Conjugate 15 verbs in Past Simple. Include at least 8 irregular verbs.", fr: "Conjugue 15 verbes au Past Simple. Inclus au moins 8 verbes irréguliers." },
         { id: "hw-i-04", category: "Vocab", en: "Learn 25 advanced everyday words (anyway, although, however, etc.) and use each in a sentence.", fr: "Apprends 25 mots du quotidien plus avancés (anyway, although, however, etc.) et utilise chacun dans une phrase." },
@@ -1251,7 +1251,7 @@
         { id: "hw-i-09", category: "Grammar", en: "Write 8 sentences using Present Perfect (have/has + past participle).", fr: "Écris 8 phrases avec le Present Perfect (have/has + participe passé)." },
         { id: "hw-i-10", category: "Listening", en: "Watch an English-language film with French subtitles. Note 10 idioms or phrases you found interesting.", fr: "Regarde un film en anglais avec les sous-titres français. Note 10 expressions ou phrases qui t'ont marqué." },
         { id: "hw-i-11", category: "Speaking", en: "Phone-call roleplay: book a restaurant in English. At least 5 exchanges.", fr: "Jeu de rôle au téléphone : réserve une table au restaurant en anglais. Au moins 5 échanges." },
-        { id: "hw-i-12", category: "Writing", en: "Write a formal email asking a teacher for an extension on homework.", fr: "Écris un email formel à un professeur pour demander un délai supplémentaire pour un devoir." },
+        { id: "hw-i-12", category: "Writing", en: "Write a formal email asking a teacher for an extension on homework.", fr: "Écris un e-mail formel à un professeur pour demander un délai supplémentaire pour un devoir." },
         { id: "hw-i-13", category: "Grammar", en: "Write 10 sentences with \"since\" and \"for\" using Present Perfect.", fr: "Écris 10 phrases avec « since » et « for » en utilisant le Present Perfect." },
         { id: "hw-i-14", category: "Reading", en: "Read a 1-page English short story. Underline every word you don't know and look up at least 5.", fr: "Lis une nouvelle en anglais d'une page. Souligne tous les mots que tu ne connais pas et cherches-en au moins 5." },
         { id: "hw-i-15", category: "Vocab", en: "Learn 20 collocations (make/do, take/have a shower, do business…) and write sentences for each.", fr: "Apprends 20 collocations (make/do, take/have a shower, do business…) et écris une phrase pour chacune." },
@@ -1260,9 +1260,9 @@
         { id: "hw-i-18", category: "Listening", en: "Listen to one BBC Learning English podcast episode. Write 8 sentences about what you heard.", fr: "Écoute un épisode de podcast BBC Learning English. Écris 8 phrases sur ce que tu as entendu." },
         { id: "hw-i-19", category: "Grammar", en: "Write 5 First Conditional sentences (\"If X, Y will…\") and 5 Second Conditional (\"If X, Y would…\").", fr: "Écris 5 phrases au First Conditional (« If X, Y will… ») et 5 au Second Conditional (« If X, Y would… »)." },
         { id: "hw-i-20", category: "Reading", en: "Read an English Wikipedia article (full version, not Simple English). Note 3 things that surprised you.", fr: "Lis un article Wikipédia en anglais (version normale, pas Simple English). Note 3 choses qui t'ont surpris." },
-        { id: "hw-i-21", category: "Writing", en: "Describe a place you love in 200 words. Use at least 3 different senses (sight, sound, smell, etc.).", fr: "Décris en 200 mots un endroit que tu aimes. Sollicite au moins trois sens différents (vue, ouïe, odorat, etc.)." },
-        { id: "hw-i-22", category: "Speaking", en: "Argue both sides of a topic for 1 minute each: \"Should homework be banned?\"", fr: "Argumente une minute pour le pour et une minute pour le contre d'un sujet : « Faut-il interdire les devoirs ? »" },
-        { id: "hw-i-23", category: "Vocab", en: "Learn 15 words for expressing opinions (in my view, arguably, frankly, allegedly…) and use each.", fr: "Apprends 15 mots pour exprimer une opinion (in my view, arguably, frankly, allegedly…) et utilise-les chacun." },
+        { id: "hw-i-21", category: "Writing", en: "Describe a place you love in 200 words. Use at least 3 different senses (sight, sound, smell, etc.).", fr: "Décris en 200 mots un endroit que tu aimes. Fais appel à au moins trois sens différents (vue, ouïe, odorat, etc.)." },
+        { id: "hw-i-22", category: "Speaking", en: "Argue both sides of a topic for 1 minute each: \"Should homework be banned?\"", fr: "Défends le pour pendant une minute, puis le contre pendant une minute, sur ce sujet : « Faut-il interdire les devoirs ? »" },
+        { id: "hw-i-23", category: "Vocab", en: "Learn 15 words for expressing opinions (in my view, arguably, frankly, allegedly…) and use each.", fr: "Apprends 15 mots pour exprimer une opinion (in my view, arguably, frankly, allegedly…) et utilise chacun dans une phrase." },
         { id: "hw-i-24", category: "Listening", en: "Listen to an English song and transcribe the chorus from memory. Compare with the official lyrics.", fr: "Écoute une chanson en anglais et transcris le refrain de mémoire. Compare ensuite avec les paroles officielles." },
         { id: "hw-i-25", category: "Writing", en: "Write a 250-word movie review: plot summary, what you liked, what you didn't.", fr: "Écris une critique de film de 250 mots : résumé du scénario, ce que tu as aimé, ce qui t'a déplu." },
         { id: "hw-i-26", category: "Speaking", en: "Phone-call roleplay: complain to a hotel about a noisy room. Negotiate a solution. At least 8 exchanges.", fr: "Jeu de rôle au téléphone : adresse une plainte à un hôtel à propos d'une chambre bruyante. Négocie une solution. Au moins 8 échanges." },
@@ -1281,7 +1281,7 @@
           topic: "Possessive adjectives in context",
           subtitle: "his / her / their + noun",
           introFr:
-            "À ce niveau, l'adjectif possessif doit toujours correspondre au possesseur, pas à l'objet. En français on dit « sa maison » pour un homme ou une femme ; en anglais on dit his house ou her house selon qui possède. Pour une équipe ou un groupe, utilise their.\n\nFormule : possessif du possesseur + nom (his research, their results, its logo).\n\n|||EXAMPLES|||\nThe students presented their projects.\nShe forgot her charger at home.\nThe company changed its policy last year.\nWe improved our pronunciation this month.",
+            "À ce niveau, l'adjectif possessif doit toujours correspondre au possesseur, pas à l'objet. En français on dit « sa maison » pour un homme ou une femme ; en anglais on dit his house ou her house selon le possesseur. Pour une équipe ou un groupe, utilise their.\n\nFormule : possessif du possesseur + nom (his research, their results, its logo).\n\n|||EXAMPLES|||\nThe students presented their projects.\nShe forgot her charger at home.\nThe company changed its policy last year.\nWe improved our pronunciation this month.",
           examples: [
             "1) The students presented ___ projects. (their) -> their",
             "2) She forgot ___ charger at home. (her) -> her",
@@ -1301,7 +1301,7 @@
           topic: "Present perfect vs past simple",
           subtitle: "have done / did yesterday",
           introFr:
-            "Le passé composé français ne se traduit pas toujours pareil. Si tu peux nommer le moment précis (hier, en 2020, la semaine dernière), utilise le Past Simple. Si tu parles d'une expérience de vie ou d'un résultat visible maintenant, utilise le Present Perfect avec have/has + participe passé.\n\nFormule Past Simple : sujet + verbe passé (+ date).\nFormule Present Perfect : sujet + have/has + participe passé.\n\n|||EXAMPLES|||\nI watched that film last week.\nWe have completed three units this month.\nShe went to London in 2024.\nHave you ever tried sushi?",
+            "Le passé composé français ne se traduit pas toujours de la même façon. Si tu peux nommer le moment précis (hier, en 2020, la semaine dernière), utilise le Past Simple. Si tu parles d'une expérience de vie ou d'un résultat visible maintenant, utilise le Present Perfect avec have/has + participe passé.\n\nFormule Past Simple : sujet + verbe passé (+ date).\nFormule Present Perfect : sujet + have/has + participe passé.\n\n|||EXAMPLES|||\nI watched that film last week.\nWe have completed three units this month.\nShe went to London in 2024.\nHave you ever tried sushi?",
           examples: [
             "1) I ___ that film last week. (watched) -> watched",
             "2) We ___ three units this month. (have completed) -> have completed",
@@ -1321,7 +1321,7 @@
           topic: "Relative clauses (who/which/that)",
           subtitle: "who, which, that, whose",
           introFr:
-            "Une proposition relative ajoute une information sur un nom juste avant. Who pour les personnes, which pour les choses, that pour les deux dans une phrase définissante. Tu peux omettre who/that/which quand c'est le complément : The book (that) I read.\n\nFormule : nom + who/which/that + phrase.\n\n|||EXAMPLES|||\nThe teacher who helped me was excellent.\nThis is the app that I use every day.\nStudents who revise regularly improve faster.\nThe film we saw was brilliant.",
+            "Une proposition relative ajoute une information sur le nom qui la précède. Who pour les personnes, which pour les choses, that pour les deux dans une relative déterminative. Tu peux omettre who/that/which quand c'est le complément : The book (that) I read.\n\nFormule : nom + who/which/that + phrase.\n\n|||EXAMPLES|||\nThe teacher who helped me was excellent.\nThis is the app that I use every day.\nStudents who revise regularly improve faster.\nThe film we saw was brilliant.",
           examples: [
             "1) The teacher ___ helped me was excellent. (who) -> who",
             "2) This is the app ___ I use every day. (that) -> that",
@@ -1361,7 +1361,7 @@
           topic: "Conditionals (0, 1st, 2nd)",
           subtitle: "if + present, will / would",
           introFr:
-            "Le zero conditional = vérité générale (si tu chauffes l'eau, elle bout). Le first conditional = futur réaliste (si j'étudie, je réussirai). Le second conditional = situation imaginaire au présent (si j'avais plus de temps, je voyagerais). Jamais de would dans la partie avec if.\n\nFormule 0 : If + présent, présent.\nFormule 1 : If + présent, will + base.\nFormule 2 : If + past simple, would + base.\n\n|||EXAMPLES|||\nIf you heat ice, it melts.\nIf I study hard, I will pass the test.\nIf I had more time, I would read more books.\nIf it rains, we will stay at home.",
+            "Le zero conditional = vérité générale (si tu chauffes l'eau, elle bout). Le first conditional = futur réaliste (si j'étudie, je réussirai). Le second conditional = situation imaginaire au présent (si j'avais plus de temps, je voyagerais). Jamais de would dans la proposition introduite par if.\n\nFormule 0 : If + présent, présent.\nFormule 1 : If + présent, will + base.\nFormule 2 : If + past simple, would + base.\n\n|||EXAMPLES|||\nIf you heat ice, it melts.\nIf I study hard, I will pass the test.\nIf I had more time, I would read more books.\nIf it rains, we will stay at home.",
           examples: [
             "1) If you heat ice, it ___. (melts) -> melts",
             "2) If I study hard, I ___ the test. (will pass) -> will pass",
@@ -1401,7 +1401,7 @@
           topic: "Passive voice in context",
           subtitle: "is made, was built, been stolen",
           introFr:
-            "La voix passive met l'accent sur l'action, pas sur qui l'a faite. On la forme avec be + participe passé au bon temps. En français on utilise souvent « on » ; en anglais la passive est très courante à l'écrit.\n\nFormule : sujet + be + participe passé (+ by + agent si besoin).\n\n|||EXAMPLES|||\nEnglish is spoken worldwide.\nThe bridge was built in 1998.\nMy bike has been stolen.\nThe road is being repaired today.",
+            "La voix passive met l'accent sur l'action, pas sur qui l'a faite. On la forme avec be + participe passé au bon temps. En français on utilise souvent « on » ; en anglais, le passif est très courant à l'écrit.\n\nFormule : sujet + be + participe passé (+ by + agent si besoin).\n\n|||EXAMPLES|||\nEnglish is spoken worldwide.\nThe bridge was built in 1998.\nMy bike has been stolen.\nThe road is being repaired today.",
           examples: [
             "1) People speak English worldwide. -> English ___ worldwide. (is spoken) -> is spoken",
             "2) They built the bridge in 1998. -> The bridge ___ in 1998. (was built) -> was built",
@@ -1441,7 +1441,7 @@
           topic: "Essay paragraph structure (PEEL)",
           subtitle: "Point, Evidence, Explain, Link",
           introFr:
-            "PEEL t'aide à structurer un paragraphe d'essai en anglais : annonce ton idée tout de suite, pas à la fin comme parfois en français. Point = idée principale, Evidence = preuve, Explain = pourquoi c'est important, Link = retour à la question.\n\nFormule : Point + Evidence + Explain + Link (un paragraphe = une idée).\n\n|||EXAMPLES|||\nPoint: School uniforms improve focus.\nEvidence: A survey of 200 students showed better concentration.\nExplain: Less social pressure helps students work.\nLink: This answers why uniforms can help learning.",
+            "PEEL t'aide à structurer un paragraphe argumenté en anglais : annonce ton idée tout de suite, pas à la fin comme parfois en français. Point = idée principale, Evidence = preuve, Explain = pourquoi c'est important, Link = retour à la question.\n\nFormule : Point + Evidence + Explain + Link (un paragraphe = une idée).\n\n|||EXAMPLES|||\nPoint: School uniforms improve focus.\nEvidence: A survey of 200 students showed better concentration.\nExplain: Less social pressure helps students work.\nLink: This answers why uniforms can help learning.",
           examples: [
             "1) The ___ sentence should state your main idea. (opening) -> opening",
             "2) Good evidence includes a ___ or a real example. (fact) -> fact",
@@ -1464,7 +1464,7 @@
           topic: "Linkers for cohesion (however, therefore, moreover)",
           subtitle: "however, therefore, moreover",
           introFr:
-            "Les connecteurs montrent le lien logique entre tes idées. However = contraste, therefore = conséquence, moreover = en plus, although = bien que. En anglais formel, however commence souvent une nouvelle phrase ou suit un point-virgule.\n\nFormule : phrase 1 ; however, phrase 2.\n\n|||EXAMPLES|||\nThe plan is expensive; however, it is effective.\nWe practised daily; therefore, we improved.\nThe class is small; moreover, everyone participates.\nAlthough it was late, they continued working.",
+            "Les connecteurs montrent le lien logique entre tes idées. However = contraste, therefore = conséquence, moreover = de plus, although = bien que. En anglais formel, however commence souvent une nouvelle phrase ou suit un point-virgule.\n\nFormule : phrase 1 ; however, phrase 2.\n\n|||EXAMPLES|||\nThe plan is expensive; however, it is effective.\nWe practised daily; therefore, we improved.\nThe class is small; moreover, everyone participates.\nAlthough it was late, they continued working.",
           examples: [
             "1) The plan is expensive; ___, it is effective. (however) -> however",
             "2) We practised daily; ___, we improved. (therefore) -> therefore",
@@ -1486,7 +1486,7 @@
           topic: "Error correction and redrafting",
           subtitle: "3rd person -s, told me, agree",
           introFr:
-            "Les francophones font souvent les mêmes erreurs : oubli du -s à la 3e personne (He go → goes), « I am agree » (faux ami → I agree), et « She said me » (→ She told me). Relis à voix haute : si ça sonne bizarre en anglais, corrige.\n\nFormule de base : sujet + verbe (+ compléments), dans cet ordre.\n\n|||EXAMPLES|||\nHe goes to school every day.\nI agree with you on this point.\nShe told me to come earlier.\nThey haven't finished their homework yet.",
+            "Les francophones font souvent les mêmes erreurs : oubli du -s à la 3e personne (He go → goes), « I am agree » (calque du français → I agree), et « She said me » (→ She told me). Relis à voix haute : si ça sonne bizarre en anglais, corrige.\n\nFormule de base : sujet + verbe (+ compléments), dans cet ordre.\n\n|||EXAMPLES|||\nHe goes to school every day.\nI agree with you on this point.\nShe told me to come earlier.\nThey haven't finished their homework yet.",
           examples: [
             "1) He ___ to school every day. (goes) -> goes",
             "2) I ___ with you on this point. (agree) -> agree",
@@ -1757,7 +1757,7 @@
           topic: "Possessive adjectives in advanced writing",
           subtitle: "its policy, their results",
           introFr:
-            "En rédaction formelle, chaque possessif doit renvoyer clairement au bon possesseur sur tout le texte. Its pour une organisation, un pays ou un document ; their pour un groupe de personnes. Si c'est flou, répète le nom au lieu d'utiliser their ou its.\n\nFormule : possessif précis + nom, ou répéter le nom pour éviter l'ambiguïté.\n\n|||EXAMPLES|||\nEach candidate must justify their methodology.\nThe committee reviewed its final draft.\nThe researchers defended their conclusions.\nThe university published its annual report.",
+            "En rédaction formelle, chaque possessif doit renvoyer clairement au bon possesseur dans tout le texte. Its pour une organisation, un pays ou un document ; their pour un groupe de personnes. Si c'est flou, répète le nom au lieu d'utiliser their ou its.\n\nFormule : possessif précis + nom, ou répéter le nom pour éviter l'ambiguïté.\n\n|||EXAMPLES|||\nEach candidate must justify their methodology.\nThe committee reviewed its final draft.\nThe researchers defended their conclusions.\nThe university published its annual report.",
           examples: [
             "1) Each candidate must justify ___ methodology. (their) -> their",
             "2) The committee reviewed ___ final draft. (its) -> its",
@@ -1777,7 +1777,7 @@
           topic: "Cleft and inversion practice",
           subtitle: "It was… who, Rarely do…",
           introFr:
-            "Les phrases clivées mettent en avant un élément : It was John who called. L'inversion donne un ton plus formel ou emphatique : Rarely do we see such progress. Utilise ces structures avec parcimonie dans un essai — une ou deux fois suffisent.\n\nFormule clivée : It was/was + élément + who/that + reste.\nFormule inversion : Rarely/Never + auxiliaire + sujet + verbe.\n\n|||EXAMPLES|||\nIt was Maria who solved the problem.\nRarely do students receive such detailed feedback.\nWhat the essay lacks is clear evidence.\nNever have I seen such dedication.",
+            "Les phrases clivées mettent en avant un élément : It was John who called. L'inversion donne un ton plus formel ou emphatique : Rarely do we see such progress. Utilise ces structures avec parcimonie dans un essai — une ou deux fois suffisent.\n\nFormule clivée : It is/was + élément + who/that + reste.\nFormule inversion : Rarely/Never + auxiliaire + sujet + verbe.\n\n|||EXAMPLES|||\nIt was Maria who solved the problem.\nRarely do students receive such detailed feedback.\nWhat the essay lacks is clear evidence.\nNever have I seen such dedication.",
           examples: [
             "1) It was only later that we ___ the issue. (understood) -> understood",
             "2) Rarely ___ students receive such feedback. (do) -> do",
@@ -1857,7 +1857,7 @@
           topic: "Complex sentence cohesion",
           subtitle: "although, whereas, however",
           introFr:
-            "Une phrase complexe relie plusieurs idées avec although, while, because, so that, not only… but also. Chaque partie doit avoir un lien logique clair. Si la phrase devient trop longue, coupe en deux.\n\nFormule : Although/While + proposition, proposition principale.\n\n|||EXAMPLES|||\nAlthough the exam was hard, she passed.\nHe studied hard, yet he still felt nervous.\nIf you practise regularly, you will improve.\nShe speaks French, whereas her brother speaks English.",
+            "Une phrase complexe relie plusieurs idées avec although, while, because, so that, not only… but also. Chaque partie doit avoir un lien logique clair. Si la phrase devient trop longue, coupe-la en deux.\n\nFormule : Although/While + proposition, proposition principale.\n\n|||EXAMPLES|||\nAlthough the exam was hard, she passed.\nHe studied hard, yet he still felt nervous.\nIf you practise regularly, you will improve.\nShe speaks French, whereas her brother speaks English.",
           examples: [
             "1) ___ the exam was hard, she passed. (Although) -> Although",
             "2) He studied hard, ___ he still felt nervous. (yet) -> yet",
@@ -1877,7 +1877,7 @@
           topic: "Advanced punctuation and clarity",
           subtitle: "semicolon, colon, comma splice",
           introFr:
-            "Le point-virgule relie deux phrases complètes liées. Les deux-points introduisent une liste ou une explication. Une comma splice = deux phrases jointes seulement par une virgule — c'est une erreur fréquente. Corrige avec un point, un point-virgule ou une conjonction.\n\nFormule : phrase complète ; however, phrase complète.\n\n|||EXAMPLES|||\nThe results were mixed; however, the trend was positive.\nOne thing is clear: we need a plan.\nUse a semicolon to join related ideas.\nCommas separate items in a list of three or more.",
+            "Le point-virgule relie deux phrases complètes liées. Les deux-points introduisent une liste ou une explication. Le « comma splice » (deux phrases complètes reliées seulement par une virgule) est une erreur fréquente. Corrige avec un point, un point-virgule ou une conjonction.\n\nFormule : phrase complète ; however, phrase complète.\n\n|||EXAMPLES|||\nThe results were mixed; however, the trend was positive.\nOne thing is clear: we need a plan.\nUse a semicolon to join related ideas.\nCommas separate items in a list of three or more.",
           examples: [
             "1) Use a ___ to join two related full sentences. (semicolon) -> semicolon",
             "2) Use a ___ before a list or explanation. (colon) -> colon",
@@ -1897,7 +1897,7 @@
           topic: "Synthesis writing from two sources",
           subtitle: "Source A argues, while B…",
           introFr:
-            "La synthèse mélange deux sources dans un seul argument — ne fais pas un paragraphe par source. Utilise Source A argues… while Source B suggests… et montre comment les idées se répondent ou s'opposent.\n\nFormule : thèse + Source A + while/however + Source B + ta conclusion.\n\n|||EXAMPLES|||\nSource A argues that remote learning increases access.\nSource B claims quality depends on teacher training.\nA strong thesis must address both viewpoints.\nUse contrast linkers to compare the two sources.",
+            "La synthèse fait dialoguer deux sources dans un même argument — ne fais pas un paragraphe par source. Utilise Source A argues… while Source B suggests… et montre comment les idées se répondent ou s'opposent.\n\nFormule : thèse + Source A + while/however + Source B + ta conclusion.\n\n|||EXAMPLES|||\nSource A argues that remote learning increases access.\nSource B claims quality depends on teacher training.\nA strong thesis must address both viewpoints.\nUse contrast linkers to compare the two sources.",
           examples: [
             "1) Source A argues that remote learning ___ access. (increases) -> increases",
             "2) Source B claims quality depends on ___ training. (teacher) -> teacher",
@@ -1917,7 +1917,7 @@
           topic: "Timed high-level speaking response",
           subtitle: "First, However, To sum up",
           introFr:
-            "À l'oral chronométré, prends trente secondes pour planifier, puis structure : affirmation, exemple, contrepoint, conclusion. Des phrases courtes et correctes valent mieux que de longues phrases cassées. Entraîne-toi avec un minuteur.\n\nFormule : First + point 1. However + contrepoint. To sum up + conclusion.\n\n|||EXAMPLES|||\nFirst, state your main claim clearly.\nSupport it with one concrete example.\nHowever, mention one counterargument briefly.\nTo sum up, restate your position in one sentence.",
+            "À l'oral chronométré, prends trente secondes pour planifier, puis structure : affirmation, exemple, contrepoint, conclusion. Des phrases courtes et correctes valent mieux que de longues phrases bancales. Entraîne-toi avec un minuteur.\n\nFormule : First + point 1. However + contrepoint. To sum up + conclusion.\n\n|||EXAMPLES|||\nFirst, state your main claim clearly.\nSupport it with one concrete example.\nHowever, mention one counterargument briefly.\nTo sum up, restate your position in one sentence.",
           examples: [
             "1) Start with a clear ___ statement. (opening) -> opening",
             "2) Support your claim with a concrete ___. (example) -> example",
@@ -1940,7 +1940,7 @@
           topic: "Abstract topic essay planning",
           subtitle: "thesis, points, counterargument",
           introFr:
-            "Avant d'écrire sur un sujet abstrait (technologie, éthique, climat), écris un plan avec une thèse claire, deux arguments et un contre-argument que tu peux réfuter. Chaque paragraphe du corps = une partie du plan. Planifier d'abord te fait gagner du temps.\n\nFormule : thèse + argument 1 + argument 2 + contre-argument + conclusion.\n\n|||EXAMPLES|||\nEvery essay plan needs a clear thesis.\nInclude at least two supporting points.\nAdd one counterargument you can answer.\nSpend the first minutes planning, then write.",
+            "Avant d'écrire sur un sujet abstrait (technologie, éthique, climat), écris un plan avec une thèse claire, deux arguments et un contre-argument que tu peux réfuter. Chaque paragraphe du développement = une partie du plan. Planifier d'abord te fait gagner du temps.\n\nFormule : thèse + argument 1 + argument 2 + contre-argument + conclusion.\n\n|||EXAMPLES|||\nEvery essay plan needs a clear thesis.\nInclude at least two supporting points.\nAdd one counterargument you can answer.\nSpend the first minutes planning, then write.",
           examples: [
             "1) Every essay plan needs a clear ___. (thesis) -> thesis",
             "2) Include at least two supporting ___ in your plan. (points) -> points",
@@ -8091,7 +8091,7 @@
         if (!Array.isArray(data.homeworkChecklist) || data.homeworkChecklist.length === 0) {
           const unavailable = document.createElement("p");
           unavailable.className = "lh-muted";
-          unavailable.textContent = "The checklist is not available for this level.";
+          unavailable.textContent = I18n.t("learning_homework_unavailable");
           homeworkPanel.appendChild(unavailable);
           return;
         }
