@@ -7648,3 +7648,30 @@ body.wr-open .pts {
   font-size: 0.88rem;
   color: #4a6580;
 }
+
+/* Flashcard answer buttons – solid, high-contrast colours */
+.flashcard-btn.flashcard-btn--save-later {
+  background: #dc2626;
+  border-color: #b91c1c;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.flashcard-btn.flashcard-btn--save-later:hover {
+  background: #b91c1c;
+  border-color: #991b1b;
+  color: #ffffff;
+}
+
+.flashcard-btn.flashcard-btn--got-it {
+  background: #16a34a;
+  border-color: #15803d;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.flashcard-btn.flashcard-btn--got-it:hover {
+  background: #15803d;
+  border-color: #166534;
+  color: #ffffff;
+}
