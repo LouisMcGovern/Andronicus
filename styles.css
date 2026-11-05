@@ -7272,3 +7272,20 @@ body.wr-open .pts {
     grid-template-columns: 1fr;
   }
 }
+
+/* About – photo */
+.about-photo {
+  width: min(17rem, 72%);
+  margin: 0.25rem auto 1.4rem;
+}
+
+.about-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-soft);
+}

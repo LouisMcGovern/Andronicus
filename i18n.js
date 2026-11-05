@@ -89,7 +89,7 @@
       about_p2_html:
         "In my Leaving Certificate I was awarded an <strong>H1</strong> — the highest possible grade — in Higher-Level French.",
       about_p3_html:
-        "I have travelled a lot in France: I've been in the <strong>Pyrenees</strong> and the <strong>Alps</strong>, stayed in <strong>Le Mans</strong> for two months and <strong>Laval</strong> for a month, visited <strong>Paris</strong> many times, and taught in <strong>Nantes</strong>. Next year I will spend a year in <strong>Strasbourg</strong> on <strong>Erasmus</strong>.",
+        "I have travelled a lot in France: I've been in the <strong>Pyrenees</strong> and the <strong>Alps</strong>, stayed in <strong>Le Mans</strong> for two months and <strong>Laval</strong> for a month, visited <strong>Paris</strong> many times, and taught in <strong>Nantes</strong>. I am currently studying on <strong>Erasmus</strong> in <strong>Strasbourg</strong>, France.",
       about_p4_html:
         "I taught English to children through <strong>Living Language</strong>. I have taught <strong>sailing</strong> for the past four years and I work with young people in other teaching settings too.",
       about_p5_html:
@@ -784,7 +784,7 @@
       about_p2_html:
         "Au Leaving Certificate (l’équivalent irlandais du baccalauréat), j’ai obtenu un <strong>H1</strong>, la meilleure note possible, en français niveau supérieur.",
       about_p3_html:
-        "Je connais bien la France : les <strong>Pyrénées</strong> et les <strong>Alpes</strong>, deux mois au <strong>Mans</strong>, un mois à <strong>Laval</strong>, de nombreux séjours à <strong>Paris</strong>, et j’ai enseigné à <strong>Nantes</strong>. L’année prochaine, je passerai un an à <strong>Strasbourg</strong> dans le cadre d’<strong>Erasmus</strong>.",
+        "Je connais bien la France : les <strong>Pyrénées</strong> et les <strong>Alpes</strong>, deux mois au <strong>Mans</strong>, un mois à <strong>Laval</strong>, de nombreux séjours à <strong>Paris</strong>, et j’ai enseigné à <strong>Nantes</strong>. Je suis actuellement en <strong>Erasmus</strong> à <strong>Strasbourg</strong>.",
       about_p4_html:
         "J’ai enseigné l’anglais à des enfants avec <strong>Living Language</strong>. J’enseigne la <strong>voile</strong> depuis quatre ans et j’encadre aussi des jeunes dans d’autres contextes éducatifs.",
       about_p5_html:
