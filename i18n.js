@@ -92,6 +92,8 @@
         "I have travelled a lot in France: I've been in the <strong>Pyrenees</strong> and the <strong>Alps</strong>, stayed in <strong>Le Mans</strong> for two months and <strong>Laval</strong> for a month, visited <strong>Paris</strong> many times, and taught in <strong>Nantes</strong>. I am currently studying on <strong>Erasmus</strong> in <strong>Strasbourg</strong>, France.",
       about_p4_html:
         "I taught English to children through <strong>Living Language</strong>. I have taught <strong>sailing</strong> for the past four years and I work with young people in other teaching settings too.",
+      about_accent_html:
+        "My accent is <strong>clear and neutral</strong> — not strongly American, British or Irish — so it is easy to understand wherever you are from. Students learn an English that is understood everywhere, without picking up a strong regional accent.",
       about_p5_html:
         "To get in touch: <a href=\"tel:+353833198980\">+353 (83) 319 8980</a> · <a href=\"mailto:louis.f.mcgovern@gmail.com\">louis.f.mcgovern@gmail.com</a>",
       process_title: "The Process",
@@ -787,6 +789,8 @@
         "Je connais bien la France : les <strong>Pyrénées</strong> et les <strong>Alpes</strong>, deux mois au <strong>Mans</strong>, un mois à <strong>Laval</strong>, de nombreux séjours à <strong>Paris</strong>, et j’ai enseigné à <strong>Nantes</strong>. Je suis actuellement en <strong>Erasmus</strong> à <strong>Strasbourg</strong>.",
       about_p4_html:
         "J’ai enseigné l’anglais à des enfants avec <strong>Living Language</strong>. J’enseigne la <strong>voile</strong> depuis quatre ans et j’encadre aussi des jeunes dans d’autres contextes éducatifs.",
+      about_accent_html:
+        "Mon accent est <strong>clair et neutre</strong> — ni fortement américain, ni britannique, ni irlandais — et se comprend facilement, d’où que l’on vienne. L’élève apprend ainsi un anglais compris partout, sans prendre d’accent régional marqué.",
       about_p5_html:
         "Pour me joindre : <a href=\"tel:+353833198980\">+353 (83) 319 8980</a> · <a href=\"mailto:louis.f.mcgovern@gmail.com\">louis.f.mcgovern@gmail.com</a>",
       process_title: "Le déroulement des cours",
