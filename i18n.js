@@ -96,7 +96,7 @@
         "<div class=\"step-card__stack\"><p>Once you're happy to go ahead, we'll <strong>find one hour during the week that works for both of us</strong>. Classes run on the same day and time every week — no rescheduling confusion, just a fixed slot you can count on.</p></div>",
       process_step_3_title: "Show up and pay monthly",
       process_step_3_html:
-        "<div class=\"step-card__stack\"><p>Join your class on Zoom every week — <strong>one hour, just you and me</strong>. At the start of each month I'll let you know how many classes you attended the previous month, and <strong>you pay for exactly those</strong>. No advance payments, no contracts. <strong>€25 per class.</strong></p></div>",
+        "<div class=\"step-card__stack\"><p>Join your class on Zoom every week — <strong>one hour, just you and me</strong>. I keep track of the classes you attend, and <strong>at the end of each month I send an invoice</strong> for exactly those. No advance payments, no contracts. <strong>€25 per class.</strong></p></div>",
       process_btn_booking: "Open booking form",
       process_actions_hint: "Same form as in the main menu.",
       process_extra_heading: "Fees, Homework, and How It Works",
@@ -170,7 +170,7 @@
         "<strong>Extension:</strong> long-form reading (non-fiction or literary extracts) with vocabulary journals.",
       booking_title: "Booking",
       booking_intro_html:
-        "Classes start in <strong>September 2026</strong> and run <strong>each week</strong> through the school year, with <strong>homework</strong> when it helps. There are breaks around holidays (for example <strong>Christmas</strong>) and I tell everyone the dates in advance. Pick every available hour you can honestly make each week: it makes it easier to find you a fixed slot. The usual slot should work most weeks, but real life happens. Pay at the <strong>start of the month</strong>. Miss a class with fair warning (ideally when you pay, or at least <strong>three days before</strong>) and you are not charged for that hour.",
+        "Classes start in <strong>September 2026</strong> and run <strong>each week</strong> through the school year, with <strong>homework</strong> when it helps. There are breaks around holidays (for example <strong>Christmas</strong>) and I tell everyone the dates in advance. Pick every available hour you can honestly make each week: it makes it easier to find you a fixed slot. The usual slot should work most weeks, but real life happens. <strong>Nothing is paid in advance.</strong> I keep track of the classes attended and send an <strong>invoice at the end of each month</strong>, so you only pay for the classes you actually attended. If you can't make a class, please let me know at least <strong>three days before</strong>.",
       booking_parent_name_label: "Parent name",
       booking_parent_email_label: "Parent email address",
       booking_parent_email_ph: "parent@example.com",
@@ -742,7 +742,7 @@
         "<div class=\"step-card__stack\"><p>Une fois que vous souhaitez vous lancer, nous <strong>cherchons ensemble une heure dans la semaine qui convient à tous les deux</strong>. Les cours ont lieu le même jour et à la même heure chaque semaine — pas de confusion, juste un créneau fixe sur lequel vous pouvez compter.</p></div>",
       process_step_3_title: "Venez en cours et payez chaque mois",
       process_step_3_html:
-        "<div class=\"step-card__stack\"><p>Rejoignez votre cours sur Zoom chaque semaine — <strong>une heure, en tête-à-tête</strong>. En début de mois, je vous indique le nombre de cours auxquels vous avez assisté le mois précédent, et <strong>vous payez uniquement ceux-là</strong>. Pas de paiement à l'avance, pas de contrat. <strong>25 € par cours.</strong></p></div>",
+        "<div class=\"step-card__stack\"><p>Rejoignez votre cours sur Zoom chaque semaine — <strong>une heure, en tête-à-tête</strong>. Je tiens le compte des cours suivis et <strong>j’envoie une facture à la fin de chaque mois</strong>, uniquement pour ceux-là. Pas de paiement à l'avance, pas de contrat. <strong>25 € par cours.</strong></p></div>",
       process_btn_booking: "Ouvrir le formulaire d’inscription",
       process_actions_hint: "Même formulaire que dans le menu.",
       process_extra_heading: "Tarif, devoirs, et comment ça fonctionne",
@@ -816,7 +816,7 @@
         "<strong>Approfondissement :</strong> lecture longue (non-fiction ou extraits littéraires) et carnets de vocabulaire.",
       booking_title: "Inscription",
       booking_intro_html:
-        "Les cours commencent en <strong>septembre 2026</strong>, <strong>une séance par semaine</strong> pendant l’année scolaire, avec des <strong>devoirs</strong> quand ça aide. Il y a des pauses aux vacances (par exemple à <strong>Noël</strong>) et je préviens tout le monde des dates. Cochez toutes les plages disponibles où vous êtes vraiment libres : cela aide à vous trouver un créneau fixe. Le créneau habituel doit marcher la plupart du temps, mais la vie arrive. Paiement en <strong>début de mois</strong>. Si vous ne pouvez pas venir, prévenez (idéalement au paiement, ou au moins <strong>trois jours avant</strong>) et ce cours n’est pas facturé.",
+        "Les cours commencent en <strong>septembre 2026</strong>, <strong>une séance par semaine</strong> pendant l’année scolaire, avec des <strong>devoirs</strong> quand ça aide. Il y a des pauses aux vacances (par exemple à <strong>Noël</strong>) et je préviens tout le monde des dates. Cochez toutes les plages disponibles où vous êtes vraiment libres : cela aide à vous trouver un créneau fixe. Le créneau habituel doit marcher la plupart du temps, mais la vie arrive. <strong>Rien n’est payé à l’avance.</strong> Je tiens le compte des cours suivis et j’envoie une <strong>facture à la fin de chaque mois</strong> : vous ne payez que les cours auxquels l’élève a assisté. Si vous ne pouvez pas venir à un cours, prévenez-moi au moins <strong>trois jours avant</strong>.",
       booking_parent_name_label: "Nom du parent",
       booking_parent_email_label: "Adresse e-mail du parent",
       booking_parent_email_ph: "parent@exemple.com",
