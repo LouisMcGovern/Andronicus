@@ -23,7 +23,7 @@
   <link rel="icon" type="image/png" href="/favicon.svg" />
   <script>
     try {
-      var _andronicusLang = localStorage.getItem("andronicus_lang");
+      var _andronicusLang = localStorage.getItem("andronicus_lang_v2");
       document.documentElement.lang = _andronicusLang === "en" ? "en" : "fr";
     } catch (e) {
       document.documentElement.lang = "fr";
@@ -35,9 +35,9 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <a href="#main-content" class="skip-link" data-i18n="skip_to_content">Skip to content</a>
+  <a href="#main-content" class="skip-link" data-i18n="skip_to_content">Aller au contenu</a>
   <div class="lang-switch lang-switch--fixed" role="group" data-i18n-aria="lang_aria">
-    <button type="button" class="lang-switch__btn" data-lang="en" data-i18n="lang_en" aria-pressed="false">English</button>
+    <button type="button" class="lang-switch__btn" data-lang="en" data-i18n="lang_en" aria-pressed="false">Anglais</button>
     <button type="button" class="lang-switch__btn is-active" data-lang="fr" data-i18n="lang_fr" aria-pressed="true">Français</button>
   </div>
 
@@ -51,8 +51,8 @@
         <div class="home-hero__watermark" aria-hidden="true">A</div>
         <div class="brand-card">
           <h1 class="site-title" aria-label="Andronicus"><span class="char" style="--d:0">A</span><span class="char" style="--d:1">n</span><span class="char" style="--d:2">d</span><span class="char" style="--d:3">r</span><span class="char" style="--d:4">o</span><span class="char" style="--d:5">n</span><span class="char" style="--d:6">i</span><span class="char" style="--d:7">c</span><span class="char" style="--d:8">u</span><span class="char" style="--d:9">s</span></h1>
-          <p class="hero-brand-stamp" aria-hidden="true" data-i18n="hero_kicker">ENGLISH GRINDS · DUBLIN · ONLINE</p>
-          <p class="tagline" data-i18n="tagline">Learn English with confidence, energy, and real progress</p>
+          <p class="hero-brand-stamp" aria-hidden="true" data-i18n="hero_kicker">COURS D’ANGLAIS · DUBLIN · EN LIGNE</p>
+          <p class="tagline" data-i18n="tagline">Cours d’anglais en ligne pour élèves francophones.</p>
         </div>
         <div class="home-hero__rule" aria-hidden="true"></div>
       </div>
@@ -60,128 +60,119 @@
 
     <nav class="main-nav" data-i18n-aria="nav_main_aria" aria-label="Main sections">
       <div class="home-free-banner reveal-left">
-        <p class="home-free-banner__text" data-i18n="home_free_banner_text">
-          Your first class is free — no commitment, no payment until you decide to continue.
-        </p>
-        <button type="button" class="btn-primary home-free-banner__btn" data-section="booking" data-i18n="hero_cta_book_now">Claim your free class</button>
+        <p class="home-free-banner__text" data-i18n="home_free_banner_text">Votre premier cours est gratuit — sans engagement, et aucun paiement tant que vous n'avez pas décidé de continuer.</p>
+        <button type="button" class="btn-primary home-free-banner__btn" data-section="booking" data-i18n="hero_cta_book_now">Réserver mon cours gratuit</button>
       </div>
       <button type="button" class="nav-card reveal" data-section="about">
-        <span class="nav-card__label" data-i18n="nav_about_label">About me</span>
-        <span class="nav-card__hint" data-i18n="nav_about_hint">Who I am and how I teach</span>
+        <span class="nav-card__label" data-i18n="nav_about_label">À propos de moi</span>
+        <span class="nav-card__hint" data-i18n="nav_about_hint">Qui je suis et comment j’enseigne</span>
       </button>
       <button type="button" class="nav-card reveal" data-section="process">
-        <span class="nav-card__label" data-i18n="nav_process_label">The process</span>
-        <span class="nav-card__hint" data-i18n="nav_process_hint">How grinds work and what to expect</span>
+        <span class="nav-card__label" data-i18n="nav_process_label">Le déroulement des cours</span>
+        <span class="nav-card__hint" data-i18n="nav_process_hint">Comment fonctionnent les cours et à quoi s’attendre</span>
       </button>
       <button type="button" class="nav-card reveal" data-section="booking">
-        <span class="nav-card__label" data-i18n="nav_booking_label">Booking</span>
-        <span class="nav-card__hint" data-i18n="nav_booking_hint">Send a time request</span>
-        <span class="nav-card__price" data-i18n="nav_booking_price">€25 per session</span>
+        <span class="nav-card__label" data-i18n="nav_booking_label">Inscription</span>
+        <span class="nav-card__hint" data-i18n="nav_booking_hint">Envoyer une demande de créneau</span>
+        <span class="nav-card__price" data-i18n="nav_booking_price">25 € par séance</span>
       </button>
       <button type="button" class="nav-card reveal" data-section="account">
-        <span class="nav-card__label" data-i18n="nav_account_label">Student account</span>
-        <span class="nav-card__hint" data-i18n="nav_account_hint">Optional login to track practice</span>
+        <span class="nav-card__label" data-i18n="nav_account_label">Compte élève</span>
+        <span class="nav-card__hint" data-i18n="nav_account_hint">Connexion facultative pour suivre ses progrès</span>
       </button>
       <button type="button" class="nav-card reveal" data-section="content">
-        <span class="nav-card__label" data-i18n="nav_content_label">Content</span>
-        <span class="nav-card__hint" data-i18n="nav_content_hint">Materials by level</span>
+        <span class="nav-card__label" data-i18n="nav_content_label">Contenu</span>
+        <span class="nav-card__hint" data-i18n="nav_content_hint">Supports par niveau</span>
       </button>
     </nav>
 
     <main id="main-content" class="panels" tabindex="-1">
       <!-- Home / back control -->
       <div class="panel-toolbar">
-        <button type="button" id="btn-home" class="btn-text hidden" data-i18n="btn_home">← Back to home</button>
+        <button type="button" id="btn-home" class="btn-text hidden" data-i18n="btn_home">← Retour à l’accueil</button>
       </div>
 
       <section id="panel-home" class="panel panel--home">
         <section class="home-why" aria-labelledby="home-why-heading">
-          <h2 id="home-why-heading" class="home-section-title home-section-title--why reveal" data-i18n="why_section_title">Why Choose Andronicus?</h2>
+          <h2 id="home-why-heading" class="home-section-title home-section-title--why reveal" data-i18n="why_section_title">Pourquoi choisir Andronicus ?</h2>
           <ul class="why-points">
             <li class="why-point reveal-left">
-              <h3 class="why-point__title" data-i18n="why_3_title">I'm a Student Too</h3>
-              <p class="why-point__body" data-i18n="why_3_body">I'm at Trinity College Dublin right now, so I know what it's like to be inside the work, not above it. That changes how I teach — I remember exactly which bits felt hard, which explanations finally clicked, and how to find ten extra minutes when the week is already full.</p>
+              <h3 class="why-point__title" data-i18n="why_3_title">Je suis aussi étudiant</h3>
+              <p class="why-point__body" data-i18n="why_3_body">Je suis moi-même étudiant à Trinity College Dublin : je sais ce que c'est d'avoir le nez dans le travail, pas de le regarder de haut. Cela change ma façon d'enseigner — je me souviens précisément de ce qui m'a paru difficile, des explications qui m'ont enfin fait comprendre, et de la manière de trouver dix minutes de plus quand la semaine est déjà bien remplie.</p>
             </li>
             <li class="why-point reveal">
-              <h3 class="why-point__title" data-i18n="why_2_title">You Can See Progress</h3>
-              <p class="why-point__body" data-i18n="why_2_body">Every student has a tracking page with real graphs, test results, and notes on class performance. You're not guessing whether you're improving — you can look. Parents see the same view, so there are no surprises at the end of the term.</p>
+              <h3 class="why-point__title" data-i18n="why_2_title">Des progrès visibles</h3>
+              <p class="why-point__body" data-i18n="why_2_body">Chaque élève dispose d'une page de suivi avec de vrais graphiques, des résultats de tests et des remarques sur sa participation en cours. Inutile de deviner s'il progresse : il suffit de regarder. Les parents voient la même page, donc aucune mauvaise surprise en fin de trimestre.</p>
             </li>
             <li class="why-point reveal-right">
-              <h3 class="why-point__title" data-i18n="why_1_title">One-to-One Classes</h3>
-              <p class="why-point__body" data-i18n="why_1_body">Every class is one-to-one. There's nowhere to hide and no waiting for a turn to speak: the student talks for the whole hour, every answer gets a response, and the lesson moves at their pace – slowing down when a topic isn't landing, moving on when it is.</p>
+              <h3 class="why-point__title" data-i18n="why_1_title">Cours particuliers</h3>
+              <p class="why-point__body" data-i18n="why_1_body">Chaque cours se fait en tête-à-tête. Impossible de se cacher, et pas besoin d'attendre son tour pour parler : l'élève s'exprime pendant toute l'heure, chaque réponse reçoit un retour, et le cours avance à son rythme – on ralentit quand un sujet ne passe pas, on avance quand tout va bien.</p>
             </li>
           </ul>
         </section>
 
         <div class="home-testimonials" aria-labelledby="home-testimonials-heading">
-          <h2 id="home-testimonials-heading" class="home-section-title reveal" data-i18n="testimonial_heading">What students and parents say</h2>
+          <h2 id="home-testimonials-heading" class="home-section-title reveal" data-i18n="testimonial_heading">Ce que disent les élèves et les parents</h2>
           <div class="testimonial-grid">
             <figure class="testimonial-card reveal">
-              <p class="testimonial-card__lang-label" data-i18n="testimonial_label">Testimonial</p>
+              <p class="testimonial-card__lang-label" data-i18n="testimonial_label">Témoignage</p>
               <p class="testimonial-card__mark reveal-scale" aria-hidden="true">&ldquo;</p>
-              <blockquote class="testimonial-card__quote" data-i18n="testimonial_quote_1">
-                Louis explains things the way a student thinks, not the way a textbook is written. My daughter went from dreading English class to actually enjoying it.
-              </blockquote>
-              <figcaption class="testimonial-card__attribution" data-i18n="testimonial_attr_1">Parent of a Beginner student</figcaption>
+              <blockquote class="testimonial-card__quote" data-i18n="testimonial_quote_1">Louis explique les choses comme un élève les pense, pas comme un manuel les présente. Ma fille redoutait le cours d'anglais ; aujourd'hui, elle l'apprécie vraiment.</blockquote>
+              <figcaption class="testimonial-card__attribution" data-i18n="testimonial_attr_1">Parent d'un élève débutant</figcaption>
             </figure>
             <figure class="testimonial-card reveal">
-              <p class="testimonial-card__lang-label" data-i18n="testimonial_label">Testimonial</p>
+              <p class="testimonial-card__lang-label" data-i18n="testimonial_label">Témoignage</p>
               <p class="testimonial-card__mark reveal-scale" aria-hidden="true">&ldquo;</p>
-              <blockquote class="testimonial-card__quote" data-i18n="testimonial_quote_2">
-                The small group format means you can't hide. You actually have to speak, and that's what made the difference for my exam.
-              </blockquote>
-              <figcaption class="testimonial-card__attribution" data-i18n="testimonial_attr_2">Intermediate student, Lycée, Paris</figcaption>
+              <blockquote class="testimonial-card__quote" data-i18n="testimonial_quote_2">Le format en petits groupes fait qu'on ne peut pas se cacher. On doit vraiment parler, et c'est ce qui a fait la différence pour mon examen.</blockquote>
+              <figcaption class="testimonial-card__attribution" data-i18n="testimonial_attr_2">Élève intermédiaire, Lycée, Paris</figcaption>
             </figure>
           </div>
         </div>
 
-        <p class="home-trust-line" data-i18n="home_trust_line"></p>
+        <p class="home-trust-line" data-i18n="home_trust_line">La plupart des élèves qui commencent restent toute l’année. Écrivez-moi ou appelez-moi si vous souhaitez en parler avant de réserver.</p>
 
         <section class="home-faq" aria-labelledby="home-faq-heading">
-          <h2 id="home-faq-heading" class="home-section-title reveal" data-i18n="faq_section_title">Frequently asked questions</h2>
+          <h2 id="home-faq-heading" class="home-section-title reveal" data-i18n="faq_section_title">Questions fréquentes</h2>
           <div class="faq-list">
             <details class="faq-item reveal">
-              <summary class="faq-q" data-i18n="faq_q1">Who are the lessons for?</summary>
-              <p class="faq-a" data-i18n="faq_a1">Mostly French-speaking students from collège through lycée and into early university — but anyone whose first language is French and who wants to improve their English is welcome. There are beginner, intermediate, and advanced tracks, and we'll place you sensibly once we talk.</p>
+              <summary class="faq-q" data-i18n="faq_q1">À qui s’adressent les cours ?</summary>
+              <p class="faq-a" data-i18n="faq_a1">Principalement des élèves francophones, du collège au lycée et jusqu'au début des études supérieures — mais toute personne dont la langue maternelle est le français et qui souhaite progresser en anglais est la bienvenue. Il existe des parcours débutant, intermédiaire et avancé, et nous choisirons ensemble le bon niveau après en avoir discuté.</p>
             </details>
             <details class="faq-item reveal">
-              <summary class="faq-q" data-i18n="faq_q2">Where do lessons happen?</summary>
-              <p class="faq-a" data-i18n="faq_a2">Lessons are online and one-to-one. After we agree a slot, I send the join link and what you need. I will be on Zoom Plus so I can use premium features: that helps keep things reliable and simple for students every time they join.</p>
+              <summary class="faq-q" data-i18n="faq_q2">Où ont lieu les cours ?</summary>
+              <p class="faq-a" data-i18n="faq_a2">Les cours ont lieu en ligne, en tête-à-tête. Une fois le créneau convenu, je vous envoie le lien de connexion et tout ce qu’il faut. J’utilise Zoom Plus, qui donne accès aux fonctions premium : la connexion est plus fiable et plus simple pour l’élève à chaque cours.</p>
             </details>
             <details class="faq-item reveal">
-              <summary class="faq-q" data-i18n="faq_q3">How do I book?</summary>
-              <p class="faq-a" data-i18n="faq_a3">Send a booking request with your preferred times. It is not final until I confirm with you by message or email.</p>
+              <summary class="faq-q" data-i18n="faq_q3">Comment fonctionne l’inscription ?</summary>
+              <p class="faq-a" data-i18n="faq_a3">Vous proposez des horaires possibles. Tant que je ne vous ai pas répondu, ce n’est qu’une demande, pas une place garantie.</p>
             </details>
             <details class="faq-item reveal">
-              <summary class="faq-q" data-i18n="faq_q4">What level do I need?</summary>
-              <p class="faq-a" data-i18n="faq_a4">Beginner, intermediate, and advanced tracks are available. If you are unsure, tell me in your message and we'll place you sensibly.</p>
+              <summary class="faq-q" data-i18n="faq_q4">Quel niveau faut-il ?</summary>
+              <p class="faq-a" data-i18n="faq_a4">Il existe des parcours débutant, intermédiaire et avancé. Si vous hésitez, indiquez-le dans le formulaire et je vous orienterai.</p>
             </details>
             <details class="faq-item reveal">
-              <summary class="faq-q" data-i18n="faq_q5">How will I know my booking is confirmed?</summary>
-              <p class="faq-a" data-i18n="faq_a5">I confirm every booking personally by email or message — usually within 24 hours. Until you've heard back from me with a confirmed time slot, your booking is a request, not a confirmation. That way nothing gets double-booked and you always know where you stand.</p>
+              <summary class="faq-q" data-i18n="faq_q5">Comment saurai-je que ma réservation est confirmée ?</summary>
+              <p class="faq-a" data-i18n="faq_a5">Je confirme chaque réservation personnellement par e-mail ou par message — généralement sous 24 heures. Tant que vous n'avez pas reçu de confirmation avec un créneau précis, votre réservation reste une demande. Ainsi, aucun créneau n'est réservé deux fois et vous savez toujours où vous en êtes.</p>
             </details>
             <details class="faq-item reveal">
-              <summary class="faq-q" data-i18n="faq_q6">What do I need for a lesson?</summary>
-              <p class="faq-a" data-i18n="faq_a6">Somewhere you can focus, decent Wi-Fi, and the Zoom link I send. Pen and paper help. Headphones help if it is noisy at home.</p>
+              <summary class="faq-q" data-i18n="faq_q6">De quoi a-t-on besoin pour un cours ?</summary>
+              <p class="faq-a" data-i18n="faq_a6">Un endroit calme pour se concentrer, une bonne connexion Internet et le lien Zoom que je vous envoie. Une feuille et un stylo sont utiles, ainsi qu’un casque si la maison est bruyante.</p>
             </details>
           </div>
         </section>
 
         <section class="home-contact card-cta reveal" aria-labelledby="home-contact-heading">
-          <h2 id="home-contact-heading" class="home-section-title home-section-title--compact" data-i18n="contact_section_title">Questions before you book?</h2>
+          <h2 id="home-contact-heading" class="home-section-title home-section-title--compact" data-i18n="contact_section_title">Envie d’en parler avant ?</h2>
           <p class="home-contact__text" data-i18n-html="contact_section_html"></p>
-          <button type="button" class="btn-primary" id="btn-home-contact-booking" data-i18n="hero_cta_book">Book a free class</button>
+          <button type="button" class="btn-primary" id="btn-home-contact-booking" data-i18n="hero_cta_book">Réserver un cours gratuit</button>
           <p class="home-contact__instagram">
-            <a href="https://instagram.com/learn.english.andronicus" target="_blank" rel="noopener noreferrer"><span data-i18n="instagram_follow">📸 Follow us on Instagram —</span> <strong>@learn.english.andronicus</strong></a>
+            <a href="https://instagram.com/learn.english.andronicus" target="_blank" rel="noopener noreferrer"><span data-i18n="instagram_follow">📸 Suivez-nous sur Instagram —</span> <strong>@learn.english.andronicus</strong></a>
           </p>
         </section>
       </section>
 
       <section id="panel-about" class="panel hidden">
-        <h2 class="reveal" data-i18n="about_title">About me</h2>
-        <figure class="about-photo reveal">
-          <img src="assets/louis-mcgovern.jpg" width="640" height="800" alt="Louis McGovern" loading="lazy" decoding="async" />
-        </figure>
+        <h2 class="reveal" data-i18n="about_title">À propos de moi</h2>
         <div class="prose prose--about">
           <p data-i18n-html="about_p1_html"></p>
           <p data-i18n-html="about_p2_html"></p>
@@ -189,34 +180,37 @@
           <p data-i18n-html="about_p4_html"></p>
           <p data-i18n-html="about_p5_html"></p>
         </div>
+        <figure class="about-photo reveal">
+          <img src="assets/louis-mcgovern.jpg" width="640" height="800" alt="Louis McGovern" loading="lazy" decoding="async" />
+        </figure>
       </section>
 
       <section id="panel-process" class="panel hidden">
-        <h2 class="reveal" data-i18n="process_title">The process</h2>
-        <p class="process-intro" data-i18n="process_steps_intro"></p>
+        <h2 class="reveal" data-i18n="process_title">Le déroulement des cours</h2>
+        <p class="process-intro" data-i18n="process_steps_intro">Trois étapes simples — c'est vraiment tout.</p>
         <div class="process-steps" role="list">
           <article class="step-card reveal" role="listitem">
             <span class="step-card__num reveal-bounce" aria-hidden="true">1</span>
-            <h3 class="step-card__title" data-i18n="process_step_1_title">Get to know me</h3>
+            <h3 class="step-card__title" data-i18n="process_step_1_title">Apprenons à nous connaître</h3>
             <p class="step-card__body" data-i18n-html="process_step_1_html"></p>
           </article>
           <article class="step-card reveal" role="listitem">
             <span class="step-card__num reveal-bounce" aria-hidden="true">2</span>
-            <h3 class="step-card__title" data-i18n="process_step_2_title">Find a weekly slot</h3>
+            <h3 class="step-card__title" data-i18n="process_step_2_title">Trouver un créneau hebdomadaire</h3>
             <p class="step-card__body" data-i18n-html="process_step_2_html"></p>
           </article>
           <article class="step-card reveal" role="listitem">
             <span class="step-card__num reveal-bounce" aria-hidden="true">3</span>
-            <h3 class="step-card__title" data-i18n="process_step_3_title">Show up and pay monthly</h3>
+            <h3 class="step-card__title" data-i18n="process_step_3_title">Suivez les cours, payez en fin de mois</h3>
             <p class="step-card__body" data-i18n-html="process_step_3_html"></p>
           </article>
         </div>
         <div class="process-actions">
-          <button type="button" class="btn-primary process-actions__btn" id="btn-process-open-booking" data-i18n="process_btn_booking">Open booking</button>
-          <p class="process-actions__hint" data-i18n="process_actions_hint"></p>
+          <button type="button" class="btn-primary process-actions__btn" id="btn-process-open-booking" data-i18n="process_btn_booking">Ouvrir le formulaire d’inscription</button>
+          <p class="process-actions__hint" data-i18n="process_actions_hint">C’est le même formulaire que dans le menu principal.</p>
         </div>
         <section class="process-extra" aria-labelledby="process-extra-heading">
-          <h3 id="process-extra-heading" class="process-extra__title" data-i18n="process_extra_heading">Fees, homework, and how it works</h3>
+          <h3 id="process-extra-heading" class="process-extra__title" data-i18n="process_extra_heading">Tarifs, devoirs et fonctionnement</h3>
           <div class="prose prose--process-detail">
           <p data-i18n-html="process_p1_html"></p>
           <p data-i18n-html="process_p2_html"></p>
@@ -235,16 +229,16 @@
             <p class="content-intro" data-i18n-html="content_intro"></p>
             <div class="level-buttons" role="group" data-i18n-aria="content_levels_aria" aria-label="English level">
               <button type="button" class="btn-level" reveal data-level="beginner">
-                <span class="btn-level__name" data-i18n="level_beginner">Beginner</span>
-                <span class="btn-level__desc" data-i18n="btn_level_desc_beginner">A1 to A2 — core vocabulary, everyday grammar, and short practice tasks.</span>
+                <span class="btn-level__name" data-i18n="level_beginner">Débutant</span>
+                <span class="btn-level__desc" data-i18n="btn_level_desc_beginner">A1 à A2 — vocabulaire de base, grammaire du quotidien et exercices courts.</span>
               </button>
               <button type="button" class="btn-level" reveal data-level="intermediate">
-                <span class="btn-level__name" data-i18n="level_intermediate">Intermediate</span>
-                <span class="btn-level__desc" data-i18n="btn_level_desc_intermediate">B1 — stronger grammar, wider vocabulary, and longer written tasks.</span>
+                <span class="btn-level__name" data-i18n="level_intermediate">Intermédiaire</span>
+                <span class="btn-level__desc" data-i18n="btn_level_desc_intermediate">B1 — grammaire plus solide, vocabulaire élargi et tâches écrites plus longues.</span>
               </button>
               <button type="button" class="btn-level" reveal data-level="advanced">
-                <span class="btn-level__name" data-i18n="level_advanced">Advanced</span>
-                <span class="btn-level__desc" data-i18n="btn_level_desc_advanced">B2 and above — nuanced grammar, academic vocabulary, and exam-style practice.</span>
+                <span class="btn-level__name" data-i18n="level_advanced">Avancé</span>
+                <span class="btn-level__desc" data-i18n="btn_level_desc_advanced">B2 et plus — grammaire nuancée, vocabulaire académique et pratique type examen.</span>
               </button>
             </div>
           </div>
@@ -252,62 +246,62 @@
             <div class="content-password-overlay__box">
               <button type="button" id="content-password-close" class="content-password-overlay__close" data-i18n-aria="content_password_close_aria" aria-label="Cancel and return to levels">×</button>
               <h2 id="content-password-heading" class="content-password-overlay__brand">Andronicus</h2>
-              <p id="content-password-intro" class="content-password-overlay__intro" data-i18n="content_password_intro">Enter the password your teacher gave you.</p>
+              <p id="content-password-intro" class="content-password-overlay__intro" data-i18n="content_password_intro">Entre le mot de passe que ton professeur t’a donné.</p>
               <p id="content-password-for-level" class="content-password-overlay__hint"></p>
               <form id="content-password-form" class="content-password-overlay__form inline-form inline-form--stack">
-                <label for="content-password" data-i18n="content_password_label">Password</label>
+                <label for="content-password" data-i18n="content_password_label">Mot de passe</label>
                 <input type="password" id="content-password" name="password" autocomplete="off" />
-                <button type="submit" class="btn-primary" data-i18n="content_password_submit">Continue</button>
+                <button type="submit" class="btn-primary" data-i18n="content_password_submit">Continuer</button>
               </form>
-              <p id="content-password-error" class="form-error hidden" role="alert" data-i18n="content_password_error">Incorrect password.</p>
+              <p id="content-password-error" class="form-error hidden" role="alert" data-i18n="content_password_error">Mot de passe incorrect.</p>
             </div>
           </div>
           <article id="content-beginner" class="level-article hidden">
             <div class="level-article__top">
-              <button type="button" class="btn-level-back" data-i18n="content_back_levels">← Back to levels</button>
+              <button type="button" class="btn-level-back" data-i18n="content_back_levels">← Retour aux niveaux</button>
               <button type="button" class="btn-level-close btn-icon-close" data-i18n-aria="content_close_aria" aria-label="Close and return to levels">×</button>
             </div>
             <div class="learning-tools learning-hub" data-learning-level="beginner">
               <section class="level-landing" data-level-landing>
-                <h2 class="level-landing__heading" data-i18n="level_beginner">Beginner</h2>
-                <p class="level-landing__intro" data-i18n="learning_level_desc_beginner">Core vocabulary, everyday grammar, and short practice tasks to build confidence step by step.</p>
+                <h2 class="level-landing__heading" data-i18n="level_beginner">Débutant</h2>
+                <p class="level-landing__intro" data-i18n="learning_level_desc_beginner">Vocabulaire de base, grammaire du quotidien et exercices courts pour progresser pas à pas.</p>
                 <div class="level-landing__grid" role="navigation" data-i18n-aria="level_landing_grid_aria" aria-label="Choose activity">
                   <button type="button" class="level-landing__card" data-tool="flashcards">
                     <span class="level-landing__card__icon" aria-hidden="true">🃏</span>
-                    <span class="level-landing__card__label" data-i18n="learning_tab_flashcards">Flashcards</span>
-                    <span class="level-landing__card__hint" data-i18n="learning_landing_flashcards">Practice words with flip cards</span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_flashcards">Cartes mémoire</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_flashcards">Entraîne-toi avec des cartes à retourner</span>
                   </button>
                   <button type="button" class="level-landing__card" data-tool="vocab">
                     <span class="level-landing__card__icon" aria-hidden="true">📚</span>
-                    <span class="level-landing__card__label" data-i18n="learning_tab_vocab">Vocabulary</span>
-                    <span class="level-landing__card__hint" data-i18n="learning_landing_vocab">Cross the stepping stones, one word at a time</span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_vocab">Vocabulaire</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_vocab">Traverse le chemin de pierres, un mot à la fois</span>
                   </button>
                   <button type="button" class="level-landing__card" data-tool="grammar">
                     <span class="level-landing__card__icon" aria-hidden="true">✏️</span>
-                    <span class="level-landing__card__label" data-i18n="learning_tab_grammar">Grammar</span>
-                    <span class="level-landing__card__hint" data-i18n="learning_landing_grammar">Interactive exercises with instant feedback</span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_grammar">Grammaire</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_grammar">Exercices interactifs avec retour immédiat</span>
                   </button>
                   <button type="button" class="level-landing__card" data-tool="homework">
                     <span class="level-landing__card__icon" aria-hidden="true">✅</span>
-                    <span class="level-landing__card__label" data-i18n="learning_tab_homework">Homework</span>
-                    <span class="level-landing__card__hint" data-i18n="learning_landing_homework">Your task list and progress checklist</span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_homework">Devoirs</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_homework">Ta liste de devoirs et ton suivi</span>
                   </button>
                   <button type="button" class="level-landing__card" data-tool="progress">
                     <span class="level-landing__card__icon" aria-hidden="true">📈</span>
-                    <span class="level-landing__card__label" data-i18n="learning_tab_progress">Progress</span>
-                    <span class="level-landing__card__hint" data-i18n="learning_landing_progress">Your streak and activity</span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_progress">Progrès</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_progress">Ta série et ton activité</span>
                   </button>
                 </div>
               </section>
               <div class="learning-hub__workspace hidden" data-hub-workspace>
                 <div class="learning-hub__toolbar learning-hub__toolbar--sticky">
-                  <button type="button" class="learning-hub__level-link" data-hub-level-link data-i18n="level_beginner">Beginner</button>
+                  <button type="button" class="learning-hub__level-link" data-hub-level-link data-i18n="level_beginner">Débutant</button>
                   <div class="tool-menu tool-menu--learning" role="tablist" aria-label="Learning tools">
-                    <button type="button" class="tool-menu__btn is-active learning-hub__tab" data-tool="flashcards" data-i18n="learning_tab_flashcards" aria-selected="true">Flashcards</button>
-                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="vocab" data-i18n="learning_tab_vocab" aria-selected="false">Vocabulary</button>
-                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="grammar" data-i18n="learning_tab_grammar" aria-selected="false">Grammar</button>
-                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="homework" data-i18n="learning_tab_homework" aria-selected="false">Homework</button>
-                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="progress" data-i18n="learning_tab_progress" aria-selected="false">Progress</button>
+                    <button type="button" class="tool-menu__btn is-active learning-hub__tab" data-tool="flashcards" data-i18n="learning_tab_flashcards" aria-selected="true">Cartes mémoire</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="vocab" data-i18n="learning_tab_vocab" aria-selected="false">Vocabulaire</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="grammar" data-i18n="learning_tab_grammar" aria-selected="false">Grammaire</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="homework" data-i18n="learning_tab_homework" aria-selected="false">Devoirs</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="progress" data-i18n="learning_tab_progress" aria-selected="false">Progrès</button>
                   </div>
                 </div>
                 <div class="learning-hub__body">
@@ -322,50 +316,50 @@
           </article>
           <article id="content-intermediate" class="level-article hidden">
             <div class="level-article__top">
-              <button type="button" class="btn-level-back" data-i18n="content_back_levels">← Back to levels</button>
+              <button type="button" class="btn-level-back" data-i18n="content_back_levels">← Retour aux niveaux</button>
               <button type="button" class="btn-level-close btn-icon-close" data-i18n-aria="content_close_aria" aria-label="Close and return to levels">×</button>
             </div>
             <div class="learning-tools learning-hub" data-learning-level="intermediate">
               <section class="level-landing" data-level-landing>
-                <h2 class="level-landing__heading" data-i18n="level_intermediate">Intermediate</h2>
-                <p class="level-landing__intro" data-i18n="learning_level_desc_intermediate">Stronger grammar, wider vocabulary, and longer tasks for students who already handle everyday English.</p>
+                <h2 class="level-landing__heading" data-i18n="level_intermediate">Intermédiaire</h2>
+                <p class="level-landing__intro" data-i18n="learning_level_desc_intermediate">Grammaire plus solide, vocabulaire élargi et tâches plus longues si tu maîtrises déjà l'anglais courant.</p>
                 <div class="level-landing__grid" role="navigation" data-i18n-aria="level_landing_grid_aria" aria-label="Choose activity">
                   <button type="button" class="level-landing__card" data-tool="flashcards">
                     <span class="level-landing__card__icon" aria-hidden="true">🃏</span>
-                    <span class="level-landing__card__label" data-i18n="learning_tab_flashcards">Flashcards</span>
-                    <span class="level-landing__card__hint" data-i18n="learning_landing_flashcards">Practice words with flip cards</span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_flashcards">Cartes mémoire</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_flashcards">Entraîne-toi avec des cartes à retourner</span>
                   </button>
                   <button type="button" class="level-landing__card" data-tool="vocab">
                     <span class="level-landing__card__icon" aria-hidden="true">📚</span>
-                    <span class="level-landing__card__label" data-i18n="learning_tab_vocab">Vocabulary</span>
-                    <span class="level-landing__card__hint" data-i18n="learning_landing_vocab">Cross the stepping stones, one word at a time</span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_vocab">Vocabulaire</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_vocab">Traverse le chemin de pierres, un mot à la fois</span>
                   </button>
                   <button type="button" class="level-landing__card" data-tool="grammar">
                     <span class="level-landing__card__icon" aria-hidden="true">✏️</span>
-                    <span class="level-landing__card__label" data-i18n="learning_tab_grammar">Grammar</span>
-                    <span class="level-landing__card__hint" data-i18n="learning_landing_grammar">Interactive exercises with instant feedback</span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_grammar">Grammaire</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_grammar">Exercices interactifs avec retour immédiat</span>
                   </button>
                   <button type="button" class="level-landing__card" data-tool="homework">
                     <span class="level-landing__card__icon" aria-hidden="true">✅</span>
-                    <span class="level-landing__card__label" data-i18n="learning_tab_homework">Homework</span>
-                    <span class="level-landing__card__hint" data-i18n="learning_landing_homework">Your task list and progress checklist</span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_homework">Devoirs</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_homework">Ta liste de devoirs et ton suivi</span>
                   </button>
                   <button type="button" class="level-landing__card" data-tool="progress">
                     <span class="level-landing__card__icon" aria-hidden="true">📈</span>
-                    <span class="level-landing__card__label" data-i18n="learning_tab_progress">Progress</span>
-                    <span class="level-landing__card__hint" data-i18n="learning_landing_progress">Your streak and activity</span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_progress">Progrès</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_progress">Ta série et ton activité</span>
                   </button>
                 </div>
               </section>
               <div class="learning-hub__workspace hidden" data-hub-workspace>
                 <div class="learning-hub__toolbar learning-hub__toolbar--sticky">
-                  <button type="button" class="learning-hub__level-link" data-hub-level-link data-i18n="level_intermediate">Intermediate</button>
+                  <button type="button" class="learning-hub__level-link" data-hub-level-link data-i18n="level_intermediate">Intermédiaire</button>
                   <div class="tool-menu tool-menu--learning" role="tablist" aria-label="Learning tools">
-                    <button type="button" class="tool-menu__btn is-active learning-hub__tab" data-tool="flashcards" data-i18n="learning_tab_flashcards" aria-selected="true">Flashcards</button>
-                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="vocab" data-i18n="learning_tab_vocab" aria-selected="false">Vocabulary</button>
-                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="grammar" data-i18n="learning_tab_grammar" aria-selected="false">Grammar</button>
-                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="homework" data-i18n="learning_tab_homework" aria-selected="false">Homework</button>
-                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="progress" data-i18n="learning_tab_progress" aria-selected="false">Progress</button>
+                    <button type="button" class="tool-menu__btn is-active learning-hub__tab" data-tool="flashcards" data-i18n="learning_tab_flashcards" aria-selected="true">Cartes mémoire</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="vocab" data-i18n="learning_tab_vocab" aria-selected="false">Vocabulaire</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="grammar" data-i18n="learning_tab_grammar" aria-selected="false">Grammaire</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="homework" data-i18n="learning_tab_homework" aria-selected="false">Devoirs</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="progress" data-i18n="learning_tab_progress" aria-selected="false">Progrès</button>
                   </div>
                 </div>
                 <div class="learning-hub__body">
@@ -380,50 +374,50 @@
           </article>
           <article id="content-advanced" class="level-article hidden">
             <div class="level-article__top">
-              <button type="button" class="btn-level-back" data-i18n="content_back_levels">← Back to levels</button>
+              <button type="button" class="btn-level-back" data-i18n="content_back_levels">← Retour aux niveaux</button>
               <button type="button" class="btn-level-close btn-icon-close" data-i18n-aria="content_close_aria" aria-label="Close and return to levels">×</button>
             </div>
             <div class="learning-tools learning-hub" data-learning-level="advanced">
               <section class="level-landing" data-level-landing>
-                <h2 class="level-landing__heading" data-i18n="level_advanced">Advanced</h2>
-                <p class="level-landing__intro" data-i18n="learning_level_desc_advanced">Nuanced grammar, academic vocabulary, and exam-style practice for confident, precise English.</p>
+                <h2 class="level-landing__heading" data-i18n="level_advanced">Avancé</h2>
+                <p class="level-landing__intro" data-i18n="learning_level_desc_advanced">Grammaire nuancée, vocabulaire académique et pratique type examen pour un anglais précis et assuré.</p>
                 <div class="level-landing__grid" role="navigation" data-i18n-aria="level_landing_grid_aria" aria-label="Choose activity">
                   <button type="button" class="level-landing__card" data-tool="flashcards">
                     <span class="level-landing__card__icon" aria-hidden="true">🃏</span>
-                    <span class="level-landing__card__label" data-i18n="learning_tab_flashcards">Flashcards</span>
-                    <span class="level-landing__card__hint" data-i18n="learning_landing_flashcards">Practice words with flip cards</span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_flashcards">Cartes mémoire</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_flashcards">Entraîne-toi avec des cartes à retourner</span>
                   </button>
                   <button type="button" class="level-landing__card" data-tool="vocab">
                     <span class="level-landing__card__icon" aria-hidden="true">📚</span>
-                    <span class="level-landing__card__label" data-i18n="learning_tab_vocab">Vocabulary</span>
-                    <span class="level-landing__card__hint" data-i18n="learning_landing_vocab">Cross the stepping stones, one word at a time</span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_vocab">Vocabulaire</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_vocab">Traverse le chemin de pierres, un mot à la fois</span>
                   </button>
                   <button type="button" class="level-landing__card" data-tool="grammar">
                     <span class="level-landing__card__icon" aria-hidden="true">✏️</span>
-                    <span class="level-landing__card__label" data-i18n="learning_tab_grammar">Grammar</span>
-                    <span class="level-landing__card__hint" data-i18n="learning_landing_grammar">Interactive exercises with instant feedback</span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_grammar">Grammaire</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_grammar">Exercices interactifs avec retour immédiat</span>
                   </button>
                   <button type="button" class="level-landing__card" data-tool="homework">
                     <span class="level-landing__card__icon" aria-hidden="true">✅</span>
-                    <span class="level-landing__card__label" data-i18n="learning_tab_homework">Homework</span>
-                    <span class="level-landing__card__hint" data-i18n="learning_landing_homework">Your task list and progress checklist</span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_homework">Devoirs</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_homework">Ta liste de devoirs et ton suivi</span>
                   </button>
                   <button type="button" class="level-landing__card" data-tool="progress">
                     <span class="level-landing__card__icon" aria-hidden="true">📈</span>
-                    <span class="level-landing__card__label" data-i18n="learning_tab_progress">Progress</span>
-                    <span class="level-landing__card__hint" data-i18n="learning_landing_progress">Your streak and activity</span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_progress">Progrès</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_progress">Ta série et ton activité</span>
                   </button>
                 </div>
               </section>
               <div class="learning-hub__workspace hidden" data-hub-workspace>
                 <div class="learning-hub__toolbar learning-hub__toolbar--sticky">
-                  <button type="button" class="learning-hub__level-link" data-hub-level-link data-i18n="level_advanced">Advanced</button>
+                  <button type="button" class="learning-hub__level-link" data-hub-level-link data-i18n="level_advanced">Avancé</button>
                   <div class="tool-menu tool-menu--learning" role="tablist" aria-label="Learning tools">
-                    <button type="button" class="tool-menu__btn is-active learning-hub__tab" data-tool="flashcards" data-i18n="learning_tab_flashcards" aria-selected="true">Flashcards</button>
-                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="vocab" data-i18n="learning_tab_vocab" aria-selected="false">Vocabulary</button>
-                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="grammar" data-i18n="learning_tab_grammar" aria-selected="false">Grammar</button>
-                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="homework" data-i18n="learning_tab_homework" aria-selected="false">Homework</button>
-                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="progress" data-i18n="learning_tab_progress" aria-selected="false">Progress</button>
+                    <button type="button" class="tool-menu__btn is-active learning-hub__tab" data-tool="flashcards" data-i18n="learning_tab_flashcards" aria-selected="true">Cartes mémoire</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="vocab" data-i18n="learning_tab_vocab" aria-selected="false">Vocabulaire</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="grammar" data-i18n="learning_tab_grammar" aria-selected="false">Grammaire</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="homework" data-i18n="learning_tab_homework" aria-selected="false">Devoirs</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="progress" data-i18n="learning_tab_progress" aria-selected="false">Progrès</button>
                   </div>
                 </div>
                 <div class="learning-hub__body">
@@ -440,103 +434,93 @@
       </section>
 
       <section id="panel-booking" class="panel hidden">
-        <h2 data-i18n="booking_title">Booking</h2>
+        <h2 data-i18n="booking_title">Inscription</h2>
         <div class="prose booking-intro">
           <p data-i18n-html="booking_intro_html"></p>
           <p class="booking-request-note" data-i18n-html="booking_request_note_html"></p>
         </div>
         <form id="booking-form" class="booking-form" novalidate>
-          <div class="booking-price-callout" data-i18n="booking_price_callout">
-            Each one-to-one session is €25. Your first session is free.
-          </div>
-          <label for="booking-parent-name" data-i18n="booking_parent_name_label">Parent name</label>
+          <div class="booking-price-callout" data-i18n="booking_price_callout">Chaque cours particulier coûte 25 €. La première séance est gratuite.</div>
+          <label for="booking-parent-name" data-i18n="booking_parent_name_label">Nom du parent</label>
           <input type="text" id="booking-parent-name" name="parentName" required autocomplete="name" data-i18n-placeholder="booking_parent_name_ph" />
 
-          <label for="booking-parent-email" data-i18n="booking_parent_email_label">Parent email address</label>
+          <label for="booking-parent-email" data-i18n="booking_parent_email_label">Adresse e-mail du parent</label>
           <input type="email" id="booking-parent-email" name="parentEmail" required autocomplete="email" data-i18n-placeholder="booking_parent_email_ph" />
-          <p class="field-hint field-hint--tight" data-i18n="booking_parent_email_hint">You'll receive your child's monthly progress report here.</p>
+          <p class="field-hint field-hint--tight" data-i18n="booking_parent_email_hint">Vous recevrez ici le rapport mensuel de votre enfant.</p>
 
-          <label for="booking-student-name" data-i18n="booking_student_name_label">Student name</label>
+          <label for="booking-student-name" data-i18n="booking_student_name_label">Nom de l’élève</label>
           <input type="text" id="booking-student-name" name="studentName" required autocomplete="name" data-i18n-placeholder="booking_student_name_ph" />
 
-          <label for="booking-phone" data-i18n="booking_phone_label">Phone number</label>
+          <label for="booking-phone" data-i18n="booking_phone_label">Téléphone (pour ma réponse)</label>
           <input type="tel" id="booking-phone" name="phone" required autocomplete="tel" data-i18n-placeholder="booking_phone_ph" />
 
-          <label for="booking-level" data-i18n="booking_level_label">Student’s English level</label>
-          <p class="field-hint field-hint--tight" data-i18n="booking_level_help">Choose the track that best matches school level or confidence.</p>
+          <label for="booking-level" data-i18n="booking_level_label">Niveau d’anglais</label>
+          <p class="field-hint field-hint--tight" data-i18n="booking_level_help">Le niveau actuel de l’élève, à peu près : débutant, intermédiaire ou avancé.</p>
           <select id="booking-level" name="level" required>
-            <option value="" data-i18n="booking_level_empty">Select level</option>
-            <option value="unknown" data-i18n="booking_level_unknown">I do not know yet</option>
-            <option value="beginner" data-i18n="level_beginner">Beginner</option>
-            <option value="intermediate" data-i18n="level_intermediate">Intermediate</option>
-            <option value="advanced" data-i18n="level_advanced">Advanced</option>
+            <option value="" data-i18n="booking_level_empty">Choisir un niveau</option>
+            <option value="unknown" data-i18n="booking_level_unknown">Je ne sais pas encore</option>
+            <option value="beginner" data-i18n="level_beginner">Débutant</option>
+            <option value="intermediate" data-i18n="level_intermediate">Intermédiaire</option>
+            <option value="advanced" data-i18n="level_advanced">Avancé</option>
           </select>
 
           <fieldset class="slot-fieldset booking-slot-fieldset">
-            <legend data-i18n="booking_slots_legend">Preferred times (Paris time)</legend>
-            <p class="field-hint" data-i18n="booking_slots_hint">
-              Pick a weekday, then tap the hours that work. Add more days if you like. I confirm by email.
-            </p>
+            <legend data-i18n="booking_slots_legend">Créneaux souhaités (heure de Paris)</legend>
+            <p class="field-hint" data-i18n="booking_slots_hint">Les heures sont en heure locale de Paris. Choisissez un jour, puis les créneaux disponibles qui vous conviennent. Les heures grisées sont déjà prises. Ajoutez d’autres jours si besoin. Je confirme par e-mail.</p>
 
             <label class="booking-times-unknown">
               <input type="checkbox" id="booking-times-unknown" />
-              <span data-i18n="booking_times_unknown_label">I do not know yet</span>
+              <span data-i18n="booking_times_unknown_label">Je ne sais pas encore</span>
             </label>
 
             <div id="booking-calendar" class="booking-calendar">
               <div class="booking-calendar__step">
-                <p class="booking-calendar__pick-label" data-i18n="booking_pick_day">1 · Choose a day</p>
+                <p class="booking-calendar__pick-label" data-i18n="booking_pick_day">1 · Choisir un jour</p>
                 <div id="booking-day-grid" class="booking-day-grid" role="group"></div>
               </div>
 
               <div id="booking-hours-wrap" class="booking-hours-wrap hidden">
                 <p id="booking-times-heading" class="booking-hours-wrap__heading" aria-live="polite"></p>
-                <p class="field-hint booking-hours-hint" data-i18n="booking_hours_hint">
-                  Tap hours to add or remove them for this day.
-                </p>
+                <p class="field-hint booking-hours-hint" data-i18n="booking_hours_hint">Cliquez sur une heure pour l’ajouter ou la retirer pour ce jour.</p>
                 <div id="booking-hours-grid" class="booking-hours-grid" role="group"></div>
               </div>
 
               <div class="booking-selected-block">
-                <p class="booking-selected-block__label" data-i18n="booking_selected_label">Your selected slots</p>
+                <p class="booking-selected-block__label" data-i18n="booking_selected_label">Créneaux sélectionnés</p>
                 <ul id="booking-selected-list" class="booking-selected-list"></ul>
-                <p id="booking-selected-empty" class="booking-selected-empty" data-i18n="booking_no_slots">
-                  None yet. Choose a day and times above.
-                </p>
+                <p id="booking-selected-empty" class="booking-selected-empty" data-i18n="booking_no_slots">Aucun pour l’instant. Choisissez un jour et des heures ci-dessus.</p>
               </div>
             </div>
 
             <div id="booking-slots-hidden" class="booking-slots-hidden" aria-hidden="true"></div>
           </fieldset>
 
-          <p id="booking-slots-warning" class="form-error hidden" role="alert" data-i18n="booking_err_no_slots">
-            Please choose at least one time slot.
-          </p>
+          <p id="booking-slots-warning" class="form-error hidden" role="alert" data-i18n="booking_err_no_slots">Veuillez choisir au moins un créneau.</p>
 
           <p id="booking-submit-error" class="form-error booking-submit-error hidden" role="alert" aria-live="polite"></p>
 
-          <button type="submit" class="btn-primary booking-submit-btn" data-i18n="booking_submit">Submit preferences</button>
+          <button type="submit" class="btn-primary booking-submit-btn" data-i18n="booking_submit">Envoyer la demande</button>
         </form>
         <div id="booking-success" class="booking-success hidden" role="status">
           <p id="booking-success-warning" class="booking-sync-warning hidden" role="alert"></p>
-          <h3 class="booking-success__heading" data-i18n="booking_success_heading">Request received</h3>
-          <p class="booking-success__main" data-i18n="booking_success_main">Louis will contact you within 24 hours by email or WhatsApp to confirm your slot. Your first class is free — no payment until confirmed.</p>
+          <h3 class="booking-success__heading" data-i18n="booking_success_heading">Demande envoyée</h3>
+          <p class="booking-success__main" data-i18n="booking_success_main">Louis vous contactera dans les 24 heures par e-mail ou WhatsApp pour confirmer votre créneau. Votre premier cours est gratuit — aucun paiement avant confirmation.</p>
           <p id="booking-success-detail" class="booking-success__detail small-print hidden"></p>
           <p class="booking-success__followup small-print" data-i18n-html="booking_success_followup_html"></p>
         </div>
       </section>
 
       <section id="panel-account" class="panel hidden panel--student">
-        <h2 data-i18n="account_title">Your account</h2>
-        <p class="panel-lead" data-i18n="account_intro">For students who want to track exercises and quiz progress on this device.</p>
+        <h2 data-i18n="account_title">Ton compte</h2>
+        <p class="panel-lead" data-i18n="account_intro">Pour les élèves qui veulent suivre leurs exercices et leurs progrès.</p>
         <div id="account-auth" class="account-auth">
           <form id="account-register-form" class="account-card">
-            <h3 data-i18n="account_register_heading">Create account</h3>
-            <label for="account-register-name" data-i18n="account_label_username">Account name</label>
+            <h3 data-i18n="account_register_heading">Créer un compte</h3>
+            <label for="account-register-name" data-i18n="account_label_username">Nom du compte</label>
             <input type="text" id="account-register-name" autocomplete="username" required />
-            <label for="account-register-fullname" data-i18n="account_label_fullname">Full name</label>
+            <label for="account-register-fullname" data-i18n="account_label_fullname">Nom complet</label>
             <input type="text" id="account-register-fullname" autocomplete="name" required />
-            <label for="account-register-password" data-i18n="account_label_password">Password</label>
+            <label for="account-register-password" data-i18n="account_label_password">Mot de passe</label>
             <div class="account-password-row">
               <input
                 type="password"
@@ -568,13 +552,13 @@
                 </span>
               </button>
             </div>
-            <button type="submit" class="btn-primary" data-i18n="account_btn_register">Create account</button>
+            <button type="submit" class="btn-primary" data-i18n="account_btn_register">Créer le compte</button>
           </form>
           <form id="account-login-form" class="account-card">
-            <h3 data-i18n="account_login_heading">Log in</h3>
-            <label for="account-login-name" data-i18n="account_label_username">Account name</label>
+            <h3 data-i18n="account_login_heading">Connexion</h3>
+            <label for="account-login-name" data-i18n="account_label_username">Nom du compte</label>
             <input type="text" id="account-login-name" autocomplete="username" required />
-            <label for="account-login-password" data-i18n="account_label_password">Password</label>
+            <label for="account-login-password" data-i18n="account_label_password">Mot de passe</label>
             <div class="account-password-row">
               <input
                 type="password"
@@ -605,18 +589,16 @@
                 </span>
               </button>
             </div>
-            <button type="submit" class="btn-primary" data-i18n="account_btn_login">Log in</button>
+            <button type="submit" class="btn-primary" data-i18n="account_btn_login">Se connecter</button>
             <p class="account-forgot-wrap">
-              <button type="button" id="account-forgot-open" class="btn-text account-forgot-link" data-i18n="account_forgot_link">
-                Forgot password?
-              </button>
+              <button type="button" id="account-forgot-open" class="btn-text account-forgot-link" data-i18n="account_forgot_link">Mot de passe oublié ?</button>
             </p>
           </form>
           <dialog id="account-forgot-dialog" class="account-dialog">
             <form method="dialog" class="account-dialog__inner">
-              <h3 data-i18n="account_forgot_heading">Forgot your password?</h3>
+              <h3 data-i18n="account_forgot_heading">Mot de passe oublié ?</h3>
               <p class="account-dialog__body" data-i18n-html="account_forgot_body_html"></p>
-              <button type="submit" class="btn-primary" data-i18n="account_forgot_close_btn">Close</button>
+              <button type="submit" class="btn-primary" data-i18n="account_forgot_close_btn">Fermer</button>
             </form>
           </dialog>
           <p id="account-auth-feedback" class="form-error hidden" role="alert"></p>
@@ -624,11 +606,11 @@
         <div id="account-dashboard" class="account-dashboard hidden">
           <div class="account-dashboard__top">
             <p id="account-welcome" class="account-welcome"></p>
-            <button type="button" id="account-logout-btn" class="btn-text" data-i18n="account_btn_logout">Log out</button>
+            <button type="button" id="account-logout-btn" class="btn-text" data-i18n="account_btn_logout">Se déconnecter</button>
           </div>
           <div id="account-progress-cards" class="account-progress-cards"></div>
           <div class="account-card">
-            <h3 data-i18n="account_completed_heading">Completed exercises</h3>
+            <h3 data-i18n="account_completed_heading">Exercices terminés</h3>
             <ul id="account-completed-exercises" class="resource-list"></ul>
           </div>
         </div>
@@ -636,47 +618,47 @@
 
       <section id="panel-admin" class="panel hidden panel--admin" aria-label="Admin">
         <div class="admin-banner">
-          <h2 data-i18n="admin_title">Site admin</h2>
-          <p class="admin-banner__note" data-i18n="admin_banner_note"></p>
+          <h2 data-i18n="admin_title">Administration du site</h2>
+          <p class="admin-banner__note" data-i18n="admin_banner_note">Réservé au propriétaire du site. Les élèves n’en ont pas besoin.</p>
         </div>
         <div id="admin-login-wrap" class="account-card account-card--admin">
-          <h3 data-i18n="admin_login_heading">Admin login</h3>
-          <label for="admin-password" data-i18n="admin_password_label">Admin password</label>
+          <h3 data-i18n="admin_login_heading">Connexion administrateur</h3>
+          <label for="admin-password" data-i18n="admin_password_label">Mot de passe administrateur</label>
           <input type="password" id="admin-password" autocomplete="current-password" />
-          <button type="button" id="admin-login-btn" class="btn-primary" data-i18n="admin_login_btn">Open dashboard</button>
+          <button type="button" id="admin-login-btn" class="btn-primary" data-i18n="admin_login_btn">Ouvrir le tableau de bord</button>
           <p id="admin-login-feedback" class="form-error hidden"></p>
         </div>
         <div id="admin-dashboard" class="admin-surface hidden">
           <div class="account-dashboard__top">
-            <p class="account-welcome" data-i18n="admin_controls_title">Admin controls</p>
-            <button type="button" id="admin-logout-btn" class="btn-text" data-i18n="admin_logout_btn">Close admin</button>
+            <p class="account-welcome" data-i18n="admin_controls_title">Outils d’administration</p>
+            <button type="button" id="admin-logout-btn" class="btn-text" data-i18n="admin_logout_btn">Fermer l’admin</button>
           </div>
           <p id="admin-cloud-status" class="field-hint admin-cloud-status hidden" aria-live="polite"></p>
           <div class="admin-dashboard__actions">
-            <button type="button" id="admin-cloud-refresh-btn" class="btn-text hidden" data-i18n="admin_refresh_cloud">Refresh cloud data</button>
+            <button type="button" id="admin-cloud-refresh-btn" class="btn-text hidden" data-i18n="admin_refresh_cloud">Actualiser les données en ligne</button>
           </div>
           <div id="admin-reminder-banner" class="admin-reminder-banner" aria-live="polite"></div>
           <div class="tool-menu tool-menu--admin">
-            <button type="button" class="tool-menu__btn is-active" data-admin-tab="bookings" data-i18n="admin_tab_bookings">Bookings</button>
-            <button type="button" class="tool-menu__btn" data-admin-tab="progress" data-i18n="admin_tab_progress">Student progress</button>
-            <button type="button" class="tool-menu__btn" data-admin-tab="payments" data-i18n="admin_tab_payments">Payments</button>
-            <button type="button" class="tool-menu__btn" data-admin-tab="leaderboard" data-i18n="admin_tab_leaderboard">Leaderboard</button>
-            <button type="button" class="tool-menu__btn" data-admin-tab="planner" data-i18n="admin_tab_planner">Class Planner</button>
-            <button type="button" class="tool-menu__btn" data-admin-tab="writing" data-i18n="admin_tab_writing">Writing</button>
+            <button type="button" class="tool-menu__btn is-active" data-admin-tab="bookings" data-i18n="admin_tab_bookings">Réservations</button>
+            <button type="button" class="tool-menu__btn" data-admin-tab="progress" data-i18n="admin_tab_progress">Progression des élèves</button>
+            <button type="button" class="tool-menu__btn" data-admin-tab="payments" data-i18n="admin_tab_payments">Paiements</button>
+            <button type="button" class="tool-menu__btn" data-admin-tab="leaderboard" data-i18n="admin_tab_leaderboard">Classement</button>
+            <button type="button" class="tool-menu__btn" data-admin-tab="planner" data-i18n="admin_tab_planner">Planning des cours</button>
+            <button type="button" class="tool-menu__btn" data-admin-tab="writing" data-i18n="admin_tab_writing">Rédactions</button>
             <button type="button" class="tool-menu__btn" data-admin-tab="points" data-i18n="admin_tab_points">Points</button>
           </div>
           <div id="admin-bookings-tab" class="admin-tab">
             <div class="account-card account-card--admin">
-              <h3 data-i18n="admin_bookings_heading">Class bookings</h3>
+              <h3 data-i18n="admin_bookings_heading">Demandes de cours</h3>
               <div class="table-scroll">
               <table id="admin-bookings-table" class="admin-table">
                 <thead>
                   <tr>
-                    <th data-i18n="admin_col_name">Name</th>
-                    <th data-i18n="admin_col_phone">Phone</th>
-                    <th data-i18n="admin_col_level">Level</th>
-                    <th data-i18n="admin_col_slots">Slots</th>
-                    <th data-i18n="admin_col_booked">Booked at</th>
+                    <th data-i18n="admin_col_name">Nom</th>
+                    <th data-i18n="admin_col_phone">Téléphone</th>
+                    <th data-i18n="admin_col_level">Niveau</th>
+                    <th data-i18n="admin_col_slots">Créneaux</th>
+                    <th data-i18n="admin_col_booked">Date de la demande</th>
                     <th data-i18n="admin_col_actions">Actions</th>
                   </tr>
                 </thead>
@@ -687,16 +669,16 @@
           </div>
           <div id="admin-progress-tab" class="admin-tab hidden">
           <div id="admin-student-list-wrap" class="account-card account-card--admin">
-            <h3 data-i18n="admin_progress_heading">Student progress</h3>
+            <h3 data-i18n="admin_progress_heading">Progression des élèves</h3>
             <div class="table-scroll">
             <table id="admin-students-table" class="admin-table">
               <thead>
                 <tr>
-                  <th data-i18n="admin_col_name">Name</th>
-                  <th data-i18n="admin_col_username">Username</th>
-                  <th data-i18n="admin_col_flashcards">Flashcards</th>
-                  <th data-i18n="admin_col_quiz">Quiz sessions</th>
-                  <th data-i18n="admin_col_done">Completed exercises</th>
+                  <th data-i18n="admin_col_name">Nom</th>
+                  <th data-i18n="admin_col_username">Identifiant</th>
+                  <th data-i18n="admin_col_flashcards">Cartes mémoire</th>
+                  <th data-i18n="admin_col_quiz">Séances de quiz</th>
+                  <th data-i18n="admin_col_done">Exercices faits</th>
                   <th data-i18n="admin_col_actions">Actions</th>
                 </tr>
               </thead>
@@ -706,43 +688,43 @@
           </div>
           <div id="admin-student-detail" class="account-card account-card--admin admin-student-detail hidden">
             <div class="admin-student-detail__top">
-              <button type="button" id="admin-student-back-btn" class="btn-text" data-i18n="admin_student_back">Back to student list</button>
+              <button type="button" id="admin-student-back-btn" class="btn-text" data-i18n="admin_student_back">Retour à la liste</button>
             </div>
             <div id="admin-student-detail-inner" class="admin-student-detail__inner"></div>
           </div>
           </div>
           <div id="admin-payments-tab" class="admin-tab hidden">
             <div class="account-card account-card--admin">
-              <h3 data-i18n="admin_payments_heading">Parent payment checklist</h3>
+              <h3 data-i18n="admin_payments_heading">Liste de suivi des paiements (parents)</h3>
               <div class="admin-email-section">
-                <button type="button" id="admin-send-emails-btn" class="btn-primary" data-i18n="admin_send_emails_btn">Send monthly progress emails</button>
+                <button type="button" id="admin-send-emails-btn" class="btn-primary" data-i18n="admin_send_emails_btn">Envoyer les bilans mensuels par e-mail</button>
                 <p id="admin-send-emails-status" class="field-hint hidden" aria-live="polite"></p>
               </div>
               <form id="admin-payment-form" class="inline-form inline-form--stack">
-                <label for="admin-payment-name" data-i18n="admin_payment_name_label">Parent or student name</label>
+                <label for="admin-payment-name" data-i18n="admin_payment_name_label">Nom du parent ou de l’élève</label>
                 <input type="text" id="admin-payment-name" required />
-                <label for="admin-payment-owed" data-i18n="admin_payment_owed_label">Amount owed (EUR)</label>
+                <label for="admin-payment-owed" data-i18n="admin_payment_owed_label">Montant dû (EUR)</label>
                 <input type="number" id="admin-payment-owed" min="0" step="0.01" value="0" />
-                <button type="submit" class="btn-primary" data-i18n="admin_payment_add_btn">Add to checklist</button>
+                <button type="submit" class="btn-primary" data-i18n="admin_payment_add_btn">Ajouter à la liste</button>
               </form>
               <ul id="admin-payment-list" class="resource-list"></ul>
             </div>
           </div>
           <div id="admin-leaderboard-tab" class="admin-tab hidden">
             <div class="account-card account-card--admin">
-              <h3 data-i18n="admin_leaderboard_heading">Leaderboard</h3>
+              <h3 data-i18n="admin_leaderboard_heading">Classement des élèves</h3>
               <div class="table-scroll">
                 <table id="admin-leaderboard-table" class="admin-table">
                   <thead>
                     <tr>
-                      <th data-i18n="admin_lb_col_rank">Rank</th>
-                      <th data-i18n="admin_lb_col_name">Name</th>
-                      <th data-i18n="admin_lb_col_level">Level</th>
+                      <th data-i18n="admin_lb_col_rank">Rang</th>
+                      <th data-i18n="admin_lb_col_name">Nom</th>
+                      <th data-i18n="admin_lb_col_level">Niveau</th>
                       <th data-i18n="admin_lb_col_score">Score</th>
-                      <th data-i18n="admin_lb_col_cards">Cards</th>
-                      <th data-i18n="admin_lb_col_quizzes">Quizzes</th>
-                      <th data-i18n="admin_lb_col_exercises">Exercises</th>
-                      <th data-i18n="admin_lb_col_homework">Homework</th>
+                      <th data-i18n="admin_lb_col_cards">Cartes (×1)</th>
+                      <th data-i18n="admin_lb_col_quizzes">Quiz (×5)</th>
+                      <th data-i18n="admin_lb_col_exercises">Exercices (×10)</th>
+                      <th data-i18n="admin_lb_col_homework">Devoirs (×3)</th>
                     </tr>
                   </thead>
                   <tbody id="admin-leaderboard-tbody"></tbody>
@@ -765,7 +747,7 @@
 
     <footer class="site-footer">
       <p class="site-footer__brand">Andronicus</p>
-      <p class="site-footer__tagline" data-i18n="footer_tagline">ANDRONICUS · ENGLISH GRINDS FOR FRENCH-SPEAKING STUDENTS</p>
+      <p class="site-footer__tagline" data-i18n="footer_tagline">ANDRONICUS · COURS D’ANGLAIS POUR ÉLÈVES FRANCOPHONES</p>
       <p class="site-footer__contact">
         <a href="tel:+353833198980">+353 (83) 319 8980</a>
         ·
@@ -794,19 +776,19 @@
   <nav id="mobile-bottom-nav" class="mobile-bottom-nav" data-i18n-aria="mobile_nav_aria" aria-label="Mobile navigation">
     <button type="button" class="mobile-bottom-nav__btn is-active" data-section="home">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      <span class="mobile-bottom-nav__label" data-i18n="mobile_nav_home">Home</span>
+      <span class="mobile-bottom-nav__label" data-i18n="mobile_nav_home">Accueil</span>
     </button>
     <button type="button" class="mobile-bottom-nav__btn" data-section="content">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-      <span class="mobile-bottom-nav__label" data-i18n="mobile_nav_content">Content</span>
+      <span class="mobile-bottom-nav__label" data-i18n="mobile_nav_content">Contenu</span>
     </button>
     <button type="button" class="mobile-bottom-nav__btn" data-section="booking">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      <span class="mobile-bottom-nav__label" data-i18n="mobile_nav_booking">Booking</span>
+      <span class="mobile-bottom-nav__label" data-i18n="mobile_nav_booking">Réserver</span>
     </button>
     <button type="button" class="mobile-bottom-nav__btn" data-section="account">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      <span class="mobile-bottom-nav__label" data-i18n="mobile_nav_account">Account</span>
+      <span class="mobile-bottom-nav__label" data-i18n="mobile_nav_account">Compte</span>
     </button>
   </nav>
 

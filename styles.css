@@ -7276,7 +7276,7 @@ body.wr-open .pts {
 /* About – photo */
 .about-photo {
   width: min(17rem, 72%);
-  margin: 0.25rem auto 1.4rem;
+  margin: 1.5rem auto 0.5rem;
 }
 
 .about-photo img {

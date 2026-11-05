@@ -4,7 +4,7 @@
  * the element with data-i18n / data-i18n-html in index.html (or use t() in app.js).
  */
 (function (global) {
-  const STORAGE_KEY = "andronicus_lang";
+  const STORAGE_KEY = "andronicus_lang_v2";
   const THEME_STORAGE_KEY = "andronicus_theme";
 
   const STRINGS = {
