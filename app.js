@@ -2250,7 +2250,34 @@
    * ------------------------------------------------------------------ */
 
   const IRREGULAR_DECK_NAME = "Irregular verbs";
-  const VERB_TENSES = ["all", "past", "present_perfect", "past_perfect"];
+  /** Tense groups shown in the dropdown. Each tense has a label key verbs_tense_<id>. */
+  const VERB_TENSE_GROUPS = [
+    ["overview", ["all"]],
+    ["present", ["present_simple", "present_continuous", "present_perfect", "present_perfect_continuous"]],
+    ["past", ["past_simple", "past_continuous", "past_perfect", "past_perfect_continuous"]],
+    ["future", ["future_will", "future_going_to", "future_continuous", "future_perfect"]],
+    ["conditional", ["conditional", "conditional_perfect"]],
+  ];
+
+  /** Forms the irregular-verb list doesn't store: third person (-s) and -ing. */
+  const VERB_THIRD_PERSON = { be: "is", have: "has", do: "does", go: "goes" };
+  const VERB_DOUBLE_FINAL = { begin: 1, forget: 1, forbid: 1, upset: 1, input: 1, outrun: 1, beset: 1, quit: 1 };
+
+  function verbThirdPerson(base) {
+    if (VERB_THIRD_PERSON[base]) return VERB_THIRD_PERSON[base];
+    if (/(s|x|z|ch|sh|o)$/.test(base)) return base + "es";
+    if (/[^aeiou]y$/.test(base)) return base.slice(0, -1) + "ies";
+    return base + "s";
+  }
+
+  function verbIngForm(base) {
+    if (base === "be") return "being";
+    if (/ie$/.test(base)) return base.slice(0, -2) + "ying";
+    if (/[^aeiouy]e$/.test(base) || /[^e]ue$/.test(base)) return base.slice(0, -1) + "ing";
+    const oneSyllableCvc = /^[^aeiou]*(qu|[^aeiou])?[aeiou][^aeiouwxy]$/.test(base) && !/[aeiou]{2}[^aeiou]$/.test(base);
+    if (VERB_DOUBLE_FINAL[base] || oneSyllableCvc) return base + base.slice(-1) + "ing";
+    return base + "ing";
+  }
 
   function irregularVerbList() {
     const raw = (typeof window !== "undefined" && window.ANDRONICUS_IRREGULAR_VERBS) || [];
@@ -2273,14 +2300,46 @@
     return String(form || "").split("/")[0];
   }
 
-  function verbExample(v, tense) {
-    if (tense === "past") {
-      if (v.base === "be") return "I was · you were";
-      return "I " + firstForm(v.past);
+  /** The verb conjugated in a tense, e.g. "I will have gone". */
+  function verbConjugation(v, tense) {
+    const base = v.base;
+    const past = firstForm(v.past);
+    const pp = firstForm(v.pp);
+    const ing = verbIngForm(base);
+    switch (tense) {
+      case "present_simple":
+        if (base === "be") return "I am · you are · she is";
+        return "I " + base + " · she " + verbThirdPerson(base);
+      case "present_continuous":
+        return "I am " + ing + " · she is " + ing;
+      case "present_perfect":
+        return "I have " + pp + " · she has " + pp;
+      case "present_perfect_continuous":
+        return "I have been " + ing;
+      case "past_simple":
+        if (base === "be") return "I was · you were";
+        return "I " + past;
+      case "past_continuous":
+        return "I was " + ing + " · they were " + ing;
+      case "past_perfect":
+        return "I had " + pp;
+      case "past_perfect_continuous":
+        return "I had been " + ing;
+      case "future_will":
+        return "I will " + base;
+      case "future_going_to":
+        return "I am going to " + base;
+      case "future_continuous":
+        return "I will be " + ing;
+      case "future_perfect":
+        return "I will have " + pp;
+      case "conditional":
+        return "I would " + base;
+      case "conditional_perfect":
+        return "I would have " + pp;
+      default:
+        return "";
     }
-    if (tense === "present_perfect") return "I have " + firstForm(v.pp) + " · she has " + firstForm(v.pp);
-    if (tense === "past_perfect") return "I had " + firstForm(v.pp);
-    return "";
   }
 
   function verbSearchText(v) {
@@ -2345,11 +2404,9 @@
           ["verbs_col_fr", function (v) { return v.fr; }, "iv-fr"],
         ];
       }
-      const formKey = tense === "past" ? "verbs_col_past" : "verbs_col_pp";
       return [
         ["verbs_col_base", function (v) { return v.base; }, "iv-base"],
-        [formKey, function (v) { return tense === "past" ? v.past : v.pp; }, ""],
-        ["verbs_col_example", function (v) { return verbExample(v, tense); }, "iv-example"],
+        ["verbs_col_conjugation", function (v) { return verbConjugation(v, tense); }, "iv-conj"],
         ["verbs_col_fr", function (v) { return v.fr; }, "iv-fr"],
       ];
     }
@@ -2394,21 +2451,33 @@
       el.searchLab.textContent = I18n.t("verbs_search_label");
       el.search.placeholder = I18n.t("verbs_search_ph");
       el.hint.textContent = I18n.t("verbs_hint");
-      el.tenses.setAttribute("aria-label", I18n.t("verbs_tense_label"));
       el.tenses.innerHTML = "";
-      VERB_TENSES.forEach(function (t) {
-        const b = document.createElement("button");
-        b.type = "button";
-        b.className = "tool-menu__btn iv-tense" + (t === tense ? " is-active" : "");
-        b.setAttribute("aria-pressed", t === tense ? "true" : "false");
-        b.textContent = I18n.t("verbs_tense_" + t);
-        b.addEventListener("click", function () {
-          tense = t;
-          renderChrome();
-          renderTable();
+      const lab = document.createElement("label");
+      lab.className = "iv-search iv-tense-pick";
+      const labText = document.createElement("span");
+      labText.className = "iv-search__lab";
+      labText.textContent = I18n.t("verbs_tense_label");
+      const sel = document.createElement("select");
+      sel.className = "iv-tense-select";
+      VERB_TENSE_GROUPS.forEach(function (g) {
+        const og = document.createElement("optgroup");
+        og.label = I18n.t("verbs_group_" + g[0]);
+        g[1].forEach(function (t) {
+          const o = document.createElement("option");
+          o.value = t;
+          o.textContent = I18n.t("verbs_tense_" + t);
+          og.appendChild(o);
         });
-        el.tenses.appendChild(b);
+        sel.appendChild(og);
       });
+      sel.value = tense;
+      sel.addEventListener("change", function () {
+        tense = sel.value;
+        renderTable();
+      });
+      lab.appendChild(labText);
+      lab.appendChild(sel);
+      el.tenses.appendChild(lab);
     }
 
     el.search.addEventListener("input", function () {
