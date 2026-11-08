@@ -113,37 +113,83 @@
   /* ---------- speech ---------- */
 
   var synth = window.speechSynthesis || null;
-  var voice = null;
-  function pickVoice() {
-    if (!synth) return;
-    var list = synth.getVoices() || [];
-    function find(test) {
-      for (var i = 0; i < list.length; i++) if (test(list[i])) return list[i];
-      return null;
-    }
-    var lang = function (v) {
-      return String(v.lang || "").replace("_", "-").toLowerCase();
-    };
-    voice =
-      find(function (v) { return lang(v) === "en-gb" && /google|natural|premium|enhanced/i.test(v.name); }) ||
-      find(function (v) { return lang(v) === "en-gb"; }) ||
-      find(function (v) { return lang(v) === "en-ie"; }) ||
-      find(function (v) { return lang(v).indexOf("en") === 0; }) ||
-      null;
+  var VOICE_PREF_KEY = "andronicus_dictation_voice";
+
+  /* Browsers don't say whether a voice is male or female, so go by known names
+     (Chrome, Edge, macOS/iOS, Windows). If nothing matches, the pitch is shifted instead. */
+  var MALE = /\b(male|daniel|arthur|oliver|george|ryan|thomas|alfie|elliot|ethan|noah|harry|fred|alex|aaron|tom|evan|rishi|gordon|lee|david|mark|guy|christopher|eric|roger|steffan|brian|andrew|davis|tony|jason|ralph)\b/i;
+  var FEMALE = /\b(female|kate|serena|stephanie|martha|moira|sonia|libby|maisie|hazel|susan|bella|hollie|abbie|olivia|mia|samantha|victoria|karen|tessa|fiona|allison|ava|nicky|zoe|zira|aria|jenny|michelle|emma|ana|sara|nancy|amber|ashley|cora|elizabeth|jane|catherine|natasha|emily|siri)\b/i;
+
+  function getGender() {
+    try {
+      var g = localStorage.getItem(VOICE_PREF_KEY);
+      if (g === "male" || g === "female") return g;
+    } catch (e) {}
+    return "female";
   }
-  if (synth) {
-    pickVoice();
-    if (typeof synth.addEventListener === "function") synth.addEventListener("voiceschanged", pickVoice);
-    else synth.onvoiceschanged = pickVoice;
+  function setGender(g) {
+    try {
+      localStorage.setItem(VOICE_PREF_KEY, g);
+    } catch (e) {}
   }
 
-  function speak(text, rate, onStart, onEnd) {
+  function langOf(v) {
+    return String(v.lang || "").replace("_", "-").toLowerCase();
+  }
+  function genderOf(v) {
+    var n = String(v.name || "");
+    if (/female/i.test(n)) return "female";
+    if (MALE.test(n)) return "male";
+    if (FEMALE.test(n)) return "female";
+    return "";
+  }
+
+  /** Best English voice for the chosen gender; `exact` says whether the gender really matched. */
+  function pickVoice(gender) {
+    if (!synth) return { voice: null, exact: false };
+    var list = (synth.getVoices() || []).filter(function (v) {
+      return langOf(v).indexOf("en") === 0;
+    });
+    function score(v) {
+      var l = langOf(v);
+      var s = 0;
+      if (l === "en-gb") s += 40;
+      else if (l === "en-ie") s += 35;
+      else if (l === "en-us") s += 25;
+      else if (l === "en-au" || l === "en-ca" || l === "en-nz") s += 15;
+      if (/natural|neural|premium|enhanced|online/i.test(v.name)) s += 8;
+      if (/google/i.test(v.name)) s += 5;
+      if (/novelty|whisper|bells|bubbles|cellos|zarvox|trinoids|bad news|good news|jester|organ|superstar|wobble|boing|albert|bahh/i.test(v.name)) s -= 100;
+      return s;
+    }
+    var best = null;
+    var bestAny = null;
+    list.forEach(function (v) {
+      var sc = score(v);
+      if (!bestAny || sc > score(bestAny)) bestAny = v;
+      if (genderOf(v) === gender && (!best || sc > score(best))) best = v;
+    });
+    return best ? { voice: best, exact: true } : { voice: bestAny, exact: false };
+  }
+  if (synth) {
+    synth.getVoices();
+    if (typeof synth.addEventListener === "function") synth.addEventListener("voiceschanged", function () {});
+  }
+
+  function speak(text, rate, gender, onStart, onEnd) {
     if (!synth) return false;
     synth.cancel();
+    var picked = pickVoice(gender);
     var u = new SpeechSynthesisUtterance(text);
-    if (voice) u.voice = voice;
-    u.lang = voice ? voice.lang : "en-GB";
+    if (picked.voice) u.voice = picked.voice;
+    u.lang = picked.voice ? picked.voice.lang : "en-GB";
     u.rate = rate;
+    /* No voice of the right gender on this device: shift the pitch instead. */
+    if (!picked.exact) {
+      var g = picked.voice ? genderOf(picked.voice) : "";
+      if (gender === "male" && g !== "male") u.pitch = 0.7;
+      if (gender === "female" && g !== "female") u.pitch = 1.25;
+    }
     u.onstart = onStart || null;
     u.onend = u.onerror = onEnd || null;
     synth.speak(u);
@@ -254,7 +300,31 @@
       var card = el("div", "dict__card");
       var pill = el("span", "dict__pill dict__pill--" + p.diff);
       pill.textContent = t(DIFF_KEY[p.diff]) + " · " + t(POINTS[p.diff] === 1 ? "dict_point" : "dict_points", { n: String(POINTS[p.diff]) });
-      card.appendChild(pill);
+      var top = el("div", "dict__top");
+      top.appendChild(pill);
+      if (synth) {
+        var seg = el("div", "dict__voice");
+        seg.setAttribute("role", "group");
+        seg.setAttribute("aria-label", t("dict_voice"));
+        seg.appendChild(el("span", "dict__voicelabel", t("dict_voice")));
+        ["female", "male"].forEach(function (g) {
+          var b = el("button", "dict__voicebtn" + (getGender() === g ? " is-on" : ""), t(g === "male" ? "dict_voice_male" : "dict_voice_female"));
+          b.type = "button";
+          b.setAttribute("aria-pressed", getGender() === g ? "true" : "false");
+          b.addEventListener("click", function () {
+            setGender(g);
+            seg.querySelectorAll(".dict__voicebtn").forEach(function (x) {
+              var on = x === b;
+              x.classList.toggle("is-on", on);
+              x.setAttribute("aria-pressed", on ? "true" : "false");
+            });
+            play(RATE_NORMAL, playBtn);
+          });
+          seg.appendChild(b);
+        });
+        top.appendChild(seg);
+      }
+      card.appendChild(top);
 
       if (!synth) {
         card.appendChild(el("p", "dict__warn", t("dict_no_speech")));
@@ -378,6 +448,7 @@
       speak(
         p.text,
         rate,
+        getGender(),
         function () {
           btn.classList.add("is-playing");
         },

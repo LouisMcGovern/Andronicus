@@ -8417,3 +8417,45 @@ body.wr-open .pts {
   text-align: center;
 }
 .dict__warn { color: var(--dict-bad); }
+
+.dict__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.dict__voice {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+}
+
+.dict__voicelabel {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+  padding: 0 0.35rem 0 0.5rem;
+}
+
+.dict__voicebtn {
+  border: none;
+  background: transparent;
+  color: var(--ink-heading);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.dict__voicebtn.is-on {
+  background: var(--dict-accent);
+  color: #fff;
+}
