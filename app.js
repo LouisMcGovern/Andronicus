@@ -4211,6 +4211,19 @@
       '  <div class="vp-options" role="group"></div>' +
       '  <p class="vp-feedback" aria-live="polite"></p>' +
       '  <button type="button" class="btn-primary vp-continue hidden"></button>' +
+      '  <button type="button" class="vp-lookback-btn hidden"></button>' +
+      "</div>" +
+      '<div class="vp-look hidden" aria-live="polite">' +
+      '  <p class="vp-look__tag"></p>' +
+      '  <p class="vp-look__q"></p>' +
+      '  <span class="vp-look__arrow" aria-hidden="true"></span>' +
+      '  <p class="vp-look__a"></p>' +
+      '  <div class="vp-look__nav">' +
+      '    <button type="button" class="vp-look__step vp-look__prev"></button>' +
+      '    <span class="vp-look__count"></span>' +
+      '    <button type="button" class="vp-look__step vp-look__next"></button>' +
+      "  </div>" +
+      '  <button type="button" class="btn-primary vp-look__close"></button>' +
       "</div>" +
       '<div class="vp-done hidden">' +
       '  <p class="vp-done__badge"></p>' +
@@ -4241,7 +4254,105 @@
       doneText: card.querySelector(".vp-done__text"),
       nextLap: card.querySelector(".vp-next-lap"),
       foot: card.querySelector(".vp-foot"),
+      lookBtn: card.querySelector(".vp-lookback-btn"),
+      look: card.querySelector(".vp-look"),
+      lookTag: card.querySelector(".vp-look__tag"),
+      lookQ: card.querySelector(".vp-look__q"),
+      lookA: card.querySelector(".vp-look__a"),
+      lookPrev: card.querySelector(".vp-look__prev"),
+      lookNext: card.querySelector(".vp-look__next"),
+      lookCount: card.querySelector(".vp-look__count"),
+      lookClose: card.querySelector(".vp-look__close"),
     };
+    el.look.querySelector(".vp-look__arrow").innerHTML =
+      '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.5v14.6M6.4 13.6l5.6 5.6 5.6-5.6"/></svg>';
+
+    /* Look back at words already answered correctly — only shows them, never changes progress. */
+    let lookIdx = -1; // index in st.recent while looking, -1 when on the path
+
+    function recentList() {
+      const st = getVocabPathState(level);
+      if (!Array.isArray(st.recent)) st.recent = [];
+      return st.recent;
+    }
+
+    function renderLookBtn() {
+      const n = recentList().length;
+      el.lookBtn.classList.toggle("hidden", !n || lookIdx >= 0);
+      el.lookBtn.innerHTML = "";
+      el.lookBtn.appendChild(document.createTextNode("‹ " + I18n.t("vocab_look_open")));
+    }
+
+    function renderLook() {
+      const list = recentList();
+      const item = list[lookIdx];
+      if (!item) return closeLook();
+      el.lookTag.textContent = I18n.t("vocab_look_tag", { n: String(item.n) });
+      el.lookQ.textContent = item.q;
+      el.lookA.textContent = item.a;
+      el.lookPrev.textContent = "‹ " + I18n.t("vocab_look_older");
+      el.lookNext.textContent = I18n.t("vocab_look_newer") + " ›";
+      el.lookPrev.disabled = lookIdx <= 0;
+      el.lookNext.disabled = lookIdx >= list.length - 1;
+      el.lookCount.textContent = I18n.t("vocab_look_count", {
+        n: String(list.length - lookIdx),
+        t: String(list.length),
+      });
+      el.lookClose.textContent = I18n.t("vocab_look_close");
+      el.stones.querySelectorAll(".vp-stone").forEach(function (s) {
+        s.classList.toggle("is-looking", Number(s.getAttribute("data-n")) === item.n);
+      });
+    }
+
+    function openLook(idx) {
+      const list = recentList();
+      if (!list.length) return;
+      lookIdx = Math.max(0, Math.min(list.length - 1, idx == null ? list.length - 1 : idx));
+      el.play.classList.add("hidden");
+      el.done.classList.add("hidden");
+      el.look.classList.remove("hidden");
+      renderLookBtn();
+      renderLook();
+      el.lookClose.focus({ preventScroll: true });
+    }
+
+    function closeLook() {
+      lookIdx = -1;
+      el.look.classList.add("hidden");
+      el.stones.querySelectorAll(".is-looking").forEach(function (s) {
+        s.classList.remove("is-looking");
+      });
+      if (getVocabPathState(level).lapDone) el.done.classList.remove("hidden");
+      else el.play.classList.remove("hidden");
+      renderLookBtn();
+      if (!el.cont.classList.contains("hidden")) el.cont.focus({ preventScroll: true });
+    }
+
+    el.lookBtn.addEventListener("click", function () {
+      openLook();
+    });
+    el.lookClose.addEventListener("click", closeLook);
+    el.lookPrev.addEventListener("click", function () {
+      if (lookIdx > 0) {
+        lookIdx -= 1;
+        renderLook();
+      }
+    });
+    el.lookNext.addEventListener("click", function () {
+      if (lookIdx < recentList().length - 1) {
+        lookIdx += 1;
+        renderLook();
+      }
+    });
+    el.stones.addEventListener("click", function (e) {
+      const stone = e.target.closest(".vp-stone.is-viewable");
+      if (!stone) return;
+      const n = Number(stone.getAttribute("data-n"));
+      const list = recentList();
+      for (let i = list.length - 1; i >= 0; i -= 1) {
+        if (list[i].n === n) return openLook(i);
+      }
+    });
 
     let current = null; // question on screen
     let answered = false;
@@ -4259,12 +4370,21 @@
       const here = st.lapDone ? total : st.correct;
       const from = Math.max(0, here - VOCAB_PATH_WINDOW_BEFORE);
       const to = Math.min(total, here + VOCAB_PATH_WINDOW_AFTER);
+      const viewable = {};
+      (Array.isArray(st.recent) ? st.recent : []).forEach(function (r) {
+        viewable[r.n] = true;
+      });
       for (let i = from; i <= to; i += 1) {
         const stone = document.createElement("div");
         let cls = "vp-stone";
         if (i < here) cls += " is-crossed";
         else if (i === here) cls += " is-here";
         if (i === total) cls += " is-goal";
+        stone.setAttribute("data-n", String(i + 1));
+        if (i < here && viewable[i + 1]) {
+          cls += " is-viewable";
+          stone.setAttribute("title", I18n.t("vocab_look_stone"));
+        }
         stone.className = cls;
         const num = document.createElement("span");
         num.className = "vp-stone__num";
@@ -4338,6 +4458,11 @@
       }
       if (st.lapDone) {
         showDone(st);
+        renderLookBtn();
+        if (lookIdx >= 0) {
+          el.done.classList.add("hidden");
+          renderLook();
+        }
         return;
       }
       el.done.classList.add("hidden");
@@ -4376,6 +4501,11 @@
         });
         el.options.appendChild(b);
       });
+      renderLookBtn();
+      if (lookIdx >= 0) {
+        el.play.classList.add("hidden");
+        renderLook();
+      }
     }
 
     function recordProgressSession(st) {
@@ -4423,6 +4553,9 @@
         if (current.from === "main") st.pos += 1;
         else st.back.shift();
         st.correct += 1;
+        if (!Array.isArray(st.recent)) st.recent = [];
+        st.recent.push({ n: st.correct, q: current.prompt, a: current.answer });
+        if (st.recent.length > 40) st.recent = st.recent.slice(-40);
         st.sessionCorrect = (st.sessionCorrect || 0) + 1;
         playElementAnimation(btn, "answer-correct-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)");
         el.feedback.textContent = I18n.t("vocab_path_correct");
@@ -4491,6 +4624,7 @@
       st.correct = 0;
       st.wrong = 0;
       st.lapDone = false;
+      st.recent = [];
       if (getActiveUser()) saveUsers();
       render();
     });
@@ -4501,6 +4635,25 @@
       const tag = (e.target && e.target.tagName) || "";
       if (tag === "INPUT" || tag === "TEXTAREA" || (e.target && e.target.isContentEditable)) return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (lookIdx >= 0) {
+        if (e.key === "ArrowLeft") {
+          e.preventDefault();
+          el.lookPrev.click();
+        } else if (e.key === "ArrowRight") {
+          e.preventDefault();
+          if (lookIdx >= recentList().length - 1) closeLook();
+          else el.lookNext.click();
+        } else if (e.key === "Escape" || (e.key === "Enter" && document.activeElement !== el.lookClose)) {
+          e.preventDefault();
+          closeLook();
+        }
+        return;
+      }
+      if (e.key === "ArrowLeft" && recentList().length) {
+        e.preventDefault();
+        openLook();
+        return;
+      }
       if (!answered && current && /^[1-4]$/.test(e.key)) {
         const btns = el.options.querySelectorAll(".vp-option");
         const b = btns[Number(e.key) - 1];

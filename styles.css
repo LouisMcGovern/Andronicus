@@ -8504,3 +8504,113 @@ body.wr-open .pts {
 @media (prefers-reduced-motion: reduce) {
   .streak-celebration__emoji .and-icon { animation: none; }
 }
+
+/* ---------- Vocabulary: look back at words already crossed ---------- */
+.vp-stone.is-viewable {
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.vp-stone.is-viewable:hover {
+  box-shadow: inset 0 -3px 0 rgba(13, 27, 42, 0.12), 0 0 0 3px rgba(47, 138, 91, 0.25);
+}
+.vp-stone.is-looking {
+  background: #2f8a5b;
+  box-shadow: 0 0 0 3px rgba(47, 138, 91, 0.3);
+}
+.vp-stone.is-looking .vp-stone__num {
+  color: #fff;
+}
+
+.vp-lookback-btn {
+  display: block;
+  margin: 0.9rem auto 0;
+  border: none;
+  background: none;
+  color: #1a5090;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.4rem;
+  text-decoration: underline;
+  text-decoration-color: rgba(26, 80, 144, 0.35);
+  text-underline-offset: 3px;
+}
+.vp-lookback-btn:hover {
+  text-decoration-color: currentColor;
+}
+
+.vp-look {
+  margin-top: 1rem;
+  text-align: center;
+  animation: vp-look-in 0.25s ease both;
+}
+@keyframes vp-look-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vp-look { animation: none; }
+}
+.vp-look__tag {
+  display: inline-block;
+  margin: 0 0 0.6rem;
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(47, 138, 91, 0.14);
+  color: #1d6a43;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.vp-look__q {
+  margin: 0;
+  font-size: clamp(1.4rem, 4.2vw, 1.9rem);
+  font-weight: 700;
+  color: #0d1b2a;
+  overflow-wrap: anywhere;
+}
+.vp-look__arrow {
+  display: block;
+  margin: 0.3rem 0;
+  font-size: 1.2rem;
+  color: #4a6580;
+}
+.vp-look__a {
+  margin: 0 auto;
+  max-width: 30rem;
+  padding: 0.6rem 1rem;
+  border-radius: 0.7rem;
+  background: #bfe3cf;
+  color: #12492e;
+  font-size: clamp(1.2rem, 3.6vw, 1.55rem);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.vp-look__nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 1rem 0 0.9rem;
+}
+.vp-look__step {
+  border: 1px solid #b9cadb;
+  background: #eef4fa;
+  color: #0f3d7a;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.vp-look__step:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.vp-look__count {
+  font-size: 0.85rem;
+  color: #4a6580;
+  min-width: 4.5em;
+}
