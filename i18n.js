@@ -128,13 +128,17 @@
       content_levels_aria: "English level",
       level_beginner: "Beginner",
       level_intermediate: "Intermediate",
+      level_meter_label: "Difficulty",
+      level_meter_1: "Difficulty 1 of 3",
+      level_meter_2: "Difficulty 2 of 3",
+      level_meter_3: "Difficulty 3 of 3",
       level_advanced: "Advanced",
       btn_level_desc_beginner:
         "A1 to A2 — core vocabulary, everyday grammar, and short practice tasks.",
       btn_level_desc_intermediate:
-        "B1 — stronger grammar, wider vocabulary, and longer written tasks.",
+        "B1 to B2 — stronger grammar, everyday and work vocabulary, phrasal verbs and longer tasks.",
       btn_level_desc_advanced:
-        "B2 and above — nuanced grammar, academic vocabulary, and exam-style practice.",
+        "B2 and above — nuanced grammar, rich vocabulary, idioms and confident discussion.",
       level_landing_grid_aria: "Choose activity",
       content_breadcrumb_aria: "Content location",
       home_testimonials_heading: "What students and parents say",
@@ -961,13 +965,17 @@
       content_levels_aria: "Niveau d’anglais",
       level_beginner: "Débutant",
       level_intermediate: "Intermédiaire",
+      level_meter_label: "Difficulté",
+      level_meter_1: "Difficulté 1 sur 3",
+      level_meter_2: "Difficulté 2 sur 3",
+      level_meter_3: "Difficulté 3 sur 3",
       level_advanced: "Avancé",
       btn_level_desc_beginner:
         "A1 à A2 — vocabulaire de base, grammaire du quotidien et exercices courts.",
       btn_level_desc_intermediate:
-        "B1 — grammaire plus solide, vocabulaire élargi et tâches écrites plus longues.",
+        "B1 à B2 — grammaire plus solide, vocabulaire du quotidien et du travail, verbes à particule et tâches plus longues.",
       btn_level_desc_advanced:
-        "B2 et plus — grammaire nuancée, vocabulaire académique et pratique type examen.",
+        "B2 et plus — grammaire nuancée, vocabulaire riche, expressions idiomatiques et discussion avec aisance.",
       level_landing_grid_aria: "Choisir une activité",
       content_breadcrumb_aria: "Emplacement dans le contenu",
       home_testimonials_heading: "Ce que disent les élèves et les parents",

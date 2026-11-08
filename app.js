@@ -2187,6 +2187,49 @@
     });
   })();
 
+  (function useCuratedVocabDecks() {
+    // Intermediate / advanced vocabulary lives in vocab-decks.js (everyday, useful words — no jargon).
+    const src = typeof window !== "undefined" && window.ANDRONICUS_VOCAB_DECKS;
+    if (!src) return;
+    Object.keys(src).forEach(function (lvl) {
+      const fc = learningData[lvl] && learningData[lvl].flashcards;
+      if (!fc) return;
+      const keep = {};
+      if (fc["Irregular verbs"]) keep["Irregular verbs"] = fc["Irregular verbs"];
+      Object.keys(fc).forEach(function (k) {
+        delete fc[k];
+      });
+      Object.keys(src[lvl]).forEach(function (deckName) {
+        fc[deckName] = src[lvl][deckName].map(function (row) {
+          return { front: row[0], back: row[1] };
+        });
+      });
+      Object.keys(keep).forEach(function (k) {
+        fc[k] = keep[k];
+      });
+    });
+  })();
+
+  (function buildFullDecks() {
+    // "Full deck" = every themed word of the level together (no repeats).
+    ["beginner", "intermediate", "advanced"].forEach(function (lvl) {
+      const fc = learningData[lvl] && learningData[lvl].flashcards;
+      if (!fc) return;
+      const all = [];
+      const seen = {};
+      Object.keys(fc).forEach(function (deckName) {
+        if (deckName === "Master 1000" || deckName === "Irregular verbs") return;
+        (fc[deckName] || []).forEach(function (c) {
+          const k = String(c.front).toLowerCase();
+          if (seen[k]) return;
+          seen[k] = true;
+          all.push({ front: c.front, back: c.back });
+        });
+      });
+      fc["Master 1000"] = all;
+    });
+  })();
+
   learningData.beginner.vocabQuiz = buildFiftyVocabQuestions(beginnerQuizSeeds);
   learningData.intermediate.vocabQuiz = buildFiftyVocabQuestions(intermediateQuizSeeds);
   learningData.advanced.vocabQuiz = buildFiftyVocabQuestions(advancedQuizSeeds);
@@ -4129,59 +4172,117 @@
     ["Homework diary", "Notebook"],
     ["Door mat", "Welcome mat"],
     ["Smoke alarm", "Smoke detector battery"],
-    ["Bill", "Bills", "Household bills", "Utility bills"],
+    ["Bill", "Bills"],
     ["Championship", "League", "League table"],
-    ["Personal best", "Personal record"],
-    ["Added time", "Injury time"],
-    ["Booking", "Yellow card"],
-    ["VAR", "VAR review", "Video assistant"],
-    ["Professional foul", "Tactical foul"],
-    ["Sponsorship", "Sponsorship deal", "Endorsement"],
-    ["Laundry", "Laundry detergent"],
-    ["Dry cleaning", "Pressing"],
-    ["Lease", "Tenancy agreement"],
-    ["Home insurance", "Contents insurance"],
-    ["Rubbish collection", "Bin collection day"],
     ["Pay attention", "Watch out!", "Be careful"],
     ["Keep pace", "Keep up with"],
     ["Run short of", "Run out of"],
-    ["Lay the blame on", "Pass the buck"],
-    ["Shoulder the blame", "Take responsibility", "Face the music", "Take charge of"],
+    ["Take responsibility", "Face the music", "Take charge of"],
     ["Meet halfway", "Find common ground", "Reach consensus", "Strike a balance", "Strike a deal"],
     ["Hold on", "Hang on", "Wait a minute"],
     ["Carry on", "Go on"],
     ["Give out", "Hand out"],
     ["Figure out", "Work out", "Catch on", "Find out"],
-    ["Cut down on", "Scale down", "Cut out"],
+    ["Cut down on", "Cut out"],
     ["Fill in", "Fill out"],
     ["Catch up", "Catch up with"],
-    ["Bursary", "Scholarship", "Grant"],
-    ["Peer review", "Peer assessment", "Peer feedback"],
-    ["Reading list", "Bibliography"],
-    ["Redundancy", "Dismissal"],
-    ["Internship", "Work placement"],
     ["By contrast", "On the other hand...", "Whereas"],
-    ["Consequently", "Accordingly", "Hence", "As a result of..."],
-    ["Granted", "Admittedly", "To be fair", "In fairness"],
-    ["Undoubtedly", "Evidently"],
-    ["Put differently", "In other words", "That is to say", "To put it another way", "Id est"],
-    ["On balance", "All things considered", "Overall, I would argue...", "In the final analysis", "To sum up", "In summary..."],
-    ["First and foremost", "In the first place", "Primarily"],
-    ["From my perspective", "As far as I am concerned"],
-    ["I see your point, however", "I take your point", "That is a fair point"],
-    ["I strongly disagree", "With respect, I disagree", "I remain unconvinced"],
-    ["At first glance", "Prima facie"],
+    ["Consequently", "Hence"],
+    ["In other words", "That is to say"],
+    ["On balance", "To sum up"],
     ["Furthermore", "Moreover"],
-    ["Nevertheless", "Notwithstanding", "That being said"],
-    ["Ubiquitous", "Pervasive", "Prevalent"],
-    ["Meiosis", "Understatement"],
-    ["Screed", "Tirade", "Philippic", "Invective", "Broadside", "Jeremiad", "Harangue", "Diatribe", "Polemic"],
-    ["Admonition", "Castigation", "Reproof", "Rebuke", "Reprimand", "Censure"],
-    ["Blood passport", "Biological passport"],
-    ["Doping test", "Sample collection"],
-    ["Gentrification", "Gentrification pressure"],
-    ["Compulsory purchase", "Eminent domain"],
-    ["Misinformation", "Disinformation"],
+    // Intermediate (new decks)
+    ["Boss", "Manager", "Team leader"],
+    ["Salary", "Wages"],
+    ["Colleague", "Employee"],
+    ["Self-employed", "Small business"],
+    ["To get up", "To wake up"],
+    ["Tidy", "Clean"],
+    ["Messy", "Dirty"],
+    ["Leftovers", "Food waste"],
+    ["Groceries", "Shopping list", "To do the shopping"],
+    ["Hobby", "Free time"],
+    ["To train", "To get fit", "To keep fit"],
+    ["Concert", "Live music", "Festival"],
+    ["Ticket", "Queue for tickets"],
+    ["In my opinion", "I think that", "From my point of view", "Personally", "It seems to me that"],
+    ["I totally agree", "Exactly!"],
+    ["However", "Although", "Whereas", "On the other hand...", "Even if"],
+    ["So", "Therefore", "As a result"],
+    ["In addition", "Also"],
+    ["Finally", "In conclusion", "To sum up", "Overall"],
+    ["Actually", "In fact"],
+    ["It depends", "It depends on..."],
+    ["I'm against", "I don't agree at all"],
+    ["Pros and cons", "Advantages and disadvantages"],
+    ["So far", "For the time being"],
+    ["To fix", "To repair"],
+    ["Make money", "Raise money"],
+    ["Lose your temper", "Have an argument"],
+    // Advanced (new decks)
+    ["Nevertheless", "Nonetheless", "Having said that"],
+    ["Furthermore", "Moreover"],
+    ["Consequently", "Hence", "Thus", "Thereby"],
+    ["On balance", "All in all", "By and large"],
+    ["As far as I'm concerned", "I'd argue that", "I'm inclined to think", "It strikes me that"],
+    ["I couldn't agree more", "Fair enough", "I take your point, but"],
+    ["Despite", "In spite of the fact that", "Whereas"],
+    ["Arguably", "Admittedly", "Undeniably"],
+    ["Apparently", "Allegedly", "Supposedly"],
+    ["Essentially", "Primarily", "Ultimately", "Eventually"],
+    ["It goes without saying", "Needless to say"],
+    ["To find common ground", "To reach a compromise"],
+    ["To be laid off", "To go bust", "Bankruptcy"],
+    ["Strike", "To go on strike"],
+    ["Profit", "Revenue", "Turnover"],
+    ["Bonus", "Perks"],
+    ["Merger", "Takeover"],
+    ["Workload", "Burnout"],
+    ["Global warming", "Climate change"],
+    ["Fake news", "Propaganda"],
+    ["Affordable housing", "Social housing", "Housing crisis"],
+    ["Protest", "Demonstrator"],
+    ["Trial", "Court"],
+    ["Survey", "Statistics", "Public opinion"],
+    ["To tackle", "To address", "To cope with", "To overcome"],
+    ["To achieve", "To accomplish"],
+    ["To persuade", "To convince", "To urge"],
+    ["To boost", "To enhance", "To foster"],
+    ["To curb", "To restrict", "To tighten"],
+    ["To hinder", "To undermine"],
+    ["To reveal", "To disclose"],
+    ["To soar", "To spread"],
+    ["To imply", "To infer"],
+    ["To assess", "To estimate"],
+    ["To postpone", "To cancel"],
+    ["To come up with", "To put forward"],
+    ["Thorough", "Meticulous"],
+    ["Eager", "Keen"],
+    ["Reluctant", "Hesitant"],
+    ["Tricky", "Challenging", "Daunting"],
+    ["Rewarding", "Worthwhile"],
+    ["Crucial", "Significant", "Considerable"],
+    ["Outrageous", "Appalling"],
+    ["Reliable", "Trustworthy"],
+    ["Consistent", "Coherent"],
+    ["Fair", "Reasonable"],
+    ["Misleading", "Inaccurate"],
+    ["Hectic", "Exhausting"],
+    ["Bleak", "Gloomy"],
+    ["Thriving", "Vibrant"],
+    ["Obvious", "Inevitable"],
+    ["To be over the moon", "To be on cloud nine"],
+    ["To spill the beans", "To let the cat out of the bag"],
+    ["To be in two minds", "To have second thoughts", "To be up in the air", "To sleep on it"],
+    ["To be in hot water", "To be on thin ice"],
+    ["To bite the bullet", "To face the music"],
+    ["To throw in the towel", "To get cold feet"],
+    ["To keep your cool", "To take it easy"],
+    ["To lose your temper", "To get on someone's nerves"],
+    ["To call the shots", "To get the ball rolling"],
+    ["To see eye to eye", "To be on the same page"],
+    ["To be in the same boat", "To be under pressure"],
+    ["The last straw", "To add insult to injury"],
   ];
   const vocabSynonymOf = {};
   VOCAB_SYNONYM_GROUPS.forEach(function (group, gi) {
@@ -8463,19 +8564,19 @@
   function initLearningHubForRoot(root) {
       const LEVEL_COLORS = {
         beginner: {
-          accent: "#059669",
-          soft: "rgba(5,150,105,0.12)",
-          strong: "#047857",
+          accent: "#2f8a5b",
+          soft: "rgba(47,138,91,0.12)",
+          strong: "#236b46",
         },
         intermediate: {
-          accent: "#1d4ed8",
-          soft: "rgba(29,78,216,0.12)",
-          strong: "#1e40af",
+          accent: "#e07a1f",
+          soft: "rgba(224,122,31,0.13)",
+          strong: "#b85f12",
         },
         advanced: {
-          accent: "#7c3aed",
-          soft: "rgba(124,58,237,0.12)",
-          strong: "#6d28d9",
+          accent: "#d0453b",
+          soft: "rgba(208,69,59,0.12)",
+          strong: "#a8332b",
         },
       };
       const level = root.getAttribute("data-learning-level");
