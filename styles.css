@@ -8690,8 +8690,8 @@ body.wr-open .pts {
 .level-article#content-beginner,
 .level-article#content-intermediate,
 .level-article#content-advanced {
-  border-top: 5px solid var(--lvl) !important;
-  background: linear-gradient(180deg, var(--lvl-soft) 0, transparent 9rem), #d4e5f2;
+  border-top: none !important;
+  background: #d4e5f2;
 }
 .level-landing__head {
   display: flex;
