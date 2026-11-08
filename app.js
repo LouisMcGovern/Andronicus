@@ -4402,13 +4402,17 @@
 
     const header = document.createElement("div");
     header.className = "lh-vocab__header";
+    // Answer streak: correct answers in a row (resets on a mistake). Days-in-a-row shown beside it.
     const stBox = document.createElement("div");
-    stBox.className = "lh-chip lh-chip--streak";
+    stBox.className = "lh-chip lh-chip--streak vp-run";
     stBox.innerHTML =
-      '<span class="lh-chip__lab">' +
-      I18n.t("learning_hub_streak") +
-      '</span> <span class="lh-vocab__streak-val">0</span>';
+      '<span class="vp-run__icon" aria-hidden="true">' + AndIcon("flame") + "</span>" +
+      '<span class="lh-chip__lab vp-run__lab"></span> <span class="vp-run__val">0</span>' +
+      '<span class="vp-run__best"></span>';
     header.appendChild(stBox);
+    const daysBox = document.createElement("div");
+    daysBox.className = "lh-chip vp-days hidden";
+    header.appendChild(daysBox);
     shell.appendChild(header);
 
     const card = document.createElement("section");
@@ -4577,11 +4581,28 @@
     let answered = false;
     let busy = false;
 
-    function refreshStreakChip() {
+    function refreshStreakChip(change) {
+      const st = getVocabPathState(level);
+      const run = st.run || 0;
+      stBox.querySelector(".vp-run__lab").textContent = I18n.t("learning_hub_streak");
+      stBox.querySelector(".vp-run__val").textContent = String(run);
+      stBox.querySelector(".vp-run__best").textContent = st.bestRun
+        ? I18n.t("vocab_run_best", { n: String(st.bestRun) })
+        : "";
+      stBox.classList.toggle("is-hot", run >= 5);
+      if (change === "up") {
+        stBox.classList.remove("is-bump", "is-reset");
+        void stBox.offsetWidth;
+        stBox.classList.add("is-bump");
+      } else if (change === "reset") {
+        stBox.classList.remove("is-bump", "is-reset");
+        void stBox.offsetWidth;
+        stBox.classList.add("is-reset");
+      }
       const user = getActiveUser();
-      const v = stBox.querySelector(".lh-vocab__streak-val");
-      if (!v) return;
-      v.textContent = user ? String(ensureLearningHub(ensureStats(user)).streak || 0) : "0";
+      const days = user ? ensureLearningHub(ensureStats(user)).streak || 0 : 0;
+      daysBox.classList.toggle("hidden", !days);
+      daysBox.textContent = I18n.t(days === 1 ? "vocab_days_one" : "vocab_days", { n: String(days) });
     }
 
     function renderStones(st, hop) {
@@ -4772,6 +4793,11 @@
         if (current.from === "main") st.pos += 1;
         else st.back.shift();
         st.correct += 1;
+        st.run = (st.run || 0) + 1;
+        const newBest = st.run > (st.bestRun || 0);
+        if (newBest) st.bestRun = st.run;
+        refreshStreakChip("up");
+        if (newBest && st.run >= 5 && st.run % 5 === 0) stBox.classList.add("is-record");
         if (!Array.isArray(st.recent)) st.recent = [];
         st.recent.push({ n: st.correct, q: current.prompt, a: current.answer });
         if (st.recent.length > 40) st.recent = st.recent.slice(-40);
@@ -4799,6 +4825,10 @@
       } else {
         btn.classList.add("is-wrong");
         playElementAnimation(btn, "shake 0.35s ease");
+        const hadRun = (st.run || 0) > 0;
+        st.run = 0;
+        stBox.classList.remove("is-record");
+        refreshStreakChip(hadRun ? "reset" : null);
         if (current.from === "main") {
           st.pos += 1;
           st.back.push(current.key);
