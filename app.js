@@ -558,7 +558,7 @@
           { front: "Price", back: "Prix" },
           { front: "Cheap", back: "Bon marché" },
           { front: "Expensive", back: "Cher" },
-          { front: "Would like", back: "Voudrais" },
+          { front: "Would you like…?", back: "Voulez-vous… ?" },
           { front: "How much is it?", back: "C'est combien ?" },
           { front: "Shopping basket", back: "Panier" },
           { front: "Trolley", back: "Caddie" },
@@ -1077,14 +1077,14 @@
           { front: "Curriculum vitae (CV)", back: "CV" },
           { front: "Cover letter", back: "Lettre de motivation" },
           { front: "Interview", back: "Entretien" },
-          { front: "Reference", back: "Reference" },
+          { front: "Reference", back: "Références (employeur)" },
           { front: "Networking", back: "Réseautage" },
           { front: "Mentor", back: "Mentor" },
           { front: "Scholarship", back: "Bourse" },
           { front: "Tuition fees", back: "Frais de scolarité" },
           { front: "Seminar", back: "Séminaire" },
           { front: "Lecture", back: "Cours magistral" },
-          { front: "Tutorial", back: "Travaux diriges" },
+          { front: "Tutorial", back: "Travaux dirigés (TD)" },
           { front: "Dissertation", back: "Mémoire" },
           { front: "Plagiarism", back: "Plagiat" },
           { front: "Peer review", back: "Évaluation par les pairs" },
@@ -1103,10 +1103,10 @@
           { front: "This raises the question of...", back: "Cela soulève la question de..." },
           { front: "There is evidence to suggest...", back: "Des éléments suggèrent que..." },
           { front: "A compelling case", back: "Un argument convaincant" },
-          { front: "To some extent", back: "Jusqu'à un certain point" },
+          { front: "To some extent", back: "Dans une certaine mesure" },
           { front: "By contrast", back: "En revanche" },
-          { front: "In contrast", back: "Par contraste" },
-          { front: "As a result", back: "En conséquence" },
+          { front: "On the contrary", back: "Au contraire" },
+          { front: "As a result of...", back: "À la suite de..." },
           { front: "Consequently", back: "Par conséquent" },
           { front: "That being said", back: "Cela dit" },
           { front: "To sum up", back: "Pour conclure" },
@@ -1502,7 +1502,7 @@
         "Academic Vocabulary": [
           { front: "Furthermore", back: "De plus" },
           { front: "Nevertheless", back: "Néanmoins" },
-          { front: "Significant", back: "Significatif" },
+          { front: "Significant", back: "Important / significatif" },
           { front: "To assess", back: "Évaluer" },
           { front: "To justify", back: "Justifier" },
           { front: "To highlight", back: "Mettre en évidence" },
@@ -1510,7 +1510,7 @@
           { front: "Hence", back: "D'où" },
           { front: "Accordingly", back: "En conséquence" },
           { front: "Prerequisite", back: "Prérequis" },
-          { front: "Implication", back: "Implication" },
+          { front: "Implication", back: "Conséquence / sous-entendu" },
           { front: "Criterion", back: "Critère" },
           { front: "Hypothesis", back: "Hypothèse" },
           { front: "Variable", back: "Variable" },
@@ -1518,7 +1518,7 @@
           { front: "Causation", back: "Relation de cause à effet" },
           { front: "Paradigm", back: "Paradigme" },
           { front: "Rationale", back: "Justification" },
-          { front: "Coherent", back: "Coherent" },
+          { front: "Coherent", back: "Cohérent" },
           { front: "Ambiguous", back: "Ambigu" },
           { front: "Prevalent", back: "Répandu" },
           { front: "Robust", back: "Robuste" },
@@ -1560,7 +1560,7 @@
           { front: "Sampling error", back: "Erreur d'échantillonnage" },
           { front: "Statistical significance", back: "Signification statistique" },
           { front: "Effect size", back: "Taille d'effet" },
-          { front: "Replication", back: "Replication" },
+          { front: "Replication", back: "Réplication" },
           { front: "Anomaly", back: "Anomalie" },
           { front: "Outlier", back: "Valeur aberrante" },
           { front: "Cherry-picking", back: "Sélection biaisée des données" },
@@ -4116,6 +4116,124 @@
     return arr;
   }
 
+  /* Words that mean (nearly) the same thing, so they must never be wrong options for each other. */
+  const VOCAB_SYNONYM_GROUPS = [
+    ["Hello", "Good morning"],
+    ["Nice to meet you", "Pleased to meet you"],
+    ["See you later", "See you soon", "See you around", "Speak soon"],
+    ["Help!", "I need help"],
+    ["Key", "Keys"],
+    ["Tired", "I'm tired"],
+    ["Break time", "Recess"],
+    ["Test", "Exam"],
+    ["Homework diary", "Notebook"],
+    ["Door mat", "Welcome mat"],
+    ["Smoke alarm", "Smoke detector battery"],
+    ["Bill", "Bills", "Household bills", "Utility bills"],
+    ["Championship", "League", "League table"],
+    ["Personal best", "Personal record"],
+    ["Added time", "Injury time"],
+    ["Booking", "Yellow card"],
+    ["VAR", "VAR review", "Video assistant"],
+    ["Professional foul", "Tactical foul"],
+    ["Sponsorship", "Sponsorship deal", "Endorsement"],
+    ["Laundry", "Laundry detergent"],
+    ["Dry cleaning", "Pressing"],
+    ["Lease", "Tenancy agreement"],
+    ["Home insurance", "Contents insurance"],
+    ["Rubbish collection", "Bin collection day"],
+    ["Pay attention", "Watch out!", "Be careful"],
+    ["Keep pace", "Keep up with"],
+    ["Run short of", "Run out of"],
+    ["Lay the blame on", "Pass the buck"],
+    ["Shoulder the blame", "Take responsibility", "Face the music", "Take charge of"],
+    ["Meet halfway", "Find common ground", "Reach consensus", "Strike a balance", "Strike a deal"],
+    ["Hold on", "Hang on", "Wait a minute"],
+    ["Carry on", "Go on"],
+    ["Give out", "Hand out"],
+    ["Figure out", "Work out", "Catch on", "Find out"],
+    ["Cut down on", "Scale down", "Cut out"],
+    ["Fill in", "Fill out"],
+    ["Catch up", "Catch up with"],
+    ["Bursary", "Scholarship", "Grant"],
+    ["Peer review", "Peer assessment", "Peer feedback"],
+    ["Reading list", "Bibliography"],
+    ["Redundancy", "Dismissal"],
+    ["Internship", "Work placement"],
+    ["By contrast", "On the other hand...", "Whereas"],
+    ["Consequently", "Accordingly", "Hence", "As a result of..."],
+    ["Granted", "Admittedly", "To be fair", "In fairness"],
+    ["Undoubtedly", "Evidently"],
+    ["Put differently", "In other words", "That is to say", "To put it another way", "Id est"],
+    ["On balance", "All things considered", "Overall, I would argue...", "In the final analysis", "To sum up", "In summary..."],
+    ["First and foremost", "In the first place", "Primarily"],
+    ["From my perspective", "As far as I am concerned"],
+    ["I see your point, however", "I take your point", "That is a fair point"],
+    ["I strongly disagree", "With respect, I disagree", "I remain unconvinced"],
+    ["At first glance", "Prima facie"],
+    ["Furthermore", "Moreover"],
+    ["Nevertheless", "Notwithstanding", "That being said"],
+    ["Ubiquitous", "Pervasive", "Prevalent"],
+    ["Meiosis", "Understatement"],
+    ["Screed", "Tirade", "Philippic", "Invective", "Broadside", "Jeremiad", "Harangue", "Diatribe", "Polemic"],
+    ["Admonition", "Castigation", "Reproof", "Rebuke", "Reprimand", "Censure"],
+    ["Blood passport", "Biological passport"],
+    ["Doping test", "Sample collection"],
+    ["Gentrification", "Gentrification pressure"],
+    ["Compulsory purchase", "Eminent domain"],
+    ["Misinformation", "Disinformation"],
+  ];
+  const vocabSynonymOf = {};
+  VOCAB_SYNONYM_GROUPS.forEach(function (group, gi) {
+    group.forEach(function (en) {
+      const k = vocabNormalize(en);
+      (vocabSynonymOf[k] = vocabSynonymOf[k] || []).push(gi);
+    });
+  });
+
+  /** The alternative answers inside one translation: "Plan / carte" -> ["plan", "carte"]. */
+  function vocabMeaningParts(text) {
+    const parts = [];
+    const full = vocabNormalize(String(text).replace(/\([^)]*\)/g, " "));
+    if (full) parts.push(full);
+    String(text)
+      .replace(/\([^)]*\)/g, " ")
+      .split("/")
+      .forEach(function (p) {
+        const n = vocabNormalize(p);
+        if (n && parts.indexOf(n) < 0) parts.push(n);
+      });
+    return parts;
+  }
+
+  function vocabPartsOverlap(a, b) {
+    const pa = vocabMeaningParts(a);
+    const pb = vocabMeaningParts(b);
+    for (let i = 0; i < pa.length; i += 1) {
+      for (let j = 0; j < pb.length; j += 1) {
+        const x = pa[i];
+        const y = pb[j];
+        if (x === y) return true;
+        // "faire attention" inside "faire attention a": one is just a longer form of the other.
+        const short = x.length < y.length ? x : y;
+        const long = x.length < y.length ? y : x;
+        if (short.length >= 4 && (" " + long + " ").indexOf(" " + short + " ") >= 0) return true;
+      }
+    }
+    return false;
+  }
+
+  /** True when w2 would also be an acceptable answer for w1 (in either direction). */
+  function vocabSameMeaning(w1, w2) {
+    if (vocabPartsOverlap(w1.fr, w2.fr) || vocabPartsOverlap(w1.en, w2.en)) return true;
+    const g1 = vocabSynonymOf[w1.key];
+    const g2 = vocabSynonymOf[w2.key];
+    if (g1 && g2) {
+      for (let i = 0; i < g1.length; i += 1) if (g2.indexOf(g1[i]) >= 0) return true;
+    }
+    return false;
+  }
+
   function buildVocabPathQuestion(bank, key, lap) {
     const word = bank.byKey[key];
     const t = vocabDifficulty(bank, key);
@@ -4124,11 +4242,11 @@
     const answerField = toEnglish ? "en" : "fr";
     const optionCount = t < 0.12 ? 3 : 4;
 
-    // Never offer another word that has the same French meaning (e.g. "Entrée" = Entrance and Starter),
-    // or there would be two right answers.
-    const sameMeaning = vocabNormalize(word.fr);
+    // Never offer a wrong option that is also a right answer: same French meaning
+    // (e.g. "Entrée" = Entrance and Starter), overlapping wording ("Bonjour" / "Bonjour (matin)"),
+    // or known English synonyms ("Consequently" / "As a result").
     let pool = bank.words.filter(function (w) {
-      return w.key !== key && vocabNormalize(w.fr) !== sameMeaning;
+      return w.key !== key && !vocabSameMeaning(word, w);
     });
     if (t >= 0.33) {
       const sameDeck = pool.filter(function (w) {
