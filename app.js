@@ -26,6 +26,8 @@
   const STREAK_CONFETTI_COLORS = ["#1d4ed8", "#059669", "#7c3aed", "#f59e0b", "#ef4444"];
 
   const LANDING_TOOL_ICONS = {
+    dictation:
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1v-6h3z"/><path d="M3 19a2 2 0 0 0 2 2h1v-6H3z"/></svg>',
     leaderboard:
       '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M17 5h2a2 2 0 0 1 0 4h-2"/><path d="M7 5H5a2 2 0 0 0 0 4h2"/></svg>',
     verbs:
@@ -2886,6 +2888,43 @@
     });
   }
 
+  const DICTATION_KEY = "andronicus_dictation_v1";
+  function dictationSolvedTotal(st) {
+    let n = 0;
+    Object.keys(st || {}).forEach(function (lvl) {
+      const s = st[lvl] || {};
+      n += Object.keys(s.solved || {}).length + Object.keys(s.revealed || {}).length;
+    });
+    return n;
+  }
+  function readDictationState() {
+    let local = null;
+    try {
+      local = JSON.parse(localStorage.getItem(DICTATION_KEY) || "null");
+    } catch (e) {
+      local = null;
+    }
+    const user = getActiveUser();
+    const remote = user ? ensureLearningHub(ensureStats(user)).dictation : null;
+    if (remote && (!local || dictationSolvedTotal(remote) >= dictationSolvedTotal(local))) return remote;
+    return local || {};
+  }
+  function writeDictationState(st) {
+    const copy = JSON.parse(JSON.stringify(st));
+    try {
+      localStorage.setItem(DICTATION_KEY, JSON.stringify(copy));
+    } catch (e) {}
+    const user = getActiveUser();
+    if (user) {
+      ensureLearningHub(ensureStats(user)).dictation = copy;
+      saveUsers();
+    }
+    document.querySelectorAll(".learning-hub[data-learning-level]").forEach(function (hub) {
+      const lvl = hub.getAttribute("data-learning-level");
+      if (learningData[lvl]) refreshLandingCardProgress(hub, lvl, learningData[lvl]);
+    });
+  }
+
   function countHomeworkCompleted(lh, lvl, checklist) {
     const done = (lh.homeworkChecklist && lh.homeworkChecklist[lvl]) || {};
     return (checklist || []).reduce(function (acc, item) {
@@ -2914,6 +2953,13 @@
         n: String(Math.min((wg.round || 0) + 1, window.AndronicusWordGame ? window.AndronicusWordGame.count() : 1)),
         t: String(window.AndronicusWordGame ? window.AndronicusWordGame.count() : 0),
       });
+    }
+    if (tool === "dictation") {
+      const total = window.AndronicusDictation ? window.AndronicusDictation.count(lvl) : 0;
+      if (!total) return "";
+      const ds = readDictationState()[lvl] || {};
+      const n = Math.min(Math.floor(+ds.best || 0) + 1, total);
+      return I18n.t("learning_landing_dictation_progress", { n: String(n), t: String(total) });
     }
     if (tool === "flashcards") {
       const n = (stats.flashcardSessions || []).filter(function (s) {
@@ -3041,7 +3087,7 @@
       const text =
         tool === "homework" && !hasClassAccess()
           ? I18n.t("hw_card_locked")
-          : tool === "words"
+          : tool === "words" || tool === "dictation"
             ? landingCardProgressText(tool, lvl, data, stats, lh)
             : user && stats && lh && tool !== "progress"
               ? landingCardProgressText(tool, lvl, data, stats, lh)
@@ -5890,6 +5936,7 @@
       progress: "learning_tab_progress",
       verbs: "learning_tab_verbs",
       words: "learning_tab_words",
+      dictation: "learning_tab_dictation",
       leaderboard: "lb_title",
     }[tool];
     return key ? I18n.t(key) : tool;
@@ -8190,6 +8237,7 @@
       const leaderboardPanel = root.querySelector('[data-tool-panel="leaderboard"]');
       let leaderboardView = null;
       let wordGameView = null;
+      let dictationView = null;
       const wordsPanelEl = root.querySelector('[data-tool-panel="words"]');
 
       function activateTab(name) {
@@ -8201,6 +8249,8 @@
         panels.forEach(function (panel) {
           panel.classList.toggle("hidden", panel.getAttribute("data-tool-panel") !== name);
         });
+        if (name !== "dictation" && dictationView) dictationView.stop();
+        if (name === "dictation" && dictationView) dictationView.render();
         if (name === "progress") renderProgressPanel();
         if (name === "homework") renderHomeworkPanel();
         if (name === "leaderboard" && leaderboardView) void leaderboardView.load(false);
@@ -8827,6 +8877,29 @@
           },
         });
         learningToolsLangRefreshers.push(wordGameView.render);
+      }
+
+      const dictationPanel = root.querySelector('[data-tool-panel="dictation"]');
+      if (dictationPanel && window.AndronicusDictation) {
+        dictationView = window.AndronicusDictation.mount(dictationPanel, level, {
+          t: function (k, vars) {
+            return I18n.t(k, vars);
+          },
+          loadState: readDictationState,
+          saveState: writeDictationState,
+          signedIn: function () {
+            return !!getActiveUser();
+          },
+          addPoints: function (n) {
+            const user = getActiveUser();
+            if (!user) return;
+            const stats = ensureStats(user);
+            const lh = ensureLearningHub(stats);
+            lh.vocabPoints = Math.max(0, vocabPointsFromStats(stats) + n);
+            renderPointsBadge({ bump: n > 0 });
+          },
+        });
+        learningToolsLangRefreshers.push(dictationView.render);
       }
 
       if (leaderboardPanel) {
