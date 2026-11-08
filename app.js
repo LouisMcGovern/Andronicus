@@ -102,7 +102,7 @@
     const emoji = document.createElement("div");
     emoji.className = "streak-celebration__emoji";
     emoji.setAttribute("aria-hidden", "true");
-    emoji.textContent = "🔥";
+    emoji.innerHTML = AndIcon("flame", "big");
     const heading = document.createElement("h2");
     heading.textContent = I18n.t("streak_days_title", { n: String(days) });
     const subline = document.createElement("p");
@@ -2992,7 +2992,7 @@
     const icon = document.createElement("div");
     icon.className = "hw-lock__icon";
     icon.setAttribute("aria-hidden", "true");
-    icon.textContent = "🔒";
+    icon.innerHTML = AndIcon("lock", "big");
     const title = document.createElement("h3");
     title.className = "hw-lock__title";
     title.textContent = I18n.t("hw_lock_title");
@@ -3102,6 +3102,7 @@
         card.appendChild(prog);
       }
       prog.textContent = text;
+      if (tool === "homework" && !hasClassAccess()) prog.insertBefore(AndIcon.el("lock"), prog.firstChild);
     });
   }
 
@@ -3526,7 +3527,7 @@
     let state = { rows: null, error: "", loading: false };
 
     function medal(rank) {
-      return rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : "";
+      return rank >= 1 && rank <= 3 ? AndIcon.rank(rank) : "";
     }
 
     function render() {
@@ -3553,7 +3554,9 @@
         li.className = "lb-row" + (r.is_me ? " is-me" : "") + (r.rank <= 3 ? " is-top" : "");
         const rank = document.createElement("span");
         rank.className = "lb-rank";
-        rank.textContent = medal(r.rank) || String(r.rank);
+        const badge = medal(r.rank);
+        if (badge) rank.innerHTML = badge;
+        else rank.textContent = String(r.rank);
         rank.setAttribute("aria-label", I18n.t("lb_rank_aria", { n: String(r.rank) }));
         const name = document.createElement("span");
         name.className = "lb-name";
@@ -4265,7 +4268,8 @@
         stone.className = cls;
         const num = document.createElement("span");
         num.className = "vp-stone__num";
-        num.textContent = i === total ? "🏁" : String(i + 1);
+        if (i === total) num.innerHTML = AndIcon("flag");
+        else num.textContent = String(i + 1);
         stone.appendChild(num);
         if (i === here) {
           const me = document.createElement("span");
@@ -4538,7 +4542,7 @@
     const emoji = document.createElement("div");
     emoji.className = "streak-celebration__emoji";
     emoji.setAttribute("aria-hidden", "true");
-    emoji.textContent = "🏁";
+    emoji.innerHTML = AndIcon("flag", "big");
     const heading = document.createElement("h2");
     heading.textContent = I18n.t("vocab_path_celebrate");
     overlay.appendChild(emoji);
@@ -6804,7 +6808,8 @@
     rows.forEach(function (row, idx) {
       var tr = document.createElement("tr");
       var rankTd = document.createElement("td");
-      rankTd.textContent = (row.score === topScore && topScore > 0 ? "🏆 " : "") + String(idx + 1);
+      rankTd.textContent = String(idx + 1);
+      if (row.score === topScore && topScore > 0) rankTd.insertBefore(AndIcon.el("trophy"), rankTd.firstChild);
       var nameTd = document.createElement("td");
       nameTd.textContent = row.name;
       var levelTd = document.createElement("td");
@@ -7073,13 +7078,13 @@
     const row1 = document.createElement("p");
     row1.className = "admin-reminder-banner__line";
     row1.innerHTML =
-      "<span class='admin-reminder-banner__icon'>📧</span>" +
+      "<span class='admin-reminder-banner__icon'>" + AndIcon("mail") + "</span>" +
       "<span>Next progress email due: <strong>" + dateStr + "</strong> — <em>" + countdownText + "</em></span>";
 
     const row2 = document.createElement("p");
     row2.className = "admin-reminder-banner__line";
     row2.innerHTML =
-      "<span class='admin-reminder-banner__icon'>💶</span>" +
+      "<span class='admin-reminder-banner__icon'>" + AndIcon("euro") + "</span>" +
       "<span>Payment collection due: <strong>" + dateStr + "</strong> — <em>" + countdownText + "</em></span>";
 
     const row3 = document.createElement("p");
@@ -9315,7 +9320,7 @@
 
           const emoji = document.createElement("p");
           emoji.className = "lh-gap-results__emoji";
-          emoji.textContent = "🎉";
+          emoji.innerHTML = AndIcon("party", "big");
 
           const fraction = document.createElement("p");
           fraction.className = "lh-gap-results__fraction";

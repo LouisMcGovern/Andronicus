@@ -433,7 +433,7 @@
         save();
         renderActions();
         var tr2 = fr(word);
-        say("✨ " + t("wg_bonus", { w: word.toUpperCase() }) + (tr2 ? " (" + tr2 + ")" : ""), "bonus");
+        say("✦ " + t("wg_bonus", { w: word.toUpperCase() }) + (tr2 ? " (" + tr2 + ")" : ""), "bonus");
         return;
       }
       say(t("wg_not_word", { w: word.toUpperCase() }), "bad");
@@ -489,7 +489,7 @@
 
     function renderActions() {
       actions.innerHTML = "";
-      var shuf = el("button", "wg__act", "🔀 " + t("wg_shuffle"));
+      var shuf = window.AndIcon ? AndIcon.label(el("button", "wg__act"), "shuffle", t("wg_shuffle")) : el("button", "wg__act", t("wg_shuffle"));
       shuf.type = "button";
       shuf.addEventListener("click", function () {
         for (var i = shuffled.length - 1; i > 0; i--) {
@@ -500,10 +500,10 @@
         }
         renderWheel();
       });
-      var hint = el("button", "wg__act", "💡 " + t("wg_hint_cost"));
+      var hint = window.AndIcon ? AndIcon.label(el("button", "wg__act"), "bulb", t("wg_hint_cost")) : el("button", "wg__act", t("wg_hint_cost"));
       hint.type = "button";
       hint.addEventListener("click", giveHint);
-      var words = el("button", "wg__act", "📖 " + t("wg_words"));
+      var words = window.AndIcon ? AndIcon.label(el("button", "wg__act"), "book", t("wg_words")) : el("button", "wg__act", t("wg_words"));
       words.type = "button";
       words.addEventListener("click", function () {
         showDone(false, true);
@@ -511,7 +511,7 @@
       actions.appendChild(shuf);
       actions.appendChild(hint);
       actions.appendChild(words);
-      var bonus = el("p", "wg__bonuscount", "✨ " + t("wg_bonus_total", { n: String(state.bonusTotal) }));
+      var bonus = window.AndIcon ? AndIcon.label(el("p", "wg__bonuscount"), "sparkle", t("wg_bonus_total", { n: String(state.bonusTotal) })) : el("p", "wg__bonuscount", t("wg_bonus_total", { n: String(state.bonusTotal) }));
       actions.appendChild(bonus);
     }
 

@@ -21,7 +21,7 @@
       tagline: "Online English grinds for French-speaking students.",
       hero_kicker: "ENGLISH GRINDS · DUBLIN · ONLINE",
       footer_tagline: "ANDRONICUS · ENGLISH GRINDS FOR FRENCH-SPEAKING STUDENTS",
-      instagram_follow: "📸 Follow us on Instagram —",
+      instagram_follow: "Follow us on Instagram —",
       admin_tab_planner: "Class Planner",
       streak_days_title: "{n} days in a row!",
       streak_keep_going: "Keep it up!",
@@ -101,7 +101,7 @@
       process_steps_intro: "Three simple steps — that's genuinely all there is to it.",
       process_step_1_title: "Get to know me",
       process_step_1_html:
-        "<div class=\"step-card__stack\"><p>Before anything else, <strong>let's have a quick chat</strong>. Call me, send me a text, or drop me an email — five or ten minutes is enough. I'll explain exactly how the classes work, you can ask anything you like, and we'll figure out together whether it's the right fit. <strong>No pressure, no obligation.</strong></p></div><div class=\"step-card__links\"><a href=\"tel:+353833198980\">📞 +353 (83) 319 8980</a><span class=\"step-card__dot\" aria-hidden=\"true\">·</span><a href=\"mailto:louis.f.mcgovern@gmail.com\">✉️ Email me</a></div>",
+        "<div class=\"step-card__stack\"><p>Before anything else, <strong>let's have a quick chat</strong>. Call me, send me a text, or drop me an email — five or ten minutes is enough. I'll explain exactly how the classes work, you can ask anything you like, and we'll figure out together whether it's the right fit. <strong>No pressure, no obligation.</strong></p></div><div class=\"step-card__links\"><a href=\"tel:+353833198980\"><svg class=\"and-icon\" viewBox=\"0 0 24 24\" width=\"1em\" height=\"1em\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M6.6 3.6h2.6l1.4 4-2 1.4c1 2.3 2.6 3.9 4.6 4.9l1.4-2 4 1.4v2.6c0 1.3-1 2.3-2.3 2.3C9.9 18.1 5.9 14.1 4.3 6c0-1.3 1-2.4 2.3-2.4z\"/></svg> +353 (83) 319 8980</a><span class=\"step-card__dot\" aria-hidden=\"true\">·</span><a href=\"mailto:louis.f.mcgovern@gmail.com\"><svg class=\"and-icon\" viewBox=\"0 0 24 24\" width=\"1em\" height=\"1em\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"3.2\" y=\"5.4\" width=\"17.6\" height=\"13.4\" rx=\"2.4\"/><path d=\"M3.9 6.6l7 5.6c.7.5 1.5.5 2.2 0l7-5.6\"/></svg> Email me</a></div>",
       process_step_2_title: "Find a weekly slot",
       process_step_2_html:
         "<div class=\"step-card__stack\"><p>Once you're happy to go ahead, we'll <strong>find one hour during the week that works for both of us</strong>. Classes run on the same day and time every week — no rescheduling confusion, just a fixed slot you can count on.</p></div>",
@@ -533,7 +533,7 @@
       hw_lock_wrong: "That code isn't right. Ask your teacher.",
       hw_lock_join: "Not in a class yet?",
       hw_lock_join_btn: "Book your free first class",
-      hw_card_locked: "🔒 Class students only",
+      hw_card_locked: "Class students only",
       lb_title: "Leaderboard",
       learning_landing_leaderboard: "All levels together, ranked by points",
       lb_sub: "Everyone competes together, whatever their level: 1 point per vocabulary stone, plus points from your teacher.",
@@ -847,7 +847,7 @@
       tagline: "Cours d’anglais en ligne pour élèves francophones.",
       hero_kicker: "COURS D’ANGLAIS · DUBLIN · EN LIGNE",
       footer_tagline: "ANDRONICUS · COURS D’ANGLAIS POUR ÉLÈVES FRANCOPHONES",
-      instagram_follow: "📸 Suivez-nous sur Instagram —",
+      instagram_follow: "Suivez-nous sur Instagram —",
       admin_tab_planner: "Planning des cours",
       streak_days_title: "{n} jours de suite !",
       streak_keep_going: "Continue comme ça !",
@@ -927,7 +927,7 @@
       process_steps_intro: "Trois étapes simples — c'est vraiment tout.",
       process_step_1_title: "Apprenons à nous connaître",
       process_step_1_html:
-        "<div class=\"step-card__stack\"><p>Avant toute chose, <strong>parlons quelques minutes</strong>. Appelez-moi, envoyez-moi un SMS ou un e-mail — cinq à dix minutes suffisent. Je vous explique comment se déroulent les cours, vous posez toutes vos questions, et nous voyons ensemble si cela vous convient. <strong>Sans pression, sans engagement.</strong></p></div><div class=\"step-card__links\"><a href=\"tel:+353833198980\">📞 +353 (83) 319 8980</a><span class=\"step-card__dot\" aria-hidden=\"true\">·</span><a href=\"mailto:louis.f.mcgovern@gmail.com\">✉️ M'envoyer un e-mail</a></div>",
+        "<div class=\"step-card__stack\"><p>Avant toute chose, <strong>parlons quelques minutes</strong>. Appelez-moi, envoyez-moi un SMS ou un e-mail — cinq à dix minutes suffisent. Je vous explique comment se déroulent les cours, vous posez toutes vos questions, et nous voyons ensemble si cela vous convient. <strong>Sans pression, sans engagement.</strong></p></div><div class=\"step-card__links\"><a href=\"tel:+353833198980\"><svg class=\"and-icon\" viewBox=\"0 0 24 24\" width=\"1em\" height=\"1em\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M6.6 3.6h2.6l1.4 4-2 1.4c1 2.3 2.6 3.9 4.6 4.9l1.4-2 4 1.4v2.6c0 1.3-1 2.3-2.3 2.3C9.9 18.1 5.9 14.1 4.3 6c0-1.3 1-2.4 2.3-2.4z\"/></svg> +353 (83) 319 8980</a><span class=\"step-card__dot\" aria-hidden=\"true\">·</span><a href=\"mailto:louis.f.mcgovern@gmail.com\"><svg class=\"and-icon\" viewBox=\"0 0 24 24\" width=\"1em\" height=\"1em\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"3.2\" y=\"5.4\" width=\"17.6\" height=\"13.4\" rx=\"2.4\"/><path d=\"M3.9 6.6l7 5.6c.7.5 1.5.5 2.2 0l7-5.6\"/></svg> M'envoyer un e-mail</a></div>",
       process_step_2_title: "Trouver un créneau hebdomadaire",
       process_step_2_html:
         "<div class=\"step-card__stack\"><p>Si vous décidez de vous lancer, nous <strong>cherchons ensemble une heure dans la semaine qui nous convient à tous les deux</strong>. Les cours ont lieu le même jour et à la même heure chaque semaine — pas de casse-tête d’agenda, juste un créneau fixe sur lequel vous pouvez compter.</p></div>",
@@ -1363,7 +1363,7 @@
       hw_lock_wrong: "Ce code n'est pas le bon. Demande-le à ton professeur.",
       hw_lock_join: "Pas encore inscrit ?",
       hw_lock_join_btn: "Réserve ton premier cours gratuit",
-      hw_card_locked: "🔒 Réservé aux élèves du cours",
+      hw_card_locked: "Réservé aux élèves du cours",
       lb_title: "Classement",
       learning_landing_leaderboard: "Tous les niveaux réunis, classés par points",
       lb_sub: "Tout le monde concourt ensemble, quel que soit le niveau : 1 point par pierre de vocabulaire, plus les points de ton professeur.",

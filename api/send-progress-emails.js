@@ -68,7 +68,7 @@ function buildCourseProgressHtml() {
 
   if (now > PROGRAMME_END) {
     return `<div class="course-progress">
-  <p class="course-progress__label">Programme completed — congratulations! 🎉</p>
+  <p class="course-progress__label">Programme completed — congratulations!</p>
 </div>`;
   }
 
