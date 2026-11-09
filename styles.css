@@ -10276,3 +10276,309 @@ body.content-panel-open .tool-panel[data-tool-panel="flashcards"] { padding-top:
 #content-advanced .level-landing__card[data-tool="words"] .level-landing__card__progress {
   max-width: calc(100% - 4.5rem);
 }
+
+/* ==========================================================================
+   Dictation – music intro: staff lines, letters hop like a melody,
+   then each letter turns into a note and floats away
+   ========================================================================== */
+.music-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  overflow: hidden;
+  cursor: pointer;
+  background:
+    radial-gradient(80% 55% at 50% 45%, #faf8fe 0%, transparent 75%),
+    linear-gradient(180deg, #f2eefb 0%, #e2d9f4 100%);
+  animation: music-bg-in 0.3s ease both, music-bg-out 0.5s ease 2.3s forwards;
+}
+
+.music-intro__staff {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: clamp(4rem, 12vw, 9rem);
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  animation: music-staff-out 0.5s ease 1.8s forwards;
+}
+.music-intro__staff span {
+  display: block;
+  height: 2px;
+  background: #b9a6e3;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  animation: music-line 0.55s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  animation-delay: calc(0.15s + var(--i) * 0.06s);
+}
+
+.music-intro__word {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  font-weight: 400;
+  font-size: clamp(2.6rem, 9vw, 6.5rem);
+  color: #2b1a4e;
+  white-space: nowrap;
+  text-shadow: 0 2px 0 rgba(255, 255, 255, 0.7);
+}
+.music-intro__word span {
+  display: inline-block;
+  opacity: 0;
+  animation:
+    music-letter 0.45s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i) * 0.03s) forwards,
+    music-hop 0.32s ease-in-out calc(0.7s + var(--i) * 0.05s) 1,
+    music-vanish 0.3s ease-in calc(1.3s + var(--i) * 0.035s) forwards;
+}
+
+.music-intro__note {
+  position: fixed;
+  z-index: 3;
+  opacity: 0;
+  animation: music-note-fly 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--d, 1.4s);
+}
+
+.music-reveal {
+  animation: vp-reveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes music-bg-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes music-bg-out { to { opacity: 0; visibility: hidden; } }
+@keyframes music-line { to { transform: scaleX(1); } }
+@keyframes music-staff-out { to { opacity: 0; } }
+@keyframes music-letter {
+  from { opacity: 0; transform: translateY(0.35em); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes music-hop {
+  0%, 100% { transform: translateY(0); }
+  45% { transform: translateY(-0.28em); color: #6a46c2; }
+}
+@keyframes music-vanish {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: scale(0.6); }
+}
+@keyframes music-note-fly {
+  0% { opacity: 0; transform: scale(0.4); }
+  20% { opacity: 1; transform: scale(1.05); }
+  100% { opacity: 0; transform: translate(var(--x, 0), -34vh) rotate(var(--r, 0deg)) scale(0.9); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .music-intro { display: none; }
+  .music-reveal { animation: none; }
+}
+
+body .music-intro__word,
+body .music-intro__word * {
+  font-family: "Libre Baskerville", Georgia, serif !important;
+}
+
+/* ==========================================================================
+   Dictation zone – lavender and violet while dictation is open
+   ========================================================================== */
+body.music-zone {
+  --page-bg: #ebe5f6;
+  --surface: #f6f2fc;
+  --surface-elevated: #ece5f8;
+  --border: #c7b8e6;
+  --accent: #6a46c2;
+  --accent-strong: #8360d6;
+  --accent-soft: rgba(106, 70, 194, 0.12);
+  --ink-heading: #2b1a4e;
+  --text: #2b1d44;
+  --readable-body: #3d2e5c;
+  --muted: #6f5c98;
+  --chrome-bg: #efe9f9;
+  --chrome-border: #c7b8e6;
+  --chrome-btn-border: rgba(43, 26, 78, 0.2);
+  --chrome-btn-text: #2b1a4e;
+  --chrome-btn-hover: rgba(106, 70, 194, 0.08);
+  --chrome-btn-active-bg: #7a55cc;
+  --chrome-btn-active-border: #6a46c2;
+  background: #ebe5f6;
+}
+body.music-zone::before {
+  background:
+    radial-gradient(ellipse 70% 45% at 50% 0%, rgba(255, 255, 255, 0.45), transparent 60%),
+    radial-gradient(ellipse 50% 35% at 100% 100%, rgba(131, 96, 214, 0.08), transparent 55%);
+}
+body.music-zone.content-panel-open .panel-toolbar,
+body.music-zone .content-breadcrumb {
+  background: #efe9f9;
+  border-bottom-color: #c7b8e6;
+}
+body.music-zone .content-breadcrumb { color: #6f5c98; }
+body.music-zone .content-breadcrumb__current { color: #2b1a4e; }
+body.music-zone.content-panel-open .panel--content {
+  background:
+    radial-gradient(60% 40% at 0% 100%, rgba(176, 95, 184, 0.1), transparent 70%),
+    radial-gradient(50% 35% at 100% 0%, rgba(255, 255, 255, 0.45), transparent 70%),
+    #ebe5f6;
+}
+body.music-zone .level-article,
+body.music-zone .level-article#content-beginner,
+body.music-zone .level-article#content-intermediate,
+body.music-zone .level-article#content-advanced {
+  background: transparent;
+  padding-top: 1.1rem;
+}
+body.music-zone .lh-back-to-menu { margin-bottom: 0.6rem; }
+body.music-zone .btn-text,
+body.music-zone .btn-level-back,
+body.music-zone .btn-icon-close,
+body.music-zone .lh-back-to-menu {
+  background: #f4f0fc;
+  border-color: #c7b8e6;
+}
+body.music-zone .btn-text:hover,
+body.music-zone .btn-level-back:hover,
+body.music-zone .btn-icon-close:hover,
+body.music-zone .lh-back-to-menu:hover {
+  background: #faf8fe;
+}
+body.music-zone .pts-btn {
+  border-color: #c7b8e6;
+  color: #2b1a4e;
+}
+body.music-zone .pts-btn__star { color: #8360d6; }
+
+/* The panel: soft lavender with a faint staff along the bottom */
+body.content-panel-open .tool-panel[data-tool-panel="dictation"],
+.panel--content .tool-panel[data-tool-panel="dictation"] {
+  position: relative;
+  overflow: hidden;
+  border-color: #c7b8e6;
+  border-radius: 0.6rem;
+  padding-top: 0.9rem;
+  padding-bottom: 2.6rem;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='44' viewBox='0 0 400 44' preserveAspectRatio='none'%3E%3Cg fill='none' stroke='%23c7b8e6' stroke-width='1.2'%3E%3Cpath d='M0 6 C 100 0, 300 14, 400 6'/%3E%3Cpath d='M0 14 C 100 8, 300 22, 400 14'/%3E%3Cpath d='M0 22 C 100 16, 300 30, 400 22'/%3E%3Cpath d='M0 30 C 100 24, 300 38, 400 30'/%3E%3Cpath d='M0 38 C 100 32, 300 46, 400 38'/%3E%3C/g%3E%3C/svg%3E") no-repeat left 0 bottom 0.6rem / 100% 2.2rem,
+    radial-gradient(70% 50% at 50% 0%, rgba(255, 255, 255, 0.6), transparent 70%),
+    linear-gradient(180deg, #f6f2fc 0%, #e9e1f7 100%);
+}
+.tool-panel[data-tool-panel="dictation"] > * {
+  position: relative;
+  z-index: 1;
+}
+.tool-panel[data-tool-panel="dictation"] > .music-decor {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.music-note {
+  position: absolute;
+  bottom: 1rem;
+  opacity: 0;
+  animation: music-float var(--dur, 12s) linear var(--delay, 0s) infinite;
+}
+@keyframes music-float {
+  0% { transform: translate(0, 0) rotate(-8deg); opacity: 0; }
+  10% { opacity: 0.55; }
+  50% { transform: translate(var(--x, 0), -45vh) rotate(8deg); }
+  85% { opacity: 0.4; }
+  100% { transform: translate(calc(var(--x, 0) * -1), -90vh) rotate(-6deg); opacity: 0; }
+}
+
+/* Still sound-bars standing in the bottom corners */
+.music-side {
+  position: absolute;
+  bottom: 0;
+  width: clamp(4rem, 9vw, 6.5rem);
+  height: clamp(6rem, 22vh, 10rem);
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='120' viewBox='0 0 80 120' preserveAspectRatio='none'%3E%3Cg fill='%238360d6' fill-opacity='0.35'%3E%3Crect x='4' y='60' width='8' height='60' rx='4'/%3E%3Crect x='18' y='20' width='8' height='100' rx='4'/%3E%3Crect x='32' y='48' width='8' height='72' rx='4'/%3E%3Crect x='46' y='78' width='8' height='42' rx='4'/%3E%3Crect x='60' y='94' width='8' height='26' rx='4'/%3E%3C/g%3E%3Cg fill='%23b05fb8' fill-opacity='0.3'%3E%3Crect x='11' y='86' width='6' height='34' rx='3'/%3E%3Crect x='39' y='70' width='6' height='50' rx='3'/%3E%3C/g%3E%3C/svg%3E") no-repeat left bottom / 100% 100%;
+}
+.music-side--left { left: 0.4rem; }
+.music-side--right { right: 0.4rem; transform: scaleX(-1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .music-note { display: none; }
+}
+
+/* The dictation card itself */
+.tool-panel[data-tool-panel="dictation"] .dict {
+  --dict-accent: #6a46c2;
+  gap: 0.55rem;
+}
+.tool-panel[data-tool-panel="dictation"] .dict__card {
+  background: rgba(253, 252, 255, 0.92);
+  border-color: #d3c6ee;
+  box-shadow: 0 6px 22px rgba(106, 70, 194, 0.1);
+  padding: 0.95rem 1.05rem;
+  gap: 0.6rem;
+}
+.tool-panel[data-tool-panel="dictation"] .dict__play {
+  background: linear-gradient(135deg, #7a55cc 0%, #6a46c2 100%);
+}
+.tool-panel[data-tool-panel="dictation"] .dict__play.is-playing,
+.tool-panel[data-tool-panel="dictation"] .dict__slow.is-playing {
+  box-shadow: 0 0 0 4px rgba(106, 70, 194, 0.22);
+}
+.tool-panel[data-tool-panel="dictation"] .dict__input {
+  background: #ffffff;
+  min-height: 3rem;
+}
+.tool-panel[data-tool-panel="dictation"] .dict__input:focus {
+  box-shadow: 0 0 0 3px rgba(106, 70, 194, 0.15);
+}
+.tool-panel[data-tool-panel="dictation"] .dict__voicebtn.is-on {
+  background: #6a46c2;
+  border-color: #6a46c2;
+  color: #fff;
+}
+
+/* Level menu – dictation card in its music theme */
+#content-beginner .level-landing__card[data-tool="dictation"],
+#content-intermediate .level-landing__card[data-tool="dictation"],
+#content-advanced .level-landing__card[data-tool="dictation"] {
+  position: relative;
+  overflow: hidden;
+  border-color: #c7b8e6 !important;
+  border-top: 3px solid #6a46c2 !important;
+  background: linear-gradient(170deg, #f7f4fd 0%, #e6ddf6 100%);
+}
+#content-beginner .level-landing__card[data-tool="dictation"]:hover,
+#content-intermediate .level-landing__card[data-tool="dictation"]:hover,
+#content-advanced .level-landing__card[data-tool="dictation"]:hover {
+  border-color: #6a46c2 !important;
+  background: linear-gradient(170deg, #faf8fe 0%, #ebe4f8 100%);
+  box-shadow: 0 6px 18px rgba(106, 70, 194, 0.18);
+}
+#content-beginner .level-landing__card[data-tool="dictation"] > *,
+#content-intermediate .level-landing__card[data-tool="dictation"] > *,
+#content-advanced .level-landing__card[data-tool="dictation"] > * {
+  position: relative;
+  z-index: 1;
+}
+#content-beginner .level-landing__card[data-tool="dictation"]::after,
+#content-intermediate .level-landing__card[data-tool="dictation"]::after,
+#content-advanced .level-landing__card[data-tool="dictation"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='130' height='90' viewBox='0 0 130 90'%3E%3Cg fill='none' stroke='%23b9a6e3' stroke-width='1.4'%3E%3Cpath d='M0 40 C 40 34, 90 50, 130 38'/%3E%3Cpath d='M0 50 C 40 44, 90 60, 130 48'/%3E%3Cpath d='M0 60 C 40 54, 90 70, 130 58'/%3E%3Cpath d='M0 70 C 40 64, 90 80, 130 68'/%3E%3Cpath d='M0 80 C 40 74, 90 90, 130 78'/%3E%3C/g%3E%3Cg fill='%236a46c2'%3E%3Cellipse cx='44' cy='58' rx='6' ry='4.4' transform='rotate(-20 44 58)'/%3E%3Crect x='48.4' y='30' width='2.2' height='28'/%3E%3Cpath d='M50.6 30 C 55 36, 60 38, 57 47 C 56 41, 53 39, 50.6 38 Z'/%3E%3C/g%3E%3Cg fill='%23b05fb8'%3E%3Cellipse cx='78' cy='62' rx='6' ry='4.4' transform='rotate(-20 78 62)'/%3E%3Cellipse cx='100' cy='54' rx='6' ry='4.4' transform='rotate(-20 100 54)'/%3E%3Crect x='82.4' y='34' width='2.2' height='28'/%3E%3Crect x='104.4' y='26' width='2.2' height='28'/%3E%3Cpath d='M82.4 34 L106.6 26 L106.6 32 L82.4 40 Z'/%3E%3C/g%3E%3C/svg%3E") no-repeat right 0.3rem bottom 0.2rem / auto 4.4rem;
+}
+#content-beginner .level-landing__card[data-tool="dictation"] .level-landing__card__icon,
+#content-intermediate .level-landing__card[data-tool="dictation"] .level-landing__card__icon,
+#content-advanced .level-landing__card[data-tool="dictation"] .level-landing__card__icon { color: #6a46c2; }
+#content-beginner .level-landing__card[data-tool="dictation"] .level-landing__card__label,
+#content-intermediate .level-landing__card[data-tool="dictation"] .level-landing__card__label,
+#content-advanced .level-landing__card[data-tool="dictation"] .level-landing__card__label { color: #2b1a4e; }
+#content-beginner .level-landing__card[data-tool="dictation"] .level-landing__card__hint,
+#content-intermediate .level-landing__card[data-tool="dictation"] .level-landing__card__hint,
+#content-advanced .level-landing__card[data-tool="dictation"] .level-landing__card__hint,
+#content-beginner .level-landing__card[data-tool="dictation"] .level-landing__card__progress,
+#content-intermediate .level-landing__card[data-tool="dictation"] .level-landing__card__progress,
+#content-advanced .level-landing__card[data-tool="dictation"] .level-landing__card__progress { color: #6f5c98; max-width: calc(100% - 4.5rem); }

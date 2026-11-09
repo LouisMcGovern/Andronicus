@@ -4765,6 +4765,128 @@
     panel.insertBefore(decor, panel.firstChild);
   }
 
+  /** A small music-note SVG (one note, or two beamed notes). */
+  function musicNoteSvg(kind, color) {
+    if (kind === 2) {
+      return '<svg viewBox="0 0 40 40" width="100%" height="100%"><g fill="' + color + '">' +
+        '<ellipse cx="9" cy="31" rx="6" ry="4.4" transform="rotate(-20 9 31)"/>' +
+        '<ellipse cx="29" cy="27" rx="6" ry="4.4" transform="rotate(-20 29 27)"/>' +
+        '<rect x="13.2" y="6" width="2.4" height="25"/><rect x="33.2" y="2" width="2.4" height="25"/>' +
+        '<path d="M13.2 6 L35.6 2 L35.6 8 L13.2 12 Z"/></g></svg>';
+    }
+    return '<svg viewBox="0 0 30 40" width="100%" height="100%"><g fill="' + color + '">' +
+      '<ellipse cx="10" cy="31" rx="7" ry="5" transform="rotate(-20 10 31)"/>' +
+      '<rect x="15" y="3" width="2.6" height="28"/>' +
+      '<path d="M17.6 3 C 22 9, 28 11, 25 20 C 24 14, 21 12, 17.6 11 Z"/></g></svg>';
+  }
+
+  /**
+   * Dictation intro: staff lines draw across the screen, the title's letters
+   * hop along them like a melody, then each letter turns into a note and
+   * floats away. Click or press a key to skip. Skipped for reduced motion.
+   */
+  function playDictIntro(panel) {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const old = document.querySelector(".music-intro");
+    if (old) old.remove();
+
+    const overlay = document.createElement("div");
+    overlay.className = "music-intro";
+    overlay.setAttribute("aria-hidden", "true");
+    const staff = document.createElement("div");
+    staff.className = "music-intro__staff";
+    for (let i = 0; i < 5; i += 1) {
+      const line = document.createElement("span");
+      line.style.setProperty("--i", String(i));
+      staff.appendChild(line);
+    }
+    overlay.appendChild(staff);
+
+    const word = document.createElement("h2");
+    word.className = "music-intro__word";
+    Array.from(I18n.t("learning_tab_dictation")).forEach(function (ch, i) {
+      const sp = document.createElement("span");
+      sp.textContent = ch === " " ? " " : ch;
+      sp.style.setProperty("--i", String(i));
+      word.appendChild(sp);
+    });
+    overlay.appendChild(word);
+    document.body.appendChild(overlay);
+
+    // Each letter becomes a note that drifts up and away
+    const colors = ["#6a46c2", "#8360d6", "#b05fb8", "#5a6fd0"];
+    word.querySelectorAll("span").forEach(function (sp, i) {
+      if (!sp.textContent.trim()) return;
+      const r = sp.getBoundingClientRect();
+      const n = document.createElement("span");
+      n.className = "music-intro__note";
+      const size = Math.max(30, Math.min(80, r.height * 0.75));
+      n.style.width = size + "px";
+      n.style.height = size * 1.3 + "px";
+      n.style.left = (r.left + r.width / 2 - size / 2).toFixed(0) + "px";
+      n.style.top = (r.top + r.height / 2 - size * 0.65).toFixed(0) + "px";
+      n.style.setProperty("--d", (1.35 + i * 0.035).toFixed(2) + "s");
+      n.style.setProperty("--x", (Math.random() * 80 - 40).toFixed(0) + "px");
+      n.style.setProperty("--r", (Math.random() * 50 - 25).toFixed(0) + "deg");
+      n.innerHTML = musicNoteSvg(i % 3 === 0 ? 2 : 1, colors[i % colors.length]);
+      overlay.appendChild(n);
+    });
+
+    const shell = panel;
+    if (shell) {
+      shell.classList.remove("music-reveal");
+      shell.style.opacity = "0";
+    }
+    let finished = false;
+    function reveal() {
+      if (!shell) return;
+      shell.style.opacity = "";
+      void shell.offsetWidth;
+      shell.classList.add("music-reveal");
+    }
+    const revealTimer = setTimeout(reveal, 2250);
+    function finish() {
+      if (finished) return;
+      finished = true;
+      clearTimeout(revealTimer);
+      clearTimeout(endTimer);
+      document.removeEventListener("keydown", finish);
+      overlay.remove();
+      if (shell && shell.style.opacity === "0") reveal();
+    }
+    const endTimer = setTimeout(finish, 2850);
+    overlay.addEventListener("click", finish);
+    document.addEventListener("keydown", finish);
+  }
+
+  /** Notes drifting up the sides of the dictation panel; the middle stays still. */
+  function addMusicDecor(panel) {
+    if (!panel || panel.querySelector(".music-decor")) return;
+    const decor = document.createElement("div");
+    decor.className = "music-decor";
+    decor.setAttribute("aria-hidden", "true");
+    const colors = ["#8360d6", "#b05fb8", "#6a46c2", "#5a6fd0"];
+    for (let i = 0; i < 10; i += 1) {
+      const n = document.createElement("span");
+      n.className = "music-note";
+      const size = 14 + Math.round(Math.random() * 12);
+      n.style.width = size + "px";
+      n.style.height = Math.round(size * 1.3) + "px";
+      n.style.left = (i % 2 ? 1.5 + Math.random() * 9 : 89 + Math.random() * 8).toFixed(1) + "%";
+      n.style.setProperty("--dur", (9 + Math.random() * 7).toFixed(1) + "s");
+      n.style.setProperty("--delay", (-Math.random() * 16).toFixed(1) + "s");
+      n.style.setProperty("--x", (Math.random() * 14 - 7).toFixed(0) + "px");
+      n.innerHTML = musicNoteSvg(i % 3 === 0 ? 2 : 1, colors[i % colors.length]);
+      decor.appendChild(n);
+    }
+    ["left", "right"].forEach(function (side) {
+      const eq = document.createElement("div");
+      eq.className = "music-side music-side--" + side;
+      decor.appendChild(eq);
+    });
+    panel.insertBefore(decor, panel.firstChild);
+  }
+
   function mountVocabPath(root, level, panel, onLevelProgressChange) {
     const bank = buildVocabBank(level);
     const total = bank.order.length;
@@ -6734,6 +6856,7 @@
     document.body.classList.toggle("vocab-zone", panelOpen("vocab"));
     document.body.classList.toggle("ocean-zone", panelOpen("words"));
     document.body.classList.toggle("fire-zone", panelOpen("flashcards"));
+    document.body.classList.toggle("music-zone", panelOpen("dictation"));
   }
 
   function updateContentBreadcrumb() {
@@ -9044,6 +9167,10 @@
         }
         if (name === "words") addSeaDecor(root.querySelector('[data-tool-panel="words"]'));
         if (name === "flashcards") addFireDecor(root.querySelector('[data-tool-panel="flashcards"]'));
+        if (name === "dictation") addMusicDecor(root.querySelector('[data-tool-panel="dictation"]'));
+        if (name === "dictation" && currentTab !== "dictation") {
+          playDictIntro(root.querySelector('[data-tool-panel="dictation"]'));
+        }
         if (name === "flashcards" && currentTab !== "flashcards") {
           playFlashIntro(root.querySelector('[data-tool-panel="flashcards"]'));
         }
