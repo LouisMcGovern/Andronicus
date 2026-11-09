@@ -11271,3 +11271,78 @@ body.content-panel-open .tool-panel[data-tool-panel="grammar"] .lh-lesson-card {
   color: #ffffff;
 }
 .tool-panel[data-tool-panel="homework"] .btn-primary:hover { background: #b83631; }
+
+/* ==========================================================================
+   Homework – text sits on the ruled lines
+   Everything on the open page follows one 2rem rhythm, starting at the top
+   of the panel; the red margin stays left of all text, and the week cards
+   are solid sheets so no lines run behind their contents.
+   ========================================================================== */
+body.content-panel-open .tool-panel[data-tool-panel="homework"],
+.panel--content .tool-panel[data-tool-panel="homework"] {
+  --rule: 2rem;
+  --rule-shift: 0.55rem; /* lines sit this far above the bottom of each band, just under the text */
+  --margin-x: 2.3rem;
+  padding: var(--rule) 1.4rem var(--rule) calc(var(--margin-x) + 1.1rem);
+  background:
+    linear-gradient(90deg, transparent 0 var(--margin-x), rgba(242, 164, 160, 0.9) var(--margin-x) calc(var(--margin-x) + 2px), transparent calc(var(--margin-x) + 2px)),
+    repeating-linear-gradient(180deg, transparent 0 calc(var(--rule) - 1px), rgba(120, 140, 170, 0.22) calc(var(--rule) - 1px) var(--rule)) 0 calc(var(--rule-shift) * -1) / 100% var(--rule),
+    #fdfdfb;
+}
+.tool-panel[data-tool-panel="homework"] .lh-hw-checklist {
+  gap: 0;
+}
+.tool-panel[data-tool-panel="homework"] .lh-hw-section__title {
+  margin: 0;
+  font-size: 1.75rem;
+  line-height: calc(var(--rule) * 2);
+  height: calc(var(--rule) * 2);
+  position: relative;
+  top: 0.68rem; /* drops the title's baseline onto the second rule */
+}
+.tool-panel[data-tool-panel="homework"] .lh-hw-checklist > .lh-muted {
+  margin: 0;
+  font-size: 1rem;
+  line-height: var(--rule);
+  color: #4c525d;
+}
+.tool-panel[data-tool-panel="homework"] .lh-hw-checklist__overall {
+  margin: 0;
+  padding: calc(var(--rule) - 8px - 0.55rem) 0 0;
+}
+.tool-panel[data-tool-panel="homework"] .lh-hw-overall-bar-track {
+  height: 8px;
+  margin-bottom: 0.55rem;
+  background: #e3e5ea;
+}
+.tool-panel[data-tool-panel="homework"] .lh-hw-overall-bar-fill {
+  background: #d0453f !important;
+}
+.tool-panel[data-tool-panel="homework"] .lh-hw-overall-bar-fill[style*="width: 100%"] {
+  background: #1f8a44 !important;
+}
+.tool-panel[data-tool-panel="homework"] .lh-hw-overall-stat {
+  margin: 0;
+  line-height: var(--rule);
+  font-size: 1rem;
+}
+.tool-panel[data-tool-panel="homework"] .lh-hw-week-list {
+  margin-top: var(--rule);
+}
+.tool-panel[data-tool-panel="homework"] .lh-hw-week {
+  background: #ffffff;
+  border-color: #d5d8de;
+  box-shadow: 0 1px 2px rgba(35, 39, 47, 0.04);
+}
+.tool-panel[data-tool-panel="homework"] .lh-hw-week.is-done {
+  background: #f1f9f3;
+  border-color: #b8dfc1;
+}
+@media (max-width: 540px) {
+  body.content-panel-open .tool-panel[data-tool-panel="homework"],
+  .panel--content .tool-panel[data-tool-panel="homework"] {
+    --margin-x: 1.2rem;
+    padding-left: calc(var(--margin-x) + 0.8rem);
+    padding-right: 0.8rem;
+  }
+}
