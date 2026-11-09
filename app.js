@@ -4403,15 +4403,16 @@
     if (old) old.remove();
 
     const NS = "http://www.w3.org/2000/svg";
+    // Each main vine climbs to the word, then loops up over a letter and wraps back down its front
     const vines = [
-      { d: "M110 1060 C 170 900, 70 800, 190 690 S 270 560, 300 535 c 22 -16 40 0 26 16 c -12 12 -30 2 -20 -12", delay: 0.35 },
-      { d: "M330 1070 C 290 930, 390 830, 345 720 S 375 590, 395 540 c 8 -20 30 -18 26 4 c -4 16 -22 14 -20 0", delay: 0.45 },
-      { d: "M500 1070 C 545 930, 455 840, 505 725 S 470 595, 470 545 c -2 -20 -26 -22 -26 0 c 0 14 18 16 22 4", delay: 0.4 },
-      { d: "M700 1060 C 640 905, 730 800, 610 695 S 540 565, 505 538 c -18 -14 -40 -2 -26 16 c 12 12 30 2 20 -12", delay: 0.5 },
-      { d: "M220 1060 C 250 960, 200 880, 260 800 S 300 640, 255 560", delay: 0.6, thin: true },
-      { d: "M610 1060 C 580 960, 640 880, 575 800 S 520 650, 560 560", delay: 0.65, thin: true }
+      { d: "M110 1060 C 170 900, 70 800, 190 690 S 280 590, 290 545 C 296 510, 276 490, 288 468 C 298 450, 322 458, 316 478 C 310 498, 288 500, 292 520", delay: 0.35 },
+      { d: "M330 1070 C 290 930, 390 830, 345 720 S 372 600, 372 550 C 372 515, 360 490, 376 470 C 390 452, 410 470, 398 488 C 388 504, 370 496, 378 482", delay: 0.45 },
+      { d: "M500 1070 C 545 930, 455 840, 505 725 S 455 600, 455 550 C 455 515, 470 492, 452 472 C 436 455, 418 474, 430 490 C 442 504, 458 496, 450 482", delay: 0.4 },
+      { d: "M700 1060 C 640 905, 730 800, 610 695 S 525 595, 520 545 C 516 510, 536 490, 522 468 C 510 452, 488 460, 492 480 C 496 500, 516 502, 512 520", delay: 0.5 },
+      { d: "M220 1060 C 250 960, 200 880, 260 800 S 330 640, 330 560 C 330 520, 345 500, 338 480 c -4 -12 -18 -8 -14 4", delay: 0.6, thin: true },
+      { d: "M610 1060 C 580 960, 640 880, 575 800 S 490 650, 490 560 C 490 520, 478 500, 486 482 c 4 -12 18 -8 14 4", delay: 0.65, thin: true }
     ];
-    const leafColors = ["#5f9461", "#4a7d52", "#78a96f"];
+    const leafColors = ["#5fb64f", "#4c9e45", "#8fd16e"];
 
     const overlay = document.createElement("div");
     overlay.className = "vine-intro";
@@ -4443,8 +4444,8 @@
     });
     word.appendChild(inner);
 
-    pull.appendChild(svg);
     pull.appendChild(word);
+    pull.appendChild(svg);
     overlay.appendChild(pull);
     document.body.appendChild(overlay);
 
@@ -4454,7 +4455,7 @@
       const len = path.getTotalLength();
       const count = v.thin ? 4 : 7;
       for (let k = 1; k <= count; k += 1) {
-        const f = 0.08 + (k / (count + 1)) * 0.82;
+        const f = 0.06 + (k / (count + 1)) * 0.66;
         const a = path.getPointAtLength(len * f);
         const b = path.getPointAtLength(Math.min(len, len * f + 2));
         const ang = (Math.atan2(b.y - a.y, b.x - a.x) * 180) / Math.PI;

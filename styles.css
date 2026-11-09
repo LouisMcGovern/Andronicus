@@ -9093,7 +9093,7 @@ body.wr-open .pts {
 
 .vine-intro__vine {
   fill: none;
-  stroke: #3f6e4a;
+  stroke: #4c9e45;
   stroke-width: 7;
   stroke-linecap: round;
   stroke-dasharray: 1;
@@ -9103,7 +9103,7 @@ body.wr-open .pts {
   animation-delay: var(--d, 0.35s);
 }
 .vine-intro__vine--thin {
-  stroke: #5a8a5c;
+  stroke: #74c25f;
   stroke-width: 4;
 }
 
@@ -9162,8 +9162,9 @@ body.wr-open .pts {
 }
 @keyframes vine-tug {
   0%, 100% { transform: none; }
-  30% { transform: translateY(0.06em) rotate(-1deg); }
-  65% { transform: translateY(-0.03em) rotate(0.8deg); }
+  25% { transform: translateY(0.1em) scaleY(0.95) rotate(-1.5deg); }
+  55% { transform: translateY(-0.04em) scaleY(1.02) rotate(1deg); }
+  80% { transform: translateY(0.06em) scaleY(0.97); }
 }
 @keyframes vine-pull {
   to { transform: translateY(115vh); }
@@ -9176,4 +9177,37 @@ body.wr-open .pts {
 @media (prefers-reduced-motion: reduce) {
   .vine-intro { display: none; }
   .vp-reveal { animation: none; }
+}
+
+/* ==========================================================================
+   Vocabulary – the panel behind the game becomes forest floor (Nov 2026)
+   ========================================================================== */
+.tool-panel[data-tool-panel="vocab"] {
+  position: relative;
+  overflow: hidden;
+  border-color: #a9c49f;
+  border-radius: 0.6rem;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Cg fill='%2387b77a' opacity='0.35'%3E%3Cpath d='M0 0 C 60 10, 90 50, 70 110 C 40 80, 10 60, 0 0z'/%3E%3Cpath d='M0 40 C 40 70, 40 120, 10 170 C 0 130, -10 90, 0 40z'/%3E%3Cpath d='M30 0 C 90 -10, 140 20, 150 60 C 110 50, 60 40, 30 0z'/%3E%3C/g%3E%3C/svg%3E") no-repeat left top / 220px 220px,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Cg fill='%2387b77a' opacity='0.35' transform='translate(220 220) rotate(180)'%3E%3Cpath d='M0 0 C 60 10, 90 50, 70 110 C 40 80, 10 60, 0 0z'/%3E%3Cpath d='M0 40 C 40 70, 40 120, 10 170 C 0 130, -10 90, 0 40z'/%3E%3Cpath d='M30 0 C 90 -10, 140 20, 150 60 C 110 50, 60 40, 30 0z'/%3E%3C/g%3E%3C/svg%3E") no-repeat right bottom / 220px 220px,
+    radial-gradient(90% 70% at 50% 30%, #dceadb 0%, transparent 70%),
+    linear-gradient(180deg, #d3e4cd 0%, #bfd6b7 100%);
+}
+
+.tool-panel[data-tool-panel="vocab"] > * {
+  position: relative;
+  z-index: 1;
+}
+
+.lh-vocab.vp .lh-chip {
+  border-color: #a9c49f;
+  background: rgba(247, 251, 244, 0.85);
+  color: #2b4a33;
+}
+.lh-vocab.vp .lh-chip--streak {
+  border-color: #6fae63;
+  background: #e4f2dd;
+}
+.lh-vocab.vp .vp-card {
+  border-color: #a9c49f;
 }
