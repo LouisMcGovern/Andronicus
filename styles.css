@@ -10107,3 +10107,172 @@ body.content-panel-open .tool-panel[data-tool-panel="flashcards"] { padding-top:
 @media (prefers-reduced-motion: reduce) {
   .fire-spark { display: none; }
 }
+
+/* ==========================================================================
+   Level menu – the three game cards wear their zone's theme
+   ========================================================================== */
+#content-beginner .level-landing__card[data-tool="flashcards"],
+#content-intermediate .level-landing__card[data-tool="flashcards"],
+#content-advanced .level-landing__card[data-tool="flashcards"],
+#content-beginner .level-landing__card[data-tool="vocab"],
+#content-intermediate .level-landing__card[data-tool="vocab"],
+#content-advanced .level-landing__card[data-tool="vocab"],
+#content-beginner .level-landing__card[data-tool="words"],
+#content-intermediate .level-landing__card[data-tool="words"],
+#content-advanced .level-landing__card[data-tool="words"] {
+  position: relative;
+  overflow: hidden;
+  border-color: var(--card-border) !important;
+  border-top: 3px solid var(--card-top) !important;
+}
+#content-beginner .level-landing__card[data-tool="flashcards"] > *,
+#content-intermediate .level-landing__card[data-tool="flashcards"] > *,
+#content-advanced .level-landing__card[data-tool="flashcards"] > *,
+#content-beginner .level-landing__card[data-tool="vocab"] > *,
+#content-intermediate .level-landing__card[data-tool="vocab"] > *,
+#content-advanced .level-landing__card[data-tool="vocab"] > *,
+#content-beginner .level-landing__card[data-tool="words"] > *,
+#content-intermediate .level-landing__card[data-tool="words"] > *,
+#content-advanced .level-landing__card[data-tool="words"] > * {
+  position: relative;
+  z-index: 1;
+}
+#content-beginner .level-landing__card[data-tool="flashcards"]::after,
+#content-intermediate .level-landing__card[data-tool="flashcards"]::after,
+#content-advanced .level-landing__card[data-tool="flashcards"]::after,
+#content-beginner .level-landing__card[data-tool="vocab"]::after,
+#content-intermediate .level-landing__card[data-tool="vocab"]::after,
+#content-advanced .level-landing__card[data-tool="vocab"]::after,
+#content-beginner .level-landing__card[data-tool="words"]::after,
+#content-intermediate .level-landing__card[data-tool="words"]::after,
+#content-advanced .level-landing__card[data-tool="words"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+#content-beginner .level-landing__card[data-tool="flashcards"]:hover,
+#content-intermediate .level-landing__card[data-tool="flashcards"]:hover,
+#content-advanced .level-landing__card[data-tool="flashcards"]:hover,
+#content-beginner .level-landing__card[data-tool="vocab"]:hover,
+#content-intermediate .level-landing__card[data-tool="vocab"]:hover,
+#content-advanced .level-landing__card[data-tool="vocab"]:hover,
+#content-beginner .level-landing__card[data-tool="words"]:hover,
+#content-intermediate .level-landing__card[data-tool="words"]:hover,
+#content-advanced .level-landing__card[data-tool="words"]:hover {
+  border-color: var(--card-top) !important;
+  box-shadow: 0 6px 18px var(--card-glow);
+}
+
+/* Fire */
+#content-beginner .level-landing__card[data-tool="flashcards"],
+#content-intermediate .level-landing__card[data-tool="flashcards"],
+#content-advanced .level-landing__card[data-tool="flashcards"] {
+  --card-border: #f0b9a2;
+  --card-top: #e2533a;
+  --card-glow: rgba(226, 83, 58, 0.18);
+  background: radial-gradient(70% 60% at 100% 110%, rgba(255, 140, 70, 0.3), transparent 70%), linear-gradient(170deg, #fff5ef 0%, #fde0d1 100%);
+}
+#content-beginner .level-landing__card[data-tool="flashcards"]:hover,
+#content-intermediate .level-landing__card[data-tool="flashcards"]:hover,
+#content-advanced .level-landing__card[data-tool="flashcards"]:hover {
+  background: radial-gradient(70% 60% at 100% 110%, rgba(255, 140, 70, 0.38), transparent 70%), linear-gradient(170deg, #fff8f4 0%, #fde6d9 100%);
+}
+#content-beginner .level-landing__card[data-tool="flashcards"]::after,
+#content-intermediate .level-landing__card[data-tool="flashcards"]::after,
+#content-advanced .level-landing__card[data-tool="flashcards"]::after { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='110' viewBox='0 0 120 110'%3E%3Cpath d='M10 110 C 4 86, 22 74, 18 50 C 32 64, 36 76, 40 66 C 44 50, 40 34, 52 12 C 58 40, 76 52, 72 76 C 80 70, 84 60, 84 48 C 98 64, 104 86, 100 110 Z' fill='%23e2533a' fill-opacity='0.75'/%3E%3Cpath d='M24 110 C 20 94, 32 86, 30 70 C 40 80, 44 88, 48 80 C 52 70, 52 58, 60 44 C 64 64, 76 74, 74 92 C 80 88, 84 82, 86 74 C 94 88, 94 100, 90 110 Z' fill='%23f5843e' fill-opacity='0.9'/%3E%3Cpath d='M40 110 C 38 100, 46 94, 46 84 C 52 92, 56 96, 58 90 C 60 84, 62 78, 66 72 C 70 86, 76 96, 72 110 Z' fill='%23ffd9b0'/%3E%3C/svg%3E") no-repeat right 0.5rem bottom / auto 4.2rem; }
+#content-beginner .level-landing__card[data-tool="flashcards"] .level-landing__card__icon,
+#content-intermediate .level-landing__card[data-tool="flashcards"] .level-landing__card__icon,
+#content-advanced .level-landing__card[data-tool="flashcards"] .level-landing__card__icon { color: #e2533a; }
+#content-beginner .level-landing__card[data-tool="flashcards"] .level-landing__card__label,
+#content-intermediate .level-landing__card[data-tool="flashcards"] .level-landing__card__label,
+#content-advanced .level-landing__card[data-tool="flashcards"] .level-landing__card__label { color: #4a1622; }
+#content-beginner .level-landing__card[data-tool="flashcards"] .level-landing__card__hint,
+#content-intermediate .level-landing__card[data-tool="flashcards"] .level-landing__card__hint,
+#content-advanced .level-landing__card[data-tool="flashcards"] .level-landing__card__hint,
+#content-beginner .level-landing__card[data-tool="flashcards"] .level-landing__card__progress,
+#content-intermediate .level-landing__card[data-tool="flashcards"] .level-landing__card__progress,
+#content-advanced .level-landing__card[data-tool="flashcards"] .level-landing__card__progress { color: #a34e4a; }
+
+/* Forest */
+#content-beginner .level-landing__card[data-tool="vocab"],
+#content-intermediate .level-landing__card[data-tool="vocab"],
+#content-advanced .level-landing__card[data-tool="vocab"] {
+  --card-border: #b9cdb0;
+  --card-top: #3f7a52;
+  --card-glow: rgba(63, 122, 82, 0.18);
+  padding-top: 1.7rem;
+  background: linear-gradient(170deg, #f1f6ee 0%, #dbe8d3 100%);
+}
+#content-beginner .level-landing__card[data-tool="vocab"]:hover,
+#content-intermediate .level-landing__card[data-tool="vocab"]:hover,
+#content-advanced .level-landing__card[data-tool="vocab"]:hover {
+  background: linear-gradient(170deg, #f5f9f3 0%, #e2ecdb 100%);
+}
+#content-beginner .level-landing__card[data-tool="vocab"]::after,
+#content-intermediate .level-landing__card[data-tool="vocab"]::after,
+#content-advanced .level-landing__card[data-tool="vocab"]::after { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='34' viewBox='0 0 160 34'%3E%3Cpath d='M0 8 C 25 18, 55 -2, 80 8 S 135 18, 160 8' fill='none' stroke='%233f6e4a' stroke-width='2.4' stroke-linecap='round'/%3E%3Cpath d='M14 12 q 6 10 -2 18 q -6 -10 2 -18z' fill='%235f9461'/%3E%3Cpath d='M38 6 q 9 6 6 16 q -9 -6 -6 -16z' fill='%234a7d52'/%3E%3Cpath d='M62 4 q -2 11 -11 14 q 2 -11 11 -14z' fill='%2378a96f'/%3E%3Cpath d='M92 10 q 7 9 1 19 q -7 -9 -1 -19z' fill='%235f9461'/%3E%3Cpath d='M116 13 q 9 4 9 14 q -9 -4 -9 -14z' fill='%234a7d52'/%3E%3Cpath d='M140 8 q -1 10 -10 14 q 1 -10 10 -14z' fill='%2378a96f'/%3E%3C/svg%3E") repeat-x 0 0 / 120px 26px, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='110' height='90' viewBox='0 0 110 90'%3E%3Cg transform='translate(110 0) scale(-1 1)'%3E%3Cpath d='M6 90 C 14 60, 30 34, 62 14' fill='none' stroke='%233f6e4a' stroke-width='2.2' stroke-linecap='round'/%3E%3Cg fill='%235f9461'%3E%3Cpath d='M12 74 q -10 -6 -12 -18 q 12 4 12 18z'/%3E%3Cpath d='M14 70 q 12 -2 18 6 q -12 4 -18 -6z'/%3E%3Cpath d='M20 56 q -10 -8 -10 -20 q 12 6 10 20z'/%3E%3Cpath d='M23 52 q 12 -4 20 3 q -12 5 -20 -3z'/%3E%3Cpath d='M32 40 q -8 -9 -6 -20 q 10 8 6 20z'/%3E%3Cpath d='M35 37 q 11 -6 19 0 q -10 6 -19 0z'/%3E%3Cpath d='M46 27 q -5 -9 -1 -18 q 8 8 1 18z'/%3E%3Cpath d='M49 25 q 9 -6 16 -2 q -8 6 -16 2z'/%3E%3C/g%3E%3Cpath d='M40 90 C 44 74, 52 64, 70 56' fill='none' stroke='%234a7d52' stroke-width='1.8' stroke-linecap='round'/%3E%3Cg fill='%2378a96f'%3E%3Cpath d='M46 76 q 8 -6 16 -2 q -8 6 -16 2z'/%3E%3Cpath d='M44 78 q -6 -8 -4 -16 q 8 6 4 16z'/%3E%3Cpath d='M56 64 q 7 -6 14 -3 q -7 6 -14 3z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") no-repeat right bottom / auto 4.2rem; }
+#content-beginner .level-landing__card[data-tool="vocab"] .level-landing__card__icon,
+#content-intermediate .level-landing__card[data-tool="vocab"] .level-landing__card__icon,
+#content-advanced .level-landing__card[data-tool="vocab"] .level-landing__card__icon { color: #2f6b47; }
+#content-beginner .level-landing__card[data-tool="vocab"] .level-landing__card__label,
+#content-intermediate .level-landing__card[data-tool="vocab"] .level-landing__card__label,
+#content-advanced .level-landing__card[data-tool="vocab"] .level-landing__card__label { color: #1f4a33; }
+#content-beginner .level-landing__card[data-tool="vocab"] .level-landing__card__hint,
+#content-intermediate .level-landing__card[data-tool="vocab"] .level-landing__card__hint,
+#content-advanced .level-landing__card[data-tool="vocab"] .level-landing__card__hint,
+#content-beginner .level-landing__card[data-tool="vocab"] .level-landing__card__progress,
+#content-intermediate .level-landing__card[data-tool="vocab"] .level-landing__card__progress,
+#content-advanced .level-landing__card[data-tool="vocab"] .level-landing__card__progress { color: #557258; }
+
+/* Ocean */
+#content-beginner .level-landing__card[data-tool="words"],
+#content-intermediate .level-landing__card[data-tool="words"],
+#content-advanced .level-landing__card[data-tool="words"] {
+  --card-border: #93cfc8;
+  --card-top: #168089;
+  --card-glow: rgba(22, 128, 137, 0.18);
+  background: linear-gradient(170deg, #eaf8f6 0%, #c6e9e4 100%);
+}
+#content-beginner .level-landing__card[data-tool="words"]:hover,
+#content-intermediate .level-landing__card[data-tool="words"]:hover,
+#content-advanced .level-landing__card[data-tool="words"]:hover {
+  background: linear-gradient(170deg, #f0faf9 0%, #cfeee9 100%);
+}
+#content-beginner .level-landing__card[data-tool="words"]::after,
+#content-intermediate .level-landing__card[data-tool="words"]::after,
+#content-advanced .level-landing__card[data-tool="words"]::after { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='96' viewBox='0 0 150 96'%3E%3Cg fill='none' stroke-linecap='round'%3E%3Cpath d='M128 96 C 120 76, 136 64, 126 44 S 132 20, 124 6' stroke='%2341a88f' stroke-width='5'/%3E%3Cpath d='M142 96 C 148 80, 136 70, 144 54' stroke='%2367c2a5' stroke-width='4'/%3E%3C/g%3E%3Cg transform='translate(58 30)'%3E%3Cpath d='M2 15 L12 5 L11 15 L12 25 Z' fill='%23f4a08f'/%3E%3Cellipse cx='28' cy='15' rx='18' ry='10' fill='%23ef7a63'/%3E%3Ccircle cx='38' cy='12' r='2.6' fill='%23fff'/%3E%3Ccircle cx='38.6' cy='12' r='1.3' fill='%230b3f47'/%3E%3C/g%3E%3Cg transform='translate(92 58) scale(0.6)'%3E%3Cpath d='M48 15 L38 5 L39 15 L38 25 Z' fill='%236cc6c8'/%3E%3Cellipse cx='22' cy='15' rx='18' ry='10' fill='%232a9fa6'/%3E%3Ccircle cx='12' cy='12' r='2.6' fill='%23fff'/%3E%3Ccircle cx='11.4' cy='12' r='1.3' fill='%230b3f47'/%3E%3C/g%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='1.6'%3E%3Ccircle cx='106' cy='26' r='4'/%3E%3Ccircle cx='112' cy='12' r='2.6'/%3E%3Ccircle cx='100' cy='6' r='2'/%3E%3C/g%3E%3C/svg%3E") no-repeat right 0.2rem bottom / auto 4.6rem, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='22' viewBox='0 0 200 22'%3E%3Cpath d='M0 10 C 25 0, 75 0, 100 10 S 175 20, 200 10 V 22 H 0 Z' fill='%2357bfba' fill-opacity='0.35'/%3E%3C/svg%3E") repeat-x 0 100% / 200px 22px; }
+#content-beginner .level-landing__card[data-tool="words"] .level-landing__card__icon,
+#content-intermediate .level-landing__card[data-tool="words"] .level-landing__card__icon,
+#content-advanced .level-landing__card[data-tool="words"] .level-landing__card__icon { color: #127880; }
+#content-beginner .level-landing__card[data-tool="words"] .level-landing__card__label,
+#content-intermediate .level-landing__card[data-tool="words"] .level-landing__card__label,
+#content-advanced .level-landing__card[data-tool="words"] .level-landing__card__label { color: #0b3f47; }
+#content-beginner .level-landing__card[data-tool="words"] .level-landing__card__hint,
+#content-intermediate .level-landing__card[data-tool="words"] .level-landing__card__hint,
+#content-advanced .level-landing__card[data-tool="words"] .level-landing__card__hint,
+#content-beginner .level-landing__card[data-tool="words"] .level-landing__card__progress,
+#content-intermediate .level-landing__card[data-tool="words"] .level-landing__card__progress,
+#content-advanced .level-landing__card[data-tool="words"] .level-landing__card__progress { color: #4d7f84; }
+
+#content-beginner .level-landing__card[data-tool="flashcards"] .level-landing__card__hint,
+#content-beginner .level-landing__card[data-tool="flashcards"] .level-landing__card__progress,
+#content-beginner .level-landing__card[data-tool="vocab"] .level-landing__card__hint,
+#content-beginner .level-landing__card[data-tool="vocab"] .level-landing__card__progress,
+#content-beginner .level-landing__card[data-tool="words"] .level-landing__card__hint,
+#content-beginner .level-landing__card[data-tool="words"] .level-landing__card__progress,
+#content-intermediate .level-landing__card[data-tool="flashcards"] .level-landing__card__hint,
+#content-intermediate .level-landing__card[data-tool="flashcards"] .level-landing__card__progress,
+#content-intermediate .level-landing__card[data-tool="vocab"] .level-landing__card__hint,
+#content-intermediate .level-landing__card[data-tool="vocab"] .level-landing__card__progress,
+#content-intermediate .level-landing__card[data-tool="words"] .level-landing__card__hint,
+#content-intermediate .level-landing__card[data-tool="words"] .level-landing__card__progress,
+#content-advanced .level-landing__card[data-tool="flashcards"] .level-landing__card__hint,
+#content-advanced .level-landing__card[data-tool="flashcards"] .level-landing__card__progress,
+#content-advanced .level-landing__card[data-tool="vocab"] .level-landing__card__hint,
+#content-advanced .level-landing__card[data-tool="vocab"] .level-landing__card__progress,
+#content-advanced .level-landing__card[data-tool="words"] .level-landing__card__hint,
+#content-advanced .level-landing__card[data-tool="words"] .level-landing__card__progress {
+  max-width: calc(100% - 4.5rem);
+}
