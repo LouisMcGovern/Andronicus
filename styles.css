@@ -9297,3 +9297,308 @@ body.vocab-zone .level-article#content-intermediate,
 body.vocab-zone .level-article#content-advanced {
   background: transparent;
 }
+
+/* ==========================================================================
+   Word wheel – ocean intro: the title floats, the sea rises and swallows it
+   ========================================================================== */
+.sea-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  overflow: hidden;
+  cursor: pointer;
+  background:
+    radial-gradient(80% 55% at 50% 40%, #f3fbfa 0%, transparent 75%),
+    linear-gradient(180deg, #e6f6f3 0%, #cdeee9 100%);
+  animation: sea-bg-in 0.35s ease both, sea-bg-out 0.5s ease 2.3s forwards;
+}
+
+.sea-intro__word {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  font-family: "Libre Baskerville", Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(2.6rem, 9vw, 6.5rem);
+  color: #0e5560;
+  white-space: nowrap;
+  text-shadow: 0 2px 0 rgba(255, 255, 255, 0.6);
+  animation: sea-sink 0.75s cubic-bezier(0.55, 0, 0.8, 0.4) 1.55s forwards;
+}
+
+.sea-intro__word span {
+  display: inline-block;
+  opacity: 0;
+  animation: sea-letter 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--i) * 0.03s);
+}
+
+/* Bobbing on the surface once the water reaches it */
+.sea-intro__word-inner {
+  display: inline-block;
+  animation: sea-bob 0.55s ease-in-out 0.95s 1 both;
+}
+
+.sea-intro__water {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  transform: translateY(100%);
+  animation:
+    sea-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards,
+    sea-swallow 0.6s cubic-bezier(0.5, 0, 0.3, 1) 1.5s forwards;
+}
+
+.sea-intro__wave {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 44px;
+  background-repeat: repeat-x;
+  background-size: 400px 44px;
+}
+.sea-intro__wave--back {
+  top: -40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='44' viewBox='0 0 400 44'%3E%3Cpath d='M0 22 C 50 2, 150 2, 200 22 S 350 42, 400 22 V 44 H 0 Z' fill='%2397dbd4' fill-opacity='0.75'/%3E%3C/svg%3E");
+  animation: sea-roll 2.4s linear infinite reverse;
+}
+.sea-intro__wave--front {
+  top: -28px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='44' viewBox='0 0 400 44'%3E%3Cpath d='M0 22 C 50 42, 150 42, 200 22 S 350 2, 400 22 V 44 H 0 Z' fill='%2357bfba' fill-opacity='0.85'/%3E%3Cpath d='M0 22 C 50 42, 150 42, 200 22 S 350 2, 400 22' fill='none' stroke='%23ffffff' stroke-opacity='0.7' stroke-width='3'/%3E%3C/svg%3E");
+  animation: sea-roll 1.6s linear infinite;
+}
+.sea-intro__body {
+  position: absolute;
+  top: 15px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    linear-gradient(105deg, transparent 0 18%, rgba(255, 255, 255, 0.12) 22%, transparent 30%, transparent 46%, rgba(255, 255, 255, 0.09) 50%, transparent 56%, transparent 70%, rgba(255, 255, 255, 0.1) 74%, transparent 80%),
+    linear-gradient(180deg, rgba(87, 191, 186, 0.85) 0%, rgba(38, 140, 150, 0.92) 100%);
+}
+
+.sea-intro__bubble {
+  position: absolute;
+  bottom: 30%;
+  z-index: 3;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.9) 0 18%, rgba(255, 255, 255, 0.15) 30%, transparent 70%);
+  opacity: 0;
+  animation: sea-bubble 0.9s ease-out forwards;
+  animation-delay: var(--d, 1.6s);
+}
+
+.sea-reveal {
+  animation: vp-reveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes sea-bg-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sea-bg-out { to { opacity: 0; visibility: hidden; } }
+@keyframes sea-letter {
+  from { opacity: 0; transform: translateY(0.35em); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes sea-rise { to { transform: translateY(54%); } }
+@keyframes sea-swallow {
+  from { transform: translateY(54%); }
+  to { transform: translateY(-6%); }
+}
+@keyframes sea-bob {
+  0%, 100% { transform: none; }
+  30% { transform: translateY(0.07em) rotate(-1.5deg); }
+  65% { transform: translateY(-0.05em) rotate(1.2deg); }
+}
+@keyframes sea-sink {
+  to { transform: translate(-50%, 30vh); opacity: 0.15; filter: blur(3px); }
+}
+@keyframes sea-roll {
+  from { background-position-x: 0; }
+  to { background-position-x: 400px; }
+}
+@keyframes sea-bubble {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.6); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--x, 0), -55vh) scale(1.1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sea-intro { display: none; }
+  .sea-reveal { animation: none; }
+}
+
+/* ==========================================================================
+   Word wheel zone – the whole learning screen goes ocean while it's open
+   ========================================================================== */
+body.ocean-zone {
+  --page-bg: #cdebe7;
+  --surface: #dcf2ef;
+  --surface-elevated: #cdebe7;
+  --border: #93cfc8;
+  --accent: #127880;
+  --accent-strong: #1b9aa0;
+  --ink-heading: #0b3f47;
+  --muted: #4d7f84;
+  --chrome-bg: #d6efec;
+  --chrome-border: #93cfc8;
+  --chrome-btn-border: rgba(11, 63, 71, 0.2);
+  --chrome-btn-text: #0b3f47;
+  --chrome-btn-hover: rgba(18, 120, 128, 0.08);
+  --chrome-btn-active-bg: #1b8a8f;
+  --chrome-btn-active-border: #127880;
+  background: #cdebe7;
+}
+
+body.ocean-zone::before {
+  background:
+    radial-gradient(ellipse 70% 45% at 50% 0%, rgba(255, 255, 255, 0.35), transparent 60%),
+    radial-gradient(ellipse 50% 35% at 100% 100%, rgba(18, 120, 128, 0.08), transparent 55%);
+}
+
+body.ocean-zone.content-panel-open .panel-toolbar,
+body.ocean-zone .content-breadcrumb {
+  background: #d6efec;
+  border-bottom-color: #93cfc8;
+}
+body.ocean-zone .content-breadcrumb { color: #4d7f84; }
+body.ocean-zone .content-breadcrumb__current { color: #0b3f47; }
+
+body.ocean-zone.content-panel-open .panel--content {
+  background:
+    radial-gradient(60% 40% at 0% 100%, rgba(87, 191, 186, 0.2), transparent 70%),
+    radial-gradient(50% 35% at 100% 0%, rgba(255, 255, 255, 0.4), transparent 70%),
+    #cdebe7;
+}
+
+body.ocean-zone .level-article,
+body.ocean-zone .level-article#content-beginner,
+body.ocean-zone .level-article#content-intermediate,
+body.ocean-zone .level-article#content-advanced {
+  background: transparent;
+}
+
+body.ocean-zone .btn-text,
+body.ocean-zone .btn-level-back,
+body.ocean-zone .btn-icon-close,
+body.ocean-zone .lh-back-to-menu {
+  background: #e3f5f2;
+  border-color: #93cfc8;
+}
+body.ocean-zone .btn-text:hover,
+body.ocean-zone .btn-level-back:hover,
+body.ocean-zone .btn-icon-close:hover,
+body.ocean-zone .lh-back-to-menu:hover {
+  background: #f0faf8;
+}
+body.ocean-zone .pts-btn {
+  border-color: #93cfc8;
+  color: #0b3f47;
+}
+body.ocean-zone .pts-btn__star { color: #ef7a63; }
+
+/* The panel: shallow water with light ripples, seaweed and rising bubbles */
+body.content-panel-open .tool-panel[data-tool-panel="words"],
+.panel--content .tool-panel[data-tool-panel="words"] {
+  position: relative;
+  overflow: hidden;
+  border-color: #93cfc8;
+  border-radius: 0.6rem;
+  padding-bottom: 2.5rem;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='150' viewBox='0 0 140 150'%3E%3Cg fill='none' stroke-linecap='round'%3E%3Cpath d='M20 150 C 10 120, 34 105, 22 78 S 30 40, 18 18' stroke='%2341a88f' stroke-width='7'/%3E%3Cpath d='M44 150 C 54 128, 36 112, 48 90 S 40 62, 52 44' stroke='%2367c2a5' stroke-width='6'/%3E%3Cpath d='M66 150 C 60 134, 74 122, 66 104' stroke='%2341a88f' stroke-width='5'/%3E%3C/g%3E%3C/svg%3E") no-repeat left bottom / auto 9.5rem,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='150' viewBox='0 0 140 150'%3E%3Cg fill='none' stroke-linecap='round' transform='translate(140 0) scale(-1 1)'%3E%3Cpath d='M20 150 C 10 120, 34 105, 22 78 S 30 40, 18 18' stroke='%2367c2a5' stroke-width='7'/%3E%3Cpath d='M44 150 C 54 128, 36 112, 48 90 S 40 62, 52 44' stroke='%2341a88f' stroke-width='6'/%3E%3C/g%3E%3Cg fill='%23ef7a63'%3E%3Ccircle cx='88' cy='140' r='6'/%3E%3Ccircle cx='100' cy='134' r='4'/%3E%3Ccircle cx='96' cy='144' r='5'/%3E%3C/g%3E%3C/svg%3E") no-repeat right bottom / auto 8rem,
+    linear-gradient(100deg, transparent 0 12%, rgba(255, 255, 255, 0.28) 16%, transparent 24%, transparent 40%, rgba(255, 255, 255, 0.2) 44%, transparent 50%, transparent 66%, rgba(255, 255, 255, 0.24) 70%, transparent 77%),
+    linear-gradient(180deg, #e3f5f2 0%, #bfe6e1 60%, #a6dbd5 100%);
+}
+
+/* Bubbles drifting up behind the game */
+body.content-panel-open .tool-panel[data-tool-panel="words"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 9% 78%, transparent 0 6px, rgba(255, 255, 255, 0.8) 6.5px 8px, transparent 8.5px),
+    radial-gradient(circle at 14% 52%, transparent 0 3px, rgba(255, 255, 255, 0.7) 3.5px 4.5px, transparent 5px),
+    radial-gradient(circle at 6% 30%, transparent 0 4px, rgba(255, 255, 255, 0.6) 4.5px 5.5px, transparent 6px),
+    radial-gradient(circle at 11% 12%, rgba(255, 255, 255, 0.6) 0 2px, transparent 2.5px),
+    radial-gradient(circle at 90% 66%, transparent 0 8px, rgba(255, 255, 255, 0.75) 8.5px 10px, transparent 10.5px),
+    radial-gradient(circle at 86% 40%, transparent 0 3px, rgba(255, 255, 255, 0.7) 3.5px 4.5px, transparent 5px),
+    radial-gradient(circle at 93% 18%, transparent 0 5px, rgba(255, 255, 255, 0.6) 5.5px 6.5px, transparent 7px),
+    radial-gradient(circle at 88% 90%, rgba(255, 255, 255, 0.65) 0 2px, transparent 2.5px);
+  background-size: 100% 420px;
+  animation: sea-panel-bubbles 14s linear infinite;
+}
+.tool-panel[data-tool-panel="words"] > * {
+  position: relative;
+  z-index: 1;
+}
+@keyframes sea-panel-bubbles {
+  from { background-position-y: 0; }
+  to { background-position-y: -420px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body.content-panel-open .tool-panel[data-tool-panel="words"]::after { animation: none; }
+}
+
+/* The game itself: teal tiles, a bubble for a wheel, coral for what you're tracing */
+.tool-panel[data-tool-panel="words"] .wg {
+  --wg-accent: #168089;
+  --wg-good: #1f9a6a;
+}
+.tool-panel[data-tool-panel="words"] .wg__cell {
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: inset 0 0 0 1px rgba(18, 120, 128, 0.22);
+}
+.tool-panel[data-tool-panel="words"] .wg__cell.is-shown {
+  background: linear-gradient(160deg, #22959c 0%, #127880 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+.tool-panel[data-tool-panel="words"] .wg__cell.is-new {
+  background: var(--wg-good);
+}
+.tool-panel[data-tool-panel="words"] .wg__cell.is-hint {
+  background: #ffe6df;
+  color: #c4523f;
+}
+.tool-panel[data-tool-panel="words"] .wg__wheel {
+  background:
+    radial-gradient(circle at 32% 26%, rgba(255, 255, 255, 0.95) 0 10%, transparent 26%),
+    radial-gradient(circle at 50% 50%, #f4fcfb 0%, #e0f5f2 55%, #b9e5df 88%, #9fd9d2 100%);
+  box-shadow:
+    inset 0 0 0 3px rgba(255, 255, 255, 0.85),
+    inset 0 -10px 24px rgba(18, 120, 128, 0.18),
+    0 10px 28px rgba(11, 63, 71, 0.18);
+}
+.tool-panel[data-tool-panel="words"] .wg__lines polyline {
+  stroke: #ef7a63;
+  opacity: 0.85;
+}
+.tool-panel[data-tool-panel="words"] .wg__letter { color: #0b3f47; }
+.tool-panel[data-tool-panel="words"] .wg__letter.is-on,
+.tool-panel[data-tool-panel="words"] .wg__preview.is-active {
+  background: #ef7a63;
+  color: #fff;
+}
+.tool-panel[data-tool-panel="words"] .wg__act {
+  background: rgba(255, 255, 255, 0.75);
+}
+.tool-panel[data-tool-panel="words"] .wg__msg.is-bonus,
+.tool-panel[data-tool-panel="words"] .wg__bonushead { color: #c4523f; }
+.tool-panel[data-tool-panel="words"] .wg__wordlist li { background: #eef8f7; }
+.tool-panel[data-tool-panel="words"] .wg__wordlist--bonus li { background: #ffeee9; }
+.tool-panel[data-tool-panel="words"] .wg__def,
+.tool-panel[data-tool-panel="words"] .wg__donecard { border-color: #93cfc8; }
+
+/* The content area forces a system font on everything; keep the intros in Libre Baskerville */
+body .vine-intro__word,
+body .vine-intro__word *,
+body .sea-intro__word,
+body .sea-intro__word * {
+  font-family: "Libre Baskerville", Georgia, serif !important;
+}

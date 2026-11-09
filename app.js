@@ -4500,6 +4500,83 @@
     document.addEventListener("keydown", finish);
   }
 
+  /**
+   * Word wheel intro: the title floats up, water rises with rolling waves,
+   * the word bobs on the surface, then a wave swallows it and it sinks in a
+   * trail of bubbles. Click or press a key to skip. Skipped for reduced motion.
+   */
+  function playWordsIntro(panel) {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const old = document.querySelector(".sea-intro");
+    if (old) old.remove();
+
+    const overlay = document.createElement("div");
+    overlay.className = "sea-intro";
+    overlay.setAttribute("aria-hidden", "true");
+
+    const word = document.createElement("h2");
+    word.className = "sea-intro__word";
+    const inner = document.createElement("span");
+    inner.className = "sea-intro__word-inner";
+    Array.from(I18n.t("learning_tab_words")).forEach(function (ch, i) {
+      const sp = document.createElement("span");
+      sp.textContent = ch === " " ? "\u00a0" : ch;
+      sp.style.setProperty("--i", String(i));
+      inner.appendChild(sp);
+    });
+    word.appendChild(inner);
+    overlay.appendChild(word);
+
+    const water = document.createElement("div");
+    water.className = "sea-intro__water";
+    water.innerHTML =
+      '<div class="sea-intro__wave sea-intro__wave--back"></div>' +
+      '<div class="sea-intro__wave sea-intro__wave--front"></div>' +
+      '<div class="sea-intro__body"></div>';
+    overlay.appendChild(water);
+
+    // Bubbles trail up as the word sinks
+    for (let i = 0; i < 16; i += 1) {
+      const b = document.createElement("span");
+      b.className = "sea-intro__bubble";
+      const size = 10 + Math.round(Math.random() * 18);
+      b.style.left = (32 + Math.random() * 36).toFixed(1) + "%";
+      b.style.width = size + "px";
+      b.style.height = size + "px";
+      b.style.setProperty("--d", (1.55 + Math.random() * 0.6).toFixed(2) + "s");
+      b.style.setProperty("--x", (Math.random() * 40 - 20).toFixed(0) + "px");
+      overlay.appendChild(b);
+    }
+
+    document.body.appendChild(overlay);
+
+    const shell = panel;
+    if (shell) {
+      shell.classList.remove("sea-reveal");
+      shell.style.opacity = "0";
+    }
+    let finished = false;
+    function reveal() {
+      if (!shell) return;
+      shell.style.opacity = "";
+      void shell.offsetWidth;
+      shell.classList.add("sea-reveal");
+    }
+    const revealTimer = setTimeout(reveal, 2250);
+    function finish() {
+      if (finished) return;
+      finished = true;
+      clearTimeout(revealTimer);
+      clearTimeout(endTimer);
+      document.removeEventListener("keydown", finish);
+      overlay.remove();
+      if (shell && shell.style.opacity === "0") reveal();
+    }
+    const endTimer = setTimeout(finish, 2850);
+    overlay.addEventListener("click", finish);
+    document.addEventListener("keydown", finish);
+  }
+
   function mountVocabPath(root, level, panel, onLevelProgressChange) {
     const bank = buildVocabBank(level);
     const total = bank.order.length;
@@ -6456,15 +6533,18 @@
     return key ? I18n.t(key) : tool;
   }
 
-  /** Vocabulary gets its own forest zone: the whole learning screen turns green while it's open. */
+  /** Game zones: vocab is a forest, the word wheel is the ocean. The whole learning screen re-themes while one is open. */
   function syncVocabZone() {
-    let on = false;
-    if (document.body.classList.contains("content-panel-open")) {
-      document.querySelectorAll('[data-tool-panel="vocab"]').forEach(function (p) {
+    function panelOpen(name) {
+      if (!document.body.classList.contains("content-panel-open")) return false;
+      let on = false;
+      document.querySelectorAll('[data-tool-panel="' + name + '"]').forEach(function (p) {
         if (!p.classList.contains("hidden") && p.getClientRects().length) on = true;
       });
+      return on;
     }
-    document.body.classList.toggle("vocab-zone", on);
+    document.body.classList.toggle("vocab-zone", panelOpen("vocab"));
+    document.body.classList.toggle("ocean-zone", panelOpen("words"));
   }
 
   function updateContentBreadcrumb() {
@@ -8772,6 +8852,9 @@
       function activateTab(name) {
         if (name === "vocab" && currentTab !== "vocab") {
           playVocabIntro(root.querySelector('[data-tool-panel="vocab"]'));
+        }
+        if (name === "words" && currentTab !== "words") {
+          playWordsIntro(root.querySelector('[data-tool-panel="words"]'));
         }
         currentTab = name;
         workspaceTabs.forEach(function (b) {
