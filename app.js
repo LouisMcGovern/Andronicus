@@ -4501,9 +4501,9 @@
   }
 
   /**
-   * Word wheel intro: the title floats up, water rises with rolling waves,
-   * the word bobs on the surface, then a wave swallows it and it sinks in a
-   * trail of bubbles. Click or press a key to skip. Skipped for reduced motion.
+   * Word wheel intro: the title appears, a waterfall pours down from the top
+   * of the screen, hits it with a splash and washes it down off the screen.
+   * Click or press a key to skip. Skipped for reduced motion.
    */
   function playWordsIntro(panel) {
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -4513,6 +4513,9 @@
     const overlay = document.createElement("div");
     overlay.className = "sea-intro";
     overlay.setAttribute("aria-hidden", "true");
+    overlay.innerHTML =
+      '<div class="sea-intro__fall"><div class="sea-intro__lip"></div></div>' +
+      '<div class="sea-intro__pool"></div>';
 
     const word = document.createElement("h2");
     word.className = "sea-intro__word";
@@ -4527,23 +4530,30 @@
     word.appendChild(inner);
     overlay.appendChild(word);
 
-    const water = document.createElement("div");
-    water.className = "sea-intro__water";
-    water.innerHTML =
-      '<div class="sea-intro__wave sea-intro__wave--back"></div>' +
-      '<div class="sea-intro__wave sea-intro__wave--front"></div>' +
-      '<div class="sea-intro__body"></div>';
-    overlay.appendChild(water);
-
-    // Bubbles trail up as the word sinks
-    for (let i = 0; i < 16; i += 1) {
+    // Spray bursting off the top of the word as the water hits it
+    for (let i = 0; i < 18; i += 1) {
+      const d = document.createElement("span");
+      d.className = "sea-intro__drop";
+      const ang = (-160 + Math.random() * 140) * (Math.PI / 180);
+      const dist = 40 + Math.random() * 90;
+      d.style.left = (30 + Math.random() * 40).toFixed(1) + "%";
+      d.style.setProperty("--dx", (Math.cos(ang) * dist).toFixed(0) + "px");
+      d.style.setProperty("--dy", (Math.sin(ang) * dist).toFixed(0) + "px");
+      d.style.setProperty("--d", (0.66 + Math.random() * 0.2).toFixed(2) + "s");
+      const size = 5 + Math.round(Math.random() * 8);
+      d.style.width = size + "px";
+      d.style.height = size + "px";
+      overlay.appendChild(d);
+    }
+    // Bubbles fizzing up in the pool once the word lands
+    for (let i = 0; i < 14; i += 1) {
       const b = document.createElement("span");
       b.className = "sea-intro__bubble";
-      const size = 10 + Math.round(Math.random() * 18);
-      b.style.left = (32 + Math.random() * 36).toFixed(1) + "%";
+      const size = 8 + Math.round(Math.random() * 16);
+      b.style.left = (25 + Math.random() * 50).toFixed(1) + "%";
       b.style.width = size + "px";
       b.style.height = size + "px";
-      b.style.setProperty("--d", (1.55 + Math.random() * 0.6).toFixed(2) + "s");
+      b.style.setProperty("--d", (1.35 + Math.random() * 0.6).toFixed(2) + "s");
       b.style.setProperty("--x", (Math.random() * 40 - 20).toFixed(0) + "px");
       overlay.appendChild(b);
     }
@@ -4575,6 +4585,50 @@
     const endTimer = setTimeout(finish, 2850);
     overlay.addEventListener("click", finish);
     document.addEventListener("keydown", finish);
+  }
+
+  /** Fish and bubbles swimming behind the word wheel. Added once; the game never clears it. */
+  function addSeaDecor(panel) {
+    if (!panel || panel.querySelector(".sea-decor")) return;
+    const decor = document.createElement("div");
+    decor.className = "sea-decor";
+    decor.setAttribute("aria-hidden", "true");
+    const fish = [
+      { top: 14, size: 46, dur: 26, delay: -4, color: "#ef7a63", fin: "#f4a08f", left: false },
+      { top: 34, size: 30, dur: 19, delay: -12, color: "#2a9fa6", fin: "#6cc6c8", left: true },
+      { top: 58, size: 38, dur: 31, delay: -20, color: "#f29a5c", fin: "#f7bf91", left: false },
+      { top: 72, size: 26, dur: 22, delay: -2, color: "#1d7f87", fin: "#5fb8bb", left: true },
+      { top: 46, size: 22, dur: 17, delay: -9, color: "#ef7a63", fin: "#f4a08f", left: true },
+      { top: 86, size: 34, dur: 28, delay: -15, color: "#3fb3a0", fin: "#8ed8cb", left: false }
+    ];
+    fish.forEach(function (f) {
+      const lane = document.createElement("span");
+      lane.className = "sea-fish" + (f.left ? " sea-fish--left" : "");
+      lane.style.top = f.top + "%";
+      lane.style.setProperty("--dur", f.dur + "s");
+      lane.style.setProperty("--delay", f.delay + "s");
+      lane.innerHTML =
+        '<svg width="' + f.size + '" height="' + Math.round(f.size * 0.6) + '" viewBox="0 0 50 30">' +
+        '<path d="M2 15 L12 5 L11 15 L12 25 Z" fill="' + f.fin + '"/>' +
+        '<ellipse cx="28" cy="15" rx="18" ry="10" fill="' + f.color + '"/>' +
+        '<path d="M24 6 q 6 -6 10 1" fill="' + f.fin + '"/>' +
+        '<path d="M22 8 q 3 7 0 14" fill="none" stroke="' + f.fin + '" stroke-width="2" stroke-linecap="round"/>' +
+        '<circle cx="38" cy="12" r="2.6" fill="#fff"/><circle cx="38.6" cy="12" r="1.3" fill="#0b3f47"/>' +
+        "</svg>";
+      decor.appendChild(lane);
+    });
+    for (let i = 0; i < 14; i += 1) {
+      const b = document.createElement("span");
+      b.className = "sea-bub";
+      const size = 5 + Math.round(Math.random() * 12);
+      b.style.left = (Math.random() < 0.5 ? 3 + Math.random() * 22 : 75 + Math.random() * 22).toFixed(1) + "%";
+      b.style.width = size + "px";
+      b.style.height = size + "px";
+      b.style.setProperty("--dur", (7 + Math.random() * 7).toFixed(1) + "s");
+      b.style.setProperty("--delay", (-Math.random() * 14).toFixed(1) + "s");
+      decor.appendChild(b);
+    }
+    panel.insertBefore(decor, panel.firstChild);
   }
 
   function mountVocabPath(root, level, panel, onLevelProgressChange) {
@@ -8853,6 +8907,7 @@
         if (name === "vocab" && currentTab !== "vocab") {
           playVocabIntro(root.querySelector('[data-tool-panel="vocab"]'));
         }
+        if (name === "words") addSeaDecor(root.querySelector('[data-tool-panel="words"]'));
         if (name === "words" && currentTab !== "words") {
           playWordsIntro(root.querySelector('[data-tool-panel="words"]'));
         }

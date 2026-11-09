@@ -9299,7 +9299,8 @@ body.vocab-zone .level-article#content-advanced {
 }
 
 /* ==========================================================================
-   Word wheel – ocean intro: the title floats, the sea rises and swallows it
+   Word wheel – waterfall intro: the title appears, a waterfall pours down
+   from the top of the screen and washes it away
    ========================================================================== */
 .sea-intro {
   position: fixed;
@@ -9310,23 +9311,72 @@ body.vocab-zone .level-article#content-advanced {
   background:
     radial-gradient(80% 55% at 50% 40%, #f3fbfa 0%, transparent 75%),
     linear-gradient(180deg, #e6f6f3 0%, #cdeee9 100%);
-  animation: sea-bg-in 0.35s ease both, sea-bg-out 0.5s ease 2.3s forwards;
+  animation: sea-bg-in 0.3s ease both, sea-bg-out 0.5s ease 2.3s forwards;
+}
+
+.sea-intro__fall {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: min(92vw, 62rem);
+  transform: translateX(-50%);
+  z-index: 1;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='220' viewBox='0 0 140 220'%3E%3Cg stroke='%23ffffff' stroke-linecap='round' fill='none'%3E%3Cpath d='M8 0 v70' stroke-width='3' stroke-opacity='0.55'/%3E%3Cpath d='M8 110 v90' stroke-width='3' stroke-opacity='0.4'/%3E%3Cpath d='M26 30 v120' stroke-width='2' stroke-opacity='0.35'/%3E%3Cpath d='M44 0 v40' stroke-width='4' stroke-opacity='0.5'/%3E%3Cpath d='M44 80 v130' stroke-width='3' stroke-opacity='0.45'/%3E%3Cpath d='M63 50 v90' stroke-width='2' stroke-opacity='0.3'/%3E%3Cpath d='M80 0 v100' stroke-width='3' stroke-opacity='0.5'/%3E%3Cpath d='M80 150 v60' stroke-width='3' stroke-opacity='0.35'/%3E%3Cpath d='M98 20 v80' stroke-width='2' stroke-opacity='0.4'/%3E%3Cpath d='M98 140 v80' stroke-width='2' stroke-opacity='0.3'/%3E%3Cpath d='M116 60 v110' stroke-width='4' stroke-opacity='0.45'/%3E%3Cpath d='M131 0 v50' stroke-width='2' stroke-opacity='0.35'/%3E%3Cpath d='M131 120 v90' stroke-width='3' stroke-opacity='0.5'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 140px 220px,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='300' viewBox='0 0 90 300'%3E%3Cg stroke='%23ffffff' stroke-linecap='round' fill='none' stroke-opacity='0.25'%3E%3Cpath d='M15 0 v180' stroke-width='6'/%3E%3Cpath d='M55 90 v200' stroke-width='5'/%3E%3Cpath d='M78 20 v110' stroke-width='4'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 90px 300px,
+    linear-gradient(90deg, rgba(54, 160, 166, 0.95) 0%, rgba(110, 205, 200, 0.9) 30%, rgba(132, 214, 208, 0.88) 50%, rgba(110, 205, 200, 0.9) 70%, rgba(54, 160, 166, 0.95) 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 9%, #000 91%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 9%, #000 91%, transparent 100%);
+  clip-path: inset(0 0 100% 0);
+  animation:
+    sea-pour 0.55s cubic-bezier(0.5, 0, 0.75, 0.4) 0.3s forwards,
+    sea-stream 0.5s linear infinite,
+    sea-fall-out 0.5s ease 1.85s forwards;
+}
+
+/* Foamy lip where the water comes over the top */
+.sea-intro__lip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 26px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='26' viewBox='0 0 120 26'%3E%3Cpath d='M0 0 H120 V12 C 108 22, 96 8, 84 16 S 60 24, 48 14 S 24 8, 12 18 S 2 14, 0 12 Z' fill='%23ffffff' fill-opacity='0.85'/%3E%3C/svg%3E") repeat-x 0 0 / 120px 26px;
+}
+
+/* Foam churning where it lands */
+.sea-intro__pool {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 22vh;
+  z-index: 2;
+  opacity: 0;
+  background:
+    radial-gradient(14% 40% at 20% 30%, rgba(255, 255, 255, 0.9), transparent 70%),
+    radial-gradient(16% 45% at 45% 22%, rgba(255, 255, 255, 0.95), transparent 70%),
+    radial-gradient(14% 40% at 70% 32%, rgba(255, 255, 255, 0.9), transparent 70%),
+    radial-gradient(12% 35% at 88% 26%, rgba(255, 255, 255, 0.8), transparent 70%),
+    linear-gradient(180deg, rgba(87, 191, 186, 0.6) 0%, rgba(38, 140, 150, 0.9) 100%);
+  transform: translateY(40%);
+  animation: sea-pool 0.5s ease-out 0.75s forwards;
 }
 
 .sea-intro__word {
   position: absolute;
   left: 50%;
   top: 50%;
-  z-index: 1;
+  z-index: 3;
   margin: 0;
   transform: translate(-50%, -50%);
-  font-family: "Libre Baskerville", Georgia, serif;
   font-weight: 400;
   font-size: clamp(2.6rem, 9vw, 6.5rem);
   color: #0e5560;
   white-space: nowrap;
-  text-shadow: 0 2px 0 rgba(255, 255, 255, 0.6);
-  animation: sea-sink 0.75s cubic-bezier(0.55, 0, 0.8, 0.4) 1.55s forwards;
+  text-shadow: 0 2px 0 rgba(255, 255, 255, 0.7);
+  animation: sea-wash 0.8s cubic-bezier(0.5, 0, 0.75, 0.3) 0.95s forwards;
 }
 
 .sea-intro__word span {
@@ -9336,61 +9386,34 @@ body.vocab-zone .level-article#content-advanced {
   animation-delay: calc(var(--i) * 0.03s);
 }
 
-/* Bobbing on the surface once the water reaches it */
+/* The hit: the word buckles as the water lands on it */
 .sea-intro__word-inner {
   display: inline-block;
-  animation: sea-bob 0.55s ease-in-out 0.95s 1 both;
+  animation: sea-hit 0.3s ease-out 0.68s both;
 }
 
-.sea-intro__water {
+.sea-intro__drop {
   position: absolute;
-  inset: 0;
-  z-index: 2;
-  transform: translateY(100%);
-  animation:
-    sea-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards,
-    sea-swallow 0.6s cubic-bezier(0.5, 0, 0.3, 1) 1.5s forwards;
-}
-
-.sea-intro__wave {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 44px;
-  background-repeat: repeat-x;
-  background-size: 400px 44px;
-}
-.sea-intro__wave--back {
-  top: -40px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='44' viewBox='0 0 400 44'%3E%3Cpath d='M0 22 C 50 2, 150 2, 200 22 S 350 42, 400 22 V 44 H 0 Z' fill='%2397dbd4' fill-opacity='0.75'/%3E%3C/svg%3E");
-  animation: sea-roll 2.4s linear infinite reverse;
-}
-.sea-intro__wave--front {
-  top: -28px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='44' viewBox='0 0 400 44'%3E%3Cpath d='M0 22 C 50 42, 150 42, 200 22 S 350 2, 400 22 V 44 H 0 Z' fill='%2357bfba' fill-opacity='0.85'/%3E%3Cpath d='M0 22 C 50 42, 150 42, 200 22 S 350 2, 400 22' fill='none' stroke='%23ffffff' stroke-opacity='0.7' stroke-width='3'/%3E%3C/svg%3E");
-  animation: sea-roll 1.6s linear infinite;
-}
-.sea-intro__body {
-  position: absolute;
-  top: 15px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background:
-    linear-gradient(105deg, transparent 0 18%, rgba(255, 255, 255, 0.12) 22%, transparent 30%, transparent 46%, rgba(255, 255, 255, 0.09) 50%, transparent 56%, transparent 70%, rgba(255, 255, 255, 0.1) 74%, transparent 80%),
-    linear-gradient(180deg, rgba(87, 191, 186, 0.85) 0%, rgba(38, 140, 150, 0.92) 100%);
+  top: calc(50% - 0.6em);
+  z-index: 4;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 0 1px rgba(54, 160, 166, 0.35);
+  opacity: 0;
+  animation: sea-drop 0.55s cubic-bezier(0.2, 0.7, 0.4, 1) forwards;
+  animation-delay: var(--d, 0.7s);
 }
 
 .sea-intro__bubble {
   position: absolute;
-  bottom: 30%;
-  z-index: 3;
+  bottom: 6%;
+  z-index: 4;
   border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.85);
   background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.9) 0 18%, rgba(255, 255, 255, 0.15) 30%, transparent 70%);
   opacity: 0;
   animation: sea-bubble 0.9s ease-out forwards;
-  animation-delay: var(--d, 1.6s);
+  animation-delay: var(--d, 1.4s);
 }
 
 .sea-reveal {
@@ -9403,27 +9426,30 @@ body.vocab-zone .level-article#content-advanced {
   from { opacity: 0; transform: translateY(0.35em); }
   to { opacity: 1; transform: none; }
 }
-@keyframes sea-rise { to { transform: translateY(54%); } }
-@keyframes sea-swallow {
-  from { transform: translateY(54%); }
-  to { transform: translateY(-6%); }
+@keyframes sea-pour { to { clip-path: inset(0 0 0 0); } }
+@keyframes sea-stream {
+  from { background-position: 0 0, 0 0, 0 0; }
+  to { background-position: 0 220px, 0 300px, 0 0; }
 }
-@keyframes sea-bob {
+@keyframes sea-fall-out { to { opacity: 0; } }
+@keyframes sea-pool { to { opacity: 1; transform: none; } }
+@keyframes sea-hit {
   0%, 100% { transform: none; }
-  30% { transform: translateY(0.07em) rotate(-1.5deg); }
-  65% { transform: translateY(-0.05em) rotate(1.2deg); }
+  35% { transform: translateY(0.08em) scaleY(0.93) rotate(-1deg); }
+  70% { transform: translateY(0.02em) scaleY(1.02) rotate(0.6deg); }
 }
-@keyframes sea-sink {
-  to { transform: translate(-50%, 30vh); opacity: 0.15; filter: blur(3px); }
+@keyframes sea-wash {
+  to { transform: translate(-50%, 62vh) rotate(4deg); opacity: 0.2; filter: blur(2px); }
 }
-@keyframes sea-roll {
-  from { background-position-x: 0; }
-  to { background-position-x: 400px; }
+@keyframes sea-drop {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.5); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--dx), calc(var(--dy) + 60px)) scale(1); }
 }
 @keyframes sea-bubble {
   0% { opacity: 0; transform: translate(0, 0) scale(0.6); }
   15% { opacity: 1; }
-  100% { opacity: 0; transform: translate(var(--x, 0), -55vh) scale(1.1); }
+  100% { opacity: 0; transform: translate(var(--x, 0), -40vh) scale(1.1); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -9552,7 +9578,7 @@ body.content-panel-open .tool-panel[data-tool-panel="words"]::after {
   --wg-good: #1f9a6a;
 }
 .tool-panel[data-tool-panel="words"] .wg__cell {
-  background: rgba(255, 255, 255, 0.85);
+  background: #f7fcfb;
   box-shadow: inset 0 0 0 1px rgba(18, 120, 128, 0.22);
 }
 .tool-panel[data-tool-panel="words"] .wg__cell.is-shown {
@@ -9601,4 +9627,141 @@ body .vine-intro__word *,
 body .sea-intro__word,
 body .sea-intro__word * {
   font-family: "Libre Baskerville", Georgia, serif !important;
+}
+
+/* ==========================================================================
+   Word wheel – fish and bubbles swimming behind the game
+   ========================================================================== */
+.tool-panel[data-tool-panel="words"] > .sea-decor {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sea-fish {
+  position: absolute;
+  left: 0;
+  opacity: 0.7;
+  animation: sea-swim var(--dur, 24s) linear var(--delay, 0s) infinite;
+}
+.sea-fish svg {
+  display: block;
+  animation: sea-wiggle 2.2s ease-in-out infinite;
+}
+.sea-fish--left {
+  animation-name: sea-swim-left;
+}
+.sea-fish--left svg {
+  transform: scaleX(-1);
+  animation-name: sea-wiggle-left;
+}
+
+.sea-bub {
+  position: absolute;
+  bottom: -20px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.85) 0 16%, transparent 40%);
+  animation: sea-bub-rise var(--dur, 10s) linear var(--delay, 0s) infinite;
+}
+
+@keyframes sea-swim {
+  from { transform: translateX(-80px); }
+  to { transform: translateX(calc(100vw + 80px)); }
+}
+@keyframes sea-swim-left {
+  from { transform: translateX(calc(100vw + 80px)); }
+  to { transform: translateX(-80px); }
+}
+@keyframes sea-wiggle {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-6px) rotate(-3deg); }
+}
+@keyframes sea-wiggle-left {
+  0%, 100% { transform: scaleX(-1) translateY(0) rotate(0); }
+  50% { transform: scaleX(-1) translateY(-6px) rotate(-3deg); }
+}
+@keyframes sea-bub-rise {
+  0% { transform: translate(0, 0); opacity: 0; }
+  10% { opacity: 0.9; }
+  50% { transform: translate(8px, -50vh); }
+  90% { opacity: 0.7; }
+  100% { transform: translate(-6px, -105vh); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sea-fish, .sea-fish svg, .sea-bub { animation: none; }
+  .sea-bub { display: none; }
+}
+
+/* ==========================================================================
+   Word wheel – compact layout so the whole round fits without scrolling
+   ========================================================================== */
+body.ocean-zone .level-article,
+body.ocean-zone .level-article#content-beginner,
+body.ocean-zone .level-article#content-intermediate,
+body.ocean-zone .level-article#content-advanced {
+  padding-top: 1.1rem;
+}
+body.ocean-zone .lh-back-to-menu {
+  margin-bottom: 0.6rem;
+}
+body.content-panel-open .tool-panel[data-tool-panel="words"] {
+  padding-top: 0.8rem;
+  padding-bottom: 1.2rem;
+}
+.tool-panel[data-tool-panel="words"] .wg {
+  gap: 0.35rem;
+}
+.tool-panel[data-tool-panel="words"] .wg__navbtn {
+  width: 2rem;
+  height: 2rem;
+  font-size: 1.2rem;
+}
+.tool-panel[data-tool-panel="words"] .wg__sub {
+  margin-top: 0.15rem;
+}
+.tool-panel[data-tool-panel="words"] .wg__wheel {
+  width: min(70vw, 15rem, 30vh);
+  min-width: 11rem;
+}
+
+/* Wide screens: crossword on the left, wheel on the right */
+@media (min-width: 860px) {
+  .tool-panel[data-tool-panel="words"] .wg {
+    max-width: 52rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      "head head"
+      "grid mid"
+      "grid wheel"
+      "grid actions"
+      "done done";
+    grid-template-rows: auto auto auto auto auto;
+    column-gap: 2.5rem;
+    row-gap: 0.4rem;
+    align-items: center;
+    justify-items: center;
+  }
+  .tool-panel[data-tool-panel="words"] .wg__head { grid-area: head; }
+  .tool-panel[data-tool-panel="words"] .wg__grid { grid-area: grid; align-self: center; }
+  .tool-panel[data-tool-panel="words"] .wg__mid { grid-area: mid; }
+  .tool-panel[data-tool-panel="words"] .wg__wheel {
+    grid-area: wheel;
+    width: min(17rem, 42vh);
+  }
+  .tool-panel[data-tool-panel="words"] .wg__actions { grid-area: actions; }
+  .tool-panel[data-tool-panel="words"] .wg__done { grid-area: done; }
+  .tool-panel[data-tool-panel="words"] .wg__nav {
+    max-width: 30rem;
+    margin: 0 auto;
+  }
+  .tool-panel[data-tool-panel="words"] .wg.is-finished {
+    grid-template-areas:
+      "head head"
+      "grid done"
+      "mid mid";
+  }
 }
