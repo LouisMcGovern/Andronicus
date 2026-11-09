@@ -5256,58 +5256,41 @@
     panel.insertBefore(decor, panel.firstChild);
   }
 
-  /** Friendly animal faces for the leaderboard theme. */
-  function animalSvg(kind) {
-    const eyes = function (lx, rx, y) {
-      return '<circle cx="' + lx + '" cy="' + y + '" r="3.2" fill="#2b2530"/><circle cx="' + rx + '" cy="' + y + '" r="3.2" fill="#2b2530"/>' +
-        '<circle cx="' + (lx + 1) + '" cy="' + (y - 1) + '" r="1" fill="#fff"/><circle cx="' + (rx + 1) + '" cy="' + (y - 1) + '" r="1" fill="#fff"/>';
+  /** Wild animal silhouettes for the leaderboard theme. */
+  function animalSvg(kind, color) {
+    const c = color || "#2f2a33";
+    const paths = {
+      wolf:
+        '<path d="M22 100 L23 72 C 21 56, 29 43, 41 37 L 52 19 L 55 7 L 60 16 L 65 5 L 68 16 C 74 14, 82 8, 89 3 L 87 12 C 81 18, 77 23, 73 29 C 71 37, 73 49, 71 61 L 75 100 L 65 100 L 63 79 L 51 77 L 45 100 Z" fill="' + c + '"/>' +
+        '<path d="M22 92 C 10 92, 4 86, 6 78 C 10 84, 16 86, 23 84 Z" fill="' + c + '"/>',
+      eagle:
+        '<path d="M50 30 C 46 30, 44 34, 45 38 C 30 33, 15 25, 1 29 C 11 33, 19 37, 26 41 C 18 43, 10 46, 3 50 C 17 50, 30 48, 42 46 L 44 60 L 39 73 L 50 66 L 61 73 L 56 60 L 58 46 C 70 48, 83 50, 97 50 C 90 46, 82 43, 74 41 C 81 37, 89 33, 99 29 C 85 25, 70 33, 55 38 C 56 34, 54 30, 50 30 Z" fill="' + c + '"/>' +
+        '<path d="M50 30 L 47 26 L 53 26 Z" fill="' + c + '"/>',
+      stag:
+        '<path d="M43 46 C 40 60, 45 78, 50 92 C 55 78, 60 60, 57 46 C 54 42, 46 42, 43 46 Z" fill="' + c + '"/>' +
+        '<path d="M42 46 L 32 42 L 40 50 Z M58 46 L 68 42 L 60 50 Z" fill="' + c + '"/>' +
+        '<g fill="none" stroke="' + c + '" stroke-width="3.4" stroke-linecap="round">' +
+        '<path d="M45 43 C 40 32, 34 24, 28 8"/><path d="M38 30 L 26 26"/><path d="M33 19 L 22 16"/><path d="M41 36 L 34 38"/>' +
+        '<path d="M55 43 C 60 32, 66 24, 72 8"/><path d="M62 30 L 74 26"/><path d="M67 19 L 78 16"/><path d="M59 36 L 66 38"/></g>',
+      bear:
+        '<path d="M6 86 L8 70 C 8 56, 20 46, 36 46 C 46 40, 60 40, 70 44 C 76 39, 84 39, 90 45 C 95 48, 97 53, 94 57 L 88 59 C 86 63, 84 66, 82 68 L 82 86 L 73 86 L 71 72 C 62 74, 48 74, 38 72 L 36 86 L 27 86 L 25 72 C 19 75, 14 77, 13 86 Z" fill="' + c + '"/>' +
+        '<path d="M80 41 L 82 35 L 86 40 Z" fill="' + c + '"/>'
     };
-    const cheeks = '<circle cx="18" cy="44" r="4" fill="#f6a5b8" opacity="0.7"/><circle cx="46" cy="44" r="4" fill="#f6a5b8" opacity="0.7"/>';
-    const svgs = {
-      panda:
-        '<circle cx="14" cy="16" r="9" fill="#2f2a33"/><circle cx="50" cy="16" r="9" fill="#2f2a33"/>' +
-        '<circle cx="32" cy="36" r="24" fill="#ffffff" stroke="#e6e1ea" stroke-width="1.5"/>' +
-        '<ellipse cx="22" cy="34" rx="6" ry="7.5" fill="#2f2a33" transform="rotate(-20 22 34)"/><ellipse cx="42" cy="34" rx="6" ry="7.5" fill="#2f2a33" transform="rotate(20 42 34)"/>' +
-        '<circle cx="23" cy="34" r="2.2" fill="#fff"/><circle cx="41" cy="34" r="2.2" fill="#fff"/>' +
-        '<ellipse cx="32" cy="44" rx="3.6" ry="2.6" fill="#2f2a33"/>' + cheeks,
-      fox:
-        '<path d="M10 6 L24 22 L12 30 Z" fill="#f08a5d"/><path d="M54 6 L40 22 L52 30 Z" fill="#f08a5d"/>' +
-        '<path d="M13 11 L21 21 L14 25 Z" fill="#fde3d8"/><path d="M51 11 L43 21 L50 25 Z" fill="#fde3d8"/>' +
-        '<path d="M8 30 C 10 16, 54 16, 56 30 C 56 44, 44 58, 32 58 C 20 58, 8 44, 8 30 Z" fill="#f08a5d"/>' +
-        '<path d="M14 36 C 22 40, 28 44, 32 58 C 36 44, 42 40, 50 36 C 46 50, 40 58, 32 58 C 24 58, 18 50, 14 36 Z" fill="#fff7f3"/>' +
-        eyes(23, 41, 33) + '<ellipse cx="32" cy="50" rx="3.4" ry="2.4" fill="#2b2530"/>',
-      bunny:
-        '<ellipse cx="22" cy="12" rx="6" ry="14" fill="#f4eef6"/><ellipse cx="42" cy="12" rx="6" ry="14" fill="#f4eef6"/>' +
-        '<ellipse cx="22" cy="13" rx="3" ry="10" fill="#f6b6c8"/><ellipse cx="42" cy="13" rx="3" ry="10" fill="#f6b6c8"/>' +
-        '<circle cx="32" cy="38" r="21" fill="#f4eef6" stroke="#e3dbe8" stroke-width="1.5"/>' +
-        eyes(24, 40, 36) + '<path d="M29 44 L35 44 L32 47 Z" fill="#e8849c"/>' + cheeks,
-      frog:
-        '<circle cx="19" cy="20" r="10" fill="#8fd17a"/><circle cx="45" cy="20" r="10" fill="#8fd17a"/>' +
-        '<ellipse cx="32" cy="40" rx="26" ry="19" fill="#8fd17a"/>' +
-        '<circle cx="19" cy="20" r="6" fill="#fff"/><circle cx="45" cy="20" r="6" fill="#fff"/>' +
-        '<circle cx="20" cy="21" r="3.2" fill="#2b2530"/><circle cx="46" cy="21" r="3.2" fill="#2b2530"/>' +
-        '<path d="M20 44 C 26 50, 38 50, 44 44" fill="none" stroke="#3f7a3f" stroke-width="2.4" stroke-linecap="round"/>' + cheeks,
-      cat:
-        '<path d="M10 8 L24 22 L10 30 Z" fill="#a9a3b8"/><path d="M54 8 L40 22 L54 30 Z" fill="#a9a3b8"/>' +
-        '<path d="M13 14 L20 22 L13 26 Z" fill="#f6b6c8"/><path d="M51 14 L44 22 L51 26 Z" fill="#f6b6c8"/>' +
-        '<circle cx="32" cy="36" r="23" fill="#a9a3b8"/>' +
-        '<ellipse cx="24" cy="34" rx="3.4" ry="4.4" fill="#2b2530"/><ellipse cx="40" cy="34" rx="3.4" ry="4.4" fill="#2b2530"/>' +
-        '<path d="M29 42 L35 42 L32 45 Z" fill="#e8849c"/>' +
-        '<path d="M32 45 C 30 49, 26 49, 25 47 M32 45 C 34 49, 38 49, 39 47" fill="none" stroke="#2b2530" stroke-width="1.6" stroke-linecap="round"/>' +
-        '<path d="M6 40 L18 42 M6 46 L18 45 M58 40 L46 42 M58 46 L46 45" stroke="#6f6880" stroke-width="1.2"/>'
-    };
-    return '<svg viewBox="0 0 64 64" width="100%" height="100%">' + (svgs[kind] || svgs.cat) + "</svg>";
+    return '<svg viewBox="0 0 100 100" width="100%" height="100%">' + (paths[kind] || paths.wolf) + "</svg>";
   }
 
+  /** A paw print with claws. */
   function pawSvg(color) {
-    return '<svg viewBox="0 0 40 40" width="100%" height="100%"><g fill="' + color + '">' +
-      '<ellipse cx="20" cy="27" rx="10" ry="8.5"/><ellipse cx="8" cy="15" rx="4.2" ry="5.4"/><ellipse cx="16" cy="8" rx="4.2" ry="5.6"/>' +
-      '<ellipse cx="25" cy="8" rx="4.2" ry="5.6"/><ellipse cx="33" cy="15" rx="4.2" ry="5.4"/></g></svg>';
+    return '<svg viewBox="0 0 40 44" width="100%" height="100%"><g fill="' + color + '">' +
+      '<path d="M20 22 C 28 22, 33 29, 31 35 C 29 41, 24 40, 20 40 C 16 40, 11 41, 9 35 C 7 29, 12 22, 20 22 Z"/>' +
+      '<ellipse cx="7" cy="18" rx="3.6" ry="4.8" transform="rotate(-20 7 18)"/><ellipse cx="15" cy="11" rx="3.6" ry="5"/>' +
+      '<ellipse cx="25" cy="11" rx="3.6" ry="5"/><ellipse cx="33" cy="18" rx="3.6" ry="4.8" transform="rotate(20 33 18)"/>' +
+      '<path d="M5 12 L 4 6 L 8 11 Z M14 5 L 14 0 L 17 5 Z M25 5 L 26 0 L 27 5 Z M35 12 L 36 6 L 32 11 Z"/></g></svg>';
   }
 
   /**
-   * Leaderboard intro: animals pop up along the bottom, a trail of paw prints
-   * walks across the title and each letter it steps on hops away.
+   * Leaderboard intro: wild animals stand on the horizon, three claw marks
+   * rip across the title and it splits apart.
    * Click or press a key to skip. Skipped for reduced motion.
    */
   function playAnimalIntro(panel) {
@@ -5318,53 +5301,43 @@
     const overlay = document.createElement("div");
     overlay.className = "zoo-intro";
     overlay.setAttribute("aria-hidden", "true");
-    overlay.innerHTML = '<div class="zoo-intro__grass"></div>';
+    overlay.innerHTML = '<div class="zoo-intro__ground"></div>';
 
-    ["panda", "fox", "bunny", "frog", "cat"].forEach(function (k, i) {
-      const a = document.createElement("div");
-      a.className = "zoo-intro__animal";
-      a.style.left = (6 + i * 19).toFixed(0) + "%";
-      a.style.setProperty("--d", (0.15 + i * 0.08).toFixed(2) + "s");
-      a.innerHTML = animalSvg(k);
-      overlay.appendChild(a);
+    [["wolf", 8, 0.1], ["stag", 30, 0.18], ["bear", 64, 0.26], ["wolf", 84, 0.34]].forEach(function (a, i) {
+      const el = document.createElement("div");
+      el.className = "zoo-intro__animal" + (i === 3 ? " is-flipped" : "");
+      el.style.left = a[1] + "%";
+      el.style.setProperty("--d", a[2] + "s");
+      el.innerHTML = animalSvg(a[0], "#3a3240");
+      overlay.appendChild(el);
     });
+    const eagle = document.createElement("div");
+    eagle.className = "zoo-intro__eagle";
+    eagle.innerHTML = animalSvg("eagle", "#3a3240");
+    overlay.appendChild(eagle);
 
     const word = document.createElement("h2");
     word.className = "zoo-intro__word";
-    Array.from(I18n.t("lb_title")).forEach(function (ch, i) {
-      const sp = document.createElement("span");
-      sp.textContent = ch === " " ? " " : ch;
-      sp.style.setProperty("--i", String(i));
-      word.appendChild(sp);
+    const label = I18n.t("lb_title");
+    word.innerHTML =
+      '<span class="zoo-intro__half zoo-intro__half--top"></span><span class="zoo-intro__half zoo-intro__half--bottom"></span>';
+    word.querySelectorAll(".zoo-intro__half").forEach(function (h) {
+      h.textContent = label;
     });
     overlay.appendChild(word);
-    document.body.appendChild(overlay);
 
-    // Paw prints walk left to right across the word; each letter hops off as a paw lands on it
-    const wr = word.getBoundingClientRect();
-    const steps = 9;
-    const stepGap = (wr.width + 160) / steps;
-    for (let i = 0; i < steps; i += 1) {
-      const p = document.createElement("span");
-      p.className = "zoo-intro__paw";
-      const x = wr.left - 80 + i * stepGap;
-      const y = wr.top + wr.height / 2 + (i % 2 ? -18 : 14);
-      const size = Math.max(26, wr.height * 0.42);
-      p.style.width = size + "px";
-      p.style.height = size + "px";
-      p.style.left = (x - size / 2).toFixed(0) + "px";
-      p.style.top = (y - size / 2).toFixed(0) + "px";
-      p.style.setProperty("--d", (0.8 + i * 0.09).toFixed(2) + "s");
-      p.innerHTML = pawSvg(i % 2 ? "#e0607e" : "#c94f6d");
-      overlay.appendChild(p);
-    }
-    word.querySelectorAll("span").forEach(function (sp) {
-      const r = sp.getBoundingClientRect();
-      const stepIdx = Math.max(0, (r.left + r.width / 2 - (wr.left - 80)) / stepGap);
-      sp.style.setProperty("--b", (0.8 + stepIdx * 0.09 + 0.05).toFixed(2) + "s");
-      sp.style.setProperty("--x", (Math.random() * 60 - 10).toFixed(0) + "px");
-      sp.style.setProperty("--r", (Math.random() * 70 - 35).toFixed(0) + "deg");
-    });
+    const claws = document.createElement("div");
+    claws.className = "zoo-intro__claws";
+    claws.innerHTML =
+      '<svg viewBox="0 0 300 160" preserveAspectRatio="none" width="100%" height="100%">' +
+      '<g fill="none" stroke="#b8324a" stroke-linecap="round">' +
+      '<path d="M40 20 C 110 60, 190 100, 270 128" stroke-width="9" pathLength="1"/>' +
+      '<path d="M26 46 C 100 82, 180 118, 252 146" stroke-width="11" pathLength="1"/>' +
+      '<path d="M18 74 C 86 104, 160 134, 228 158" stroke-width="8" pathLength="1"/>' +
+      "</g></svg>";
+    overlay.appendChild(claws);
+
+    document.body.appendChild(overlay);
 
     const shell = panel;
     if (shell) {
@@ -5393,7 +5366,7 @@
     document.addEventListener("keydown", finish);
   }
 
-  /** Animals peeking from the bottom corners and paw prints walking up the sides of the leaderboard. */
+  /** Wild silhouettes in the bottom corners and clawed tracks walking up the sides of the leaderboard. */
   function addAnimalDecor(panel) {
     if (!panel || panel.querySelector(".zoo-decor")) return;
     const decor = document.createElement("div");
@@ -5405,21 +5378,21 @@
       for (let i = 0; i < 6; i += 1) {
         const p = document.createElement("span");
         p.className = "zoo-step";
-        p.style.bottom = (8 + i * 13) + "%";
+        p.style.bottom = (10 + i * 13) + "%";
         p.style.setProperty("--k", String(i));
         p.style.setProperty("--off", (i % 2 ? 1 : -1) * 9 + "px");
-        p.innerHTML = pawSvg(side === "left" ? "#e0607e" : "#9f7fd0");
+        p.innerHTML = pawSvg("#3a3240");
         trail.appendChild(p);
       }
       decor.appendChild(trail);
     });
     const left = document.createElement("div");
     left.className = "zoo-peek zoo-peek--left";
-    left.innerHTML = '<span class="zoo-peek__a">' + animalSvg("panda") + '</span><span class="zoo-peek__b">' + animalSvg("bunny") + "</span>";
+    left.innerHTML = '<span class="zoo-peek__a">' + animalSvg("wolf", "#3a3240") + "</span>";
     decor.appendChild(left);
     const right = document.createElement("div");
     right.className = "zoo-peek zoo-peek--right";
-    right.innerHTML = '<span class="zoo-peek__a">' + animalSvg("fox") + '</span><span class="zoo-peek__b">' + animalSvg("frog") + "</span>";
+    right.innerHTML = '<span class="zoo-peek__a">' + animalSvg("stag", "#3a3240") + "</span>";
     decor.appendChild(right);
     panel.insertBefore(decor, panel.firstChild);
   }
