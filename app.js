@@ -4734,12 +4734,13 @@
       const e = document.createElement("span");
       e.className = "fire-ember";
       const size = 3 + Math.round(Math.random() * 5);
-      e.style.left = (Math.random() * 100).toFixed(1) + "%";
+      // Embers stay in the side strips so the middle stays still for reading
+      e.style.left = (i % 2 ? 1 + Math.random() * 12 : 87 + Math.random() * 12).toFixed(1) + "%";
       e.style.width = size + "px";
       e.style.height = size + "px";
       e.style.setProperty("--dur", (6 + Math.random() * 7).toFixed(1) + "s");
       e.style.setProperty("--delay", (-Math.random() * 13).toFixed(1) + "s");
-      e.style.setProperty("--x", (Math.random() * 60 - 30).toFixed(0) + "px");
+      e.style.setProperty("--x", (Math.random() * 16 - 8).toFixed(0) + "px");
       decor.appendChild(e);
     }
     const edge = document.createElement("div");
@@ -4754,8 +4755,7 @@
     for (let i = 0; i < 10; i += 1) {
       const sp = document.createElement("span");
       sp.className = "fire-spark";
-      const nearSide = Math.random() < 0.7;
-      sp.style.left = (nearSide ? (Math.random() < 0.5 ? 2 + Math.random() * 16 : 82 + Math.random() * 16) : 20 + Math.random() * 60).toFixed(1) + "%";
+      sp.style.left = (i % 2 ? 2 + Math.random() * 11 : 87 + Math.random() * 11).toFixed(1) + "%";
       sp.style.bottom = (4 + Math.random() * 40).toFixed(1) + "%";
       sp.style.setProperty("--dur", (5 + Math.random() * 6).toFixed(1) + "s");
       sp.style.setProperty("--delay", (-Math.random() * 11).toFixed(1) + "s");
