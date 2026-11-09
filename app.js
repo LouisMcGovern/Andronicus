@@ -4392,6 +4392,113 @@
   }
 
   /** Builds the whole Vocabulary panel for one level. Returns a render() to refresh on login/logout. */
+  /**
+   * Vocabulary intro: "Vocabulary" appears, vines grow up from the bottom of
+   * the screen, wrap around it and pull it down, then the game rises in.
+   * Click or press a key to skip. Skipped entirely for reduced motion.
+   */
+  function playVocabIntro(panel) {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const old = document.querySelector(".vine-intro");
+    if (old) old.remove();
+
+    const NS = "http://www.w3.org/2000/svg";
+    const vines = [
+      { d: "M110 1060 C 170 900, 70 800, 190 690 S 270 560, 300 535 c 22 -16 40 0 26 16 c -12 12 -30 2 -20 -12", delay: 0.35 },
+      { d: "M330 1070 C 290 930, 390 830, 345 720 S 375 590, 395 540 c 8 -20 30 -18 26 4 c -4 16 -22 14 -20 0", delay: 0.45 },
+      { d: "M500 1070 C 545 930, 455 840, 505 725 S 470 595, 470 545 c -2 -20 -26 -22 -26 0 c 0 14 18 16 22 4", delay: 0.4 },
+      { d: "M700 1060 C 640 905, 730 800, 610 695 S 540 565, 505 538 c -18 -14 -40 -2 -26 16 c 12 12 30 2 20 -12", delay: 0.5 },
+      { d: "M220 1060 C 250 960, 200 880, 260 800 S 300 640, 255 560", delay: 0.6, thin: true },
+      { d: "M610 1060 C 580 960, 640 880, 575 800 S 520 650, 560 560", delay: 0.65, thin: true }
+    ];
+    const leafColors = ["#5f9461", "#4a7d52", "#78a96f"];
+
+    const overlay = document.createElement("div");
+    overlay.className = "vine-intro";
+    overlay.setAttribute("aria-hidden", "true");
+    const pull = document.createElement("div");
+    pull.className = "vine-intro__pull";
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("class", "vine-intro__vines");
+    svg.setAttribute("viewBox", "0 0 800 1000");
+    svg.setAttribute("preserveAspectRatio", "xMidYMid slice");
+    vines.forEach(function (v) {
+      const path = document.createElementNS(NS, "path");
+      path.setAttribute("d", v.d);
+      path.setAttribute("pathLength", "1");
+      path.setAttribute("class", "vine-intro__vine" + (v.thin ? " vine-intro__vine--thin" : ""));
+      path.style.setProperty("--d", v.delay + "s");
+      svg.appendChild(path);
+    });
+
+    const word = document.createElement("h2");
+    word.className = "vine-intro__word";
+    const inner = document.createElement("span");
+    inner.className = "vine-intro__word-inner";
+    Array.from(I18n.t("learning_tab_vocab")).forEach(function (ch, i) {
+      const sp = document.createElement("span");
+      sp.textContent = ch === " " ? " " : ch;
+      sp.style.setProperty("--i", String(i));
+      inner.appendChild(sp);
+    });
+    word.appendChild(inner);
+
+    pull.appendChild(svg);
+    pull.appendChild(word);
+    overlay.appendChild(pull);
+    document.body.appendChild(overlay);
+
+    // Leaves sprout along each vine as it grows past them
+    svg.querySelectorAll(".vine-intro__vine").forEach(function (path, vi) {
+      const v = vines[vi];
+      const len = path.getTotalLength();
+      const count = v.thin ? 4 : 7;
+      for (let k = 1; k <= count; k += 1) {
+        const f = 0.08 + (k / (count + 1)) * 0.82;
+        const a = path.getPointAtLength(len * f);
+        const b = path.getPointAtLength(Math.min(len, len * f + 2));
+        const ang = (Math.atan2(b.y - a.y, b.x - a.x) * 180) / Math.PI;
+        const side = k % 2 ? 1 : -1;
+        const g = document.createElementNS(NS, "g");
+        g.setAttribute("transform", "translate(" + a.x + " " + a.y + ") rotate(" + (ang + 90 * side) + ")");
+        const leaf = document.createElementNS(NS, "path");
+        const size = v.thin ? 0.7 : 1;
+        leaf.setAttribute("d", "M0 0 q " + 9 * size + " " + -10 * size + " 0 " + -24 * size + " q " + -9 * size + " " + 10 * size + " 0 " + 24 * size + "z");
+        leaf.setAttribute("fill", leafColors[(vi + k) % leafColors.length]);
+        leaf.setAttribute("class", "vine-intro__leaf");
+        leaf.style.setProperty("--d", (v.delay + f * 0.9).toFixed(2) + "s");
+        g.appendChild(leaf);
+        svg.appendChild(g);
+      }
+    });
+
+    const shell = panel && panel.querySelector(".lh-vocab");
+    if (shell) {
+      shell.classList.remove("vp-reveal");
+      shell.style.opacity = "0";
+    }
+    let finished = false;
+    function reveal() {
+      if (!shell) return;
+      shell.style.opacity = "";
+      void shell.offsetWidth;
+      shell.classList.add("vp-reveal");
+    }
+    const revealTimer = setTimeout(reveal, 2250);
+    function finish() {
+      if (finished) return;
+      finished = true;
+      clearTimeout(revealTimer);
+      clearTimeout(endTimer);
+      document.removeEventListener("keydown", finish);
+      overlay.remove();
+      if (shell && shell.style.opacity === "0") reveal();
+    }
+    const endTimer = setTimeout(finish, 2850);
+    overlay.addEventListener("click", finish);
+    document.addEventListener("keydown", finish);
+  }
+
   function mountVocabPath(root, level, panel, onLevelProgressChange) {
     const bank = buildVocabBank(level);
     const total = bank.order.length;
@@ -8647,7 +8754,12 @@
       let dictationView = null;
       const wordsPanelEl = root.querySelector('[data-tool-panel="words"]');
 
+      let currentTab = null;
       function activateTab(name) {
+        if (name === "vocab" && currentTab !== "vocab") {
+          playVocabIntro(root.querySelector('[data-tool-panel="vocab"]'));
+        }
+        currentTab = name;
         workspaceTabs.forEach(function (b) {
           const on = b.getAttribute("data-tool") === name;
           b.classList.toggle("is-active", on);
@@ -8677,6 +8789,7 @@
       function enterSection(tabName) {
         window.scrollTo({ top: 0, behavior: "instant" });
         root.classList.add("is-locked");
+        if (levelLanding && !levelLanding.classList.contains("hidden")) currentTab = null;
         if (levelLanding) levelLanding.classList.add("hidden");
         if (hubWorkspace) hubWorkspace.classList.remove("hidden");
         activateTab(tabName || "flashcards");

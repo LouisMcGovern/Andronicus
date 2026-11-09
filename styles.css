@@ -8954,3 +8954,226 @@ body.wr-open .pts {
   color: #ffffff;
   text-shadow: none;
 }
+
+/* ==========================================================================
+   Vocabulary – forest surround (Nov 2026)
+   ========================================================================== */
+.lh-vocab.vp .vp-card {
+  position: relative;
+  overflow: hidden;
+  padding-top: 2.1rem;
+  padding-bottom: 2.4rem;
+  border-color: #b9cdb0;
+  background:
+    radial-gradient(120% 60% at 50% 0%, rgba(255, 255, 255, 0.7) 0%, transparent 70%),
+    linear-gradient(180deg, #eef4ea 0%, #e1ebdb 100%);
+  box-shadow: 0 1px 2px rgba(30, 58, 40, 0.06), 0 8px 24px rgba(30, 58, 40, 0.08);
+}
+
+/* Leafy garland across the top of the card */
+.lh-vocab.vp .vp-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1.9rem;
+  pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='34' viewBox='0 0 160 34'%3E%3Cpath d='M0 8 C 25 18, 55 -2, 80 8 S 135 18, 160 8' fill='none' stroke='%233f6e4a' stroke-width='2.4' stroke-linecap='round'/%3E%3Cpath d='M14 12 q 6 10 -2 18 q -6 -10 2 -18z' fill='%235f9461'/%3E%3Cpath d='M38 6 q 9 6 6 16 q -9 -6 -6 -16z' fill='%234a7d52'/%3E%3Cpath d='M62 4 q -2 11 -11 14 q 2 -11 11 -14z' fill='%2378a96f'/%3E%3Cpath d='M92 10 q 7 9 1 19 q -7 -9 -1 -19z' fill='%235f9461'/%3E%3Cpath d='M116 13 q 9 4 9 14 q -9 -4 -9 -14z' fill='%234a7d52'/%3E%3Cpath d='M140 8 q -1 10 -10 14 q 1 -10 10 -14z' fill='%2378a96f'/%3E%3C/svg%3E") repeat-x 0 0 / 160px 34px;
+}
+
+/* Ferns rising from the bottom corners */
+.lh-vocab.vp .vp-card::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 5.5rem;
+  pointer-events: none;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='110' height='90' viewBox='0 0 110 90'%3E%3Cpath d='M6 90 C 14 60, 30 34, 62 14' fill='none' stroke='%233f6e4a' stroke-width='2.2' stroke-linecap='round'/%3E%3Cg fill='%235f9461'%3E%3Cpath d='M12 74 q -10 -6 -12 -18 q 12 4 12 18z'/%3E%3Cpath d='M14 70 q 12 -2 18 6 q -12 4 -18 -6z'/%3E%3Cpath d='M20 56 q -10 -8 -10 -20 q 12 6 10 20z'/%3E%3Cpath d='M23 52 q 12 -4 20 3 q -12 5 -20 -3z'/%3E%3Cpath d='M32 40 q -8 -9 -6 -20 q 10 8 6 20z'/%3E%3Cpath d='M35 37 q 11 -6 19 0 q -10 6 -19 0z'/%3E%3Cpath d='M46 27 q -5 -9 -1 -18 q 8 8 1 18z'/%3E%3Cpath d='M49 25 q 9 -6 16 -2 q -8 6 -16 2z'/%3E%3C/g%3E%3Cpath d='M40 90 C 44 74, 52 64, 70 56' fill='none' stroke='%234a7d52' stroke-width='1.8' stroke-linecap='round'/%3E%3Cg fill='%2378a96f'%3E%3Cpath d='M46 76 q 8 -6 16 -2 q -8 6 -16 2z'/%3E%3Cpath d='M44 78 q -6 -8 -4 -16 q 8 6 4 16z'/%3E%3Cpath d='M56 64 q 7 -6 14 -3 q -7 6 -14 3z'/%3E%3C/g%3E%3C/svg%3E") no-repeat left bottom / auto 100%,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='110' height='90' viewBox='0 0 110 90'%3E%3Cg transform='translate(110 0) scale(-1 1)'%3E%3Cpath d='M6 90 C 14 60, 30 34, 62 14' fill='none' stroke='%233f6e4a' stroke-width='2.2' stroke-linecap='round'/%3E%3Cg fill='%234a7d52'%3E%3Cpath d='M12 74 q -10 -6 -12 -18 q 12 4 12 18z'/%3E%3Cpath d='M14 70 q 12 -2 18 6 q -12 4 -18 -6z'/%3E%3Cpath d='M20 56 q -10 -8 -10 -20 q 12 6 10 20z'/%3E%3Cpath d='M23 52 q 12 -4 20 3 q -12 5 -20 -3z'/%3E%3Cpath d='M32 40 q -8 -9 -6 -20 q 10 8 6 20z'/%3E%3Cpath d='M35 37 q 11 -6 19 0 q -10 6 -19 0z'/%3E%3Cpath d='M46 27 q -5 -9 -1 -18 q 8 8 1 18z'/%3E%3Cpath d='M49 25 q 9 -6 16 -2 q -8 6 -16 2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") no-repeat right bottom / auto 100%;
+  opacity: 0.85;
+}
+
+.lh-vocab.vp .vp-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.lh-vocab.vp .vp-title { color: #1f4a33; }
+.lh-vocab.vp .vp-meta,
+.lh-vocab.vp .vp-level__lab { color: #557258; }
+.lh-vocab.vp .vp-level__dot { background: #d2dfcb; }
+.lh-vocab.vp .vp-level__dot.is-on { background: #3f7a52; }
+.lh-vocab.vp .vp-bar { background: #d6e3cf; }
+.lh-vocab.vp .vp-bar__fill { background: #3f7a52; }
+.lh-vocab.vp .vp-pending { color: #2f6b47; }
+
+/* The clearing where the question sits */
+.lh-vocab.vp .vp-play,
+.lh-vocab.vp .vp-look,
+.lh-vocab.vp .vp-done {
+  margin-top: 1.1rem;
+  padding: 1.15rem 1rem 1.25rem;
+  border-radius: 0.7rem;
+  background: rgba(253, 255, 251, 0.82);
+  border: 1px solid #cddbc6;
+  box-shadow: 0 2px 10px rgba(30, 58, 40, 0.06);
+}
+.lh-vocab.vp .vp-instruction { color: #557258; }
+.lh-vocab.vp .vp-word { color: #1b3426; }
+.lh-vocab.vp .vp-word.is-review { color: #2f7451; }
+
+.lh-vocab.vp .vp-option {
+  border-color: #c6d6bf;
+  background: #f8fbf5;
+  color: #1b3426;
+}
+.lh-vocab.vp .vp-option:hover:not(:disabled) {
+  border-color: #3f7a52;
+  background: #ffffff;
+}
+.lh-vocab.vp .vp-option__key {
+  background: #e1ebdb;
+  color: #3d5e3a;
+}
+.lh-vocab.vp .vp-option.is-correct { border-color: #2f8a5b; background: #e2f4ea; }
+.lh-vocab.vp .vp-option.is-correct .vp-option__key { background: #2f8a5b; color: #fff; }
+.lh-vocab.vp .vp-option.is-wrong { border-color: #c0392b; background: #fdeeee; }
+.lh-vocab.vp .vp-option.is-wrong .vp-option__key { background: #c0392b; color: #fff; }
+
+.lh-vocab.vp .vp-feedback { color: #557258; }
+.lh-vocab.vp .vp-feedback--ok { color: #1d6a43; }
+.lh-vocab.vp .vp-feedback--wrong { color: #a12626; }
+.lh-vocab.vp .vp-foot { color: #6b8670; }
+
+.lh-vocab.vp .btn-primary {
+  background: #2f7451;
+  color: #eef6ef;
+}
+.lh-vocab.vp .btn-primary:hover { background: #3f8a60; }
+.lh-vocab.vp .vp-lookback-btn {
+  color: #2f6b47;
+  text-decoration-color: rgba(47, 107, 71, 0.35);
+}
+.lh-vocab.vp .vp-look__arrow,
+.lh-vocab.vp .vp-look__count { color: #557258; }
+.lh-vocab.vp .vp-look__q { color: #1b3426; }
+.lh-vocab.vp .vp-look__step {
+  border-color: #c6d6bf;
+  background: #f1f6ee;
+  color: #2f6b47;
+}
+
+/* ==========================================================================
+   Vocabulary – vine intro: the word appears, vines grow up and pull it down
+   ========================================================================== */
+.vine-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  overflow: hidden;
+  cursor: pointer;
+  background:
+    radial-gradient(80% 60% at 50% 45%, #f1f6ee 0%, transparent 75%),
+    linear-gradient(180deg, #e3ecdf 0%, #c9dbc5 100%);
+  animation: vine-bg-in 0.35s ease both, vine-bg-out 0.5s ease 2.3s forwards;
+}
+
+.vine-intro__pull {
+  position: absolute;
+  inset: 0;
+  animation: vine-pull 0.85s cubic-bezier(0.55, 0, 0.75, 0.2) 1.6s forwards;
+}
+
+.vine-intro__vines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.vine-intro__vine {
+  fill: none;
+  stroke: #3f6e4a;
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  animation: vine-grow 0.95s cubic-bezier(0.3, 0.1, 0.3, 1) both;
+  animation-delay: var(--d, 0.35s);
+}
+.vine-intro__vine--thin {
+  stroke: #5a8a5c;
+  stroke-width: 4;
+}
+
+.vine-intro__leaf {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  transform: scale(0);
+  animation: vine-leaf 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation-delay: var(--d, 0.6s);
+}
+
+.vine-intro__word {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  font-family: "Libre Baskerville", Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(2.6rem, 9vw, 6.5rem);
+  letter-spacing: 0.01em;
+  color: #1f4a33;
+  white-space: nowrap;
+  text-shadow: 0 2px 0 rgba(255, 255, 255, 0.6);
+}
+
+.vine-intro__word span {
+  display: inline-block;
+  opacity: 0;
+  animation: vine-letter 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--i) * 0.03s);
+}
+
+/* The tug just before the vines yank it down */
+.vine-intro__word-inner {
+  display: inline-block;
+  animation: vine-tug 0.3s ease-in-out 1.25s both;
+}
+
+/* The game rises in as the clearing opens */
+.vp-reveal {
+  animation: vp-reveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes vine-bg-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes vine-bg-out { to { opacity: 0; visibility: hidden; } }
+@keyframes vine-grow {
+  0% { stroke-dashoffset: 1; opacity: 0; }
+  4% { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 1; }
+}
+@keyframes vine-leaf { to { transform: scale(1); } }
+@keyframes vine-letter {
+  from { opacity: 0; transform: translateY(0.35em); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes vine-tug {
+  0%, 100% { transform: none; }
+  30% { transform: translateY(0.06em) rotate(-1deg); }
+  65% { transform: translateY(-0.03em) rotate(0.8deg); }
+}
+@keyframes vine-pull {
+  to { transform: translateY(115vh); }
+}
+@keyframes vp-reveal {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vine-intro { display: none; }
+  .vp-reveal { animation: none; }
+}
