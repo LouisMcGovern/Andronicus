@@ -10752,7 +10752,7 @@
     } else {
       document.body.classList.add("intro-running");
       document.body.style.overflow = "hidden";
-      introFallback = setTimeout(endIntroSequence, 5000);
+      introFallback = setTimeout(endIntroSequence, 4000);
 
       var introTitle = document.querySelector(".intro-title");
       var realH1     = document.querySelector(".site-title");
@@ -10765,8 +10765,8 @@
         requestAnimationFrame(function () {
           if (introTitle) {
             introTitle.style.transition =
-              "opacity 600ms cubic-bezier(0.25, 0.46, 0.45, 0.94)," +
-              "filter  600ms cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+              "opacity 450ms cubic-bezier(0.25, 0.46, 0.45, 0.94)," +
+              "filter  450ms cubic-bezier(0.25, 0.46, 0.45, 0.94)";
             introTitle.style.opacity = "1";
             introTitle.style.filter  = "blur(0px)";
           }
@@ -10780,7 +10780,7 @@
         if (!introTitle || !realH1) { endIntroSequence(); return; }
 
         // Phase 3 starts at 1400 ms from page-load
-        var phase3Wait = Math.max(0, 1400 - (Date.now() - introStart));
+        var phase3Wait = Math.max(0, 900 - (Date.now() - introStart));
 
         setTimeout(function () {
           // ── Phase 3: title relocates to h1 position (800 ms) ──────────
@@ -10799,7 +10799,7 @@
           // tx is forced to 0 — both elements are horizontally centred.
           var ty = (hRect.top - iRect.top) / scale;
 
-          introTitle.style.transition = "transform 800ms cubic-bezier(0.76, 0, 0.24, 1)";
+          introTitle.style.transition = "transform 600ms cubic-bezier(0.76, 0, 0.24, 1)";
           introTitle.style.transform  = "scale(" + scale + ") translate(0," + ty + "px)";
 
           // ── Phase 4: element entrances (starts 800 ms after Phase 3) ──
@@ -10885,9 +10885,9 @@
               var spans = stamp.querySelectorAll("span");
               spans.forEach(function (sp, i) {
                 setTimeout(function () {
-                  sp.style.transition = "opacity 300ms ease";
+                  sp.style.transition = "opacity 250ms ease";
                   sp.style.opacity    = "1";
-                }, Math.max(0, 2200 - age) + i * 30);
+                }, Math.max(0, 1500 - age) + i * 20);
               });
             }
 
@@ -10895,22 +10895,22 @@
             if (tagline) {
               setTimeout(function () {
                 tagline.style.transition =
-                  "opacity 500ms ease," +
-                  "transform 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+                  "opacity 400ms ease," +
+                  "transform 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94)";
                 tagline.style.opacity   = "1";
                 tagline.style.transform = "translateY(0)";
-              }, Math.max(0, 2500 - age));
+              }, Math.max(0, 1700 - age));
             }
 
             // 3. Divider line — draws left to right (from 2700 ms, 400 ms)
             if (rule) {
               setTimeout(function () {
                 rule.style.transition =
-                  "transform 400ms cubic-bezier(0.4, 0, 0.2, 1)," +
-                  "opacity 400ms ease";
+                  "transform 350ms cubic-bezier(0.4, 0, 0.2, 1)," +
+                  "opacity 350ms ease";
                 rule.style.opacity   = "1";
                 rule.style.transform = "scaleX(1)";
-              }, Math.max(0, 2700 - age));
+              }, Math.max(0, 1850 - age));
             }
 
             // 4. Banner — slides in from left (from 2900 ms, 400 ms)
@@ -10921,7 +10921,7 @@
                   "transform 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94)";
                 banner.style.opacity   = "1";
                 banner.style.transform = "translateX(0)";
-              }, Math.max(0, 2900 - age));
+              }, Math.max(0, 1950 - age));
             }
 
             // 5. Nav cards — flip up from rotateX(15°), 80 ms stagger (from 3000 ms)
@@ -10932,11 +10932,11 @@
                   "transform 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94)";
                 card.style.opacity   = "1";
                 card.style.transform = "perspective(800px) rotateX(0deg)";
-              }, Math.max(0, 3000 - age) + i * 80);
+              }, Math.max(0, 2000 - age) + i * 60);
             });
             // ──────────────────────────────────────────────────────────
 
-          }, 800); // Phase 3 animation duration
+          }, 600); // Phase 3 animation duration
 
         }, phase3Wait);
       });

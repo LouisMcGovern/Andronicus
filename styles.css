@@ -298,13 +298,13 @@ body.content-panel-open .panel-toolbar {
   justify-content: center;
   background: #c6dded; /* warm parchment — matches hero panel */
   pointer-events: none;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.3s ease;
 }
 
 .intro-overlay.is-done {
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.4s ease, visibility 0s linear 0.4s;
+  transition: opacity 0.3s ease, visibility 0s linear 0.3s;
 }
 
 /* Cinematic intro title — Phase 1 starts at opacity:0 blur:8px, JS transitions in */
