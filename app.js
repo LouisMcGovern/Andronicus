@@ -533,7 +533,7 @@
           { front: "Kitchen", back: "Cuisine" },
           { front: "Bedroom", back: "Chambre" },
           { front: "Library", back: "Bibliothèque" },
-          { front: "Crossroad", back: "Carrefour" },
+          { front: "Crossroads", back: "Carrefour" },
           { front: "Neighbourhood", back: "Quartier" },
           { front: "Traffic lights", back: "Feux de circulation" },
           { front: "Bus stop", back: "Arrêt de bus" },
@@ -564,7 +564,7 @@
           { front: "Trolley", back: "Caddie" },
           { front: "Cashier", back: "Caissier / caissière" },
           { front: "Credit card", back: "Carte bancaire" },
-          { front: "Cash", back: "Liquide" },
+          { front: "Cash", back: "Espèces / liquide" },
           { front: "Change (money)", back: "Monnaie" },
           { front: "Discount", back: "Réduction" },
           { front: "Special offer", back: "Promotion" },
@@ -4286,7 +4286,70 @@
     ["To see eye to eye", "To be on the same page"],
     ["To be in the same boat", "To be under pressure"],
     ["The last straw", "To add insult to injury"],
+    // Added after a full read-through: pairs where the "wrong" option could also be right
+    ["Thank you", "Cheers"],
+    ["Goodbye", "See you later", "See you soon", "See you around", "Speak soon"],
+    ["Sorry", "Excuse me"],
+    ["Rug", "Carpet"],
+    ["Gym", "Gym hall"],
+    ["Run", "Jogging"],
+    ["Toilet", "Bathroom"],
+    ["Pan", "Saucepan"],
+    ["Detention", "Punishment"],
+    ["Duvet", "Blanket"],
+    ["Tidy", "To tidy up", "Clear up"],
+    ["Comfortable", "Cosy"],
+    ["To throw", "Throw away"],
+    ["Give in", "Give up", "Back down"],
+    ["Sort out", "Deal with"],
+    ["Make an effort", "Do your best", "Go the extra mile"],
+    ["Make sense", "That makes sense"],
+    ["I'm not sure", "I doubt it"],
+    ["Provided that", "As long as"],
+    ["Awkward", "Embarrassing"],
+    ["Daunting", "Overwhelming", "Tricky"],
+    ["Irrelevant", "Pointless"],
+    ["Stubborn", "Narrow-minded"],
+    ["Widespread", "Mainstream"],
+    ["Unprecedented", "Groundbreaking"],
+    ["Admittedly", "Fair enough"],
+    ["Let alone", "Not to mention"],
+    ["Regardless of", "Despite"],
+    ["The bottom line is", "Ultimately", "All in all"],
+    ["To back up a claim", "To make a case for"],
+    ["To overlook", "To underestimate"],
+    ["To shift", "To fluctuate"],
+    ["To prompt", "To urge", "To trigger"],
+    ["To rule out", "To dismiss an idea"],
+    ["To touch base", "To follow up"],
+    ["Headline", "Breaking news"],
+    ["To get the hang of something", "To know the ropes"],
+    ["A piece of cake", "It's not rocket science"],
+    ["To have a lot on your plate", "To be under pressure", "To burn the midnight oil"],
+    ["To be a pain in the neck", "To get on someone's nerves"],
+    ["To cost an arm and a leg", "Overpriced"],
+    ["To speak your mind", "Outspoken"],
+    ["To keep your fingers crossed", "Hopefully"],
+    ["To get cold feet", "To have second thoughts"],
   ];
+
+  // French words that look like ordinary English words with a different meaning
+  // ("Four" = oven, "But" = goal, "Reporter" = put off). Shown on their own under
+  // "How do you say this in English?" they read as English, so these are only ever
+  // asked from English to French.
+  const VOCAB_FR_LOOKALIKES = [
+    "Oven", "Goal", "Everything", "Square", "Bill", "Kitchen", "Cupboard", "Saucepan",
+    "Blinds", "Mark / grade", "Towel", "Registration", "Jogging", "Trolley", "Physics",
+    "Map", "Living room", "Eat", "Novel", "Dirty", "Boss", "Trainers", "Exhibition",
+    "Opportunity", "Put off", "Internship", "Clear up", "To tidy up", "Wear out",
+    "Look into", "To kick", "Put up with", "Look up to", "Training course", "Bonus",
+    "Merger", "Eager", "Protest", "Competitor", "To vote", "Sustainable", "To postpone",
+    "Pitch", "Office", "Punishment"
+  ];
+  const vocabFrLookalike = {};
+  VOCAB_FR_LOOKALIKES.forEach(function (en) {
+    vocabFrLookalike[vocabNormalize(en)] = true;
+  });
   const vocabSynonymOf = {};
   VOCAB_SYNONYM_GROUPS.forEach(function (group, gi) {
     group.forEach(function (en) {
@@ -4342,7 +4405,7 @@
     const word = bank.byKey[key];
     const t = vocabDifficulty(bank, key);
     // Early on: see the English, pick the French. Gradually more "say it in English".
-    const toEnglish = vocabHash(key + "|" + lap) < 0.15 + 0.6 * t;
+    const toEnglish = !vocabFrLookalike[key] && vocabHash(key + "|" + lap) < 0.15 + 0.6 * t;
     const answerField = toEnglish ? "en" : "fr";
     const optionCount = t < 0.12 ? 3 : 4;
 
