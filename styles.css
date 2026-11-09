@@ -8825,3 +8825,132 @@ body.wr-open .pts {
 #content-advanced .btn-level-back:focus-visible {
   outline-color: var(--lvl);
 }
+
+/* ==========================================================================
+   Vocabulary – stepping stones as stone tiles (Nov 2026 restyle)
+   Moves the game away from the site blue: mossy water, hewn grey slabs.
+   ========================================================================== */
+.vp-river {
+  position: relative;
+  padding: 1.7rem 0.6rem 1.1rem;
+  border-radius: 0.5rem;
+  background:
+    repeating-linear-gradient(172deg, transparent 0 14px, rgba(255, 255, 255, 0.16) 14px 15px, transparent 15px 34px),
+    radial-gradient(120% 90% at 50% 120%, #6f9a8c 0%, transparent 70%),
+    linear-gradient(180deg, #a9c4b8 0%, #8fb0a3 100%);
+  box-shadow: inset 0 2px 6px rgba(30, 55, 48, 0.18);
+}
+
+.vp-stones {
+  gap: clamp(0.4rem, 1.7vw, 0.95rem);
+}
+
+.vp-stone {
+  --stone: #cfccc6;
+  --stone-dark: #a9a59e;
+  width: clamp(2.4rem, 7.2vw, 3.5rem);
+  height: clamp(1.7rem, 4.8vw, 2.35rem);
+  border-radius: 34% 46% 38% 42% / 44% 36% 48% 40%;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -4px 0 rgba(0, 0, 0, 0.16),
+    0 3px 0 rgba(40, 60, 54, 0.35),
+    0 6px 10px rgba(30, 50, 44, 0.2);
+}
+
+.vp-stone,
+.vp-stone.is-crossed,
+.vp-stone.is-here,
+.vp-stone.is-goal,
+.vp-stone.is-looking {
+  background:
+    radial-gradient(circle at 22% 30%, rgba(255, 255, 255, 0.35) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 68% 62%, rgba(0, 0, 0, 0.13) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 80% 26%, rgba(0, 0, 0, 0.1) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 38% 78%, rgba(255, 255, 255, 0.28) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 55% 40%, rgba(0, 0, 0, 0.08) 0 2px, transparent 2.5px),
+    linear-gradient(118deg, transparent 0 58%, rgba(0, 0, 0, 0.12) 58% 59.5%, transparent 59.5%),
+    linear-gradient(160deg, var(--stone) 0%, var(--stone-dark) 100%);
+}
+
+/* Each slab a slightly different cut, so the row doesn't look stamped */
+.vp-stone:nth-child(3n + 1) {
+  border-radius: 42% 36% 46% 34% / 38% 46% 36% 48%;
+}
+.vp-stone:nth-child(3n + 2) {
+  border-radius: 30% 44% 34% 48% / 48% 40% 44% 34%;
+}
+.vp-stone:nth-child(odd) {
+  transform: translateY(-0.35rem) rotate(-2deg);
+}
+.vp-stone:nth-child(even) {
+  transform: rotate(1.5deg);
+}
+
+.vp-stone__num {
+  color: #4f4c47;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+/* Crossed: moss growing on the stone */
+.vp-stone.is-crossed {
+  --stone: #b9cdb0;
+  --stone-dark: #8fab84;
+}
+.vp-stone.is-crossed .vp-stone__num {
+  color: #2e5527;
+}
+
+/* Current stone: bigger, pale and freshly lit */
+.vp-stone.is-here {
+  --stone: #ecebe7;
+  --stone-dark: #c4c0b8;
+  width: clamp(2.9rem, 8.6vw, 4.1rem);
+  height: clamp(2rem, 5.6vw, 2.75rem);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -4px 0 rgba(0, 0, 0, 0.14),
+    0 0 0 3px rgba(255, 255, 255, 0.75),
+    0 4px 0 rgba(40, 60, 54, 0.35),
+    0 8px 14px rgba(30, 50, 44, 0.25);
+}
+.vp-stone.is-here .vp-stone__num {
+  color: #2f2d2a;
+}
+
+/* Goal: deep green slab with the flag */
+.vp-stone.is-goal {
+  --stone: #4f9a70;
+  --stone-dark: #2f7451;
+}
+.vp-stone.is-goal .vp-stone__num {
+  color: #ffffff;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
+}
+
+/* The player marker sits on the stone in green rather than site blue */
+.vp-me {
+  border-color: #2f7451;
+}
+
+/* Look-back states */
+.vp-stone.is-viewable:hover {
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -4px 0 rgba(0, 0, 0, 0.16),
+    0 0 0 3px rgba(255, 255, 255, 0.7),
+    0 6px 10px rgba(30, 50, 44, 0.2);
+}
+.vp-stone.is-looking {
+  --stone: #4f9a70;
+  --stone-dark: #2f7451;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -4px 0 rgba(0, 0, 0, 0.2),
+    0 0 0 3px rgba(255, 255, 255, 0.8),
+    0 6px 10px rgba(30, 50, 44, 0.25);
+}
+.vp-stone.is-looking .vp-stone__num {
+  color: #ffffff;
+  text-shadow: none;
+}
