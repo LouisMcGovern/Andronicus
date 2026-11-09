@@ -3029,7 +3029,10 @@
   }
 
   function renderHomeworkLock(panel, onUnlocked) {
-    panel.innerHTML = "";
+    // Keep any themed background layer; clear everything else
+    Array.from(panel.children).forEach(function (c) {
+      if (!/-decor$/.test(c.className)) c.remove();
+    });
     const box = document.createElement("div");
     box.className = "hw-lock";
     const icon = document.createElement("div");
@@ -4901,11 +4904,11 @@
   }
 
   /**
-   * Grammar intro: a notebook page rules itself, a pencil writes the title,
+   * Homework intro: a notebook page rules itself, a pencil writes the title,
    * the red pen underlines it, then the pencil's eraser rubs it out.
    * Click or press a key to skip. Skipped for reduced motion.
    */
-  function playGrammarIntro(panel) {
+  function playSchoolIntro(panel) {
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const old = document.querySelector(".school-intro");
     if (old) old.remove();
@@ -4920,7 +4923,7 @@
     word.className = "school-intro__word";
     const text = document.createElement("span");
     text.className = "school-intro__text";
-    text.textContent = I18n.t("learning_tab_grammar");
+    text.textContent = I18n.t("learning_tab_homework");
     word.appendChild(text);
     const underline = document.createElement("span");
     underline.className = "school-intro__underline";
@@ -4976,7 +4979,7 @@
     document.addEventListener("keydown", finish);
   }
 
-  /** School doodles drifting up the sides of the grammar panel; the middle stays still. */
+  /** School doodles drifting up the sides of the homework panel; the middle stays still. */
   function addSchoolDecor(panel) {
     if (!panel || panel.querySelector(".school-decor")) return;
     const decor = document.createElement("div");
@@ -5002,6 +5005,129 @@
     const right = document.createElement("div");
     right.className = "school-side school-side--right";
     decor.appendChild(right);
+    panel.insertBefore(decor, panel.firstChild);
+  }
+
+  /** A four-point twinkle star. */
+  function sparkleSvg(color) {
+    return '<svg viewBox="0 0 20 20" width="100%" height="100%"><path d="M10 0 C 11 7, 13 9, 20 10 C 13 11, 11 13, 10 20 C 9 13, 7 11, 0 10 C 7 9, 9 7, 10 0 Z" fill="' + color + '"/></svg>';
+  }
+
+  /**
+   * Grammar intro: stars twinkle in, the title floats among them, a spiral
+   * galaxy opens up behind it and swallows the word in a swirl.
+   * Click or press a key to skip. Skipped for reduced motion.
+   */
+  function playSpaceIntro(panel) {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const old = document.querySelector(".space-intro");
+    if (old) old.remove();
+
+    const overlay = document.createElement("div");
+    overlay.className = "space-intro";
+    overlay.setAttribute("aria-hidden", "true");
+
+    const starColors = ["#3b3a8c", "#7c6fd8", "#c2408f", "#4fb3c8", "#ffffff"];
+    for (let i = 0; i < 46; i += 1) {
+      const st = document.createElement("span");
+      st.className = "space-intro__star";
+      const size = 5 + Math.round(Math.random() * 12);
+      st.style.width = size + "px";
+      st.style.height = size + "px";
+      st.style.left = (Math.random() * 100).toFixed(1) + "%";
+      st.style.top = (Math.random() * 100).toFixed(1) + "%";
+      st.style.setProperty("--d", (Math.random() * 0.6).toFixed(2) + "s");
+      st.style.setProperty("--t", (0.6 + Math.random() * 0.8).toFixed(2) + "s");
+      st.innerHTML = sparkleSvg(starColors[i % starColors.length]);
+      overlay.appendChild(st);
+    }
+
+    const galaxy = document.createElement("div");
+    galaxy.className = "space-intro__galaxy";
+    galaxy.innerHTML =
+      '<svg viewBox="-100 -100 200 200" width="100%" height="100%">' +
+      '<defs><radialGradient id="sgCore"><stop offset="0" stop-color="#ffffff"/><stop offset="0.35" stop-color="#f6c9e6"/><stop offset="1" stop-color="#b9a8f0" stop-opacity="0"/></radialGradient>' +
+      '<linearGradient id="sgArm" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c2408f"/><stop offset="0.5" stop-color="#7c6fd8"/><stop offset="1" stop-color="#4fb3c8"/></linearGradient></defs>' +
+      '<g fill="none" stroke="url(#sgArm)" stroke-linecap="round" opacity="0.85">' +
+      '<path d="M0 0 C 20 -10, 40 0, 45 25 C 50 55, 20 80, -15 80 C -55 80, -85 50, -88 10" stroke-width="7"/>' +
+      '<path d="M0 0 C -20 10, -40 0, -45 -25 C -50 -55, -20 -80, 15 -80 C 55 -80, 85 -50, 88 -10" stroke-width="7"/>' +
+      '<path d="M0 0 C 12 -18, 34 -24, 52 -10 C 72 6, 70 40, 52 58" stroke-width="3" opacity="0.6"/>' +
+      '<path d="M0 0 C -12 18, -34 24, -52 10 C -72 -6, -70 -40, -52 -58" stroke-width="3" opacity="0.6"/>' +
+      '</g><circle r="34" fill="url(#sgCore)"/></svg>';
+    overlay.appendChild(galaxy);
+
+    const word = document.createElement("h2");
+    word.className = "space-intro__word";
+    const inner = document.createElement("span");
+    inner.className = "space-intro__word-inner";
+    Array.from(I18n.t("learning_tab_grammar")).forEach(function (ch, i) {
+      const sp = document.createElement("span");
+      sp.textContent = ch === " " ? " " : ch;
+      sp.style.setProperty("--i", String(i));
+      inner.appendChild(sp);
+    });
+    word.appendChild(inner);
+    overlay.appendChild(word);
+
+    const flash = document.createElement("div");
+    flash.className = "space-intro__flash";
+    overlay.appendChild(flash);
+
+    document.body.appendChild(overlay);
+
+    const shell = panel;
+    if (shell) {
+      shell.classList.remove("space-reveal");
+      shell.style.opacity = "0";
+    }
+    let finished = false;
+    function reveal() {
+      if (!shell) return;
+      shell.style.opacity = "";
+      void shell.offsetWidth;
+      shell.classList.add("space-reveal");
+    }
+    const revealTimer = setTimeout(reveal, 2250);
+    function finish() {
+      if (finished) return;
+      finished = true;
+      clearTimeout(revealTimer);
+      clearTimeout(endTimer);
+      document.removeEventListener("keydown", finish);
+      overlay.remove();
+      if (shell && shell.style.opacity === "0") reveal();
+    }
+    const endTimer = setTimeout(finish, 2850);
+    overlay.addEventListener("click", finish);
+    document.addEventListener("keydown", finish);
+  }
+
+  /** Twinkling stars down the sides of the grammar panel, with a planet and moon resting in the corners. */
+  function addSpaceDecor(panel) {
+    if (!panel || panel.querySelector(".space-decor")) return;
+    const decor = document.createElement("div");
+    decor.className = "space-decor";
+    decor.setAttribute("aria-hidden", "true");
+    const colors = ["#7c6fd8", "#c2408f", "#4fb3c8", "#3b3a8c"];
+    for (let i = 0; i < 18; i += 1) {
+      const st = document.createElement("span");
+      st.className = "space-star";
+      const size = 9 + Math.round(Math.random() * 12);
+      st.style.width = size + "px";
+      st.style.height = size + "px";
+      st.style.left = (i % 2 ? 1.5 + Math.random() * 9 : 89 + Math.random() * 8).toFixed(1) + "%";
+      st.style.top = (4 + Math.random() * 70).toFixed(1) + "%";
+      st.style.setProperty("--dur", (2.5 + Math.random() * 3).toFixed(1) + "s");
+      st.style.setProperty("--delay", (-Math.random() * 5).toFixed(1) + "s");
+      st.innerHTML = sparkleSvg(colors[i % colors.length]);
+      decor.appendChild(st);
+    }
+    const planet = document.createElement("div");
+    planet.className = "space-planet";
+    decor.appendChild(planet);
+    const moon = document.createElement("div");
+    moon.className = "space-moon";
+    decor.appendChild(moon);
     panel.insertBefore(decor, panel.firstChild);
   }
 
@@ -6975,7 +7101,8 @@
     document.body.classList.toggle("ocean-zone", panelOpen("words"));
     document.body.classList.toggle("fire-zone", panelOpen("flashcards"));
     document.body.classList.toggle("music-zone", panelOpen("dictation"));
-    document.body.classList.toggle("school-zone", panelOpen("grammar"));
+    document.body.classList.toggle("school-zone", panelOpen("homework"));
+    document.body.classList.toggle("space-zone", panelOpen("grammar"));
   }
 
   function updateContentBreadcrumb() {
@@ -9287,9 +9414,13 @@
         if (name === "words") addSeaDecor(root.querySelector('[data-tool-panel="words"]'));
         if (name === "flashcards") addFireDecor(root.querySelector('[data-tool-panel="flashcards"]'));
         if (name === "dictation") addMusicDecor(root.querySelector('[data-tool-panel="dictation"]'));
-        if (name === "grammar") addSchoolDecor(root.querySelector('[data-tool-panel="grammar"]'));
+        if (name === "homework") addSchoolDecor(root.querySelector('[data-tool-panel="homework"]'));
+        if (name === "homework" && currentTab !== "homework") {
+          playSchoolIntro(root.querySelector('[data-tool-panel="homework"]'));
+        }
+        if (name === "grammar") addSpaceDecor(root.querySelector('[data-tool-panel="grammar"]'));
         if (name === "grammar" && currentTab !== "grammar") {
-          playGrammarIntro(root.querySelector('[data-tool-panel="grammar"]'));
+          playSpaceIntro(root.querySelector('[data-tool-panel="grammar"]'));
         }
         if (name === "dictation" && currentTab !== "dictation") {
           playDictIntro(root.querySelector('[data-tool-panel="dictation"]'));
@@ -9699,7 +9830,9 @@
 
       const openHwWeeks = Object.create(null);
       function renderHomeworkPanel() {
-        homeworkPanel.innerHTML = "";
+        Array.from(homeworkPanel.children).forEach(function (c) {
+          if (!c.classList.contains("school-decor")) c.remove();
+        });
 
         if (!hasClassAccess()) {
           renderHomeworkLock(homeworkPanel, renderHomeworkPanel);

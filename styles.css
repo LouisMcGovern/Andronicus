@@ -10584,7 +10584,7 @@ body.content-panel-open .tool-panel[data-tool-panel="dictation"],
 #content-advanced .level-landing__card[data-tool="dictation"] .level-landing__card__progress { color: #6f5c98; max-width: calc(100% - 4.5rem); }
 
 /* ==========================================================================
-   Grammar – school intro: the page rules itself, a pencil writes the title,
+   Homework – school intro: the page rules itself, a pencil writes the title,
    the red pen underlines it, then the eraser rubs it out
    ========================================================================== */
 .school-intro {
@@ -10729,7 +10729,7 @@ body .school-intro__word * {
 }
 
 /* ==========================================================================
-   Grammar zone – notebook paper, graphite and red pen while grammar is open
+   Homework zone – notebook paper, graphite and red pen while homework is open
    ========================================================================== */
 body.school-zone {
   --page-bg: #f1f2ef;
@@ -10786,8 +10786,8 @@ body.school-zone .pts-btn { border-color: #d5d8de; color: #23272f; }
 body.school-zone .pts-btn__star { color: #d0453f; }
 
 /* The panel: a ruled notebook page with a red margin */
-body.content-panel-open .tool-panel[data-tool-panel="grammar"],
-.panel--content .tool-panel[data-tool-panel="grammar"] {
+body.content-panel-open .tool-panel[data-tool-panel="homework"],
+.panel--content .tool-panel[data-tool-panel="homework"] {
   position: relative;
   overflow: hidden;
   border-color: #d5d8de;
@@ -10800,11 +10800,11 @@ body.content-panel-open .tool-panel[data-tool-panel="grammar"],
     #fdfdfb;
   box-shadow: 0 1px 2px rgba(35, 39, 47, 0.05), 0 8px 24px rgba(35, 39, 47, 0.06);
 }
-.tool-panel[data-tool-panel="grammar"] > * {
+.tool-panel[data-tool-panel="homework"] > * {
   position: relative;
   z-index: 1;
 }
-.tool-panel[data-tool-panel="grammar"] > .school-decor {
+.tool-panel[data-tool-panel="homework"] > .school-decor {
   position: absolute;
   inset: 0;
   z-index: 0;
@@ -10869,36 +10869,36 @@ body.content-panel-open .tool-panel[data-tool-panel="grammar"],
 }
 
 /* Topic cards and lessons on paper */
-.tool-panel[data-tool-panel="grammar"] .lh-topic-card {
+.tool-panel[data-tool-panel="homework"] .lh-topic-card {
   background: #ffffff;
   border-color: #d5d8de;
 }
-.tool-panel[data-tool-panel="grammar"] .lh-topic-card:hover {
+.tool-panel[data-tool-panel="homework"] .lh-topic-card:hover {
   border-color: #d0453f;
   box-shadow: 0 4px 14px rgba(208, 69, 63, 0.1);
 }
-.tool-panel[data-tool-panel="grammar"] .lh-topic-card--done {
+.tool-panel[data-tool-panel="homework"] .lh-topic-card--done {
   background: #f3faf5;
   border-color: rgba(31, 138, 68, 0.4);
 }
-.tool-panel[data-tool-panel="grammar"] .lh-lesson-card,
-body.content-panel-open .tool-panel[data-tool-panel="grammar"] .lh-lesson-card {
+.tool-panel[data-tool-panel="homework"] .lh-lesson-card,
+body.content-panel-open .tool-panel[data-tool-panel="homework"] .lh-lesson-card {
   background: #ffffff;
   border-color: #d5d8de;
 }
-.tool-panel[data-tool-panel="grammar"] .lh-lesson-section--learn {
+.tool-panel[data-tool-panel="homework"] .lh-lesson-section--learn {
   background: rgba(255, 255, 255, 0.9);
   border-color: #d5d8de;
 }
-.tool-panel[data-tool-panel="grammar"] .lh-lesson-section--practice {
+.tool-panel[data-tool-panel="homework"] .lh-lesson-section--practice {
   background: rgba(255, 255, 255, 0.9);
   border-color: rgba(208, 69, 63, 0.25);
 }
 
-/* Level menu – grammar card on notebook paper */
-#content-beginner .level-landing__card[data-tool="grammar"],
-#content-intermediate .level-landing__card[data-tool="grammar"],
-#content-advanced .level-landing__card[data-tool="grammar"] {
+/* Level menu – homework card on notebook paper */
+#content-beginner .level-landing__card[data-tool="homework"],
+#content-intermediate .level-landing__card[data-tool="homework"],
+#content-advanced .level-landing__card[data-tool="homework"] {
   position: relative;
   overflow: hidden;
   border-color: #d5d8de !important;
@@ -10908,11 +10908,330 @@ body.content-panel-open .tool-panel[data-tool-panel="grammar"] .lh-lesson-card {
     repeating-linear-gradient(180deg, transparent 0 calc(1.45rem - 1px), rgba(120, 140, 170, 0.18) calc(1.45rem - 1px) 1.45rem),
     #fdfdfb;
 }
+#content-beginner .level-landing__card[data-tool="homework"]:hover,
+#content-intermediate .level-landing__card[data-tool="homework"]:hover,
+#content-advanced .level-landing__card[data-tool="homework"]:hover {
+  border-color: #d0453f !important;
+  box-shadow: 0 6px 18px rgba(208, 69, 63, 0.14);
+}
+#content-beginner .level-landing__card[data-tool="homework"] > *,
+#content-intermediate .level-landing__card[data-tool="homework"] > *,
+#content-advanced .level-landing__card[data-tool="homework"] > * { position: relative; z-index: 1; }
+#content-beginner .level-landing__card[data-tool="homework"]::after,
+#content-intermediate .level-landing__card[data-tool="homework"]::after,
+#content-advanced .level-landing__card[data-tool="homework"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='130' height='90' viewBox='0 0 130 90'%3E%3Cg transform='rotate(-24 70 60)'%3E%3Cpath d='M18 60 L34 54 L34 66 Z' fill='%23f2d9c4'/%3E%3Cpath d='M18 60 L24 57.8 L24 62.2 Z' fill='%2323272f'/%3E%3Crect x='34' y='54' width='70' height='12' fill='%23e86a5c'/%3E%3Crect x='34' y='54' width='70' height='4' fill='%23f0897d'/%3E%3Crect x='104' y='53' width='10' height='14' fill='%23b9c0cc'/%3E%3Crect x='114' y='53' width='14' height='14' rx='3' fill='%23f4a3b4'/%3E%3C/g%3E%3Ctext x='18' y='30' font-family='Georgia, serif' font-style='italic' font-size='20' fill='%23d0453f'%3E2+2%3C/text%3E%3Ctext x='70' y='26' font-family='Georgia, serif' font-style='italic' font-size='18' fill='%235f6672'%3EAbc%3C/text%3E%3C/svg%3E") no-repeat right 0.3rem bottom 0.2rem / auto 4.4rem;
+}
+#content-beginner .level-landing__card[data-tool="homework"] .level-landing__card__icon,
+#content-intermediate .level-landing__card[data-tool="homework"] .level-landing__card__icon,
+#content-advanced .level-landing__card[data-tool="homework"] .level-landing__card__icon { color: #d0453f; }
+#content-beginner .level-landing__card[data-tool="homework"] .level-landing__card__label,
+#content-intermediate .level-landing__card[data-tool="homework"] .level-landing__card__label,
+#content-advanced .level-landing__card[data-tool="homework"] .level-landing__card__label { color: #23272f; }
+#content-beginner .level-landing__card[data-tool="homework"] .level-landing__card__hint,
+#content-intermediate .level-landing__card[data-tool="homework"] .level-landing__card__hint,
+#content-advanced .level-landing__card[data-tool="homework"] .level-landing__card__hint,
+#content-beginner .level-landing__card[data-tool="homework"] .level-landing__card__progress,
+#content-intermediate .level-landing__card[data-tool="homework"] .level-landing__card__progress,
+#content-advanced .level-landing__card[data-tool="homework"] .level-landing__card__progress { color: #5f6672; max-width: calc(100% - 4.5rem); }
+
+/* ==========================================================================
+   Grammar – space intro: stars twinkle in, a galaxy opens behind the title
+   and swirls it away
+   ========================================================================== */
+.space-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  overflow: hidden;
+  cursor: pointer;
+  background:
+    radial-gradient(45% 40% at 78% 22%, rgba(246, 201, 230, 0.75), transparent 70%),
+    radial-gradient(45% 45% at 18% 78%, rgba(186, 230, 240, 0.7), transparent 70%),
+    radial-gradient(60% 50% at 50% 50%, rgba(215, 200, 245, 0.6), transparent 75%),
+    linear-gradient(180deg, #f0eefb 0%, #dedbf4 100%);
+  animation: space-bg-in 0.3s ease both, space-bg-out 0.5s ease 2.3s forwards;
+}
+.space-intro__star {
+  position: absolute;
+  opacity: 0;
+  animation:
+    space-star-in 0.4s ease-out var(--d, 0s) forwards,
+    space-twinkle var(--t, 1s) ease-in-out calc(var(--d, 0s) + 0.4s) infinite alternate;
+}
+.space-intro__star svg { display: block; }
+
+.space-intro__galaxy {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(80vw, 80vh);
+  height: min(80vw, 80vh);
+  margin: calc(min(80vw, 80vh) / -2) 0 0 calc(min(80vw, 80vh) / -2);
+  transform: scale(0) rotate(0deg);
+  opacity: 0;
+  animation:
+    space-galaxy-open 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.55s forwards,
+    space-galaxy-close 0.45s cubic-bezier(0.55, 0, 0.8, 0.3) 1.75s forwards;
+}
+
+.space-intro__word {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  font-weight: 400;
+  font-size: clamp(2.6rem, 9vw, 6.5rem);
+  color: #23214f;
+  white-space: nowrap;
+  text-shadow: 0 2px 0 rgba(255, 255, 255, 0.7), 0 0 24px rgba(255, 255, 255, 0.8);
+}
+.space-intro__word-inner > span {
+  display: inline-block;
+  opacity: 0;
+  animation: space-letter 0.45s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i) * 0.03s) forwards;
+}
+.space-intro__word-inner {
+  display: inline-block;
+  animation:
+    space-float 0.9s ease-in-out 0.3s both,
+    space-swirl 0.6s cubic-bezier(0.55, 0, 0.75, 0.3) 1.25s forwards;
+}
+
+.space-intro__flash {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 40vmin;
+  height: 40vmin;
+  margin: -20vmin 0 0 -20vmin;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffffff 0%, rgba(246, 201, 230, 0.8) 35%, transparent 70%);
+  opacity: 0;
+  transform: scale(0.2);
+  animation: space-flash 0.5s ease-out 1.8s forwards;
+}
+
+.space-reveal {
+  animation: vp-reveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes space-bg-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes space-bg-out { to { opacity: 0; visibility: hidden; } }
+@keyframes space-star-in {
+  from { opacity: 0; transform: scale(0); }
+  to { opacity: 0.85; transform: scale(1); }
+}
+@keyframes space-twinkle {
+  from { opacity: 0.85; transform: scale(1) rotate(0deg); }
+  to { opacity: 0.35; transform: scale(0.7) rotate(20deg); }
+}
+@keyframes space-galaxy-open {
+  to { transform: scale(1) rotate(-200deg); opacity: 1; }
+}
+@keyframes space-galaxy-close {
+  from { transform: scale(1) rotate(-200deg); opacity: 1; }
+  to { transform: scale(0.1) rotate(-520deg); opacity: 0; }
+}
+@keyframes space-letter {
+  from { opacity: 0; transform: translateY(0.35em); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes space-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-0.08em) rotate(-1deg); }
+}
+@keyframes space-swirl {
+  to { transform: scale(0.05) rotate(-540deg); opacity: 0; filter: blur(3px); }
+}
+@keyframes space-flash {
+  0% { opacity: 0; transform: scale(0.2); }
+  35% { opacity: 1; }
+  100% { opacity: 0; transform: scale(1.6); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .space-intro { display: none; }
+  .space-reveal { animation: none; }
+}
+
+body .space-intro__word,
+body .space-intro__word * {
+  font-family: "Libre Baskerville", Georgia, serif !important;
+}
+
+/* ==========================================================================
+   Grammar zone – a light twilight galaxy while grammar is open
+   ========================================================================== */
+body.space-zone {
+  --page-bg: #e9e8f6;
+  --surface: #f6f5fc;
+  --surface-elevated: #ebe9f8;
+  --border: #c9c5e8;
+  --accent: #b63a86;
+  --accent-strong: #c2408f;
+  --accent-soft: rgba(194, 64, 143, 0.1);
+  --ink-heading: #23214f;
+  --text: #24234a;
+  --readable-body: #37355f;
+  --muted: #5e5b8a;
+  --chrome-bg: #efeefa;
+  --chrome-border: #c9c5e8;
+  --chrome-btn-border: rgba(35, 33, 79, 0.2);
+  --chrome-btn-text: #23214f;
+  --chrome-btn-hover: rgba(124, 111, 216, 0.08);
+  --chrome-btn-active-bg: #c2408f;
+  --chrome-btn-active-border: #b63a86;
+  background: #e9e8f6;
+}
+body.space-zone::before {
+  background:
+    radial-gradient(ellipse 50% 40% at 85% 10%, rgba(246, 201, 230, 0.4), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 5% 95%, rgba(186, 230, 240, 0.35), transparent 60%);
+}
+body.space-zone.content-panel-open .panel-toolbar,
+body.space-zone .content-breadcrumb {
+  background: #efeefa;
+  border-bottom-color: #c9c5e8;
+}
+body.space-zone .content-breadcrumb { color: #5e5b8a; }
+body.space-zone .content-breadcrumb__current { color: #23214f; }
+body.space-zone.content-panel-open .panel--content {
+  background:
+    radial-gradient(50% 40% at 100% 0%, rgba(246, 201, 230, 0.35), transparent 70%),
+    radial-gradient(50% 40% at 0% 100%, rgba(186, 230, 240, 0.3), transparent 70%),
+    #e9e8f6;
+}
+body.space-zone .level-article,
+body.space-zone .level-article#content-beginner,
+body.space-zone .level-article#content-intermediate,
+body.space-zone .level-article#content-advanced {
+  background: transparent;
+  padding-top: 1.1rem;
+}
+body.space-zone .lh-back-to-menu { margin-bottom: 0.6rem; }
+body.space-zone .btn-text,
+body.space-zone .btn-level-back,
+body.space-zone .btn-icon-close,
+body.space-zone .lh-back-to-menu {
+  background: #f4f3fc;
+  border-color: #c9c5e8;
+}
+body.space-zone .btn-text:hover,
+body.space-zone .btn-level-back:hover,
+body.space-zone .btn-icon-close:hover,
+body.space-zone .lh-back-to-menu:hover { background: #fbfaff; }
+body.space-zone .pts-btn { border-color: #c9c5e8; color: #23214f; }
+body.space-zone .pts-btn__star { color: #c2408f; }
+
+/* The panel: soft nebula glows in the corners, calm in the middle */
+body.content-panel-open .tool-panel[data-tool-panel="grammar"],
+.panel--content .tool-panel[data-tool-panel="grammar"] {
+  position: relative;
+  overflow: hidden;
+  border-color: #c9c5e8;
+  border-radius: 0.6rem;
+  padding-top: 1rem;
+  padding-bottom: 2.8rem;
+  background:
+    radial-gradient(40% 45% at 100% 0%, rgba(246, 201, 230, 0.7), transparent 70%),
+    radial-gradient(40% 45% at 0% 100%, rgba(186, 230, 240, 0.65), transparent 70%),
+    radial-gradient(30% 35% at 0% 0%, rgba(215, 200, 245, 0.6), transparent 70%),
+    linear-gradient(180deg, #f6f5fd 0%, #ebe8f8 100%);
+  box-shadow: 0 1px 2px rgba(35, 33, 79, 0.05), 0 8px 24px rgba(35, 33, 79, 0.07);
+}
+.tool-panel[data-tool-panel="grammar"] > * {
+  position: relative;
+  z-index: 1;
+}
+.tool-panel[data-tool-panel="grammar"] > .space-decor {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.space-star {
+  position: absolute;
+  opacity: 0.7;
+  animation: space-side-twinkle var(--dur, 3s) ease-in-out var(--delay, 0s) infinite alternate;
+}
+.space-star svg { display: block; }
+@keyframes space-side-twinkle {
+  from { opacity: 0.75; transform: scale(1) rotate(0deg); }
+  to { opacity: 0.2; transform: scale(0.6) rotate(25deg); }
+}
+.space-planet {
+  position: absolute;
+  left: 0.4rem;
+  bottom: 0.2rem;
+  width: clamp(5rem, 11vw, 7.5rem);
+  height: clamp(3.8rem, 8vw, 5.6rem);
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='90' viewBox='0 0 120 90'%3E%3Cdefs%3E%3ClinearGradient id='p' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d7b8f0'/%3E%3Cstop offset='1' stop-color='%237c6fd8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cellipse cx='60' cy='52' rx='46' ry='10' fill='none' stroke='%23c2408f' stroke-opacity='0.55' stroke-width='3' transform='rotate(-14 60 52)'/%3E%3Ccircle cx='60' cy='52' r='24' fill='url(%23p)'/%3E%3Cpath d='M38 58 C 50 50, 70 46, 82 44' stroke='%23ffffff' stroke-opacity='0.4' stroke-width='3' fill='none'/%3E%3Cpath d='M14 60 C 40 74, 90 62, 106 42' fill='none' stroke='%23c2408f' stroke-width='3' stroke-opacity='0.85' transform='rotate(-14 60 52)' stroke-dasharray='0 0'/%3E%3C/svg%3E") no-repeat center / contain;
+  opacity: 0.9;
+}
+.space-moon {
+  position: absolute;
+  right: 0.8rem;
+  bottom: 0.5rem;
+  width: clamp(2.4rem, 5vw, 3.4rem);
+  height: clamp(2.4rem, 5vw, 3.4rem);
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Ccircle cx='30' cy='30' r='22' fill='%23e9e6f8'/%3E%3Ccircle cx='22' cy='24' r='5' fill='%23cfc9ee'/%3E%3Ccircle cx='36' cy='38' r='4' fill='%23cfc9ee'/%3E%3Ccircle cx='38' cy='20' r='2.5' fill='%23cfc9ee'/%3E%3Cpath d='M44 14 A 22 22 0 0 1 30 52 A 18 22 0 0 0 44 14 Z' fill='%23b9b2e4' fill-opacity='0.6'/%3E%3C/svg%3E") no-repeat center / contain;
+  opacity: 0.95;
+}
+@media (prefers-reduced-motion: reduce) {
+  .space-star { animation: none; }
+}
+
+/* Topic cards and lessons float like little cards in space */
+.tool-panel[data-tool-panel="grammar"] .lh-topic-card {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: #d3cfee;
+}
+.tool-panel[data-tool-panel="grammar"] .lh-topic-card:hover {
+  border-color: #c2408f;
+  box-shadow: 0 4px 16px rgba(124, 111, 216, 0.18);
+}
+.tool-panel[data-tool-panel="grammar"] .lh-topic-card--done {
+  background: #f3faf5;
+  border-color: rgba(31, 138, 68, 0.4);
+}
+.tool-panel[data-tool-panel="grammar"] .lh-lesson-card,
+body.content-panel-open .tool-panel[data-tool-panel="grammar"] .lh-lesson-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #d3cfee;
+}
+.tool-panel[data-tool-panel="grammar"] .lh-lesson-section--learn,
+.tool-panel[data-tool-panel="grammar"] .lh-lesson-section--practice {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: #d3cfee;
+}
+
+/* Level menu – grammar card in its space theme */
+#content-beginner .level-landing__card[data-tool="grammar"],
+#content-intermediate .level-landing__card[data-tool="grammar"],
+#content-advanced .level-landing__card[data-tool="grammar"] {
+  position: relative;
+  overflow: hidden;
+  border-color: #c9c5e8 !important;
+  border-top: 3px solid #c2408f !important;
+  background:
+    radial-gradient(60% 70% at 100% 0%, rgba(246, 201, 230, 0.7), transparent 70%),
+    radial-gradient(50% 60% at 0% 100%, rgba(186, 230, 240, 0.6), transparent 70%),
+    linear-gradient(170deg, #f6f5fd 0%, #e6e3f7 100%);
+}
 #content-beginner .level-landing__card[data-tool="grammar"]:hover,
 #content-intermediate .level-landing__card[data-tool="grammar"]:hover,
 #content-advanced .level-landing__card[data-tool="grammar"]:hover {
-  border-color: #d0453f !important;
-  box-shadow: 0 6px 18px rgba(208, 69, 63, 0.14);
+  border-color: #c2408f !important;
+  box-shadow: 0 6px 18px rgba(124, 111, 216, 0.2);
 }
 #content-beginner .level-landing__card[data-tool="grammar"] > *,
 #content-intermediate .level-landing__card[data-tool="grammar"] > *,
@@ -10925,17 +11244,30 @@ body.content-panel-open .tool-panel[data-tool-panel="grammar"] .lh-lesson-card {
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='130' height='90' viewBox='0 0 130 90'%3E%3Cg transform='rotate(-24 70 60)'%3E%3Cpath d='M18 60 L34 54 L34 66 Z' fill='%23f2d9c4'/%3E%3Cpath d='M18 60 L24 57.8 L24 62.2 Z' fill='%2323272f'/%3E%3Crect x='34' y='54' width='70' height='12' fill='%23e86a5c'/%3E%3Crect x='34' y='54' width='70' height='4' fill='%23f0897d'/%3E%3Crect x='104' y='53' width='10' height='14' fill='%23b9c0cc'/%3E%3Crect x='114' y='53' width='14' height='14' rx='3' fill='%23f4a3b4'/%3E%3C/g%3E%3Ctext x='18' y='30' font-family='Georgia, serif' font-style='italic' font-size='20' fill='%23d0453f'%3E2+2%3C/text%3E%3Ctext x='70' y='26' font-family='Georgia, serif' font-style='italic' font-size='18' fill='%235f6672'%3EAbc%3C/text%3E%3C/svg%3E") no-repeat right 0.3rem bottom 0.2rem / auto 4.4rem;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='130' height='90' viewBox='0 0 130 90'%3E%3Cdefs%3E%3ClinearGradient id='p' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d7b8f0'/%3E%3Cstop offset='1' stop-color='%237c6fd8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg transform='translate(48 18) scale(0.85)'%3E%3Cellipse cx='60' cy='52' rx='46' ry='10' fill='none' stroke='%23c2408f' stroke-opacity='0.6' stroke-width='3' transform='rotate(-14 60 52)'/%3E%3Ccircle cx='60' cy='52' r='22' fill='url(%23p)'/%3E%3C/g%3E%3Cg transform='translate(30 14) scale(0.7)'%3E%3Cpath d='M10 0 C 11 7, 13 9, 20 10 C 13 11, 11 13, 10 20 C 9 13, 7 11, 0 10 C 7 9, 9 7, 10 0 Z' fill='%23c2408f'/%3E%3C/g%3E%3Cg transform='translate(14 44) scale(0.5)'%3E%3Cpath d='M10 0 C 11 7, 13 9, 20 10 C 13 11, 11 13, 10 20 C 9 13, 7 11, 0 10 C 7 9, 9 7, 10 0 Z' fill='%234fb3c8'/%3E%3C/g%3E%3Cg transform='translate(112 8) scale(0.55)'%3E%3Cpath d='M10 0 C 11 7, 13 9, 20 10 C 13 11, 11 13, 10 20 C 9 13, 7 11, 0 10 C 7 9, 9 7, 10 0 Z' fill='%237c6fd8'/%3E%3C/g%3E%3C/svg%3E") no-repeat right 0.2rem bottom 0.2rem / auto 4.6rem;
 }
 #content-beginner .level-landing__card[data-tool="grammar"] .level-landing__card__icon,
 #content-intermediate .level-landing__card[data-tool="grammar"] .level-landing__card__icon,
-#content-advanced .level-landing__card[data-tool="grammar"] .level-landing__card__icon { color: #d0453f; }
+#content-advanced .level-landing__card[data-tool="grammar"] .level-landing__card__icon { color: #c2408f; }
 #content-beginner .level-landing__card[data-tool="grammar"] .level-landing__card__label,
 #content-intermediate .level-landing__card[data-tool="grammar"] .level-landing__card__label,
-#content-advanced .level-landing__card[data-tool="grammar"] .level-landing__card__label { color: #23272f; }
+#content-advanced .level-landing__card[data-tool="grammar"] .level-landing__card__label { color: #23214f; }
 #content-beginner .level-landing__card[data-tool="grammar"] .level-landing__card__hint,
 #content-intermediate .level-landing__card[data-tool="grammar"] .level-landing__card__hint,
 #content-advanced .level-landing__card[data-tool="grammar"] .level-landing__card__hint,
 #content-beginner .level-landing__card[data-tool="grammar"] .level-landing__card__progress,
 #content-intermediate .level-landing__card[data-tool="grammar"] .level-landing__card__progress,
-#content-advanced .level-landing__card[data-tool="grammar"] .level-landing__card__progress { color: #5f6672; max-width: calc(100% - 4.5rem); }
+#content-advanced .level-landing__card[data-tool="grammar"] .level-landing__card__progress { color: #5e5b8a; max-width: calc(100% - 4.5rem); }
+
+/* Homework – lock card and buttons in red pen */
+.tool-panel[data-tool-panel="homework"] .hw-lock {
+  border-color: #d5d8de;
+  box-shadow: 0 6px 22px rgba(35, 39, 47, 0.07);
+}
+.tool-panel[data-tool-panel="homework"] .hw-lock__icon { color: #d0453f; }
+.tool-panel[data-tool-panel="homework"] .hw-lock__join { color: #5f6672; }
+.tool-panel[data-tool-panel="homework"] .btn-primary {
+  background: #d0453f;
+  color: #ffffff;
+}
+.tool-panel[data-tool-panel="homework"] .btn-primary:hover { background: #b83631; }
