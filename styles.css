@@ -10002,8 +10002,6 @@ body.content-panel-open .tool-panel[data-tool-panel="flashcards"],
   height: 3.2rem;
   background:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='52' viewBox='0 0 180 52'%3E%3Cpath d='M0 52 C 6 36, 14 30, 12 14 C 22 26, 26 34, 30 22 C 34 32, 40 38, 46 6 C 54 24, 64 30, 62 40 C 70 30, 74 24, 82 16 C 86 28, 96 36, 100 20 C 108 32, 112 38, 120 4 C 126 22, 138 30, 134 42 C 142 34, 148 26, 156 12 C 160 26, 170 34, 180 24 V 52 Z' fill='%23e2533a' fill-opacity='0.75'/%3E%3Cpath d='M0 52 C 8 42, 16 38, 18 28 C 26 38, 32 42, 40 30 C 46 40, 56 44, 62 34 C 70 42, 78 44, 86 30 C 92 40, 102 44, 110 32 C 118 42, 126 44, 132 34 C 140 42, 150 44, 158 30 C 164 40, 172 44, 180 38 V 52 Z' fill='%23f5843e' fill-opacity='0.85'/%3E%3Cpath d='M0 52 C 12 46, 22 44, 30 40 C 40 46, 52 46, 62 42 C 74 47, 86 46, 96 41 C 108 47, 120 46, 132 42 C 144 47, 158 46, 168 42 C 172 45, 176 47, 180 46 V 52 Z' fill='%23ffd9b0'/%3E%3C/svg%3E") repeat-x 0 100% / 180px 52px;
-  transform-origin: 50% 100%;
-  animation: fire-edge-flicker 0.6s ease-in-out infinite alternate;
 }
 
 @keyframes fire-ember-rise {
@@ -10077,3 +10075,35 @@ body.content-panel-open .tool-panel[data-tool-panel="flashcards"],
 .tool-panel[data-tool-panel="flashcards"] .flashcard-session-hint,
 .tool-panel[data-tool-panel="flashcards"] .flashcard-deck-count { font-size: 0.8rem; margin: 0; }
 body.content-panel-open .tool-panel[data-tool-panel="flashcards"] { padding-top: 0.9rem; }
+
+/* Flashcards – taller fire up the sides (still, not flickering) */
+.fire-side {
+  position: absolute;
+  bottom: 0;
+  width: clamp(4.5rem, 11vw, 8.5rem);
+  height: clamp(9rem, 38vh, 17rem);
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='260' viewBox='0 0 120 260' preserveAspectRatio='none'%3E%3Cpath d='M0 260 V 40 C 10 70, 20 90, 16 120 C 30 100, 34 70, 30 30 C 48 60, 58 100, 50 140 C 62 128, 70 110, 72 86 C 86 120, 92 160, 80 196 C 92 188, 100 176, 104 160 C 114 190, 118 226, 110 260 Z' fill='%23e2533a' fill-opacity='0.72'/%3E%3Cpath d='M0 260 V 110 C 12 130, 20 150, 18 176 C 30 160, 36 140, 36 112 C 50 140, 56 170, 48 200 C 60 192, 66 180, 68 164 C 80 190, 82 222, 74 260 Z' fill='%23f5843e' fill-opacity='0.85'/%3E%3Cpath d='M0 260 V 180 C 10 192, 16 204, 16 220 C 24 212, 28 200, 30 188 C 40 206, 44 230, 38 260 Z' fill='%23ffd9b0'/%3E%3C/svg%3E") no-repeat left bottom / 100% 100%;
+  opacity: 0.9;
+}
+.fire-side--left { left: 0; }
+.fire-side--right { right: 0; transform: scaleX(-1); }
+
+/* Sparks: tiny, faint, rare */
+.fire-spark {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #ffc28f;
+  box-shadow: 0 0 4px 1px rgba(255, 140, 70, 0.45);
+  opacity: 0;
+  animation: fire-spark var(--dur, 7s) ease-out var(--delay, 0s) infinite;
+}
+@keyframes fire-spark {
+  0%, 88% { opacity: 0; transform: translate(0, 0); }
+  91% { opacity: 0.55; }
+  100% { opacity: 0; transform: translate(var(--x, 0), -26px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fire-spark { display: none; }
+}

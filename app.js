@@ -4745,6 +4745,23 @@
     const edge = document.createElement("div");
     edge.className = "fire-edge";
     decor.appendChild(edge);
+    ["left", "right"].forEach(function (side) {
+      const f = document.createElement("div");
+      f.className = "fire-side fire-side--" + side;
+      decor.appendChild(f);
+    });
+    // Occasional faint sparks that pop and vanish at random spots
+    for (let i = 0; i < 10; i += 1) {
+      const sp = document.createElement("span");
+      sp.className = "fire-spark";
+      const nearSide = Math.random() < 0.7;
+      sp.style.left = (nearSide ? (Math.random() < 0.5 ? 2 + Math.random() * 16 : 82 + Math.random() * 16) : 20 + Math.random() * 60).toFixed(1) + "%";
+      sp.style.bottom = (4 + Math.random() * 40).toFixed(1) + "%";
+      sp.style.setProperty("--dur", (5 + Math.random() * 6).toFixed(1) + "s");
+      sp.style.setProperty("--delay", (-Math.random() * 11).toFixed(1) + "s");
+      sp.style.setProperty("--x", (Math.random() * 30 - 15).toFixed(0) + "px");
+      decor.appendChild(sp);
+    }
     panel.insertBefore(decor, panel.firstChild);
   }
 
