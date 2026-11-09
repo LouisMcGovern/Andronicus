@@ -4631,6 +4631,123 @@
     panel.insertBefore(decor, panel.firstChild);
   }
 
+  /**
+   * Flashcards intro: the title appears, a wall of flames rises and engulfs
+   * it, the letters glow and burn away into embers. Click or press a key to
+   * skip. Skipped for reduced motion.
+   */
+  function playFlashIntro(panel) {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const old = document.querySelector(".fire-intro");
+    if (old) old.remove();
+
+    const overlay = document.createElement("div");
+    overlay.className = "fire-intro";
+    overlay.setAttribute("aria-hidden", "true");
+
+    const word = document.createElement("h2");
+    word.className = "fire-intro__word";
+    const letters = Array.from(I18n.t("learning_tab_flashcards"));
+    letters.forEach(function (ch, i) {
+      const sp = document.createElement("span");
+      sp.textContent = ch === " " ? " " : ch;
+      sp.style.setProperty("--i", String(i));
+      // Letters burn away in a ragged order, not left to right
+      sp.style.setProperty("--b", (1.15 + Math.random() * 0.45).toFixed(2) + "s");
+      word.appendChild(sp);
+    });
+
+    const flames = document.createElement("div");
+    flames.className = "fire-intro__flames";
+    const NS = "http://www.w3.org/2000/svg";
+    const count = 11;
+    for (let i = 0; i < count; i += 1) {
+      const svg = document.createElementNS(NS, "svg");
+      svg.setAttribute("viewBox", "0 0 100 200");
+      svg.setAttribute("preserveAspectRatio", "none");
+      svg.setAttribute("class", "fire-intro__flame");
+      const w = 14 + Math.random() * 10;
+      svg.style.left = ((i / (count - 1)) * 108 - 4 - w / 2).toFixed(1) + "%";
+      svg.style.width = w.toFixed(1) + "%";
+      svg.style.height = (70 + Math.random() * 30).toFixed(0) + "%";
+      svg.style.setProperty("--f", (0.35 + Math.random() * 0.3).toFixed(2) + "s");
+      svg.style.setProperty("--fd", (-Math.random()).toFixed(2) + "s");
+      svg.innerHTML =
+        '<path d="M50 0 C 62 40, 98 70, 92 128 C 88 170, 70 200, 50 200 C 30 200, 12 170, 8 128 C 2 80, 40 60, 50 0 Z" fill="#e2533a"/>' +
+        '<path d="M52 50 C 60 80, 82 100, 78 140 C 76 172, 64 200, 50 200 C 36 200, 24 172, 22 142 C 20 108, 46 92, 52 50 Z" fill="#f5843e"/>' +
+        '<path d="M50 105 C 56 125, 66 140, 64 165 C 62 186, 56 200, 50 200 C 44 200, 37 186, 36 168 C 35 146, 47 132, 50 105 Z" fill="#ffd9b0"/>';
+      flames.appendChild(svg);
+    }
+
+    overlay.appendChild(flames);
+    overlay.appendChild(word);
+
+    // Embers flying off as the letters burn
+    for (let i = 0; i < 26; i += 1) {
+      const e = document.createElement("span");
+      e.className = "fire-intro__ember";
+      const size = 3 + Math.round(Math.random() * 6);
+      e.style.left = (28 + Math.random() * 44).toFixed(1) + "%";
+      e.style.width = size + "px";
+      e.style.height = size + "px";
+      e.style.setProperty("--d", (1.1 + Math.random() * 0.7).toFixed(2) + "s");
+      e.style.setProperty("--x", (Math.random() * 120 - 60).toFixed(0) + "px");
+      overlay.appendChild(e);
+    }
+
+    document.body.appendChild(overlay);
+
+    const shell = panel;
+    if (shell) {
+      shell.classList.remove("fire-reveal");
+      shell.style.opacity = "0";
+    }
+    let finished = false;
+    function reveal() {
+      if (!shell) return;
+      shell.style.opacity = "";
+      void shell.offsetWidth;
+      shell.classList.add("fire-reveal");
+    }
+    const revealTimer = setTimeout(reveal, 2250);
+    function finish() {
+      if (finished) return;
+      finished = true;
+      clearTimeout(revealTimer);
+      clearTimeout(endTimer);
+      document.removeEventListener("keydown", finish);
+      overlay.remove();
+      if (shell && shell.style.opacity === "0") reveal();
+    }
+    const endTimer = setTimeout(finish, 2850);
+    overlay.addEventListener("click", finish);
+    document.addEventListener("keydown", finish);
+  }
+
+  /** Embers drifting up and flames licking the bottom edge behind the flashcards. */
+  function addFireDecor(panel) {
+    if (!panel || panel.querySelector(".fire-decor")) return;
+    const decor = document.createElement("div");
+    decor.className = "fire-decor";
+    decor.setAttribute("aria-hidden", "true");
+    for (let i = 0; i < 22; i += 1) {
+      const e = document.createElement("span");
+      e.className = "fire-ember";
+      const size = 3 + Math.round(Math.random() * 5);
+      e.style.left = (Math.random() * 100).toFixed(1) + "%";
+      e.style.width = size + "px";
+      e.style.height = size + "px";
+      e.style.setProperty("--dur", (6 + Math.random() * 7).toFixed(1) + "s");
+      e.style.setProperty("--delay", (-Math.random() * 13).toFixed(1) + "s");
+      e.style.setProperty("--x", (Math.random() * 60 - 30).toFixed(0) + "px");
+      decor.appendChild(e);
+    }
+    const edge = document.createElement("div");
+    edge.className = "fire-edge";
+    decor.appendChild(edge);
+    panel.insertBefore(decor, panel.firstChild);
+  }
+
   function mountVocabPath(root, level, panel, onLevelProgressChange) {
     const bank = buildVocabBank(level);
     const total = bank.order.length;
@@ -6599,6 +6716,7 @@
     }
     document.body.classList.toggle("vocab-zone", panelOpen("vocab"));
     document.body.classList.toggle("ocean-zone", panelOpen("words"));
+    document.body.classList.toggle("fire-zone", panelOpen("flashcards"));
   }
 
   function updateContentBreadcrumb() {
@@ -8908,6 +9026,10 @@
           playVocabIntro(root.querySelector('[data-tool-panel="vocab"]'));
         }
         if (name === "words") addSeaDecor(root.querySelector('[data-tool-panel="words"]'));
+        if (name === "flashcards") addFireDecor(root.querySelector('[data-tool-panel="flashcards"]'));
+        if (name === "flashcards" && currentTab !== "flashcards") {
+          playFlashIntro(root.querySelector('[data-tool-panel="flashcards"]'));
+        }
         if (name === "words" && currentTab !== "words") {
           playWordsIntro(root.querySelector('[data-tool-panel="words"]'));
         }

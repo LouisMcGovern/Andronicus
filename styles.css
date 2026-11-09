@@ -9765,3 +9765,315 @@ body.content-panel-open .tool-panel[data-tool-panel="words"] {
       "mid mid";
   }
 }
+
+/* ==========================================================================
+   Flashcards – fire intro: flames rise and the title burns away into embers
+   ========================================================================== */
+.fire-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  overflow: hidden;
+  cursor: pointer;
+  background:
+    radial-gradient(80% 55% at 50% 45%, #fffaf5 0%, transparent 75%),
+    linear-gradient(180deg, #fff3ea 0%, #fddccb 100%);
+  animation: fire-bg-in 0.3s ease both, fire-bg-out 0.5s ease 2.3s forwards;
+}
+
+.fire-intro__flames {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 68vh;
+  z-index: 1;
+  transform: translateY(100%);
+  background: radial-gradient(70% 60% at 50% 100%, rgba(255, 150, 80, 0.45), transparent 70%);
+  animation:
+    fire-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.35s forwards,
+    fire-die 0.55s ease-in 1.75s forwards;
+}
+
+.fire-intro__flame {
+  position: absolute;
+  bottom: -4%;
+  transform-origin: 50% 100%;
+  opacity: 0.92;
+  animation: fire-flicker var(--f, 0.45s) ease-in-out var(--fd, 0s) infinite alternate;
+}
+
+.fire-intro__word {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  font-weight: 400;
+  font-size: clamp(2.6rem, 9vw, 6.5rem);
+  color: #4a1622;
+  white-space: nowrap;
+  text-shadow: 0 2px 0 rgba(255, 255, 255, 0.6);
+}
+
+.fire-intro__word span {
+  display: inline-block;
+  opacity: 0;
+  animation:
+    fire-letter 0.45s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i) * 0.03s) forwards,
+    fire-heat 0.35s ease-in 0.85s forwards,
+    fire-burn 0.55s ease-in var(--b, 1.3s) forwards;
+}
+
+.fire-intro__ember {
+  position: absolute;
+  top: 52%;
+  z-index: 3;
+  border-radius: 50%;
+  background: #ff9a4d;
+  box-shadow: 0 0 6px 2px rgba(255, 120, 50, 0.7);
+  opacity: 0;
+  animation: fire-ember-fly 0.9s ease-out forwards;
+  animation-delay: var(--d, 1.2s);
+}
+
+.fire-reveal {
+  animation: vp-reveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes fire-bg-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fire-bg-out { to { opacity: 0; visibility: hidden; } }
+@keyframes fire-rise { to { transform: translateY(0); } }
+@keyframes fire-die { to { transform: translateY(70%); opacity: 0; } }
+@keyframes fire-flicker {
+  0% { transform: scaleY(0.9) scaleX(1.02) skewX(-3deg); }
+  50% { transform: scaleY(1.08) scaleX(0.96) skewX(2deg); }
+  100% { transform: scaleY(0.96) scaleX(1) skewX(4deg); }
+}
+@keyframes fire-letter {
+  from { opacity: 0; transform: translateY(0.35em); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes fire-heat {
+  to {
+    color: #e2533a;
+    text-shadow: 0 0 18px rgba(255, 130, 60, 0.85), 0 0 4px rgba(255, 220, 180, 0.9);
+  }
+}
+@keyframes fire-burn {
+  0% { opacity: 1; transform: none; filter: none; }
+  40% { color: #f5843e; }
+  100% { opacity: 0; transform: translateY(-0.6em) scale(0.85); filter: blur(4px); }
+}
+@keyframes fire-ember-fly {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.6); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--x, 0), -38vh) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fire-intro { display: none; }
+  .fire-reveal { animation: none; }
+}
+
+/* Keep the fire title in Libre Baskerville despite the content-area font rule */
+body .fire-intro__word,
+body .fire-intro__word * {
+  font-family: "Libre Baskerville", Georgia, serif !important;
+}
+
+/* ==========================================================================
+   Flashcards zone – the whole learning screen goes warm ember while it's open
+   ========================================================================== */
+body.fire-zone {
+  --page-bg: #fbe4d8;
+  --surface: #fdeee6;
+  --surface-elevated: #fbe4d8;
+  --border: #f0b9a2;
+  --accent: #c8402a;
+  --accent-strong: #e2533a;
+  --accent-soft: rgba(226, 83, 58, 0.12);
+  --accent-warm: #e2533a;
+  --accent-warm-hover: #c8402a;
+  --ink-heading: #4a1622;
+  --text: #3a1a20;
+  --readable-body: #5c2a2c;
+  --muted: #a34e4a;
+  --flashcard-face-bg: #fffaf6;
+  --chrome-bg: #fce8dd;
+  --chrome-border: #f0b9a2;
+  --chrome-btn-border: rgba(74, 22, 34, 0.2);
+  --chrome-btn-text: #4a1622;
+  --chrome-btn-hover: rgba(226, 83, 58, 0.08);
+  --chrome-btn-active-bg: #e2533a;
+  --chrome-btn-active-border: #c8402a;
+  background: #fbe4d8;
+}
+
+body.fire-zone::before {
+  background:
+    radial-gradient(ellipse 70% 45% at 50% 100%, rgba(255, 140, 70, 0.14), transparent 60%),
+    radial-gradient(ellipse 50% 35% at 0% 0%, rgba(255, 255, 255, 0.4), transparent 55%);
+}
+
+body.fire-zone.content-panel-open .panel-toolbar,
+body.fire-zone .content-breadcrumb {
+  background: #fce8dd;
+  border-bottom-color: #f0b9a2;
+}
+body.fire-zone .content-breadcrumb { color: #a34e4a; }
+body.fire-zone .content-breadcrumb__current { color: #4a1622; }
+
+body.fire-zone.content-panel-open .panel--content {
+  background:
+    radial-gradient(60% 40% at 50% 100%, rgba(255, 150, 80, 0.18), transparent 70%),
+    #fbe4d8;
+}
+
+body.fire-zone .level-article,
+body.fire-zone .level-article#content-beginner,
+body.fire-zone .level-article#content-intermediate,
+body.fire-zone .level-article#content-advanced {
+  background: transparent;
+  padding-top: 1.1rem;
+}
+body.fire-zone .lh-back-to-menu { margin-bottom: 0.6rem; }
+
+body.fire-zone .btn-text,
+body.fire-zone .btn-level-back,
+body.fire-zone .btn-icon-close,
+body.fire-zone .lh-back-to-menu {
+  background: #fdf0e8;
+  border-color: #f0b9a2;
+}
+body.fire-zone .btn-text:hover,
+body.fire-zone .btn-level-back:hover,
+body.fire-zone .btn-icon-close:hover,
+body.fire-zone .lh-back-to-menu:hover {
+  background: #fff7f2;
+}
+body.fire-zone .pts-btn {
+  border-color: #f0b9a2;
+  color: #4a1622;
+}
+body.fire-zone .pts-btn__star { color: #e2533a; }
+
+/* The panel: warm glow rising from the bottom */
+body.content-panel-open .tool-panel[data-tool-panel="flashcards"],
+.panel--content .tool-panel[data-tool-panel="flashcards"] {
+  position: relative;
+  overflow: hidden;
+  border-color: #f0b9a2;
+  border-radius: 0.6rem;
+  padding-bottom: 3.2rem;
+  background:
+    radial-gradient(70% 45% at 50% 105%, rgba(255, 140, 70, 0.38), transparent 70%),
+    linear-gradient(180deg, #fff5ef 0%, #fde3d5 65%, #fbcfb9 100%);
+}
+.tool-panel[data-tool-panel="flashcards"] > * {
+  position: relative;
+  z-index: 1;
+}
+.tool-panel[data-tool-panel="flashcards"] > .fire-decor {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.fire-ember {
+  position: absolute;
+  bottom: 1.2rem;
+  border-radius: 50%;
+  background: #ff9a4d;
+  box-shadow: 0 0 6px 2px rgba(255, 120, 50, 0.55);
+  opacity: 0;
+  animation: fire-ember-rise var(--dur, 9s) linear var(--delay, 0s) infinite;
+}
+
+/* Low flames licking along the bottom edge */
+.fire-edge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3.2rem;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='52' viewBox='0 0 180 52'%3E%3Cpath d='M0 52 C 6 36, 14 30, 12 14 C 22 26, 26 34, 30 22 C 34 32, 40 38, 46 6 C 54 24, 64 30, 62 40 C 70 30, 74 24, 82 16 C 86 28, 96 36, 100 20 C 108 32, 112 38, 120 4 C 126 22, 138 30, 134 42 C 142 34, 148 26, 156 12 C 160 26, 170 34, 180 24 V 52 Z' fill='%23e2533a' fill-opacity='0.75'/%3E%3Cpath d='M0 52 C 8 42, 16 38, 18 28 C 26 38, 32 42, 40 30 C 46 40, 56 44, 62 34 C 70 42, 78 44, 86 30 C 92 40, 102 44, 110 32 C 118 42, 126 44, 132 34 C 140 42, 150 44, 158 30 C 164 40, 172 44, 180 38 V 52 Z' fill='%23f5843e' fill-opacity='0.85'/%3E%3Cpath d='M0 52 C 12 46, 22 44, 30 40 C 40 46, 52 46, 62 42 C 74 47, 86 46, 96 41 C 108 47, 120 46, 132 42 C 144 47, 158 46, 168 42 C 172 45, 176 47, 180 46 V 52 Z' fill='%23ffd9b0'/%3E%3C/svg%3E") repeat-x 0 100% / 180px 52px;
+  transform-origin: 50% 100%;
+  animation: fire-edge-flicker 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes fire-ember-rise {
+  0% { transform: translate(0, 0) scale(1); opacity: 0; }
+  8% { opacity: 1; }
+  50% { transform: translate(var(--x, 0), -45vh) scale(0.85); }
+  85% { opacity: 0.7; }
+  100% { transform: translate(calc(var(--x, 0) * -1), -90vh) scale(0.5); opacity: 0; }
+}
+@keyframes fire-edge-flicker {
+  from { transform: scaleY(0.88); background-position-x: 0; }
+  to { transform: scaleY(1.06); background-position-x: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fire-ember, .fire-edge { animation: none; }
+  .fire-ember { display: none; }
+}
+
+/* The flashcard: a warm cream card that glows a little on hover */
+.tool-panel[data-tool-panel="flashcards"] .flashcard-stage {
+  min-height: auto;
+}
+.tool-panel[data-tool-panel="flashcards"] .flashcard {
+  min-height: 38vh;
+  border-color: #f0b9a2;
+  background: linear-gradient(165deg, #fffdfb 0%, #fff4ed 100%);
+  box-shadow:
+    0 4px 8px rgba(200, 64, 42, 0.12),
+    0 14px 32px rgba(200, 64, 42, 0.16);
+}
+.tool-panel[data-tool-panel="flashcards"] .flashcard:hover,
+.tool-panel[data-tool-panel="flashcards"] .flashcard.is-flipped:hover {
+  box-shadow:
+    0 0 0 3px rgba(245, 132, 62, 0.25),
+    0 8px 14px rgba(200, 64, 42, 0.16),
+    0 22px 44px rgba(200, 64, 42, 0.22);
+}
+.tool-panel[data-tool-panel="flashcards"] .flashcard__back { color: #c8402a; }
+.tool-panel[data-tool-panel="flashcards"] .flashcard-progress-bar-track { background: #f6d2c2; }
+.tool-panel[data-tool-panel="flashcards"] .flashcard-progress-bar-fill {
+  background: linear-gradient(90deg, #c8402a 0%, #f5843e 100%);
+}
+.tool-panel[data-tool-panel="flashcards"] .flashcard-btn:not(.flashcard-btn--got-it):not(.flashcard-btn--save-later) {
+  background: #fff7f2;
+  border-color: #f0b9a2;
+  color: #7a2e2c;
+}
+.tool-panel[data-tool-panel="flashcards"] .flashcard-btn:not(.flashcard-btn--got-it):not(.flashcard-btn--save-later):hover {
+  border-color: #e2533a;
+  color: #4a1622;
+}
+.tool-panel[data-tool-panel="flashcards"] .flashcard-topic {
+  background: #fff7f2;
+  border-color: #f0b9a2;
+}
+.tool-panel[data-tool-panel="flashcards"] .flashcard-lang-toggle {
+  background: #fdeee6;
+  border-color: #f0b9a2;
+}
+.tool-panel[data-tool-panel="flashcards"] .flashcard-complete-overlay {
+  background: rgba(74, 22, 34, 0.25);
+}
+.tool-panel[data-tool-panel="flashcards"] .flashcard-complete-overlay__inner {
+  background: #fff7f2;
+  border-color: #f0b9a2;
+}
+
+/* Flashcards – compact so the card and its buttons fit on one screen */
+.tool-panel[data-tool-panel="flashcards"] .flashcard-stage { gap: 0.45rem; }
+.tool-panel[data-tool-panel="flashcards"] .flashcard { min-height: clamp(12rem, 30vh, 19rem); }
+.tool-panel[data-tool-panel="flashcards"] .flashcard-session-hint,
+.tool-panel[data-tool-panel="flashcards"] .flashcard-deck-count { font-size: 0.8rem; margin: 0; }
+body.content-panel-open .tool-panel[data-tool-panel="flashcards"] { padding-top: 0.9rem; }
