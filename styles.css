@@ -10582,3 +10582,360 @@ body.content-panel-open .tool-panel[data-tool-panel="dictation"],
 #content-beginner .level-landing__card[data-tool="dictation"] .level-landing__card__progress,
 #content-intermediate .level-landing__card[data-tool="dictation"] .level-landing__card__progress,
 #content-advanced .level-landing__card[data-tool="dictation"] .level-landing__card__progress { color: #6f5c98; max-width: calc(100% - 4.5rem); }
+
+/* ==========================================================================
+   Grammar – school intro: the page rules itself, a pencil writes the title,
+   the red pen underlines it, then the eraser rubs it out
+   ========================================================================== */
+.school-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  overflow: hidden;
+  cursor: pointer;
+  background: #fdfdfb;
+  animation: school-bg-in 0.3s ease both, school-bg-out 0.5s ease 2.3s forwards;
+}
+.school-intro__rules {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(180deg, transparent 0 calc(2.2rem - 1px), rgba(120, 140, 170, 0.35) calc(2.2rem - 1px) 2.2rem);
+  clip-path: inset(0 100% 0 0);
+  animation: school-rule 0.5s cubic-bezier(0.65, 0, 0.35, 1) 0.05s forwards;
+}
+.school-intro__margin {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 12%;
+  width: 2px;
+  background: #f2a4a0;
+  transform: scaleY(0);
+  transform-origin: 50% 0;
+  animation: school-margin 0.45s ease-out 0.2s forwards;
+}
+
+.school-intro__word {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(2.6rem, 9vw, 6.5rem);
+  line-height: 1.15;
+  color: #23272f;
+  white-space: nowrap;
+}
+.school-intro__text {
+  display: inline-block;
+  clip-path: inset(-30% 100% -30% 0);
+  animation:
+    school-write 0.8s steps(18, end) 0.35s forwards,
+    school-erase 0.5s linear 1.5s forwards;
+}
+.school-intro__underline {
+  position: absolute;
+  left: -2%;
+  right: -2%;
+  bottom: 0.02em;
+  height: 0.2em;
+  animation: school-under-out 0.3s ease 1.6s forwards;
+}
+.school-intro__underline path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  animation: school-under 0.3s ease-out 1.15s both;
+}
+
+.school-intro__pencil {
+  position: absolute;
+  top: 58%;
+  left: 0;
+  width: 2.4em;
+  height: 0.36em;
+  transform-origin: 0 50%;
+  transform: rotate(-38deg);
+  opacity: 0;
+  pointer-events: none;
+}
+.school-intro__pencil svg { display: block; }
+.school-intro__pencil--write {
+  animation: school-pencil-write 0.8s steps(18, end) 0.35s forwards;
+}
+.school-intro__pencil--erase svg { transform: scaleX(-1); }
+.school-intro__pencil--erase {
+  animation: school-pencil-erase 0.5s linear 1.5s forwards;
+}
+
+.school-intro__crumb {
+  position: absolute;
+  top: 78%;
+  width: 6px;
+  height: 4px;
+  border-radius: 1px;
+  background: #f4a3b4;
+  opacity: 0;
+  animation: school-crumb 0.6s ease-in forwards;
+  animation-delay: var(--d, 1.6s);
+}
+
+.school-reveal {
+  animation: vp-reveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes school-bg-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes school-bg-out { to { opacity: 0; visibility: hidden; } }
+@keyframes school-rule { to { clip-path: inset(0 0 0 0); } }
+@keyframes school-margin { to { transform: scaleY(1); } }
+@keyframes school-write { to { clip-path: inset(-30% 0 -30% 0); } }
+@keyframes school-erase {
+  from { clip-path: inset(-30% 0 -30% 0); }
+  to { clip-path: inset(-30% 0 -30% 100%); }
+}
+@keyframes school-under {
+  0% { stroke-dashoffset: 1; opacity: 0; }
+  5% { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 1; }
+}
+@keyframes school-under-out { to { opacity: 0; } }
+@keyframes school-pencil-write {
+  0% { opacity: 1; left: 0%; }
+  95% { opacity: 1; left: 100%; }
+  100% { opacity: 0; left: 100%; }
+}
+@keyframes school-pencil-erase {
+  0% { opacity: 1; left: 0%; }
+  92% { opacity: 1; left: 100%; }
+  100% { opacity: 0; left: 100%; }
+}
+@keyframes school-crumb {
+  0% { opacity: 0; transform: translate(0, 0); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--x, 0), 70px) rotate(90deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .school-intro { display: none; }
+  .school-reveal { animation: none; }
+}
+
+body .school-intro__word,
+body .school-intro__word * {
+  font-family: "Libre Baskerville", Georgia, serif !important;
+}
+
+/* ==========================================================================
+   Grammar zone – notebook paper, graphite and red pen while grammar is open
+   ========================================================================== */
+body.school-zone {
+  --page-bg: #f1f2ef;
+  --surface: #fafaf8;
+  --surface-elevated: #f0f1ed;
+  --border: #d5d8de;
+  --accent: #c63a35;
+  --accent-strong: #d0453f;
+  --accent-soft: rgba(208, 69, 63, 0.1);
+  --ink-heading: #23272f;
+  --text: #23272f;
+  --readable-body: #3a3f49;
+  --muted: #5f6672;
+  --chrome-bg: #f6f6f3;
+  --chrome-border: #d5d8de;
+  --chrome-btn-border: rgba(35, 39, 47, 0.2);
+  --chrome-btn-text: #23272f;
+  --chrome-btn-hover: rgba(35, 39, 47, 0.06);
+  --chrome-btn-active-bg: #d0453f;
+  --chrome-btn-active-border: #c63a35;
+  background: #f1f2ef;
+}
+body.school-zone::before {
+  background: radial-gradient(ellipse 70% 45% at 50% 0%, rgba(255, 255, 255, 0.6), transparent 60%);
+}
+body.school-zone.content-panel-open .panel-toolbar,
+body.school-zone .content-breadcrumb {
+  background: #f6f6f3;
+  border-bottom-color: #d5d8de;
+}
+body.school-zone .content-breadcrumb { color: #5f6672; }
+body.school-zone .content-breadcrumb__current { color: #23272f; }
+body.school-zone.content-panel-open .panel--content { background: #f1f2ef; }
+body.school-zone .level-article,
+body.school-zone .level-article#content-beginner,
+body.school-zone .level-article#content-intermediate,
+body.school-zone .level-article#content-advanced {
+  background: transparent;
+  padding-top: 1.1rem;
+}
+body.school-zone .lh-back-to-menu { margin-bottom: 0.6rem; }
+body.school-zone .btn-text,
+body.school-zone .btn-level-back,
+body.school-zone .btn-icon-close,
+body.school-zone .lh-back-to-menu {
+  background: #fbfbf9;
+  border-color: #d5d8de;
+}
+body.school-zone .btn-text:hover,
+body.school-zone .btn-level-back:hover,
+body.school-zone .btn-icon-close:hover,
+body.school-zone .lh-back-to-menu:hover { background: #ffffff; }
+body.school-zone .pts-btn { border-color: #d5d8de; color: #23272f; }
+body.school-zone .pts-btn__star { color: #d0453f; }
+
+/* The panel: a ruled notebook page with a red margin */
+body.content-panel-open .tool-panel[data-tool-panel="grammar"],
+.panel--content .tool-panel[data-tool-panel="grammar"] {
+  position: relative;
+  overflow: hidden;
+  border-color: #d5d8de;
+  border-radius: 0.6rem;
+  padding-top: 1rem;
+  padding-bottom: 2.6rem;
+  background:
+    linear-gradient(90deg, transparent 0 2.3rem, rgba(242, 164, 160, 0.9) 2.3rem calc(2.3rem + 2px), transparent calc(2.3rem + 2px)),
+    repeating-linear-gradient(180deg, transparent 0 calc(1.9rem - 1px), rgba(120, 140, 170, 0.16) calc(1.9rem - 1px) 1.9rem),
+    #fdfdfb;
+  box-shadow: 0 1px 2px rgba(35, 39, 47, 0.05), 0 8px 24px rgba(35, 39, 47, 0.06);
+}
+.tool-panel[data-tool-panel="grammar"] > * {
+  position: relative;
+  z-index: 1;
+}
+.tool-panel[data-tool-panel="grammar"] > .school-decor {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.school-mark {
+  position: absolute;
+  bottom: 1rem;
+  font-family: "Libre Baskerville", Georgia, serif !important;
+  font-style: italic;
+  color: #7a818d;
+  opacity: 0;
+  animation: school-float var(--dur, 12s) linear var(--delay, 0s) infinite;
+}
+.school-mark.is-red { color: #d0453f; }
+@keyframes school-float {
+  0% { transform: translate(0, 0) rotate(-6deg); opacity: 0; }
+  10% { opacity: 0.5; }
+  50% { transform: translate(var(--x, 0), -45vh) rotate(6deg); }
+  85% { opacity: 0.35; }
+  100% { transform: translate(calc(var(--x, 0) * -1), -90vh) rotate(-4deg); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .school-mark { display: none; }
+}
+
+/* Still pencil and ruler resting in the bottom corners */
+.school-side {
+  position: absolute;
+  bottom: 0.3rem;
+}
+.school-side--left {
+  left: 0.6rem;
+  width: clamp(5rem, 12vw, 8rem);
+  height: 2.6rem;
+}
+.school-side__pencil {
+  position: absolute;
+  left: 0;
+  bottom: 0.4rem;
+  width: 100%;
+  height: 1.1rem;
+  transform: rotate(-5deg);
+  transform-origin: 0 100%;
+  opacity: 0.85;
+}
+.school-side__pencil svg { display: block; }
+.school-side--right {
+  right: 0.6rem;
+  width: clamp(5rem, 12vw, 8rem);
+  height: 1.6rem;
+  transform: rotate(-8deg);
+  border-radius: 3px;
+  border: 1px solid #c7ccd4;
+  background:
+    repeating-linear-gradient(90deg, #8a919d 0 1px, transparent 1px 0.5rem) left top / 100% 30% no-repeat,
+    repeating-linear-gradient(90deg, #8a919d 0 1px, transparent 1px 2.5rem) left top / 100% 55% no-repeat,
+    rgba(214, 233, 228, 0.85);
+  opacity: 0.85;
+}
+
+/* Topic cards and lessons on paper */
+.tool-panel[data-tool-panel="grammar"] .lh-topic-card {
+  background: #ffffff;
+  border-color: #d5d8de;
+}
+.tool-panel[data-tool-panel="grammar"] .lh-topic-card:hover {
+  border-color: #d0453f;
+  box-shadow: 0 4px 14px rgba(208, 69, 63, 0.1);
+}
+.tool-panel[data-tool-panel="grammar"] .lh-topic-card--done {
+  background: #f3faf5;
+  border-color: rgba(31, 138, 68, 0.4);
+}
+.tool-panel[data-tool-panel="grammar"] .lh-lesson-card,
+body.content-panel-open .tool-panel[data-tool-panel="grammar"] .lh-lesson-card {
+  background: #ffffff;
+  border-color: #d5d8de;
+}
+.tool-panel[data-tool-panel="grammar"] .lh-lesson-section--learn {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: #d5d8de;
+}
+.tool-panel[data-tool-panel="grammar"] .lh-lesson-section--practice {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(208, 69, 63, 0.25);
+}
+
+/* Level menu – grammar card on notebook paper */
+#content-beginner .level-landing__card[data-tool="grammar"],
+#content-intermediate .level-landing__card[data-tool="grammar"],
+#content-advanced .level-landing__card[data-tool="grammar"] {
+  position: relative;
+  overflow: hidden;
+  border-color: #d5d8de !important;
+  border-top: 3px solid #d0453f !important;
+  background:
+    linear-gradient(90deg, transparent 0 0.9rem, rgba(242, 164, 160, 0.85) 0.9rem calc(0.9rem + 2px), transparent calc(0.9rem + 2px)),
+    repeating-linear-gradient(180deg, transparent 0 calc(1.45rem - 1px), rgba(120, 140, 170, 0.18) calc(1.45rem - 1px) 1.45rem),
+    #fdfdfb;
+}
+#content-beginner .level-landing__card[data-tool="grammar"]:hover,
+#content-intermediate .level-landing__card[data-tool="grammar"]:hover,
+#content-advanced .level-landing__card[data-tool="grammar"]:hover {
+  border-color: #d0453f !important;
+  box-shadow: 0 6px 18px rgba(208, 69, 63, 0.14);
+}
+#content-beginner .level-landing__card[data-tool="grammar"] > *,
+#content-intermediate .level-landing__card[data-tool="grammar"] > *,
+#content-advanced .level-landing__card[data-tool="grammar"] > * { position: relative; z-index: 1; }
+#content-beginner .level-landing__card[data-tool="grammar"]::after,
+#content-intermediate .level-landing__card[data-tool="grammar"]::after,
+#content-advanced .level-landing__card[data-tool="grammar"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='130' height='90' viewBox='0 0 130 90'%3E%3Cg transform='rotate(-24 70 60)'%3E%3Cpath d='M18 60 L34 54 L34 66 Z' fill='%23f2d9c4'/%3E%3Cpath d='M18 60 L24 57.8 L24 62.2 Z' fill='%2323272f'/%3E%3Crect x='34' y='54' width='70' height='12' fill='%23e86a5c'/%3E%3Crect x='34' y='54' width='70' height='4' fill='%23f0897d'/%3E%3Crect x='104' y='53' width='10' height='14' fill='%23b9c0cc'/%3E%3Crect x='114' y='53' width='14' height='14' rx='3' fill='%23f4a3b4'/%3E%3C/g%3E%3Ctext x='18' y='30' font-family='Georgia, serif' font-style='italic' font-size='20' fill='%23d0453f'%3E2+2%3C/text%3E%3Ctext x='70' y='26' font-family='Georgia, serif' font-style='italic' font-size='18' fill='%235f6672'%3EAbc%3C/text%3E%3C/svg%3E") no-repeat right 0.3rem bottom 0.2rem / auto 4.4rem;
+}
+#content-beginner .level-landing__card[data-tool="grammar"] .level-landing__card__icon,
+#content-intermediate .level-landing__card[data-tool="grammar"] .level-landing__card__icon,
+#content-advanced .level-landing__card[data-tool="grammar"] .level-landing__card__icon { color: #d0453f; }
+#content-beginner .level-landing__card[data-tool="grammar"] .level-landing__card__label,
+#content-intermediate .level-landing__card[data-tool="grammar"] .level-landing__card__label,
+#content-advanced .level-landing__card[data-tool="grammar"] .level-landing__card__label { color: #23272f; }
+#content-beginner .level-landing__card[data-tool="grammar"] .level-landing__card__hint,
+#content-intermediate .level-landing__card[data-tool="grammar"] .level-landing__card__hint,
+#content-advanced .level-landing__card[data-tool="grammar"] .level-landing__card__hint,
+#content-beginner .level-landing__card[data-tool="grammar"] .level-landing__card__progress,
+#content-intermediate .level-landing__card[data-tool="grammar"] .level-landing__card__progress,
+#content-advanced .level-landing__card[data-tool="grammar"] .level-landing__card__progress { color: #5f6672; max-width: calc(100% - 4.5rem); }

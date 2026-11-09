@@ -4887,6 +4887,124 @@
     panel.insertBefore(decor, panel.firstChild);
   }
 
+  /** A pencil, drawn lying flat with the tip on the left. */
+  function pencilSvg() {
+    return '<svg viewBox="0 0 160 24" width="100%" height="100%">' +
+      '<path d="M0 12 L18 5 L18 19 Z" fill="#f2d9c4"/>' +
+      '<path d="M0 12 L7 9.3 L7 14.7 Z" fill="#23272f"/>' +
+      '<rect x="18" y="5" width="104" height="14" fill="#e86a5c"/>' +
+      '<rect x="18" y="5" width="104" height="4.6" fill="#f0897d"/>' +
+      '<rect x="18" y="14.4" width="104" height="4.6" fill="#cf5246"/>' +
+      '<rect x="122" y="4" width="14" height="16" fill="#b9c0cc"/>' +
+      '<rect x="125" y="4" width="2" height="16" fill="#9aa2b0"/><rect x="131" y="4" width="2" height="16" fill="#9aa2b0"/>' +
+      '<rect x="136" y="4" width="22" height="16" rx="4" fill="#f4a3b4"/></svg>';
+  }
+
+  /**
+   * Grammar intro: a notebook page rules itself, a pencil writes the title,
+   * the red pen underlines it, then the pencil's eraser rubs it out.
+   * Click or press a key to skip. Skipped for reduced motion.
+   */
+  function playGrammarIntro(panel) {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const old = document.querySelector(".school-intro");
+    if (old) old.remove();
+
+    const overlay = document.createElement("div");
+    overlay.className = "school-intro";
+    overlay.setAttribute("aria-hidden", "true");
+    overlay.innerHTML =
+      '<div class="school-intro__rules"></div><div class="school-intro__margin"></div>';
+
+    const word = document.createElement("h2");
+    word.className = "school-intro__word";
+    const text = document.createElement("span");
+    text.className = "school-intro__text";
+    text.textContent = I18n.t("learning_tab_grammar");
+    word.appendChild(text);
+    const underline = document.createElement("span");
+    underline.className = "school-intro__underline";
+    underline.innerHTML =
+      '<svg viewBox="0 0 300 20" preserveAspectRatio="none" width="100%" height="100%"><path d="M4 12 C 60 6, 120 16, 180 10 S 270 8, 296 12" fill="none" stroke="#d0453f" stroke-width="4" stroke-linecap="round" pathLength="1"/></svg>';
+    word.appendChild(underline);
+    const writer = document.createElement("span");
+    writer.className = "school-intro__pencil school-intro__pencil--write";
+    writer.innerHTML = pencilSvg();
+    word.appendChild(writer);
+    const eraser = document.createElement("span");
+    eraser.className = "school-intro__pencil school-intro__pencil--erase";
+    eraser.innerHTML = pencilSvg();
+    word.appendChild(eraser);
+    overlay.appendChild(word);
+
+    // Eraser crumbs flicking off as it rubs
+    for (let i = 0; i < 14; i += 1) {
+      const c = document.createElement("span");
+      c.className = "school-intro__crumb";
+      c.style.left = (10 + (i / 13) * 80).toFixed(1) + "%";
+      c.style.setProperty("--d", (1.5 + (i / 13) * 0.45).toFixed(2) + "s");
+      c.style.setProperty("--x", (Math.random() * 40 - 20).toFixed(0) + "px");
+      word.appendChild(c);
+    }
+
+    document.body.appendChild(overlay);
+
+    const shell = panel;
+    if (shell) {
+      shell.classList.remove("school-reveal");
+      shell.style.opacity = "0";
+    }
+    let finished = false;
+    function reveal() {
+      if (!shell) return;
+      shell.style.opacity = "";
+      void shell.offsetWidth;
+      shell.classList.add("school-reveal");
+    }
+    const revealTimer = setTimeout(reveal, 2250);
+    function finish() {
+      if (finished) return;
+      finished = true;
+      clearTimeout(revealTimer);
+      clearTimeout(endTimer);
+      document.removeEventListener("keydown", finish);
+      overlay.remove();
+      if (shell && shell.style.opacity === "0") reveal();
+    }
+    const endTimer = setTimeout(finish, 2850);
+    overlay.addEventListener("click", finish);
+    document.addEventListener("keydown", finish);
+  }
+
+  /** School doodles drifting up the sides of the grammar panel; the middle stays still. */
+  function addSchoolDecor(panel) {
+    if (!panel || panel.querySelector(".school-decor")) return;
+    const decor = document.createElement("div");
+    decor.className = "school-decor";
+    decor.setAttribute("aria-hidden", "true");
+    const marks = ["+", "÷", "=", "×", "?", "a", "b", "c", "√", "%", "!", "Aa", "1", "2", "3"];
+    for (let i = 0; i < 12; i += 1) {
+      const m = document.createElement("span");
+      m.className = "school-mark";
+      m.textContent = marks[Math.floor(Math.random() * marks.length)];
+      m.style.left = (i % 2 ? 1.5 + Math.random() * 9 : 89 + Math.random() * 8).toFixed(1) + "%";
+      m.style.fontSize = (0.9 + Math.random() * 0.8).toFixed(2) + "rem";
+      m.style.setProperty("--dur", (10 + Math.random() * 7).toFixed(1) + "s");
+      m.style.setProperty("--delay", (-Math.random() * 17).toFixed(1) + "s");
+      m.style.setProperty("--x", (Math.random() * 14 - 7).toFixed(0) + "px");
+      if (i % 3 === 0) m.classList.add("is-red");
+      decor.appendChild(m);
+    }
+    const left = document.createElement("div");
+    left.className = "school-side school-side--left";
+    left.innerHTML = '<span class="school-side__pencil">' + pencilSvg() + "</span>";
+    decor.appendChild(left);
+    const right = document.createElement("div");
+    right.className = "school-side school-side--right";
+    decor.appendChild(right);
+    panel.insertBefore(decor, panel.firstChild);
+  }
+
   function mountVocabPath(root, level, panel, onLevelProgressChange) {
     const bank = buildVocabBank(level);
     const total = bank.order.length;
@@ -6857,6 +6975,7 @@
     document.body.classList.toggle("ocean-zone", panelOpen("words"));
     document.body.classList.toggle("fire-zone", panelOpen("flashcards"));
     document.body.classList.toggle("music-zone", panelOpen("dictation"));
+    document.body.classList.toggle("school-zone", panelOpen("grammar"));
   }
 
   function updateContentBreadcrumb() {
@@ -9168,6 +9287,10 @@
         if (name === "words") addSeaDecor(root.querySelector('[data-tool-panel="words"]'));
         if (name === "flashcards") addFireDecor(root.querySelector('[data-tool-panel="flashcards"]'));
         if (name === "dictation") addMusicDecor(root.querySelector('[data-tool-panel="dictation"]'));
+        if (name === "grammar") addSchoolDecor(root.querySelector('[data-tool-panel="grammar"]'));
+        if (name === "grammar" && currentTab !== "grammar") {
+          playGrammarIntro(root.querySelector('[data-tool-panel="grammar"]'));
+        }
         if (name === "dictation" && currentTab !== "dictation") {
           playDictIntro(root.querySelector('[data-tool-panel="dictation"]'));
         }
