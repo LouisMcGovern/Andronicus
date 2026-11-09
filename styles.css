@@ -8804,3 +8804,24 @@ body.wr-open .pts {
   font-size: 0.8rem;
   color: #4a6580;
 }
+
+/* Back-to-levels button in the level's own colour */
+#content-beginner .btn-level-back,
+#content-intermediate .btn-level-back,
+#content-advanced .btn-level-back {
+  color: var(--lvl-strong);
+  border-color: var(--lvl);
+  background: var(--surface-elevated);
+}
+#content-beginner .btn-level-back:hover,
+#content-intermediate .btn-level-back:hover,
+#content-advanced .btn-level-back:hover {
+  color: #fff;
+  background: var(--lvl);
+  border-color: var(--lvl);
+}
+#content-beginner .btn-level-back:focus-visible,
+#content-intermediate .btn-level-back:focus-visible,
+#content-advanced .btn-level-back:focus-visible {
+  outline-color: var(--lvl);
+}
