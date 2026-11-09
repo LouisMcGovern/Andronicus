@@ -5256,6 +5256,174 @@
     panel.insertBefore(decor, panel.firstChild);
   }
 
+  /** Friendly animal faces for the leaderboard theme. */
+  function animalSvg(kind) {
+    const eyes = function (lx, rx, y) {
+      return '<circle cx="' + lx + '" cy="' + y + '" r="3.2" fill="#2b2530"/><circle cx="' + rx + '" cy="' + y + '" r="3.2" fill="#2b2530"/>' +
+        '<circle cx="' + (lx + 1) + '" cy="' + (y - 1) + '" r="1" fill="#fff"/><circle cx="' + (rx + 1) + '" cy="' + (y - 1) + '" r="1" fill="#fff"/>';
+    };
+    const cheeks = '<circle cx="18" cy="44" r="4" fill="#f6a5b8" opacity="0.7"/><circle cx="46" cy="44" r="4" fill="#f6a5b8" opacity="0.7"/>';
+    const svgs = {
+      panda:
+        '<circle cx="14" cy="16" r="9" fill="#2f2a33"/><circle cx="50" cy="16" r="9" fill="#2f2a33"/>' +
+        '<circle cx="32" cy="36" r="24" fill="#ffffff" stroke="#e6e1ea" stroke-width="1.5"/>' +
+        '<ellipse cx="22" cy="34" rx="6" ry="7.5" fill="#2f2a33" transform="rotate(-20 22 34)"/><ellipse cx="42" cy="34" rx="6" ry="7.5" fill="#2f2a33" transform="rotate(20 42 34)"/>' +
+        '<circle cx="23" cy="34" r="2.2" fill="#fff"/><circle cx="41" cy="34" r="2.2" fill="#fff"/>' +
+        '<ellipse cx="32" cy="44" rx="3.6" ry="2.6" fill="#2f2a33"/>' + cheeks,
+      fox:
+        '<path d="M10 6 L24 22 L12 30 Z" fill="#f08a5d"/><path d="M54 6 L40 22 L52 30 Z" fill="#f08a5d"/>' +
+        '<path d="M13 11 L21 21 L14 25 Z" fill="#fde3d8"/><path d="M51 11 L43 21 L50 25 Z" fill="#fde3d8"/>' +
+        '<path d="M8 30 C 10 16, 54 16, 56 30 C 56 44, 44 58, 32 58 C 20 58, 8 44, 8 30 Z" fill="#f08a5d"/>' +
+        '<path d="M14 36 C 22 40, 28 44, 32 58 C 36 44, 42 40, 50 36 C 46 50, 40 58, 32 58 C 24 58, 18 50, 14 36 Z" fill="#fff7f3"/>' +
+        eyes(23, 41, 33) + '<ellipse cx="32" cy="50" rx="3.4" ry="2.4" fill="#2b2530"/>',
+      bunny:
+        '<ellipse cx="22" cy="12" rx="6" ry="14" fill="#f4eef6"/><ellipse cx="42" cy="12" rx="6" ry="14" fill="#f4eef6"/>' +
+        '<ellipse cx="22" cy="13" rx="3" ry="10" fill="#f6b6c8"/><ellipse cx="42" cy="13" rx="3" ry="10" fill="#f6b6c8"/>' +
+        '<circle cx="32" cy="38" r="21" fill="#f4eef6" stroke="#e3dbe8" stroke-width="1.5"/>' +
+        eyes(24, 40, 36) + '<path d="M29 44 L35 44 L32 47 Z" fill="#e8849c"/>' + cheeks,
+      frog:
+        '<circle cx="19" cy="20" r="10" fill="#8fd17a"/><circle cx="45" cy="20" r="10" fill="#8fd17a"/>' +
+        '<ellipse cx="32" cy="40" rx="26" ry="19" fill="#8fd17a"/>' +
+        '<circle cx="19" cy="20" r="6" fill="#fff"/><circle cx="45" cy="20" r="6" fill="#fff"/>' +
+        '<circle cx="20" cy="21" r="3.2" fill="#2b2530"/><circle cx="46" cy="21" r="3.2" fill="#2b2530"/>' +
+        '<path d="M20 44 C 26 50, 38 50, 44 44" fill="none" stroke="#3f7a3f" stroke-width="2.4" stroke-linecap="round"/>' + cheeks,
+      cat:
+        '<path d="M10 8 L24 22 L10 30 Z" fill="#a9a3b8"/><path d="M54 8 L40 22 L54 30 Z" fill="#a9a3b8"/>' +
+        '<path d="M13 14 L20 22 L13 26 Z" fill="#f6b6c8"/><path d="M51 14 L44 22 L51 26 Z" fill="#f6b6c8"/>' +
+        '<circle cx="32" cy="36" r="23" fill="#a9a3b8"/>' +
+        '<ellipse cx="24" cy="34" rx="3.4" ry="4.4" fill="#2b2530"/><ellipse cx="40" cy="34" rx="3.4" ry="4.4" fill="#2b2530"/>' +
+        '<path d="M29 42 L35 42 L32 45 Z" fill="#e8849c"/>' +
+        '<path d="M32 45 C 30 49, 26 49, 25 47 M32 45 C 34 49, 38 49, 39 47" fill="none" stroke="#2b2530" stroke-width="1.6" stroke-linecap="round"/>' +
+        '<path d="M6 40 L18 42 M6 46 L18 45 M58 40 L46 42 M58 46 L46 45" stroke="#6f6880" stroke-width="1.2"/>'
+    };
+    return '<svg viewBox="0 0 64 64" width="100%" height="100%">' + (svgs[kind] || svgs.cat) + "</svg>";
+  }
+
+  function pawSvg(color) {
+    return '<svg viewBox="0 0 40 40" width="100%" height="100%"><g fill="' + color + '">' +
+      '<ellipse cx="20" cy="27" rx="10" ry="8.5"/><ellipse cx="8" cy="15" rx="4.2" ry="5.4"/><ellipse cx="16" cy="8" rx="4.2" ry="5.6"/>' +
+      '<ellipse cx="25" cy="8" rx="4.2" ry="5.6"/><ellipse cx="33" cy="15" rx="4.2" ry="5.4"/></g></svg>';
+  }
+
+  /**
+   * Leaderboard intro: animals pop up along the bottom, a trail of paw prints
+   * walks across the title and each letter it steps on hops away.
+   * Click or press a key to skip. Skipped for reduced motion.
+   */
+  function playAnimalIntro(panel) {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const old = document.querySelector(".zoo-intro");
+    if (old) old.remove();
+
+    const overlay = document.createElement("div");
+    overlay.className = "zoo-intro";
+    overlay.setAttribute("aria-hidden", "true");
+    overlay.innerHTML = '<div class="zoo-intro__grass"></div>';
+
+    ["panda", "fox", "bunny", "frog", "cat"].forEach(function (k, i) {
+      const a = document.createElement("div");
+      a.className = "zoo-intro__animal";
+      a.style.left = (6 + i * 19).toFixed(0) + "%";
+      a.style.setProperty("--d", (0.15 + i * 0.08).toFixed(2) + "s");
+      a.innerHTML = animalSvg(k);
+      overlay.appendChild(a);
+    });
+
+    const word = document.createElement("h2");
+    word.className = "zoo-intro__word";
+    Array.from(I18n.t("lb_title")).forEach(function (ch, i) {
+      const sp = document.createElement("span");
+      sp.textContent = ch === " " ? " " : ch;
+      sp.style.setProperty("--i", String(i));
+      word.appendChild(sp);
+    });
+    overlay.appendChild(word);
+    document.body.appendChild(overlay);
+
+    // Paw prints walk left to right across the word; each letter hops off as a paw lands on it
+    const wr = word.getBoundingClientRect();
+    const steps = 9;
+    const stepGap = (wr.width + 160) / steps;
+    for (let i = 0; i < steps; i += 1) {
+      const p = document.createElement("span");
+      p.className = "zoo-intro__paw";
+      const x = wr.left - 80 + i * stepGap;
+      const y = wr.top + wr.height / 2 + (i % 2 ? -18 : 14);
+      const size = Math.max(26, wr.height * 0.42);
+      p.style.width = size + "px";
+      p.style.height = size + "px";
+      p.style.left = (x - size / 2).toFixed(0) + "px";
+      p.style.top = (y - size / 2).toFixed(0) + "px";
+      p.style.setProperty("--d", (0.8 + i * 0.09).toFixed(2) + "s");
+      p.innerHTML = pawSvg(i % 2 ? "#e0607e" : "#c94f6d");
+      overlay.appendChild(p);
+    }
+    word.querySelectorAll("span").forEach(function (sp) {
+      const r = sp.getBoundingClientRect();
+      const stepIdx = Math.max(0, (r.left + r.width / 2 - (wr.left - 80)) / stepGap);
+      sp.style.setProperty("--b", (0.8 + stepIdx * 0.09 + 0.05).toFixed(2) + "s");
+      sp.style.setProperty("--x", (Math.random() * 60 - 10).toFixed(0) + "px");
+      sp.style.setProperty("--r", (Math.random() * 70 - 35).toFixed(0) + "deg");
+    });
+
+    const shell = panel;
+    if (shell) {
+      shell.classList.remove("zoo-reveal");
+      shell.style.opacity = "0";
+    }
+    let finished = false;
+    function reveal() {
+      if (!shell) return;
+      shell.style.opacity = "";
+      void shell.offsetWidth;
+      shell.classList.add("zoo-reveal");
+    }
+    const revealTimer = setTimeout(reveal, 2250);
+    function finish() {
+      if (finished) return;
+      finished = true;
+      clearTimeout(revealTimer);
+      clearTimeout(endTimer);
+      document.removeEventListener("keydown", finish);
+      overlay.remove();
+      if (shell && shell.style.opacity === "0") reveal();
+    }
+    const endTimer = setTimeout(finish, 2850);
+    overlay.addEventListener("click", finish);
+    document.addEventListener("keydown", finish);
+  }
+
+  /** Animals peeking from the bottom corners and paw prints walking up the sides of the leaderboard. */
+  function addAnimalDecor(panel) {
+    if (!panel || panel.querySelector(".zoo-decor")) return;
+    const decor = document.createElement("div");
+    decor.className = "zoo-decor";
+    decor.setAttribute("aria-hidden", "true");
+    ["left", "right"].forEach(function (side) {
+      const trail = document.createElement("div");
+      trail.className = "zoo-trail zoo-trail--" + side;
+      for (let i = 0; i < 6; i += 1) {
+        const p = document.createElement("span");
+        p.className = "zoo-step";
+        p.style.bottom = (8 + i * 13) + "%";
+        p.style.setProperty("--k", String(i));
+        p.style.setProperty("--off", (i % 2 ? 1 : -1) * 9 + "px");
+        p.innerHTML = pawSvg(side === "left" ? "#e0607e" : "#9f7fd0");
+        trail.appendChild(p);
+      }
+      decor.appendChild(trail);
+    });
+    const left = document.createElement("div");
+    left.className = "zoo-peek zoo-peek--left";
+    left.innerHTML = '<span class="zoo-peek__a">' + animalSvg("panda") + '</span><span class="zoo-peek__b">' + animalSvg("bunny") + "</span>";
+    decor.appendChild(left);
+    const right = document.createElement("div");
+    right.className = "zoo-peek zoo-peek--right";
+    right.innerHTML = '<span class="zoo-peek__a">' + animalSvg("fox") + '</span><span class="zoo-peek__b">' + animalSvg("frog") + "</span>";
+    decor.appendChild(right);
+    panel.insertBefore(decor, panel.firstChild);
+  }
+
   function mountVocabPath(root, level, panel, onLevelProgressChange) {
     const bank = buildVocabBank(level);
     const total = bank.order.length;
@@ -7229,6 +7397,7 @@
     document.body.classList.toggle("school-zone", panelOpen("homework"));
     document.body.classList.toggle("space-zone", panelOpen("grammar"));
     document.body.classList.toggle("desert-zone", panelOpen("verbs"));
+    document.body.classList.toggle("zoo-zone", panelOpen("leaderboard"));
   }
 
   function updateContentBreadcrumb() {
@@ -9546,6 +9715,10 @@
         }
         if (name === "grammar") addSpaceDecor(root.querySelector('[data-tool-panel="grammar"]'));
         if (name === "verbs") addDesertDecor(root.querySelector('[data-tool-panel="verbs"]'));
+        if (name === "leaderboard") addAnimalDecor(root.querySelector('[data-tool-panel="leaderboard"]'));
+        if (name === "leaderboard" && currentTab !== "leaderboard") {
+          playAnimalIntro(root.querySelector('[data-tool-panel="leaderboard"]'));
+        }
         if (name === "verbs" && currentTab !== "verbs") {
           playDesertIntro(root.querySelector('[data-tool-panel="verbs"]'));
         }

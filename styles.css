@@ -11635,7 +11635,9 @@ body.content-panel-open .tool-panel[data-tool-panel="verbs"],
 
 /* The verbs table: fits the screen, scrolls inside, header stays put */
 .tool-panel[data-tool-panel="verbs"] .iv-table-wrap {
-  max-height: max(12rem, calc(100vh - 33rem));
+  max-height: none;
+  overflow: visible;
+  overflow: clip;
   border-color: #e3c4c4;
   background: #ffffff;
   box-shadow: 0 4px 16px rgba(61, 30, 42, 0.06);
@@ -11720,3 +11722,318 @@ body.content-panel-open .tool-panel[data-tool-panel="verbs"],
 .tool-panel[data-tool-panel="verbs"] .iv-title { font-size: 1.5rem; margin: 0; }
 .tool-panel[data-tool-panel="verbs"] .iv-count { margin: 0.1rem 0 0; }
 .tool-panel[data-tool-panel="verbs"] .iv-hint { margin: 0.25rem 0 0.4rem; }
+
+/* Irregular verbs – the full list sits on the page; the column headers stick under the top bar */
+.tool-panel[data-tool-panel="verbs"] .iv-table th {
+  top: 57px;
+  z-index: 2;
+  box-shadow: 0 1px 0 #ecd3d2;
+}
+
+/* ==========================================================================
+   Leaderboard – animal intro: animals pop up, paw prints walk across the
+   title and each letter they land on hops away
+   ========================================================================== */
+.zoo-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  overflow: hidden;
+  cursor: pointer;
+  background:
+    radial-gradient(70% 50% at 50% 40%, #ffffff 0%, transparent 75%),
+    linear-gradient(180deg, #eef7f4 0%, #f2f8ea 70%, #e6f3d9 100%);
+  animation: zoo-bg-in 0.3s ease both, zoo-bg-out 0.5s ease 2.3s forwards;
+}
+.zoo-intro__grass {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 16vh;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40' viewBox='0 0 120 40'%3E%3Cpath d='M0 40 L6 18 L10 40 L16 10 L22 40 L28 22 L32 40 L40 14 L46 40 L52 20 L58 40 L64 8 L70 40 L76 24 L82 40 L88 12 L94 40 L100 20 L106 40 L112 16 L120 40 Z' fill='%23a9d98e'/%3E%3C/svg%3E") repeat-x left top / 120px 40px,
+    linear-gradient(180deg, transparent 0 38px, #a9d98e 38px);
+  transform: translateY(100%);
+  animation: zoo-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.05s forwards;
+}
+.zoo-intro__animal {
+  position: absolute;
+  bottom: 9vh;
+  width: min(15vmin, 9rem);
+  height: min(15vmin, 9rem);
+  transform: translateY(160%);
+  animation:
+    zoo-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) var(--d, 0.2s) forwards,
+    zoo-duck 0.4s cubic-bezier(0.55, 0, 0.8, 0.4) 1.85s forwards;
+}
+.zoo-intro__animal svg { display: block; }
+
+.zoo-intro__word {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  z-index: 2;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  font-weight: 400;
+  font-size: clamp(2.6rem, 9vw, 6.5rem);
+  color: #2f2433;
+  white-space: nowrap;
+  text-shadow: 0 2px 0 rgba(255, 255, 255, 0.7);
+}
+.zoo-intro__word > span {
+  display: inline-block;
+  opacity: 0;
+  animation:
+    zoo-letter 0.45s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i) * 0.03s) forwards,
+    zoo-hop 0.6s cubic-bezier(0.3, 0, 0.7, 1) var(--b, 1.2s) forwards;
+}
+.zoo-intro__paw {
+  position: fixed;
+  z-index: 3;
+  opacity: 0;
+  transform: scale(0.4) rotate(90deg);
+  animation: zoo-step 0.9s ease-out var(--d, 0.8s) forwards;
+}
+
+.zoo-reveal {
+  animation: vp-reveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes zoo-bg-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes zoo-bg-out { to { opacity: 0; visibility: hidden; } }
+@keyframes zoo-rise { to { transform: translateY(0); } }
+@keyframes zoo-pop { to { transform: translateY(0); } }
+@keyframes zoo-duck {
+  from { transform: translateY(0); }
+  to { transform: translateY(160%); }
+}
+@keyframes zoo-letter {
+  from { opacity: 0; transform: translateY(0.35em); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes zoo-hop {
+  0% { opacity: 1; transform: none; }
+  35% { opacity: 1; transform: translate(calc(var(--x, 0px) * 0.3), -0.7em) rotate(calc(var(--r, 0deg) * 0.5)); }
+  100% { opacity: 0; transform: translate(var(--x, 0px), 1.6em) rotate(var(--r, 0deg)); }
+}
+@keyframes zoo-step {
+  0% { opacity: 0; transform: scale(0.4) rotate(90deg); }
+  15% { opacity: 1; transform: scale(1.1) rotate(90deg); }
+  25% { transform: scale(1) rotate(90deg); }
+  75% { opacity: 1; }
+  100% { opacity: 0; transform: scale(1) rotate(90deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zoo-intro { display: none; }
+  .zoo-reveal { animation: none; }
+}
+
+body .zoo-intro__word,
+body .zoo-intro__word * {
+  font-family: "Libre Baskerville", Georgia, serif !important;
+}
+
+/* ==========================================================================
+   Leaderboard zone – a bright meadow while the leaderboard is open
+   ========================================================================== */
+body.zoo-zone {
+  --page-bg: #eef6ec;
+  --surface: #f8fbf5;
+  --surface-elevated: #eef5e9;
+  --border: #cfe2c4;
+  --accent: #d24f6c;
+  --accent-strong: #e0607e;
+  --accent-soft: rgba(224, 96, 126, 0.1);
+  --ink-heading: #2f2433;
+  --text: #2f2833;
+  --readable-body: #463d4a;
+  --muted: #6a6470;
+  --chrome-bg: #f3f8ef;
+  --chrome-border: #cfe2c4;
+  --chrome-btn-border: rgba(47, 36, 51, 0.2);
+  --chrome-btn-text: #2f2433;
+  --chrome-btn-hover: rgba(224, 96, 126, 0.08);
+  --chrome-btn-active-bg: #e0607e;
+  --chrome-btn-active-border: #d24f6c;
+  background: #eef6ec;
+}
+body.zoo-zone::before {
+  background: radial-gradient(ellipse 70% 45% at 50% 0%, rgba(255, 255, 255, 0.6), transparent 60%);
+}
+body.zoo-zone.content-panel-open .panel-toolbar,
+body.zoo-zone .content-breadcrumb {
+  background: #f3f8ef;
+  border-bottom-color: #cfe2c4;
+}
+body.zoo-zone .content-breadcrumb { color: #6a6470; }
+body.zoo-zone .content-breadcrumb__current { color: #2f2433; }
+body.zoo-zone.content-panel-open .panel--content { background: #eef6ec; }
+body.zoo-zone .level-article,
+body.zoo-zone .level-article#content-beginner,
+body.zoo-zone .level-article#content-intermediate,
+body.zoo-zone .level-article#content-advanced {
+  background: transparent;
+  padding-top: 1.1rem;
+}
+body.zoo-zone .lh-back-to-menu { margin-bottom: 0.6rem; }
+body.zoo-zone .btn-text,
+body.zoo-zone .btn-level-back,
+body.zoo-zone .btn-icon-close,
+body.zoo-zone .lh-back-to-menu {
+  background: #f8fbf5;
+  border-color: #cfe2c4;
+}
+body.zoo-zone .btn-text:hover,
+body.zoo-zone .btn-level-back:hover,
+body.zoo-zone .btn-icon-close:hover,
+body.zoo-zone .lh-back-to-menu:hover { background: #ffffff; }
+body.zoo-zone .pts-btn { border-color: #cfe2c4; color: #2f2433; }
+body.zoo-zone .pts-btn__star { color: #e0607e; }
+
+/* The panel: sky-to-meadow with grass along the bottom */
+body.content-panel-open .tool-panel[data-tool-panel="leaderboard"],
+.panel--content .tool-panel[data-tool-panel="leaderboard"] {
+  position: relative;
+  overflow: hidden;
+  border-color: #cfe2c4;
+  border-radius: 0.6rem;
+  padding: 1rem clamp(3.6rem, 9vw, 6rem) 5.2rem;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40' viewBox='0 0 120 40'%3E%3Cpath d='M0 40 L6 18 L10 40 L16 10 L22 40 L28 22 L32 40 L40 14 L46 40 L52 20 L58 40 L64 8 L70 40 L76 24 L82 40 L88 12 L94 40 L100 20 L106 40 L112 16 L120 40 Z' fill='%23bfe3a8'/%3E%3C/svg%3E") repeat-x left bottom 1.1rem / 120px 34px,
+    linear-gradient(180deg, transparent calc(100% - 1.2rem), #bfe3a8 calc(100% - 1.2rem)),
+    linear-gradient(180deg, #f2f9f8 0%, #f5faef 70%, #ebf5e2 100%);
+  box-shadow: 0 1px 2px rgba(47, 36, 51, 0.05), 0 8px 24px rgba(47, 36, 51, 0.06);
+}
+.tool-panel[data-tool-panel="leaderboard"] > * {
+  position: relative;
+  z-index: 1;
+}
+.tool-panel[data-tool-panel="leaderboard"] > .zoo-decor {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Paw prints walking up each side, one step at a time */
+.zoo-trail {
+  position: absolute;
+  top: 0;
+  bottom: 4rem;
+  width: clamp(2.4rem, 6vw, 4rem);
+}
+.zoo-trail--left { left: 0.6rem; }
+.zoo-trail--right { right: 0.6rem; }
+.zoo-step {
+  position: absolute;
+  left: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-left: calc(-0.75rem + var(--off, 0px));
+  opacity: 0;
+  animation: zoo-walk 9s linear infinite;
+  animation-delay: calc(var(--k) * 0.9s);
+}
+.zoo-trail--right .zoo-step { animation-delay: calc(4.5s + var(--k) * 0.9s); }
+.zoo-step svg { display: block; }
+@keyframes zoo-walk {
+  0% { opacity: 0; transform: scale(0.6); }
+  3% { opacity: 0.55; transform: scale(1.05); }
+  6% { transform: scale(1); }
+  45% { opacity: 0.45; }
+  60%, 100% { opacity: 0; transform: scale(1); }
+}
+
+/* Animals peeking up from the grass in the bottom corners */
+.zoo-peek {
+  position: absolute;
+  bottom: 0.4rem;
+  width: clamp(5.5rem, 12vw, 8rem);
+  height: 3.6rem;
+}
+.zoo-peek--left { left: 0.4rem; }
+.zoo-peek--right { right: 0.4rem; }
+.zoo-peek span {
+  position: absolute;
+  bottom: 0;
+  width: 3.4rem;
+  height: 3.4rem;
+}
+.zoo-peek span svg { display: block; }
+.zoo-peek__a { left: 0; }
+.zoo-peek__b { left: 2.6rem; width: 2.9rem !important; height: 2.9rem !important; }
+.zoo-peek--right .zoo-peek__a { left: auto; right: 0; }
+.zoo-peek--right .zoo-peek__b { left: auto; right: 2.6rem; }
+@media (prefers-reduced-motion: reduce) {
+  .zoo-step { animation: none; opacity: 0.35; }
+}
+
+/* The leaderboard list */
+.tool-panel[data-tool-panel="leaderboard"] .lb-title { color: #2f2433; }
+.tool-panel[data-tool-panel="leaderboard"] .lb-sub,
+.tool-panel[data-tool-panel="leaderboard"] .lb-msg { color: #6a6470; }
+.tool-panel[data-tool-panel="leaderboard"] .lb-list {
+  border-color: #d9e8cf;
+  box-shadow: 0 4px 16px rgba(47, 36, 51, 0.06);
+}
+.tool-panel[data-tool-panel="leaderboard"] .lb-row { border-top-color: #edf3e8; color: #2f2833; }
+.tool-panel[data-tool-panel="leaderboard"] .lb-row.is-top { background: #fbfdf8; }
+.tool-panel[data-tool-panel="leaderboard"] .lb-row.is-me,
+.tool-panel[data-tool-panel="leaderboard"] .lb-me {
+  background: #fdeef2;
+  color: #8d2f47;
+}
+.tool-panel[data-tool-panel="leaderboard"] .lb-rank { color: #6a6470; }
+.tool-panel[data-tool-panel="leaderboard"] .lb-row.is-top .lb-rank { color: #d24f6c; }
+.tool-panel[data-tool-panel="leaderboard"] .lb-pts { color: #d24f6c; }
+.tool-panel[data-tool-panel="leaderboard"] .lb-refresh { border-color: #cfe2c4; color: #8d2f47; }
+
+/* Level menu – leaderboard card in its animal theme */
+#content-beginner .level-landing__card[data-tool="leaderboard"],
+#content-intermediate .level-landing__card[data-tool="leaderboard"],
+#content-advanced .level-landing__card[data-tool="leaderboard"] {
+  position: relative;
+  overflow: hidden;
+  border-color: #cfe2c4 !important;
+  border-top: 3px solid #e0607e !important;
+  background: linear-gradient(180deg, #f3faf8 0%, #eef7e6 100%);
+}
+#content-beginner .level-landing__card[data-tool="leaderboard"]:hover,
+#content-intermediate .level-landing__card[data-tool="leaderboard"]:hover,
+#content-advanced .level-landing__card[data-tool="leaderboard"]:hover {
+  border-color: #e0607e !important;
+  box-shadow: 0 6px 18px rgba(224, 96, 126, 0.16);
+}
+#content-beginner .level-landing__card[data-tool="leaderboard"] > *,
+#content-intermediate .level-landing__card[data-tool="leaderboard"] > *,
+#content-advanced .level-landing__card[data-tool="leaderboard"] > * { position: relative; z-index: 1; }
+#content-beginner .level-landing__card[data-tool="leaderboard"]::after,
+#content-intermediate .level-landing__card[data-tool="leaderboard"]::after,
+#content-advanced .level-landing__card[data-tool="leaderboard"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='130' height='90' viewBox='0 0 130 90'%3E%3Cpath d='M0 78 C 30 70, 70 72, 130 74 V 90 H 0 Z' fill='%23bfe3a8'/%3E%3Cg transform='translate(62 40) scale(0.72)'%3E%3Cpath d='M10 8 L24 22 L10 30 Z' fill='%23a9a3b8'/%3E%3Cpath d='M54 8 L40 22 L54 30 Z' fill='%23a9a3b8'/%3E%3Ccircle cx='32' cy='36' r='23' fill='%23a9a3b8'/%3E%3Cellipse cx='24' cy='34' rx='3.4' ry='4.4' fill='%232b2530'/%3E%3Cellipse cx='40' cy='34' rx='3.4' ry='4.4' fill='%232b2530'/%3E%3Cpath d='M29 42 L35 42 L32 45 Z' fill='%23e8849c'/%3E%3C/g%3E%3Cg transform='translate(14 18) scale(0.42) rotate(-20 20 20)'%3E%3Cg fill='%23e0607e'%3E%3Cellipse cx='20' cy='27' rx='10' ry='8.5'/%3E%3Cellipse cx='8' cy='15' rx='4.2' ry='5.4'/%3E%3Cellipse cx='16' cy='8' rx='4.2' ry='5.6'/%3E%3Cellipse cx='25' cy='8' rx='4.2' ry='5.6'/%3E%3Cellipse cx='33' cy='15' rx='4.2' ry='5.4'/%3E%3C/g%3E%3C/g%3E%3Cg transform='translate(34 6) scale(0.36) rotate(-10 20 20)'%3E%3Cg fill='%23e0607e'%3E%3Cellipse cx='20' cy='27' rx='10' ry='8.5'/%3E%3Cellipse cx='8' cy='15' rx='4.2' ry='5.4'/%3E%3Cellipse cx='16' cy='8' rx='4.2' ry='5.6'/%3E%3Cellipse cx='25' cy='8' rx='4.2' ry='5.6'/%3E%3Cellipse cx='33' cy='15' rx='4.2' ry='5.4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") no-repeat right 0.3rem bottom 0 / auto 4.6rem;
+}
+#content-beginner .level-landing__card[data-tool="leaderboard"] .level-landing__card__icon,
+#content-intermediate .level-landing__card[data-tool="leaderboard"] .level-landing__card__icon,
+#content-advanced .level-landing__card[data-tool="leaderboard"] .level-landing__card__icon { color: #e0607e; }
+#content-beginner .level-landing__card[data-tool="leaderboard"] .level-landing__card__label,
+#content-intermediate .level-landing__card[data-tool="leaderboard"] .level-landing__card__label,
+#content-advanced .level-landing__card[data-tool="leaderboard"] .level-landing__card__label { color: #2f2433; }
+#content-beginner .level-landing__card[data-tool="leaderboard"] .level-landing__card__hint,
+#content-intermediate .level-landing__card[data-tool="leaderboard"] .level-landing__card__hint,
+#content-advanced .level-landing__card[data-tool="leaderboard"] .level-landing__card__hint,
+#content-beginner .level-landing__card[data-tool="leaderboard"] .level-landing__card__progress,
+#content-intermediate .level-landing__card[data-tool="leaderboard"] .level-landing__card__progress,
+#content-advanced .level-landing__card[data-tool="leaderboard"] .level-landing__card__progress { color: #6a6470; max-width: calc(100% - 4.5rem); }
+body.content-panel-open .tool-panel[data-tool-panel="verbs"],
+.panel--content .tool-panel[data-tool-panel="verbs"] {
+  overflow: clip;
+}
