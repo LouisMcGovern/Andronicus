@@ -5388,6 +5388,166 @@
     panel.appendChild(credit);
   }
 
+  /** A leaf caught in the wind. */
+  function leafSvg(color) {
+    return '<svg viewBox="0 0 24 24" width="100%" height="100%"><path d="M3 21 C 3 11, 9 4, 21 3 C 20 15, 13 21, 3 21 Z" fill="' + color + '"/><path d="M4 20 C 9 15, 13 11, 18 6" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.2" stroke-linecap="round"/></svg>';
+  }
+
+  /** A curling gust of wind. */
+  function gustSvg() {
+    return '<svg viewBox="0 0 120 40" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">' +
+      '<path d="M4 14 H 78 C 92 14, 96 2, 86 2 C 78 2, 78 10, 84 10"/><path d="M14 26 H 98 C 112 26, 116 38, 106 38 C 98 38, 98 30, 104 30"/></svg>';
+  }
+
+  /** Builds a twisting tornado out of stacked rings. */
+  function buildTornado(cls, rings) {
+    const t = document.createElement("div");
+    t.className = cls;
+    const body = document.createElement("i");
+    body.className = "twister-body";
+    t.appendChild(body);
+    const dust = document.createElement("i");
+    dust.className = "twister-dust";
+    t.appendChild(dust);
+    for (let i = 0; i < rings; i += 1) {
+      const r = document.createElement("span");
+      r.className = "twister-ring";
+      const f = i / (rings - 1);
+      r.style.setProperty("--w", (100 - Math.pow(f, 0.7) * 88).toFixed(1) + "%");
+      r.style.setProperty("--top", (f * 92).toFixed(1) + "%");
+      r.style.setProperty("--sway", (6 + f * f * 26).toFixed(1));
+      r.style.setProperty("--ph", (-i * 0.09).toFixed(2) + "s");
+      t.appendChild(r);
+    }
+    return t;
+  }
+
+  /**
+   * Progress intro: wind picks up, a tornado touches down and the title's
+   * letters are sucked up into it, then it spins off the screen.
+   * Click or press a key to skip. Skipped for reduced motion.
+   */
+  function playWindIntro(panel) {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const old = document.querySelector(".wind-intro");
+    if (old) old.remove();
+
+    const overlay = document.createElement("div");
+    overlay.className = "wind-intro";
+    overlay.setAttribute("aria-hidden", "true");
+
+    for (let i = 0; i < 10; i += 1) {
+      const g = document.createElement("span");
+      g.className = "wind-intro__gust";
+      g.style.top = (12 + Math.random() * 70).toFixed(1) + "%";
+      g.style.width = (12 + Math.random() * 14).toFixed(0) + "vw";
+      g.style.setProperty("--d", (Math.random() * 0.7).toFixed(2) + "s");
+      g.innerHTML = gustSvg();
+      overlay.appendChild(g);
+    }
+
+    const word = document.createElement("h2");
+    word.className = "wind-intro__word";
+    Array.from(I18n.t("learning_tab_progress")).forEach(function (ch, i) {
+      const sp = document.createElement("span");
+      sp.textContent = ch === " " ? " " : ch;
+      sp.style.setProperty("--i", String(i));
+      word.appendChild(sp);
+    });
+    overlay.appendChild(word);
+
+    const tornado = buildTornado("wind-intro__tornado", 14);
+    overlay.appendChild(tornado);
+
+    const leafColors = ["#7fa58a", "#9cbf86", "#5f8f6e"];
+    for (let i = 0; i < 12; i += 1) {
+      const l = document.createElement("span");
+      l.className = "wind-intro__leaf";
+      l.style.setProperty("--d", (0.6 + Math.random() * 0.9).toFixed(2) + "s");
+      l.style.setProperty("--a", (Math.random() * 360).toFixed(0) + "deg");
+      l.style.setProperty("--h", (20 + Math.random() * 55).toFixed(0) + "vh");
+      l.innerHTML = leafSvg(leafColors[i % 3]);
+      tornado.appendChild(l);
+    }
+
+    document.body.appendChild(overlay);
+
+    // Each letter spirals into the funnel's core
+    const tr = tornado.getBoundingClientRect();
+    const cx = tr.left + tr.width / 2;
+    const cy = tr.top + tr.height * 0.35;
+    word.querySelectorAll("span").forEach(function (sp, i, all) {
+      const r = sp.getBoundingClientRect();
+      sp.style.setProperty("--tx", (cx - (r.left + r.width / 2)).toFixed(0) + "px");
+      sp.style.setProperty("--ty", (cy - (r.top + r.height / 2)).toFixed(0) + "px");
+      const fromCentre = Math.abs(i - (all.length - 1) / 2) / Math.max(1, (all.length - 1) / 2);
+      sp.style.setProperty("--b", (1.0 + fromCentre * 0.35).toFixed(2) + "s");
+      sp.style.setProperty("--spin", (Math.random() < 0.5 ? -1 : 1) * (360 + Math.random() * 360) + "deg");
+    });
+
+    const shell = panel;
+    if (shell) {
+      shell.classList.remove("wind-reveal");
+      shell.style.opacity = "0";
+    }
+    let finished = false;
+    function reveal() {
+      if (!shell) return;
+      shell.style.opacity = "";
+      void shell.offsetWidth;
+      shell.classList.add("wind-reveal");
+    }
+    const revealTimer = setTimeout(reveal, 2250);
+    function finish() {
+      if (finished) return;
+      finished = true;
+      clearTimeout(revealTimer);
+      clearTimeout(endTimer);
+      document.removeEventListener("keydown", finish);
+      overlay.remove();
+      if (shell && shell.style.opacity === "0") reveal();
+    }
+    const endTimer = setTimeout(finish, 2850);
+    overlay.addEventListener("click", finish);
+    document.addEventListener("keydown", finish);
+  }
+
+  /** Gusts and leaves swirling up the sides of the progress panel, with a small twister in each corner. */
+  function addWindDecor(panel) {
+    if (!panel || panel.querySelector(".wind-decor")) return;
+    const decor = document.createElement("div");
+    decor.className = "wind-decor";
+    decor.setAttribute("aria-hidden", "true");
+    const leafColors = ["#7fa58a", "#9cbf86", "#5f8f6e"];
+    for (let i = 0; i < 10; i += 1) {
+      const l = document.createElement("span");
+      l.className = "wind-leaf";
+      const size = 10 + Math.round(Math.random() * 8);
+      l.style.width = size + "px";
+      l.style.height = size + "px";
+      l.style.left = (i % 2 ? 1.5 + Math.random() * 8 : 90 + Math.random() * 7).toFixed(1) + "%";
+      l.style.setProperty("--dur", (7 + Math.random() * 6).toFixed(1) + "s");
+      l.style.setProperty("--delay", (-Math.random() * 13).toFixed(1) + "s");
+      l.style.setProperty("--x", ((i % 2 ? 1 : -1) * (8 + Math.random() * 14)).toFixed(0) + "px");
+      l.innerHTML = leafSvg(leafColors[i % 3]);
+      decor.appendChild(l);
+    }
+    for (let i = 0; i < 6; i += 1) {
+      const g = document.createElement("span");
+      g.className = "wind-gust";
+      g.style.top = (8 + i * 13).toFixed(0) + "%";
+      g.style.left = (i % 2 ? "0.4rem" : "auto");
+      g.style.right = (i % 2 ? "auto" : "0.4rem");
+      if (i % 2 === 0) g.classList.add("is-right");
+      g.style.setProperty("--delay", (i * 1.3).toFixed(1) + "s");
+      g.innerHTML = gustSvg();
+      decor.appendChild(g);
+    }
+    decor.appendChild(buildTornado("wind-twister wind-twister--left", 10));
+    decor.appendChild(buildTornado("wind-twister wind-twister--right", 10));
+    panel.insertBefore(decor, panel.firstChild);
+  }
+
   function mountVocabPath(root, level, panel, onLevelProgressChange) {
     const bank = buildVocabBank(level);
     const total = bank.order.length;
@@ -7362,6 +7522,7 @@
     document.body.classList.toggle("space-zone", panelOpen("grammar"));
     document.body.classList.toggle("desert-zone", panelOpen("verbs"));
     document.body.classList.toggle("zoo-zone", panelOpen("leaderboard"));
+    document.body.classList.toggle("wind-zone", panelOpen("progress"));
   }
 
   function updateContentBreadcrumb() {
@@ -9680,6 +9841,10 @@
         if (name === "grammar") addSpaceDecor(root.querySelector('[data-tool-panel="grammar"]'));
         if (name === "verbs") addDesertDecor(root.querySelector('[data-tool-panel="verbs"]'));
         if (name === "leaderboard") addAnimalDecor(root.querySelector('[data-tool-panel="leaderboard"]'));
+        if (name === "progress") addWindDecor(root.querySelector('[data-tool-panel="progress"]'));
+        if (name === "progress" && currentTab !== "progress") {
+          playWindIntro(root.querySelector('[data-tool-panel="progress"]'));
+        }
         if (name === "leaderboard" && currentTab !== "leaderboard") {
           playAnimalIntro(root.querySelector('[data-tool-panel="leaderboard"]'));
         }
@@ -9879,7 +10044,9 @@
       }
 
       function renderProgressPanel() {
-        progressPanel.innerHTML = "";
+        Array.from(progressPanel.children).forEach(function (c) {
+          if (!c.classList.contains("wind-decor")) c.remove();
+        });
         const wrap = document.createElement("div");
         wrap.className = "lh-progress";
         const user = getActiveUser();
