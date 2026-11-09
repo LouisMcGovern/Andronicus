@@ -10905,7 +10905,6 @@ body.content-panel-open .tool-panel[data-tool-panel="homework"] .lh-lesson-card 
   border-top: 3px solid #d0453f !important;
   background:
     linear-gradient(90deg, transparent 0 0.9rem, rgba(242, 164, 160, 0.85) 0.9rem calc(0.9rem + 2px), transparent calc(0.9rem + 2px)),
-    repeating-linear-gradient(180deg, transparent 0 calc(1.45rem - 1px), rgba(120, 140, 170, 0.18) calc(1.45rem - 1px) 1.45rem),
     #fdfdfb;
 }
 #content-beginner .level-landing__card[data-tool="homework"]:hover,
@@ -11346,3 +11345,378 @@ body.content-panel-open .tool-panel[data-tool-panel="homework"],
     padding-right: 0.8rem;
   }
 }
+
+/* ==========================================================================
+   Irregular verbs – desert intro: dunes rise, the wind picks up and a
+   tumbleweed rolls through, blowing the title away
+   ========================================================================== */
+.desert-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  overflow: hidden;
+  cursor: pointer;
+  background: linear-gradient(180deg, #f6eef4 0%, #fbe9e6 55%, #f8dcda 100%);
+  animation: desert-bg-in 0.3s ease both, desert-bg-out 0.5s ease 2.3s forwards;
+}
+.desert-intro__sun {
+  position: absolute;
+  left: 68%;
+  top: 22%;
+  width: 18vmin;
+  height: 18vmin;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fbd3c6 0%, #f7c4b5 60%, rgba(247, 196, 181, 0) 72%);
+  opacity: 0;
+  animation: desert-fade-in 0.6s ease 0.1s forwards;
+}
+.desert-intro__dunes {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transform: translateY(100%);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+.desert-intro__dunes--back {
+  height: 42vh;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='200' viewBox='0 0 600 200' preserveAspectRatio='none'%3E%3Cpath d='M0 80 C 100 30, 200 30, 300 70 S 480 120, 600 50 V 200 H 0 Z' fill='%23f0cfcc'/%3E%3C/svg%3E");
+  animation: desert-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+}
+.desert-intro__dunes--front {
+  height: 30vh;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='200' viewBox='0 0 600 200' preserveAspectRatio='none'%3E%3Cpath d='M0 90 C 120 40, 240 60, 330 100 S 500 140, 600 80 V 200 H 0 Z' fill='%23e3adae'/%3E%3C/svg%3E");
+  animation: desert-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.25s forwards;
+}
+.desert-intro__cactus {
+  position: absolute;
+  bottom: 12vh;
+  width: 7vmin;
+  height: 12vmin;
+  opacity: 0;
+  animation: desert-fade-in 0.4s ease 0.55s forwards;
+}
+.desert-intro__cactus--l { left: 12%; }
+.desert-intro__cactus--r { right: 16%; bottom: 16vh; transform: scale(0.75); }
+.desert-intro__cactus svg { display: block; }
+
+.desert-intro__wind {
+  position: absolute;
+  left: -30vw;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, rgba(184, 120, 130, 0.45), transparent);
+  opacity: 0;
+  animation: desert-wind 0.7s ease-in forwards;
+  animation-delay: var(--d, 0.9s);
+}
+
+.desert-intro__word {
+  position: absolute;
+  left: 50%;
+  top: 44%;
+  z-index: 2;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  font-weight: 400;
+  font-size: clamp(2.3rem, 7.5vw, 5.6rem);
+  color: #3d1e2a;
+  white-space: nowrap;
+  text-shadow: 0 2px 0 rgba(255, 255, 255, 0.6);
+}
+.desert-intro__word > span {
+  display: inline-block;
+  opacity: 0;
+  animation:
+    desert-letter 0.45s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i) * 0.025s) forwards,
+    desert-blow 0.7s cubic-bezier(0.4, 0, 0.8, 0.6) var(--b, 1.2s) forwards;
+}
+
+.desert-intro__weed {
+  position: absolute;
+  z-index: 3;
+  left: -12vmin;
+  top: calc(44% - 4vmin);
+  width: 15vmin;
+  height: 15vmin;
+  animation: desert-roll 1.25s linear 0.85s forwards;
+}
+.desert-intro__weed svg { display: block; }
+
+.desert-intro__grain {
+  position: absolute;
+  top: calc(44% + 4vmin);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #d99a9c;
+  opacity: 0;
+  animation: desert-grain 0.6s ease-out forwards;
+  animation-delay: var(--d, 1s);
+}
+
+.desert-reveal {
+  animation: vp-reveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes desert-bg-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes desert-bg-out { to { opacity: 0; visibility: hidden; } }
+@keyframes desert-fade-in { to { opacity: 1; } }
+@keyframes desert-rise { to { transform: translateY(0); } }
+@keyframes desert-wind {
+  0% { opacity: 0; transform: translateX(0); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(150vw); }
+}
+@keyframes desert-letter {
+  from { opacity: 0; transform: translateY(0.35em); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes desert-blow {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translate(42vw, var(--y, -20px)) rotate(var(--r, 60deg)); filter: blur(2px); }
+}
+@keyframes desert-roll {
+  0% { left: -12vmin; transform: translateY(0) rotate(0deg); }
+  20% { transform: translateY(-3vmin) rotate(180deg); }
+  40% { transform: translateY(0) rotate(360deg); }
+  60% { transform: translateY(-2vmin) rotate(540deg); }
+  80% { transform: translateY(0) rotate(720deg); }
+  100% { left: 104vw; transform: translateY(-1vmin) rotate(900deg); }
+}
+@keyframes desert-grain {
+  0% { opacity: 0; transform: translate(0, 0); }
+  20% { opacity: 0.9; }
+  100% { opacity: 0; transform: translate(30px, var(--y, -20px)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .desert-intro { display: none; }
+  .desert-reveal { animation: none; }
+}
+
+body .desert-intro__word,
+body .desert-intro__word * {
+  font-family: "Libre Baskerville", Georgia, serif !important;
+}
+
+/* ==========================================================================
+   Irregular verbs zone – a dusky rose desert while verbs are open
+   ========================================================================== */
+body.desert-zone {
+  --page-bg: #f5e7e8;
+  --surface: #fbf4f3;
+  --surface-elevated: #f4e3e3;
+  --border: #e3c4c4;
+  --accent: #b4566a;
+  --accent-strong: #c4677a;
+  --accent-soft: rgba(180, 86, 106, 0.1);
+  --ink-heading: #3d1e2a;
+  --text: #3a2029;
+  --readable-body: #52313b;
+  --muted: #8a5a66;
+  --chrome-bg: #f8ecec;
+  --chrome-border: #e3c4c4;
+  --chrome-btn-border: rgba(61, 30, 42, 0.2);
+  --chrome-btn-text: #3d1e2a;
+  --chrome-btn-hover: rgba(180, 86, 106, 0.08);
+  --chrome-btn-active-bg: #b4566a;
+  --chrome-btn-active-border: #a04b5e;
+  background: #f5e7e8;
+}
+body.desert-zone::before {
+  background: radial-gradient(ellipse 60% 40% at 80% 0%, rgba(247, 196, 181, 0.3), transparent 60%);
+}
+body.desert-zone.content-panel-open .panel-toolbar,
+body.desert-zone .content-breadcrumb {
+  background: #f8ecec;
+  border-bottom-color: #e3c4c4;
+}
+body.desert-zone .content-breadcrumb { color: #8a5a66; }
+body.desert-zone .content-breadcrumb__current { color: #3d1e2a; }
+body.desert-zone.content-panel-open .panel--content { background: #f5e7e8; }
+body.desert-zone .level-article,
+body.desert-zone .level-article#content-beginner,
+body.desert-zone .level-article#content-intermediate,
+body.desert-zone .level-article#content-advanced {
+  background: transparent;
+  padding-top: 1.1rem;
+}
+body.desert-zone .lh-back-to-menu { margin-bottom: 0.6rem; }
+body.desert-zone .btn-text,
+body.desert-zone .btn-level-back,
+body.desert-zone .btn-icon-close,
+body.desert-zone .lh-back-to-menu {
+  background: #fbf3f3;
+  border-color: #e3c4c4;
+}
+body.desert-zone .btn-text:hover,
+body.desert-zone .btn-level-back:hover,
+body.desert-zone .btn-icon-close:hover,
+body.desert-zone .lh-back-to-menu:hover { background: #fffafa; }
+body.desert-zone .pts-btn { border-color: #e3c4c4; color: #3d1e2a; }
+body.desert-zone .pts-btn__star { color: #b4566a; }
+
+/* The panel: rose sky above, dunes along the bottom where the tumbleweed rolls */
+body.content-panel-open .tool-panel[data-tool-panel="verbs"],
+.panel--content .tool-panel[data-tool-panel="verbs"] {
+  position: relative;
+  overflow: hidden;
+  border-color: #e3c4c4;
+  border-radius: 0.6rem;
+  padding-top: 0.9rem;
+  padding-bottom: 5.6rem;
+  background: linear-gradient(180deg, #f8f1f6 0%, #fbede9 60%, #f8e0dd 100%);
+  box-shadow: 0 1px 2px rgba(61, 30, 42, 0.05), 0 8px 24px rgba(61, 30, 42, 0.06);
+}
+.tool-panel[data-tool-panel="verbs"] > * {
+  position: relative;
+  z-index: 1;
+}
+.tool-panel[data-tool-panel="verbs"] > .desert-decor {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.desert-sun {
+  position: absolute;
+  right: 6%;
+  top: 0.8rem;
+  width: 3.6rem;
+  height: 3.6rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fbd3c6 0%, #f7c4b5 60%, rgba(247, 196, 181, 0) 72%);
+  opacity: 0.7;
+}
+.desert-dunes {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4.6rem;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='90' viewBox='0 0 600 90' preserveAspectRatio='none'%3E%3Cpath d='M0 50 C 80 20, 160 20, 240 46 S 400 70, 470 38 S 570 20, 600 34 V 90 H 0 Z' fill='%23ecc3c0'/%3E%3Cpath d='M0 70 C 90 48, 180 52, 260 68 S 420 84, 500 60 S 580 54, 600 62 V 90 H 0 Z' fill='%23dea5a7'/%3E%3C/svg%3E") no-repeat center bottom / 100% 100%;
+}
+.desert-cactus {
+  position: absolute;
+  bottom: 1.6rem;
+  width: 2.4rem;
+  height: 4rem;
+}
+.desert-cactus svg { display: block; }
+.desert-cactus--l { left: 4%; }
+.desert-cactus--r { right: 5%; bottom: 2.2rem; transform: scale(0.75); transform-origin: 50% 100%; }
+
+/* A tumbleweed rolls along the dunes every now and then */
+.desert-weed {
+  position: absolute;
+  bottom: 0.9rem;
+  left: -4rem;
+  width: 2.6rem;
+  height: 2.6rem;
+  animation: desert-weed-roll 17s linear 3s infinite;
+}
+.desert-weed svg { display: block; }
+@keyframes desert-weed-roll {
+  0% { left: -4rem; transform: translateY(0) rotate(0deg); }
+  5% { transform: translateY(-1.1rem) rotate(170deg); }
+  10% { transform: translateY(0) rotate(340deg); }
+  15% { transform: translateY(-0.7rem) rotate(510deg); }
+  20% { transform: translateY(0) rotate(680deg); }
+  25% { transform: translateY(-0.4rem) rotate(850deg); }
+  30% { left: calc(100% + 4rem); transform: translateY(0) rotate(1020deg); }
+  100% { left: calc(100% + 4rem); transform: translateY(0) rotate(1020deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .desert-weed { display: none; }
+}
+
+/* The verbs table: fits the screen, scrolls inside, header stays put */
+.tool-panel[data-tool-panel="verbs"] .iv-table-wrap {
+  max-height: max(12rem, calc(100vh - 33rem));
+  border-color: #e3c4c4;
+  background: #ffffff;
+  box-shadow: 0 4px 16px rgba(61, 30, 42, 0.06);
+}
+.tool-panel[data-tool-panel="verbs"] .iv-table th {
+  background: #f6e3e2;
+  color: #3d1e2a;
+}
+.tool-panel[data-tool-panel="verbs"] .iv-table td {
+  border-top-color: #f2e2e1;
+  color: #3a2029;
+}
+.tool-panel[data-tool-panel="verbs"] .iv-table tbody tr:nth-child(even) td { background: #fdf8f7; }
+.tool-panel[data-tool-panel="verbs"] .iv-table td.iv-fr,
+.tool-panel[data-tool-panel="verbs"] .iv-table td.iv-example,
+.tool-panel[data-tool-panel="verbs"] .iv-count,
+.tool-panel[data-tool-panel="verbs"] .iv-hint,
+.tool-panel[data-tool-panel="verbs"] .iv-search,
+.tool-panel[data-tool-panel="verbs"] .iv-none { color: #8a5a66; }
+.tool-panel[data-tool-panel="verbs"] .iv-title { color: #3d1e2a; }
+.tool-panel[data-tool-panel="verbs"] .iv-search__input,
+.tool-panel[data-tool-panel="verbs"] .iv-tense-select {
+  border-color: #e3c4c4;
+  color: #3a2029;
+}
+.tool-panel[data-tool-panel="verbs"] .iv-search__input:focus,
+.tool-panel[data-tool-panel="verbs"] .iv-tense-select:focus {
+  outline-color: #b4566a;
+  border-color: #b4566a;
+}
+.tool-panel[data-tool-panel="verbs"] .iv-tense-select {
+  background: #ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23b4566a' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 0.8rem center;
+}
+.tool-panel[data-tool-panel="verbs"] .iv-cards {
+  border-color: #e3c4c4;
+  color: #8a3e52;
+}
+
+/* Level menu – irregular verbs card in its desert theme */
+#content-beginner .level-landing__card[data-tool="verbs"],
+#content-intermediate .level-landing__card[data-tool="verbs"],
+#content-advanced .level-landing__card[data-tool="verbs"] {
+  position: relative;
+  overflow: hidden;
+  border-color: #e3c4c4 !important;
+  border-top: 3px solid #b4566a !important;
+  background: linear-gradient(180deg, #faf3f7 0%, #fbeae7 100%);
+}
+#content-beginner .level-landing__card[data-tool="verbs"]:hover,
+#content-intermediate .level-landing__card[data-tool="verbs"]:hover,
+#content-advanced .level-landing__card[data-tool="verbs"]:hover {
+  border-color: #b4566a !important;
+  box-shadow: 0 6px 18px rgba(180, 86, 106, 0.16);
+}
+#content-beginner .level-landing__card[data-tool="verbs"] > *,
+#content-intermediate .level-landing__card[data-tool="verbs"] > *,
+#content-advanced .level-landing__card[data-tool="verbs"] > * { position: relative; z-index: 1; }
+#content-beginner .level-landing__card[data-tool="verbs"]::after,
+#content-intermediate .level-landing__card[data-tool="verbs"]::after,
+#content-advanced .level-landing__card[data-tool="verbs"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='90' viewBox='0 0 140 90'%3E%3Ccircle cx='104' cy='34' r='16' fill='%23f7c4b5'/%3E%3Cpath d='M0 66 C 30 50, 60 52, 86 64 S 120 72, 140 60 V 90 H 0 Z' fill='%23ecc3c0'/%3E%3Cpath d='M0 78 C 40 68, 80 70, 110 80 S 132 82, 140 78 V 90 H 0 Z' fill='%23dea5a7'/%3E%3Cg transform='translate(36 26) scale(0.5)' fill='%237fa58a'%3E%3Crect x='24' y='10' width='13' height='90' rx='6.5'/%3E%3Cpath d='M24 52 H 14 a 6 6 0 0 1 -6 -6 V 30 a 5 5 0 0 1 10 0 V 42 H 24 Z'/%3E%3Cpath d='M37 44 H 46 a 6 6 0 0 0 6 -6 V 22 a 5 5 0 0 0 -10 0 V 34 H 37 Z'/%3E%3C/g%3E%3Cg transform='translate(98 62)' fill='none' stroke='%239b8a97' stroke-width='1.4'%3E%3Ccircle r='7'/%3E%3Cpath d='M-6 -2 C -2 -7, 5 -5, 6 1 C 6 6, -1 7, -3 3'/%3E%3C/g%3E%3C/svg%3E") no-repeat right 0.1rem bottom 0 / auto 4.8rem;
+}
+#content-beginner .level-landing__card[data-tool="verbs"] .level-landing__card__icon,
+#content-intermediate .level-landing__card[data-tool="verbs"] .level-landing__card__icon,
+#content-advanced .level-landing__card[data-tool="verbs"] .level-landing__card__icon { color: #b4566a; }
+#content-beginner .level-landing__card[data-tool="verbs"] .level-landing__card__label,
+#content-intermediate .level-landing__card[data-tool="verbs"] .level-landing__card__label,
+#content-advanced .level-landing__card[data-tool="verbs"] .level-landing__card__label { color: #3d1e2a; }
+#content-beginner .level-landing__card[data-tool="verbs"] .level-landing__card__hint,
+#content-intermediate .level-landing__card[data-tool="verbs"] .level-landing__card__hint,
+#content-advanced .level-landing__card[data-tool="verbs"] .level-landing__card__hint,
+#content-beginner .level-landing__card[data-tool="verbs"] .level-landing__card__progress,
+#content-intermediate .level-landing__card[data-tool="verbs"] .level-landing__card__progress,
+#content-advanced .level-landing__card[data-tool="verbs"] .level-landing__card__progress { color: #8a5a66; max-width: calc(100% - 4.8rem); }
+
+.tool-panel[data-tool-panel="verbs"] .iv-head { margin-bottom: 0.2rem; }
+.tool-panel[data-tool-panel="verbs"] .iv-title { font-size: 1.5rem; margin: 0; }
+.tool-panel[data-tool-panel="verbs"] .iv-count { margin: 0.1rem 0 0; }
+.tool-panel[data-tool-panel="verbs"] .iv-hint { margin: 0.25rem 0 0.4rem; }

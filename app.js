@@ -5131,6 +5131,131 @@
     panel.insertBefore(decor, panel.firstChild);
   }
 
+  /** A tumbleweed: a loose tangle of looping strands. */
+  function tumbleweedSvg() {
+    return '<svg viewBox="0 0 60 60" width="100%" height="100%"><g fill="none" stroke="#9b8a97" stroke-width="2" stroke-linecap="round" opacity="0.95">' +
+      '<circle cx="30" cy="30" r="26"/>' +
+      '<path d="M8 22 C 20 8, 44 10, 52 26 C 58 40, 40 56, 24 50 C 10 44, 12 26, 26 24 C 38 22, 44 34, 34 40"/>' +
+      '<path d="M14 46 C 6 32, 18 12, 34 12 C 50 12, 56 32, 46 44 C 38 52, 22 48, 22 36"/>' +
+      '<path d="M30 4 C 22 18, 40 26, 30 38 C 24 46, 40 54, 44 50"/>' +
+      '<path d="M6 32 C 18 30, 26 40, 40 34 C 50 30, 54 22, 56 30"/>' +
+      '</g><g fill="none" stroke="#b9a8b3" stroke-width="1.4" stroke-linecap="round">' +
+      '<path d="M16 16 C 26 22, 30 14, 40 18"/><path d="M18 40 C 26 34, 34 44, 44 38"/></g></svg>';
+  }
+
+  /** A simple saguaro cactus. */
+  function cactusSvg() {
+    return '<svg viewBox="0 0 60 100" width="100%" height="100%"><g fill="#7fa58a">' +
+      '<rect x="24" y="10" width="13" height="90" rx="6.5"/>' +
+      '<path d="M24 52 H 14 a 6 6 0 0 1 -6 -6 V 30 a 5 5 0 0 1 10 0 V 42 H 24 Z"/>' +
+      '<path d="M37 44 H 46 a 6 6 0 0 0 6 -6 V 22 a 5 5 0 0 0 -10 0 V 34 H 37 Z"/>' +
+      '</g><g stroke="#6a917a" stroke-width="1.2" fill="none"><path d="M30.5 16 V 96"/><path d="M13 30 V 44"/><path d="M47 22 V 36"/></g></svg>';
+  }
+
+  /**
+   * Irregular verbs intro: dunes rise under the title, the wind picks up
+   * and a tumbleweed rolls through, blowing the letters away.
+   * Click or press a key to skip. Skipped for reduced motion.
+   */
+  function playDesertIntro(panel) {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const old = document.querySelector(".desert-intro");
+    if (old) old.remove();
+
+    const overlay = document.createElement("div");
+    overlay.className = "desert-intro";
+    overlay.setAttribute("aria-hidden", "true");
+    overlay.innerHTML =
+      '<div class="desert-intro__sun"></div>' +
+      '<div class="desert-intro__dunes desert-intro__dunes--back"></div>' +
+      '<div class="desert-intro__dunes desert-intro__dunes--front"></div>' +
+      '<div class="desert-intro__cactus desert-intro__cactus--l">' + cactusSvg() + "</div>" +
+      '<div class="desert-intro__cactus desert-intro__cactus--r">' + cactusSvg() + "</div>";
+
+    // Wind streaks
+    for (let i = 0; i < 9; i += 1) {
+      const w = document.createElement("span");
+      w.className = "desert-intro__wind";
+      w.style.top = (30 + Math.random() * 40).toFixed(1) + "%";
+      w.style.width = (10 + Math.random() * 18).toFixed(0) + "vw";
+      w.style.setProperty("--d", (0.75 + Math.random() * 0.5).toFixed(2) + "s");
+      overlay.appendChild(w);
+    }
+
+    const word = document.createElement("h2");
+    word.className = "desert-intro__word";
+    const letters = Array.from(I18n.t("learning_tab_verbs"));
+    letters.forEach(function (ch, i) {
+      const sp = document.createElement("span");
+      sp.textContent = ch === " " ? " " : ch;
+      sp.style.setProperty("--i", String(i));
+      // Letters blow away as the tumbleweed passes them, left to right
+      sp.style.setProperty("--b", (1.05 + (i / Math.max(1, letters.length - 1)) * 0.55).toFixed(2) + "s");
+      sp.style.setProperty("--y", (Math.random() * 60 - 40).toFixed(0) + "px");
+      sp.style.setProperty("--r", (Math.random() * 120 - 30).toFixed(0) + "deg");
+      word.appendChild(sp);
+    });
+    overlay.appendChild(word);
+
+    const weed = document.createElement("div");
+    weed.className = "desert-intro__weed";
+    weed.innerHTML = tumbleweedSvg();
+    overlay.appendChild(weed);
+
+    // Sand kicked up behind the tumbleweed
+    for (let i = 0; i < 18; i += 1) {
+      const g = document.createElement("span");
+      g.className = "desert-intro__grain";
+      g.style.left = (5 + (i / 17) * 90).toFixed(1) + "%";
+      g.style.setProperty("--d", (0.95 + (i / 17) * 0.8).toFixed(2) + "s");
+      g.style.setProperty("--y", (-10 - Math.random() * 40).toFixed(0) + "px");
+      overlay.appendChild(g);
+    }
+
+    document.body.appendChild(overlay);
+
+    const shell = panel;
+    if (shell) {
+      shell.classList.remove("desert-reveal");
+      shell.style.opacity = "0";
+    }
+    let finished = false;
+    function reveal() {
+      if (!shell) return;
+      shell.style.opacity = "";
+      void shell.offsetWidth;
+      shell.classList.add("desert-reveal");
+    }
+    const revealTimer = setTimeout(reveal, 2250);
+    function finish() {
+      if (finished) return;
+      finished = true;
+      clearTimeout(revealTimer);
+      clearTimeout(endTimer);
+      document.removeEventListener("keydown", finish);
+      overlay.remove();
+      if (shell && shell.style.opacity === "0") reveal();
+    }
+    const endTimer = setTimeout(finish, 2850);
+    overlay.addEventListener("click", finish);
+    document.addEventListener("keydown", finish);
+  }
+
+  /** Dunes, cacti and an occasional tumbleweed along the bottom of the verbs panel. */
+  function addDesertDecor(panel) {
+    if (!panel || panel.querySelector(".desert-decor")) return;
+    const decor = document.createElement("div");
+    decor.className = "desert-decor";
+    decor.setAttribute("aria-hidden", "true");
+    decor.innerHTML =
+      '<div class="desert-sun"></div>' +
+      '<div class="desert-dunes"></div>' +
+      '<div class="desert-cactus desert-cactus--l">' + cactusSvg() + "</div>" +
+      '<div class="desert-cactus desert-cactus--r">' + cactusSvg() + "</div>" +
+      '<div class="desert-weed">' + tumbleweedSvg() + "</div>";
+    panel.insertBefore(decor, panel.firstChild);
+  }
+
   function mountVocabPath(root, level, panel, onLevelProgressChange) {
     const bank = buildVocabBank(level);
     const total = bank.order.length;
@@ -7103,6 +7228,7 @@
     document.body.classList.toggle("music-zone", panelOpen("dictation"));
     document.body.classList.toggle("school-zone", panelOpen("homework"));
     document.body.classList.toggle("space-zone", panelOpen("grammar"));
+    document.body.classList.toggle("desert-zone", panelOpen("verbs"));
   }
 
   function updateContentBreadcrumb() {
@@ -9419,6 +9545,10 @@
           playSchoolIntro(root.querySelector('[data-tool-panel="homework"]'));
         }
         if (name === "grammar") addSpaceDecor(root.querySelector('[data-tool-panel="grammar"]'));
+        if (name === "verbs") addDesertDecor(root.querySelector('[data-tool-panel="verbs"]'));
+        if (name === "verbs" && currentTab !== "verbs") {
+          playDesertIntro(root.querySelector('[data-tool-panel="verbs"]'));
+        }
         if (name === "grammar" && currentTab !== "grammar") {
           playSpaceIntro(root.querySelector('[data-tool-panel="grammar"]'));
         }
