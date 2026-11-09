@@ -6456,7 +6456,19 @@
     return key ? I18n.t(key) : tool;
   }
 
+  /** Vocabulary gets its own forest zone: the whole learning screen turns green while it's open. */
+  function syncVocabZone() {
+    let on = false;
+    if (document.body.classList.contains("content-panel-open")) {
+      document.querySelectorAll('[data-tool-panel="vocab"]').forEach(function (p) {
+        if (!p.classList.contains("hidden") && p.getClientRects().length) on = true;
+      });
+    }
+    document.body.classList.toggle("vocab-zone", on);
+  }
+
   function updateContentBreadcrumb() {
+    syncVocabZone();
     if (!contentBreadcrumb) return;
     const panelContent = document.getElementById("panel-content");
     if (
@@ -7992,6 +8004,7 @@
 
   function setContentPanelOpen(on) {
     document.body.classList.toggle("content-panel-open", on);
+    syncVocabZone();
   }
 
   function showLevelPicker() {

@@ -9211,3 +9211,89 @@ body.wr-open .pts {
 .lh-vocab.vp .vp-card {
   border-color: #a9c49f;
 }
+
+/* ==========================================================================
+   Vocabulary zone – the whole learning screen goes forest while vocab is open
+   ========================================================================== */
+body {
+  transition: background-color 0.4s ease;
+}
+
+body.vocab-zone {
+  --page-bg: #cfe0c8;
+  --surface: #dbe8d5;
+  --surface-elevated: #cfe0c8;
+  --border: #a9c49f;
+  --accent: #2f6b47;
+  --accent-strong: #3f8a60;
+  --ink-heading: #1b3426;
+  --muted: #557258;
+  --chrome-bg: #d6e6cf;
+  --chrome-border: #a9c49f;
+  --chrome-btn-border: rgba(27, 52, 38, 0.2);
+  --chrome-btn-text: #1b3426;
+  --chrome-btn-hover: rgba(47, 107, 71, 0.08);
+  --chrome-btn-active-bg: #3f8a60;
+  --chrome-btn-active-border: #2f6b47;
+  background: #cfe0c8;
+}
+
+body.vocab-zone::before {
+  background:
+    radial-gradient(ellipse 70% 45% at 50% 0%, rgba(95, 182, 79, 0.1), transparent 60%),
+    radial-gradient(ellipse 50% 35% at 100% 100%, rgba(47, 107, 71, 0.08), transparent 55%);
+}
+
+body.vocab-zone.content-panel-open .panel-toolbar,
+body.vocab-zone .content-breadcrumb {
+  background: #d6e6cf;
+  border-bottom-color: #a9c49f;
+}
+body.vocab-zone .content-breadcrumb { color: #557258; }
+body.vocab-zone .content-breadcrumb__current { color: #1b3426; }
+
+body.vocab-zone.content-panel-open .panel--content {
+  background:
+    radial-gradient(60% 40% at 0% 100%, rgba(116, 194, 95, 0.18), transparent 70%),
+    radial-gradient(50% 35% at 100% 0%, rgba(116, 194, 95, 0.14), transparent 70%),
+    #cfe0c8;
+}
+
+body.vocab-zone .btn-text,
+body.vocab-zone .btn-level-back,
+body.vocab-zone .btn-icon-close,
+body.vocab-zone .lh-back-to-menu {
+  background: #e2eedc;
+  border-color: #a9c49f;
+}
+body.vocab-zone .btn-text:hover,
+body.vocab-zone .btn-level-back:hover,
+body.vocab-zone .btn-icon-close:hover,
+body.vocab-zone .lh-back-to-menu:hover {
+  background: #eef6ea;
+}
+
+/* Beat the generic content-panel rule so the game panel stays forest */
+body.content-panel-open .tool-panel[data-tool-panel="vocab"],
+.panel--content .tool-panel[data-tool-panel="vocab"] {
+  border-color: #a9c49f;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Cg fill='%2387b77a' opacity='0.35'%3E%3Cpath d='M0 0 C 60 10, 90 50, 70 110 C 40 80, 10 60, 0 0z'/%3E%3Cpath d='M0 40 C 40 70, 40 120, 10 170 C 0 130, -10 90, 0 40z'/%3E%3Cpath d='M30 0 C 90 -10, 140 20, 150 60 C 110 50, 60 40, 30 0z'/%3E%3C/g%3E%3C/svg%3E") no-repeat left top / 220px 220px,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Cg fill='%2387b77a' opacity='0.35' transform='translate(220 220) rotate(180)'%3E%3Cpath d='M0 0 C 60 10, 90 50, 70 110 C 40 80, 10 60, 0 0z'/%3E%3Cpath d='M0 40 C 40 70, 40 120, 10 170 C 0 130, -10 90, 0 40z'/%3E%3Cpath d='M30 0 C 90 -10, 140 20, 150 60 C 110 50, 60 40, 30 0z'/%3E%3C/g%3E%3C/svg%3E") no-repeat right bottom / 220px 220px,
+    radial-gradient(90% 70% at 50% 30%, #dceadb 0%, transparent 70%),
+    linear-gradient(180deg, #d3e4cd 0%, #bfd6b7 100%);
+}
+
+/* Points badge picks up the zone too */
+body.vocab-zone .pts-btn {
+  border-color: #a9c49f;
+  color: #1b3426;
+}
+body.vocab-zone .pts-btn__star { color: #3f8a60; }
+
+body.vocab-zone .level-article,
+body.vocab-zone .level-article#content-beginner,
+body.vocab-zone .level-article#content-intermediate,
+body.vocab-zone .level-article#content-advanced {
+  background: transparent;
+}
