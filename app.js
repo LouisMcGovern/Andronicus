@@ -9138,9 +9138,7 @@
   function paymentLinks() {
     const cfg = window.ANDRONICUS_PAYMENTS || {};
     return {
-      pass: String(cfg.monthlyPassLink || "").trim(),
       pack: String(cfg.classPackLink || "").trim(),
-      manage: String(cfg.manageLink || "").trim(),
     };
   }
 
@@ -9157,7 +9155,7 @@
     const root = document.getElementById("pay-plans");
     if (!root) return;
     const links = paymentLinks();
-    ["pass", "pack"].forEach(function (plan) {
+    ["pack"].forEach(function (plan) {
       const btn = root.querySelector('[data-pay="' + plan + '"]');
       const box = root.querySelector('.pay-confirm[data-for="' + plan + '"]');
       const hint = root.querySelector('[data-hint="' + plan + '"]');
@@ -9170,11 +9168,6 @@
       box.disabled = !hasLink;
       if (hint) hint.textContent = !hasLink ? I18n.t("pay_soon") : box.checked ? "" : I18n.t("pay_tick_first");
     });
-    const manage = root.querySelector('[data-pay="manage"]');
-    if (manage) {
-      manage.classList.toggle("hidden", !links.manage);
-      if (links.manage) manage.setAttribute("href", links.manage);
-    }
   }
 
   function initPaymentPlans() {
@@ -9185,7 +9178,7 @@
     });
     root.addEventListener("click", function (e) {
       const btn = e.target.closest("[data-pay]");
-      if (!btn || btn.getAttribute("data-pay") === "manage") return;
+      if (!btn) return;
       if (btn.getAttribute("aria-disabled") === "true") {
         e.preventDefault();
         const plan = btn.getAttribute("data-pay");
@@ -9200,17 +9193,17 @@
     if (emailInput) emailInput.addEventListener("change", renderPaymentPlans);
 
     // Back from Stripe: set each payment link's confirmation page to redirect to
-    // https://andronicus-two.vercel.app/?paiement=pass  (or ?paiement=pack)
+    // https://andronicus-two.vercel.app/?paiement=pack
     let paid = "";
     try {
       paid = new URLSearchParams(window.location.search).get("paiement") || "";
     } catch (err) {
       paid = "";
     }
-    if (paid === "pass" || paid === "pack") {
+    if (paid === "pack") {
       const msg = document.getElementById("pay-return");
       if (msg) {
-        msg.textContent = I18n.t(paid === "pass" ? "pay_return_pass" : "pay_return_pack");
+        msg.textContent = I18n.t("pay_return_pack");
         msg.classList.remove("hidden");
       }
       setTimeout(function () {
