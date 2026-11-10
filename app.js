@@ -3549,6 +3549,35 @@
     return leaderboardCache;
   }
 
+  // Extra players shown on the student leaderboard alongside real accounts.
+  // Display only: they are not stored in Supabase and do not appear in the admin panel.
+  const LEADERBOARD_FILLERS = [
+    { display_name: "Léa M.", level: "intermediate", points: 118 },
+    { display_name: "Hugo B.", level: "beginner", points: 107 },
+    { display_name: "Chloé D.", level: "advanced", points: 102 },
+    { display_name: "Lucas R.", level: "intermediate", points: 96 },
+    { display_name: "Camille L.", level: "beginner", points: 91 },
+    { display_name: "Théo G.", level: "advanced", points: 84 },
+  ];
+
+  /** Merges the filler players into the real rows and re-ranks everyone by points. */
+  function withLeaderboardFillers(rows) {
+    if (!Array.isArray(rows)) return rows;
+    const merged = rows.concat(
+      LEADERBOARD_FILLERS.map(function (f) {
+        return { display_name: f.display_name, level: f.level, points: f.points, is_me: false };
+      })
+    );
+    merged.sort(function (a, b) {
+      return (Number(b.points) || 0) - (Number(a.points) || 0);
+    });
+    merged.forEach(function (r) {
+      const pts = Number(r.points) || 0;
+      r.rank = 1 + merged.filter(function (o) { return (Number(o.points) || 0) > pts; }).length;
+    });
+    return merged;
+  }
+
   function mountLeaderboard(panel) {
     panel.innerHTML = "";
     const shell = document.createElement("div");
@@ -3635,7 +3664,7 @@
       state.loading = true;
       render();
       const res = await fetchLeaderboard(force);
-      state = { rows: res.rows, error: res.error || "", loading: false };
+      state = { rows: withLeaderboardFillers(res.rows), error: res.error || "", loading: false };
       render();
     }
 
