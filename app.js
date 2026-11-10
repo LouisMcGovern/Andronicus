@@ -9135,6 +9135,21 @@
 
   /* ---------- Booking: payment plans (Stripe payment links) ---------- */
 
+  // Set when a parent comes back from Stripe (/?paiement=pack). Read once, then the
+  // query is removed from the address bar so a refresh doesn't show the message again.
+  var paymentReturnPlan = (function () {
+    try {
+      const v = new URLSearchParams(window.location.search).get("paiement");
+      if (v !== "pack") return "";
+      const url = new URL(window.location.href);
+      url.searchParams.delete("paiement");
+      window.history.replaceState(null, "", url.pathname + url.search + url.hash);
+      return v;
+    } catch (err) {
+      return "";
+    }
+  })();
+
   function paymentLinks() {
     const cfg = window.ANDRONICUS_PAYMENTS || {};
     return {
@@ -9192,25 +9207,13 @@
     const emailInput = document.getElementById("booking-parent-email");
     if (emailInput) emailInput.addEventListener("change", renderPaymentPlans);
 
-    // Back from Stripe: set each payment link's confirmation page to redirect to
-    // https://andronicus-two.vercel.app/?paiement=pack
-    let paid = "";
-    try {
-      paid = new URLSearchParams(window.location.search).get("paiement") || "";
-    } catch (err) {
-      paid = "";
-    }
-    if (paid === "pack") {
+    // Back from Stripe: the payment link redirects to /?paiement=pack
+    if (paymentReturnPlan) {
       const msg = document.getElementById("pay-return");
       if (msg) {
         msg.textContent = I18n.t("pay_return_pack");
         msg.classList.remove("hidden");
       }
-      setTimeout(function () {
-        openSection("booking");
-        const sec = document.getElementById("pay-plans");
-        if (sec) sec.scrollIntoView({ block: "start" });
-      }, 300);
     }
     renderPaymentPlans();
   }
@@ -9317,6 +9320,16 @@
   }
 
   function forceInitialHomeView() {
+    if (paymentReturnPlan) {
+      openSection("booking", false);
+      const msg = document.getElementById("pay-return");
+      if (msg) {
+        requestAnimationFrame(function () {
+          msg.scrollIntoView({ block: "center" });
+        });
+      }
+      return;
+    }
     showHome(false);
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }
@@ -12144,8 +12157,8 @@
       app.classList.remove("hidden-until-intro");
     }
 
-    if (prefersReducedMotion) {
-      // Skip entire intro for accessibility
+    if (prefersReducedMotion || paymentReturnPlan) {
+      // Skip entire intro for accessibility, or when a parent is coming back from paying
       endIntroSequence();
     } else {
       document.body.classList.add("intro-running");
