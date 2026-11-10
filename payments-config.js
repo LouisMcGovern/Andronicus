@@ -5,5 +5,5 @@
  */
 window.ANDRONICUS_PAYMENTS = {
   // One-off payment link: "One class", €25, with "Let customers adjust quantity" turned on
-  classPackLink: "",
+  classPackLink: "https://buy.stripe.com/test_6oU4gse9Bcu7bUv8yq1VK00",
 };
