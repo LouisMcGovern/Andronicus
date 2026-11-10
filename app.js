@@ -9133,7 +9133,99 @@
     }
   }
 
+  /* ---------- Booking: payment plans (Stripe payment links) ---------- */
+
+  function paymentLinks() {
+    const cfg = window.ANDRONICUS_PAYMENTS || {};
+    return {
+      pass: String(cfg.monthlyPassLink || "").trim(),
+      pack: String(cfg.classPackLink || "").trim(),
+      manage: String(cfg.manageLink || "").trim(),
+    };
+  }
+
+  /** Adds the parent's email from the booking form, if typed, so Stripe pre-fills it. */
+  function withPrefilledEmail(url) {
+    const emailInput = document.getElementById("booking-parent-email");
+    const email = emailInput ? String(emailInput.value || "").trim() : "";
+    if (!url || !email || email.indexOf("@") < 1) return url;
+    return url + (url.indexOf("?") === -1 ? "?" : "&") + "prefilled_email=" + encodeURIComponent(email);
+  }
+
+  /** A pay button only works once its "I understand" box is ticked and its Stripe link is set. */
+  function renderPaymentPlans() {
+    const root = document.getElementById("pay-plans");
+    if (!root) return;
+    const links = paymentLinks();
+    ["pass", "pack"].forEach(function (plan) {
+      const btn = root.querySelector('[data-pay="' + plan + '"]');
+      const box = root.querySelector('.pay-confirm[data-for="' + plan + '"]');
+      const hint = root.querySelector('[data-hint="' + plan + '"]');
+      if (!btn || !box) return;
+      const hasLink = !!links[plan];
+      const ready = hasLink && box.checked;
+      btn.classList.toggle("is-disabled", !ready);
+      btn.setAttribute("aria-disabled", ready ? "false" : "true");
+      btn.setAttribute("href", ready ? withPrefilledEmail(links[plan]) : "#");
+      box.disabled = !hasLink;
+      if (hint) hint.textContent = !hasLink ? I18n.t("pay_soon") : box.checked ? "" : I18n.t("pay_tick_first");
+    });
+    const manage = root.querySelector('[data-pay="manage"]');
+    if (manage) {
+      manage.classList.toggle("hidden", !links.manage);
+      if (links.manage) manage.setAttribute("href", links.manage);
+    }
+  }
+
+  function initPaymentPlans() {
+    const root = document.getElementById("pay-plans");
+    if (!root) return;
+    root.addEventListener("change", function (e) {
+      if (e.target && e.target.classList.contains("pay-confirm")) renderPaymentPlans();
+    });
+    root.addEventListener("click", function (e) {
+      const btn = e.target.closest("[data-pay]");
+      if (!btn || btn.getAttribute("data-pay") === "manage") return;
+      if (btn.getAttribute("aria-disabled") === "true") {
+        e.preventDefault();
+        const plan = btn.getAttribute("data-pay");
+        const box = root.querySelector('.pay-confirm[data-for="' + plan + '"]');
+        if (box && !box.disabled) box.focus();
+        return;
+      }
+      // Refresh the link at click time so a just-typed email is included
+      btn.setAttribute("href", withPrefilledEmail(paymentLinks()[btn.getAttribute("data-pay")]));
+    });
+    const emailInput = document.getElementById("booking-parent-email");
+    if (emailInput) emailInput.addEventListener("change", renderPaymentPlans);
+
+    // Back from Stripe: set each payment link's confirmation page to redirect to
+    // https://andronicus-two.vercel.app/?paiement=pass  (or ?paiement=pack)
+    let paid = "";
+    try {
+      paid = new URLSearchParams(window.location.search).get("paiement") || "";
+    } catch (err) {
+      paid = "";
+    }
+    if (paid === "pass" || paid === "pack") {
+      const msg = document.getElementById("pay-return");
+      if (msg) {
+        msg.textContent = I18n.t(paid === "pass" ? "pay_return_pass" : "pay_return_pack");
+        msg.classList.remove("hidden");
+      }
+      setTimeout(function () {
+        openSection("booking");
+        const sec = document.getElementById("pay-plans");
+        if (sec) sec.scrollIntoView({ block: "start" });
+      }, 300);
+    }
+    renderPaymentPlans();
+  }
+
+  initPaymentPlans();
+
   window.addEventListener("andronicus:langchange", function () {
+    renderPaymentPlans();
     I18n.apply();
     refreshStaticPageCopy();
     buildBookingCalendar();
