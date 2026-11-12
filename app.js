@@ -314,6 +314,7 @@
   const adminPlannerContent = document.getElementById("admin-planner-content");
   const adminWritingTab = document.getElementById("admin-writing-tab");
   const adminPointsTab = document.getElementById("admin-points-tab");
+  const adminCreditsTab = document.getElementById("admin-credits-tab");
   const adminPaymentForm = document.getElementById("admin-payment-form");
   const adminSendEmailsBtn = document.getElementById("admin-send-emails-btn");
   const adminSendEmailsStatus = document.getElementById("admin-send-emails-status");
@@ -2831,6 +2832,7 @@
     renderAdminPanel();
     void fetchAdminWriting();
     void fetchAdminPoints();
+    void fetchAdminCredits();
   }
 
   function persistActiveUser() {
@@ -9516,6 +9518,210 @@
     });
   }
 
+  /* ---------- Admin: prepaid class credits (filled by Stripe payments) ---------- */
+
+  var adminCredits = { loading: false, loaded: false, rows: [], error: "" };
+
+  async function fetchAdminCredits() {
+    if (!adminUnlocked || adminCredits.loading) return;
+    if (!isSupabaseConfigured() || !hasAdminApiSecret()) {
+      adminCredits.error = I18n.t("admin_credits_no_cloud");
+      adminCredits.loaded = true;
+      renderAdminCredits();
+      return;
+    }
+    const sb = getSupabaseClient();
+    if (!sb) return;
+    adminCredits.loading = true;
+    try {
+      const { data, error } = await sb.rpc("admin_list_class_credits", {
+        p_secret: getSupabaseConfig().adminApiSecret,
+      });
+      if (error) throw error;
+      adminCredits.rows = data || [];
+      adminCredits.error = "";
+    } catch (err) {
+      adminCredits.error = isMissingFunctionError(err)
+        ? I18n.t("admin_credits_missing_sql")
+        : I18n.t("admin_cloud_fail_prefix") + " " + (err.message || String(err));
+      if (!isMissingFunctionError(err)) console.error(err);
+    }
+    adminCredits.loading = false;
+    adminCredits.loaded = true;
+    renderAdminCredits();
+  }
+
+  async function adminCreditsCall(fn, params) {
+    const sb = getSupabaseClient();
+    if (!sb) return false;
+    const { error } = await sb.rpc(fn, Object.assign({ p_secret: getSupabaseConfig().adminApiSecret }, params));
+    if (error) {
+      console.error(error);
+      adminCredits.error = I18n.t("admin_cloud_fail_prefix") + " " + (error.message || String(error));
+      renderAdminCredits();
+      return false;
+    }
+    return true;
+  }
+
+  async function setAdminCredit(row, value) {
+    const prev = row.classes_owed;
+    row.classes_owed = value;
+    renderAdminCredits();
+    const ok = await adminCreditsCall("admin_set_class_credits", { p_id: row.id, p_classes: value });
+    if (!ok) {
+      row.classes_owed = prev;
+      renderAdminCredits();
+    }
+  }
+
+  function renderAdminCredits() {
+    const host = document.getElementById("admin-credits-content");
+    if (!host || !adminUnlocked) return;
+    if (adminCreditsTab && adminCreditsTab.classList.contains("hidden")) return;
+    host.innerHTML = "";
+
+    const card = document.createElement("div");
+    card.className = "account-card account-card--admin admin-credits";
+    const h = document.createElement("h3");
+    h.textContent = I18n.t("admin_credits_heading");
+    card.appendChild(h);
+    const intro = document.createElement("p");
+    intro.className = "field-hint";
+    intro.textContent = I18n.t("admin_credits_intro");
+    card.appendChild(intro);
+
+    if (adminCredits.error) {
+      const err = document.createElement("p");
+      err.className = "form-error";
+      err.textContent = adminCredits.error;
+      card.appendChild(err);
+    }
+
+    if (!adminCredits.loaded) {
+      const p = document.createElement("p");
+      p.className = "field-hint";
+      p.textContent = I18n.t("admin_credits_loading");
+      card.appendChild(p);
+    } else if (!adminCredits.rows.length && !adminCredits.error) {
+      const p = document.createElement("p");
+      p.className = "field-hint";
+      p.textContent = I18n.t("admin_credits_empty");
+      card.appendChild(p);
+    }
+
+    const list = document.createElement("ul");
+    list.className = "admin-credits__list";
+    adminCredits.rows.forEach(function (row) {
+      const owed = Number(row.classes_owed) || 0;
+      const li = document.createElement("li");
+      li.className = "admin-credits__row" + (owed <= 0 ? " is-empty" : owed === 1 ? " is-low" : "");
+
+      const info = document.createElement("div");
+      info.className = "admin-credits__info";
+      const name = document.createElement("strong");
+      name.className = "admin-credits__name";
+      name.textContent = row.student_name;
+      info.appendChild(name);
+      const meta = document.createElement("span");
+      meta.className = "admin-credits__meta small-print";
+      const bits = [];
+      if (row.parent_email) bits.push(row.parent_email);
+      if (Number(row.total_purchased) > 0) bits.push(I18n.t("admin_credits_total") + " " + row.total_purchased);
+      if (row.last_payment_at) {
+        bits.push(I18n.t("admin_credits_last_paid") + " " + new Date(row.last_payment_at).toLocaleDateString());
+      }
+      meta.textContent = bits.join(" · ");
+      info.appendChild(meta);
+      li.appendChild(info);
+
+      const ctrl = document.createElement("div");
+      ctrl.className = "admin-credits__ctrl";
+      const minus = document.createElement("button");
+      minus.type = "button";
+      minus.className = "admin-credits__step";
+      minus.textContent = "−1";
+      minus.setAttribute("aria-label", I18n.t("admin_credits_minus") + " " + row.student_name);
+      minus.addEventListener("click", function () {
+        void setAdminCredit(row, owed - 1);
+      });
+      const count = document.createElement("input");
+      count.type = "number";
+      count.className = "admin-credits__count";
+      count.value = String(owed);
+      count.setAttribute("aria-label", I18n.t("admin_credits_owed") + " " + row.student_name);
+      count.addEventListener("change", function () {
+        const v = parseInt(count.value, 10);
+        if (Number.isFinite(v) && v !== owed) void setAdminCredit(row, v);
+        else count.value = String(owed);
+      });
+      const plus = document.createElement("button");
+      plus.type = "button";
+      plus.className = "admin-credits__step";
+      plus.textContent = "+1";
+      plus.setAttribute("aria-label", I18n.t("admin_credits_plus") + " " + row.student_name);
+      plus.addEventListener("click", function () {
+        void setAdminCredit(row, owed + 1);
+      });
+      const label = document.createElement("span");
+      label.className = "admin-credits__label small-print";
+      label.textContent = owed < 0 ? I18n.t("admin_credits_owes") : I18n.t("admin_credits_left");
+      const del = document.createElement("button");
+      del.type = "button";
+      del.className = "btn-text admin-credits__del";
+      del.textContent = I18n.t("admin_credits_delete");
+      del.addEventListener("click", async function () {
+        if (!window.confirm(I18n.t("admin_credits_delete_confirm") + " " + row.student_name + " ?")) return;
+        if (await adminCreditsCall("admin_delete_class_credit", { p_id: row.id })) {
+          adminCredits.rows = adminCredits.rows.filter(function (r) {
+            return r.id !== row.id;
+          });
+          renderAdminCredits();
+        }
+      });
+      ctrl.appendChild(minus);
+      ctrl.appendChild(count);
+      ctrl.appendChild(plus);
+      ctrl.appendChild(label);
+      ctrl.appendChild(del);
+      li.appendChild(ctrl);
+      list.appendChild(li);
+    });
+    card.appendChild(list);
+
+    // Add a student by hand (e.g. someone who paid in cash)
+    const form = document.createElement("form");
+    form.className = "admin-credits__add";
+    const nameIn = document.createElement("input");
+    nameIn.type = "text";
+    nameIn.required = true;
+    nameIn.placeholder = I18n.t("admin_credits_add_name");
+    const numIn = document.createElement("input");
+    numIn.type = "number";
+    numIn.value = "0";
+    numIn.setAttribute("aria-label", I18n.t("admin_credits_owed"));
+    const addBtn = document.createElement("button");
+    addBtn.type = "submit";
+    addBtn.className = "btn-primary";
+    addBtn.textContent = I18n.t("admin_credits_add_btn");
+    form.appendChild(nameIn);
+    form.appendChild(numIn);
+    form.appendChild(addBtn);
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const n = nameIn.value.trim();
+      if (!n) return;
+      const ok = await adminCreditsCall("admin_add_class_credit_student", {
+        p_name: n,
+        p_classes: parseInt(numIn.value, 10) || 0,
+      });
+      if (ok) void fetchAdminCredits();
+    });
+    card.appendChild(form);
+
+    host.appendChild(card);
+  }
+
   if (adminTabs.length) {
     adminTabs.forEach(function (tabBtn) {
       tabBtn.addEventListener("click", function () {
@@ -9542,6 +9748,11 @@
         if (adminPlannerTab)     adminPlannerTab.classList.toggle("hidden",     tab !== "planner");
         if (adminWritingTab)     adminWritingTab.classList.toggle("hidden",     tab !== "writing");
         if (adminPointsTab)      adminPointsTab.classList.toggle("hidden",      tab !== "points");
+        if (adminCreditsTab)     adminCreditsTab.classList.toggle("hidden",     tab !== "credits");
+        if (tab === "credits") {
+          renderAdminCredits();
+          void fetchAdminCredits();
+        }
         if (tab === "points") {
           renderAdminPoints();
           if (!adminStudentsFetched && !adminStudentsLoading) void fetchAdminStudents();
