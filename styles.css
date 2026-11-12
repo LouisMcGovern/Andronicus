@@ -12748,3 +12748,36 @@ body.content-panel-open .tool-panel[data-tool-panel="progress"],
 .admin-credits__add input[type="number"] {
   width: 5rem;
 }
+
+/* Keep the credit counter compact (overrides .account-card input) */
+.account-card .admin-credits__ctrl {
+  flex-wrap: nowrap;
+}
+
+.account-card input.admin-credits__count {
+  display: inline-block;
+  width: 4rem;
+  margin: 0;
+  flex: 0 0 4rem;
+}
+
+.account-card .admin-credits__step {
+  margin: 0;
+  flex: 0 0 auto;
+}
+
+.account-card .admin-credits__add input {
+  display: inline-block;
+  margin: 0;
+}
+
+.account-card .admin-credits__add input[type="number"] {
+  width: 5rem;
+  flex: 0 0 5rem;
+}
+
+@media (max-width: 600px) {
+  .account-card .admin-credits__ctrl {
+    flex-wrap: wrap;
+  }
+}
