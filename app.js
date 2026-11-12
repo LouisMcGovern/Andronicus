@@ -9299,8 +9299,43 @@
     }, PANEL_FADE_MS);
   }
 
+  /* ---------- Browser history: Back/Forward move between sections ---------- */
+  var restoringHistory = false;
+  var HISTORY_DEEP_LINK_SKIP = ["admin"];
+
+  function sectionUrl(id) {
+    const base = window.location.pathname + window.location.search;
+    return id && id !== "home" ? base + "#" + id : base;
+  }
+
+  function recordSection(id) {
+    if (restoringHistory) return;
+    try {
+      const current = window.history.state && window.history.state.andronicusSection;
+      if (current === id) return;
+      window.history.pushState({ andronicusSection: id }, "", sectionUrl(id));
+    } catch (e) {}
+  }
+
+  window.addEventListener("popstate", function (e) {
+    let id = e.state && e.state.andronicusSection;
+    if (!id) {
+      const hash = (window.location.hash || "").replace("#", "");
+      id = hash && document.getElementById("panel-" + hash) ? hash : "home";
+    }
+    restoringHistory = true;
+    try {
+      if (id === "home") showHome();
+      else openSection(id);
+    } finally {
+      restoringHistory = false;
+    }
+  });
+
   function showHome(animate) {
-    if (animate !== false && getVisibleTopLevelPanel() === panelHome) {
+    const alreadyHome = getVisibleTopLevelPanel() === panelHome;
+    if (!alreadyHome) recordSection("home");
+    if (animate !== false && alreadyHome) {
       animate = false;
     }
 
@@ -9321,8 +9356,30 @@
     transitionTopLevelPanel(applyHomeView);
   }
 
+  var historyInitialised = false;
+
+  /** Shows the section the current history entry points at, without adding entries. */
+  function syncViewToHistory() {
+    const id = (window.history.state && window.history.state.andronicusSection) || "home";
+    restoringHistory = true;
+    try {
+      if (id === "home" || HISTORY_DEEP_LINK_SKIP.indexOf(id) !== -1) showHome(false);
+      else openSection(id, false);
+    } finally {
+      restoringHistory = false;
+    }
+  }
+
   function forceInitialHomeView() {
+    if (historyInitialised) {
+      syncViewToHistory();
+      return;
+    }
+    historyInitialised = true;
     if (paymentReturnPlan) {
+      try {
+        window.history.replaceState({ andronicusSection: "home" }, "", sectionUrl("home"));
+      } catch (e) {}
       openSection("booking", false);
       const msg = document.getElementById("pay-return");
       if (msg) {
@@ -9332,8 +9389,20 @@
       }
       return;
     }
+    // Start the history at the home page, then open a linked section (#booking etc.)
+    const startHash = (window.location.hash || "").replace("#", "");
+    try {
+      window.history.replaceState({ andronicusSection: "home" }, "", sectionUrl("home"));
+    } catch (e) {}
     showHome(false);
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    if (
+      startHash &&
+      HISTORY_DEEP_LINK_SKIP.indexOf(startHash) === -1 &&
+      document.getElementById("panel-" + startHash)
+    ) {
+      openSection(startHash, false);
+    }
   }
 
   function resetContentPanel() {
@@ -9344,6 +9413,7 @@
     const target = id === "home" ? panelHome : document.getElementById("panel-" + id);
     if (!target) return;
     if (getVisibleTopLevelPanel() === target) return;
+    recordSection(id);
 
     function applySectionView() {
       setContentPanelOpen(id === "content");
