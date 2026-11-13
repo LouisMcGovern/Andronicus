@@ -13356,13 +13356,19 @@ body.content-panel-open .intro-title .char {
 
 /* Dictation hint: first letter of every word */
 .dict__hint {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 2.4rem; /* big gap between words so they don't run together */
   margin: 0.25rem 0 0.75rem;
-  padding: 0.6rem 0.85rem;
+  padding: 0.7rem 0.85rem;
   border: 1px dashed var(--border);
   border-radius: 10px;
   background: var(--surface);
-  font-size: 1.1rem;
-  letter-spacing: 0.08em !important;
+  font-size: 1.15rem;
   color: var(--ink-heading);
-  text-align: center;
+}
+.dict__hint .dict__hintword {
+  letter-spacing: 0.18em !important; /* separates the blanks inside a word: p _ _ _ */
+  white-space: nowrap;
 }

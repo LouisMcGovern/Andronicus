@@ -454,7 +454,13 @@
       }
 
       if (state.hints[key]) {
-        card.appendChild(el("p", "dict__hint", hintText(p.text)));
+        var hintBox = el("p", "dict__hint");
+        hintText(p.text)
+          .split(/\s+/)
+          .forEach(function (w) {
+            hintBox.appendChild(el("span", "dict__hintword", w)); // one box per word, with clear gaps between
+          });
+        card.appendChild(hintBox);
       }
 
       var label = el("label", "dict__label", t("dict_type_label"));
