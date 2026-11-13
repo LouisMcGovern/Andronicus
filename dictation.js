@@ -13,7 +13,7 @@
   var POINTS = { 1: 1, 2: 2, 3: 3 };
   var DIFF_KEY = { 1: "dict_easy", 2: "dict_medium", 3: "dict_hard" };
   var RATE_NORMAL = 0.92;
-  var RATE_SLOW = 0.62;
+  var RATE_SLOW = 0.75; // much slower than this and voices start to sound distorted
 
   function phrases(level) {
     return (RAW[level] || []).map(function (line, i) {
@@ -150,16 +150,24 @@
     var list = (synth.getVoices() || []).filter(function (v) {
       return langOf(v).indexOf("en") === 0;
     });
+    /* Voice quality comes first: modern "natural"/neural voices sound like a real person,
+       older built-in voices sound robotic. Accent only breaks ties between similar voices. */
     function score(v) {
+      var n = String(v.name || "");
       var l = langOf(v);
       var s = 0;
-      if (l === "en-gb") s += 40;
-      else if (l === "en-ie") s += 35;
-      else if (l === "en-us") s += 25;
-      else if (l === "en-au" || l === "en-ca" || l === "en-nz") s += 15;
-      if (/natural|neural|premium|enhanced|online/i.test(v.name)) s += 8;
-      if (/google/i.test(v.name)) s += 5;
-      if (/novelty|whisper|bells|bubbles|cellos|zarvox|trinoids|bad news|good news|jester|organ|superstar|wobble|boing|albert|bahh/i.test(v.name)) s -= 100;
+      if (/natural|neural|premium|enhanced|siri/i.test(n)) s += 100;      // Edge "Online (Natural)", Apple Premium/Enhanced
+      else if (/online/i.test(n)) s += 90;                                 // Microsoft online voices
+      else if (/^google/i.test(n)) s += 70;                                // Chrome's Google voices
+      else if (/^(daniel|serena|kate|oliver|martha|arthur|stephanie|moira|karen|samantha|ava|tom|allison|susan)\b/i.test(n)) s += 40; // decent Apple voices
+      else if (/^microsoft (george|hazel|susan|david|zira|mark)\b/i.test(n)) s += 5; // old Windows desktop voices (robotic)
+      if (/espeak|festival|pico|mbrola/i.test(n)) s -= 80;
+      if (v.localService === false) s += 10;                               // cloud voices are usually more natural
+      if (l === "en-gb") s += 20;
+      else if (l === "en-ie") s += 18;
+      else if (l === "en-us") s += 12;
+      else if (l === "en-au" || l === "en-ca" || l === "en-nz") s += 8;
+      if (/novelty|whisper|bells|bubbles|cellos|zarvox|trinoids|bad news|good news|jester|organ|superstar|wobble|boing|albert|bahh|grandma|grandpa|rocko|shelley|flo|eddy|reed|sandy/i.test(n)) s -= 300;
       return s;
     }
     var best = null;
@@ -187,8 +195,8 @@
     /* No voice of the right gender on this device: shift the pitch instead. */
     if (!picked.exact) {
       var g = picked.voice ? genderOf(picked.voice) : "";
-      if (gender === "male" && g !== "male") u.pitch = 0.7;
-      if (gender === "female" && g !== "female") u.pitch = 1.25;
+      if (gender === "male" && g !== "male") u.pitch = 0.85;
+      if (gender === "female" && g !== "female") u.pitch = 1.12;
     }
     u.onstart = onStart || null;
     u.onend = u.onerror = onEnd || null;
