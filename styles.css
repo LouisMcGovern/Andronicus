@@ -12853,3 +12853,35 @@ body:not(.content-panel-open) .panel-toolbar .btn-back-arrow {
   background: var(--surface-elevated);
   box-shadow: 0 2px 10px rgba(13, 27, 42, 0.14);
 }
+
+/* "Andronicus" title in the learning section's top bar */
+.panel-toolbar__brand {
+  display: none;
+}
+body.content-panel-open .panel-toolbar {
+  display: flex;
+  align-items: center;
+}
+body.content-panel-open .panel-toolbar__brand {
+  display: block;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.35rem, 3vw, 1.9rem);
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--ink-heading);
+  pointer-events: none;
+  white-space: nowrap;
+}
+@media (max-width: 640px) {
+  body.content-panel-open .panel-toolbar__brand {
+    position: static;
+    transform: none;
+    margin-left: 0.6rem;
+    font-size: 1.3rem;
+  }
+}
