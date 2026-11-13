@@ -367,7 +367,7 @@
   const ACTIVE_USER_KEY = "andronicus_active_user_v1";
   const BOOKINGS_KEY = "andronicus_bookings_v1";
   const PAYMENTS_KEY = "andronicus_payments_v1";
-  const ADMIN_PASSWORD = "321";
+  const ADMIN_PASSWORD = "12345";
 
   let pendingLevel = null;
   let activeCourse = null; // "en" | "fr" | null — see setActiveCourse()
@@ -3792,15 +3792,65 @@
     return leaderboardCache;
   }
 
+  /* ---------- Leaderboard profile: chosen name + character (stats.profile) ----------
+   * Saved in the student's stats, so it syncs to Supabase with everything else;
+   * the student_leaderboard SQL function (20261113120000_leaderboard_profiles.sql) shows them. */
+  const DISPLAY_NAME_MAX = 20;
+  const DISPLAY_NAME_BLOCKED = /(merde|putain|connard|connasse|encul|salope|pute|bite|couille|nique|fuck|shit|bitch|cunt|dick|pussy|asshole|bastard|nazi|hitler|sexe|porn)/i;
+
+  function getProfile(user) {
+    const stats = user ? ensureStats(user) : null;
+    const prof = stats && stats.profile && typeof stats.profile === "object" ? stats.profile : {};
+    return {
+      displayName: typeof prof.displayName === "string" ? prof.displayName : "",
+      avatar: prof.avatar && typeof prof.avatar === "object" ? window.AndAvatar.normalize(prof.avatar) : null,
+    };
+  }
+
+  /** Tidies a chosen name; returns { name } or { error: i18n key }. */
+  function cleanDisplayName(raw) {
+    const name = String(raw || "")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (!name) return { name: "" }; // empty = go back to the automatic name
+    if (name.length < 2) return { error: "profile_name_short" };
+    if (name.length > DISPLAY_NAME_MAX) return { error: "profile_name_long" };
+    if (!/^[\p{L}\p{N} ._'’-]+$/u.test(name)) return { error: "profile_name_chars" };
+    if (DISPLAY_NAME_BLOCKED.test(name.replace(/[^\p{L}]/gu, ""))) return { error: "profile_name_rude" };
+    return { name: name };
+  }
+
+  function saveProfile(displayName, avatar) {
+    const user = getActiveUser();
+    if (!user) return;
+    const stats = ensureStats(user);
+    stats.profile = {
+      displayName: displayName || "",
+      avatar: avatar ? window.AndAvatar.normalize(avatar) : null,
+    };
+    saveUsers();
+    leaderboardCache = { at: 0, user: null, rows: null, error: "" }; // show the change next time
+  }
+
+  /** The character to draw for a leaderboard row (own row uses the local, just-saved choice). */
+  function leaderboardAvatar(r) {
+    if (r.is_me) {
+      const mine = getProfile(getActiveUser()).avatar;
+      if (mine) return mine;
+    }
+    if (r.avatar && typeof r.avatar === "object" && r.avatar.animal) return r.avatar;
+    return window.AndAvatar.forName(r.display_name);
+  }
+
   // Extra players shown on the student leaderboard alongside real accounts.
   // Display only: they are not stored in Supabase and do not appear in the admin panel.
   const LEADERBOARD_FILLERS = [
-    { display_name: "Léa M.", level: "intermediate", points: 118 },
-    { display_name: "Hugo B.", level: "beginner", points: 107 },
-    { display_name: "Chloé D.", level: "advanced", points: 102 },
-    { display_name: "Lucas R.", level: "intermediate", points: 96 },
-    { display_name: "Camille L.", level: "beginner", points: 91 },
-    { display_name: "Théo G.", level: "advanced", points: 84 },
+    { display_name: "Léa M.", level: "intermediate", points: 118, avatar: { animal: "fox", bg: "#e3dcf4", hat: "beret", eyes: "round", neck: "none" } },
+    { display_name: "Hugo B.", level: "beginner", points: 107, avatar: { animal: "bear", bg: "#d6eadf", hat: "cap", eyes: "none", neck: "scarf" } },
+    { display_name: "Chloé D.", level: "advanced", points: 102, avatar: { animal: "cat", bg: "#f3d6df", hat: "none", eyes: "sunglasses", neck: "none" } },
+    { display_name: "Lucas R.", level: "intermediate", points: 96, avatar: { animal: "dog", bg: "#cfe0f1", hat: "headphones", eyes: "none", neck: "bowtie" } },
+    { display_name: "Camille L.", level: "beginner", points: 91, avatar: { animal: "rabbit", bg: "#f3ecc8", hat: "none", eyes: "square", neck: "scarf" } },
+    { display_name: "Théo G.", level: "advanced", points: 84, avatar: { animal: "lion", bg: "#d4e9ee", hat: "crown", eyes: "none", neck: "medal" } },
   ];
 
   /** Merges the filler players into the real rows and re-ranks everyone by points. */
@@ -3808,7 +3858,7 @@
     if (!Array.isArray(rows)) return rows;
     const merged = rows.concat(
       LEADERBOARD_FILLERS.map(function (f) {
-        return { display_name: f.display_name, level: f.level, points: f.points, is_me: false };
+        return { display_name: f.display_name, level: f.level, points: f.points, is_me: false, avatar: f.avatar || null };
       })
     );
     merged.sort(function (a, b) {
@@ -3876,16 +3926,23 @@
         if (badge) rank.innerHTML = badge;
         else rank.textContent = String(r.rank);
         rank.setAttribute("aria-label", I18n.t("lb_rank_aria", { n: String(r.rank) }));
+        const face = document.createElement("span");
+        face.className = "lb-avatar";
+        face.setAttribute("aria-hidden", "true");
+        face.innerHTML = window.AndAvatar.svg(leaderboardAvatar(r));
         const name = document.createElement("span");
         name.className = "lb-name";
-        name.textContent = r.display_name + (r.is_me ? " " + I18n.t("lb_you") : "");
+        const myName = r.is_me ? getProfile(getActiveUser()).displayName : "";
+        name.textContent = (myName || r.display_name) + (r.is_me ? " " + I18n.t("lb_you") : "");
         const lvl = document.createElement("span");
         lvl.className = "lb-level" + (r.level ? " lb-level--" + r.level : "");
         lvl.textContent = r.level ? I18n.t("level_" + r.level) : "—";
+        if (r.level) lvl.className = "lb-level lb-level--" + baseLevelOf(r.level);
         const pts = document.createElement("span");
         pts.className = "lb-pts";
         pts.textContent = formatPoints(r.points);
         li.appendChild(rank);
+        li.appendChild(face);
         li.appendChild(name);
         li.appendChild(lvl);
         li.appendChild(pts);
@@ -8668,6 +8725,150 @@
     accountDashboard.insertBefore(card, accountProgressCards);
   }
 
+  /* ---------- Account: leaderboard name + character builder ---------- */
+  let profileDraft = null; // unsaved choices while the student is editing
+
+  function renderAccountProfile(user) {
+    const host = document.getElementById("account-profile");
+    if (!host || !user) return;
+    const lang = I18n.getLang();
+    const saved = getProfile(user);
+    if (!profileDraft || profileDraft.user !== activeUsername) {
+      profileDraft = {
+        user: activeUsername,
+        name: saved.displayName,
+        avatar: saved.avatar || window.AndAvatar.forName(user.fullName || activeUsername),
+        msg: "",
+        msgBad: false,
+      };
+    }
+    const d = profileDraft;
+    host.innerHTML = "";
+
+    const head = document.createElement("div");
+    head.className = "profile-head";
+    const big = document.createElement("div");
+    big.className = "profile-avatar";
+    big.innerHTML = window.AndAvatar.svg(d.avatar, I18n.t("profile_avatar_aria"));
+    const headText = document.createElement("div");
+    const h3 = document.createElement("h3");
+    h3.textContent = I18n.t("profile_heading");
+    const intro = document.createElement("p");
+    intro.className = "profile-intro";
+    intro.textContent = I18n.t("profile_intro");
+    headText.appendChild(h3);
+    headText.appendChild(intro);
+    head.appendChild(big);
+    head.appendChild(headText);
+    host.appendChild(head);
+
+    const nameLab = document.createElement("label");
+    nameLab.className = "profile-name";
+    const nameText = document.createElement("span");
+    nameText.className = "profile-label";
+    nameText.textContent = I18n.t("profile_name_label");
+    const nameInput = document.createElement("input");
+    nameInput.type = "text";
+    nameInput.maxLength = DISPLAY_NAME_MAX;
+    nameInput.autocomplete = "off";
+    nameInput.spellcheck = false;
+    nameInput.value = d.name;
+    nameInput.placeholder = I18n.t("profile_name_ph");
+    nameInput.addEventListener("input", function () {
+      d.name = nameInput.value;
+    });
+    const nameHint = document.createElement("span");
+    nameHint.className = "profile-hint";
+    nameHint.textContent = I18n.t("profile_name_hint", { n: String(DISPLAY_NAME_MAX) });
+    nameLab.appendChild(nameText);
+    nameLab.appendChild(nameInput);
+    nameLab.appendChild(nameHint);
+    host.appendChild(nameLab);
+
+    function choiceRow(labelKey, group, keys, current, onPick, isColour) {
+      const row = document.createElement("div");
+      row.className = "profile-row";
+      const lab = document.createElement("span");
+      lab.className = "profile-label";
+      lab.textContent = I18n.t(labelKey);
+      row.appendChild(lab);
+      const opts = document.createElement("div");
+      opts.className = "profile-options";
+      opts.setAttribute("role", "group");
+      opts.setAttribute("aria-label", I18n.t(labelKey));
+      keys.forEach(function (k) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "profile-opt" + (isColour ? " profile-opt--colour" : "") + (k === current ? " is-on" : "");
+        b.setAttribute("aria-pressed", k === current ? "true" : "false");
+        if (isColour) {
+          b.style.background = k;
+          b.setAttribute("aria-label", I18n.t("profile_bg") + " " + (keys.indexOf(k) + 1));
+        } else {
+          const preview = Object.assign({}, d.avatar);
+          preview[group] = k;
+          b.innerHTML = window.AndAvatar.svg(preview);
+          const title = window.AndAvatar.label(group, k, lang);
+          b.title = title;
+          b.setAttribute("aria-label", title);
+        }
+        b.addEventListener("click", function () {
+          onPick(k);
+          d.msg = "";
+          renderAccountProfile(user);
+        });
+        opts.appendChild(b);
+      });
+      row.appendChild(opts);
+      host.appendChild(row);
+    }
+
+    choiceRow("profile_animal", "animal", window.AndAvatar.animals, d.avatar.animal, function (k) {
+      d.avatar.animal = k;
+    });
+    choiceRow("profile_hat", "hat", window.AndAvatar.hats, d.avatar.hat, function (k) {
+      d.avatar.hat = k;
+    });
+    choiceRow("profile_eyes", "eyes", window.AndAvatar.eyes, d.avatar.eyes, function (k) {
+      d.avatar.eyes = k;
+    });
+    choiceRow("profile_neck", "neck", window.AndAvatar.necks, d.avatar.neck, function (k) {
+      d.avatar.neck = k;
+    });
+    choiceRow("profile_bg", "bg", window.AndAvatar.bgs, d.avatar.bg, function (k) {
+      d.avatar.bg = k;
+    }, true);
+
+    const actions = document.createElement("div");
+    actions.className = "profile-actions";
+    const saveBtn = document.createElement("button");
+    saveBtn.type = "button";
+    saveBtn.className = "btn-primary";
+    saveBtn.textContent = I18n.t("profile_save");
+    saveBtn.addEventListener("click", function () {
+      const res = cleanDisplayName(d.name);
+      if (res.error) {
+        d.msg = I18n.t(res.error, { n: String(DISPLAY_NAME_MAX) });
+        d.msgBad = true;
+      } else {
+        d.name = res.name;
+        saveProfile(res.name, d.avatar);
+        d.msg = I18n.t("profile_saved");
+        d.msgBad = false;
+      }
+      renderAccountProfile(user);
+    });
+    actions.appendChild(saveBtn);
+    if (d.msg) {
+      const msg = document.createElement("p");
+      msg.className = "profile-msg" + (d.msgBad ? " is-bad" : " is-good");
+      msg.setAttribute("role", "status");
+      msg.textContent = d.msg;
+      actions.appendChild(msg);
+    }
+    host.appendChild(actions);
+  }
+
   function renderAccountPanel() {
     syncPointsForActiveUser();
     if (!accountAuth || !accountDashboard) return;
@@ -8691,6 +8892,7 @@
       accountWelcome.appendChild(levelBadge);
     }
     renderAccountContinue(lh);
+    renderAccountProfile(user);
     renderAccountOnboarding(user, lh);
     accountProgressCards.innerHTML = "";
     const metrics = [

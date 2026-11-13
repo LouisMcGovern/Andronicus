@@ -9,6 +9,24 @@
 
   const STRINGS = {
     en: {
+      /* ---- Leaderboard profile (account) ---- */
+      profile_heading: "Your leaderboard profile",
+      profile_intro: "Choose the name and the character other students see on the leaderboard.",
+      profile_avatar_aria: "Your character",
+      profile_name_label: "Leaderboard name",
+      profile_name_ph: "e.g. Lucie, Speedy Fox…",
+      profile_name_hint: "Up to {n} characters. Leave it empty to show your first name and initial.",
+      profile_animal: "Animal",
+      profile_hat: "Hat",
+      profile_eyes: "Glasses",
+      profile_neck: "Neck",
+      profile_bg: "Background",
+      profile_save: "Save my profile",
+      profile_saved: "Saved! Your name and character now show on the leaderboard.",
+      profile_name_short: "Your name needs at least 2 characters.",
+      profile_name_long: "Your name can have up to {n} characters.",
+      profile_name_chars: "Use only letters, numbers, spaces and . _ ' -",
+      profile_name_rude: "Please choose a different name.",
       /* ---- Language picker + French course ---- */
       lang_pick_intro: "Which language do you want to learn?",
       lang_pick_aria: "Choose a language",
@@ -955,6 +973,24 @@
       account_metric_quiz_best: "Best {mode}: {pct}%",
     },
     fr: {
+      /* ---- Profil du classement (compte) ---- */
+      profile_heading: "Ton profil sur le classement",
+      profile_intro: "Choisis le nom et le personnage que les autres élèves voient dans le classement.",
+      profile_avatar_aria: "Ton personnage",
+      profile_name_label: "Nom sur le classement",
+      profile_name_ph: "ex. Lucie, Renard rapide…",
+      profile_name_hint: "{n} caractères maximum. Laisse vide pour afficher ton prénom et ton initiale.",
+      profile_animal: "Animal",
+      profile_hat: "Chapeau",
+      profile_eyes: "Lunettes",
+      profile_neck: "Cou",
+      profile_bg: "Fond",
+      profile_save: "Enregistrer mon profil",
+      profile_saved: "Enregistré ! Ton nom et ton personnage apparaissent maintenant dans le classement.",
+      profile_name_short: "Ton nom doit avoir au moins 2 caractères.",
+      profile_name_long: "Ton nom peut avoir {n} caractères maximum.",
+      profile_name_chars: "Utilise seulement des lettres, des chiffres, des espaces et . _ ' -",
+      profile_name_rude: "Merci de choisir un autre nom.",
       /* ---- Choix de la langue + cours de français ---- */
       lang_pick_intro: "Quelle langue veux-tu apprendre ?",
       lang_pick_aria: "Choisir une langue",
