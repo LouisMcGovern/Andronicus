@@ -12464,7 +12464,10 @@
       app.classList.remove("hidden-until-intro");
     }
 
-    if (prefersReducedMotion || paymentReturnPlan) {
+    // Only play the intro when the site opens on the main page, not when reloading another section
+    var openedOnOtherSection = getVisibleTopLevelPanel() !== panelHome;
+
+    if (prefersReducedMotion || paymentReturnPlan || openedOnOtherSection) {
       // Skip entire intro for accessibility, or when a parent is coming back from paying
       endIntroSequence();
     } else {

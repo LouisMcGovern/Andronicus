@@ -12891,3 +12891,10 @@ body.content-panel-open .panel-toolbar__brand {
   letter-spacing: -0.02em;
   color: #0d1b2a;
 }
+
+/* The intro title always uses the Andronicus title font, whatever section is open */
+body.content-panel-open .intro-title,
+body.content-panel-open .intro-title .char {
+  font-family: "Playfair Display", Georgia, serif !important;
+  letter-spacing: -0.02em !important;
+}
