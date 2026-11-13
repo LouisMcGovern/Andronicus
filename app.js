@@ -7710,12 +7710,32 @@
     }
   }
 
+  /* Remember where the student is in Learn English (level + game) so a reload brings them back there. */
+  var LEARN_POS_KEY = "andronicus_learn_pos";
+  var savedLearnPos = (function () {
+    try {
+      return JSON.parse(sessionStorage.getItem(LEARN_POS_KEY) || "null");
+    } catch (e) {
+      return null;
+    }
+  })();
+  function saveLearnPos(pos) {
+    try {
+      if (pos) sessionStorage.setItem(LEARN_POS_KEY, JSON.stringify(pos));
+      else sessionStorage.removeItem(LEARN_POS_KEY);
+    } catch (e) {}
+  }
+
   function resetHubToLanding(hub) {
     if (!hub) return;
     hub.classList.remove("is-locked");
     const landing = hub.querySelector("[data-level-landing]");
     const workspace = hub.querySelector("[data-hub-workspace]");
     const backBtn = hub.querySelector(".lh-back-to-menu");
+    const hubArticle = hub.closest(".level-article");
+    if (hubArticle && !hubArticle.classList.contains("hidden")) {
+      saveLearnPos({ level: hub.getAttribute("data-learning-level") });
+    }
     if (landing) landing.classList.remove("hidden");
     if (workspace) workspace.classList.add("hidden");
     if (backBtn) backBtn.classList.add("hidden");
@@ -9255,6 +9275,7 @@
     contentPasswordError.classList.add("hidden");
     document.querySelectorAll(".level-article").forEach((el) => el.classList.add("hidden"));
     document.body.removeAttribute("data-open-level");
+    saveLearnPos(null);
     document.querySelectorAll(".btn-level").forEach((b) => b.classList.remove("is-active"));
     resetAllLearningHubsToLanding();
     updateContentBreadcrumb();
@@ -10394,6 +10415,7 @@
         if (levelLanding) levelLanding.classList.add("hidden");
         if (hubWorkspace) hubWorkspace.classList.remove("hidden");
         activateTab(tabName || "flashcards");
+        saveLearnPos({ level: level, tool: tabName || "flashcards" });
         if (backToMenuBtn) backToMenuBtn.classList.remove("hidden");
       }
 
@@ -12448,6 +12470,24 @@
     buildBookingCalendar();
     initLearningTools();
     forceInitialHomeView();
+    // Reloaded inside Learn English: reopen the same level and game (its intro plays again)
+    if (
+      savedLearnPos &&
+      savedLearnPos.level &&
+      getVisibleTopLevelPanel() === document.getElementById("panel-content")
+    ) {
+      const pos = savedLearnPos;
+      savedLearnPos = null;
+      if (document.getElementById("content-" + pos.level)) {
+        openContentLevel(pos.level);
+        if (pos.tool) {
+          const card = document.querySelector(
+            "#content-" + pos.level + ' .level-landing__card[data-tool="' + pos.tool + '"]'
+          );
+          if (card) card.click();
+        }
+      }
+    }
 
     // ── Cinematic intro sequence ──────────────────────────────────────────
     var prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
