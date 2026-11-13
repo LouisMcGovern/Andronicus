@@ -74,9 +74,23 @@
       })
       .filter(Boolean);
   }
+  /* A student may type "12" for "douze": accept digits 0-20. */
+  var FR_NUMBERS = ["zero", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf", "dix",
+    "onze", "douze", "treize", "quatorze", "quinze", "seize", "dix sept", "dix huit", "dix neuf", "vingt"];
   /** French comparison words: like rawWordsFr, but accent-insensitive. */
   function wordsFr(s) {
-    return rawWordsFr(s).map(stripAccents);
+    var out = [];
+    rawWordsFr(s).forEach(function (w) {
+      w = stripAccents(w);
+      if (/^\d+$/.test(w) && FR_NUMBERS[+w]) {
+        FR_NUMBERS[+w].split(" ").forEach(function (p) {
+          out.push(p);
+        });
+      } else {
+        out.push(w);
+      }
+    });
+    return out;
   }
 
   /** Words for comparison: lower case, no punctuation, contractions expanded. */
