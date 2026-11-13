@@ -13353,3 +13353,16 @@ body.content-panel-open .intro-title .char {
   border-color: var(--accent);
   color: var(--accent);
 }
+
+/* Dictation hint: first letter of every word */
+.dict__hint {
+  margin: 0.25rem 0 0.75rem;
+  padding: 0.6rem 0.85rem;
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  font-size: 1.1rem;
+  letter-spacing: 0.08em !important;
+  color: var(--ink-heading);
+  text-align: center;
+}

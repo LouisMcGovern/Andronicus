@@ -11355,6 +11355,10 @@
           signedIn: function () {
             return !!getActiveUser();
           },
+          pointsAvailable: function () {
+            const user = getActiveUser();
+            return user ? vocabPointsFromStats(ensureStats(user)) : 0;
+          },
           addPoints: function (n) {
             const user = getActiveUser();
             if (!user) return;

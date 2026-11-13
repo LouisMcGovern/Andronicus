@@ -1,16 +1,17 @@
 /**
  * Dictation: listen to a phrase (read aloud by the browser) and type it.
- * Points depend on difficulty: easy 1, medium 2, hard 3 — earned once per phrase,
- * and not if the student reveals the answer first.
+ * Every phrase is worth 3 points, earned once per phrase (not if the student reveals the answer first).
+ * A hint (the first letter of every word) costs 1 point.
  * Data comes from dictation-data.js (window.ANDRONICUS_DICTATION).
  * Mounted by app.js with:
- *   AndronicusDictation.mount(panel, level, { t, loadState, saveState, signedIn, addPoints })
+ *   AndronicusDictation.mount(panel, level, { t, loadState, saveState, signedIn, addPoints, pointsAvailable })
  */
 (function () {
   "use strict";
 
   var RAW = window.ANDRONICUS_DICTATION || {};
-  var POINTS = { 1: 1, 2: 2, 3: 3 };
+  var POINTS = { 1: 3, 2: 3, 3: 3 }; // every phrase is worth 3 points
+  var HINT_COST = 1;
   var DIFF_KEY = { 1: "dict_easy", 2: "dict_medium", 3: "dict_hard" };
   var RATE_NORMAL = 0.92;
   var RATE_SLOW = 0.75; // much slower than this and voices start to sound distorted
@@ -170,6 +171,7 @@
     if (/female/i.test(n)) return "female";
     if (MALE.test(n)) return "male";
     if (FEMALE.test(n)) return "female";
+    if (/^google/i.test(n)) return "female"; // "Google français", "Google US English" are women's voices
     return "";
   }
 
@@ -189,7 +191,7 @@
       if (/natural|neural|premium|enhanced|siri/i.test(n)) s += 100;      // Edge "Online (Natural)", Apple Premium/Enhanced
       else if (/online/i.test(n)) s += 90;                                 // Microsoft online voices
       else if (/^google/i.test(n)) s += 70;                                // Chrome's Google voices
-      else if (/^(daniel|serena|kate|oliver|martha|arthur|stephanie|moira|karen|samantha|ava|tom|allison|susan|thomas|amélie|amelie|audrey|aurélie|aurelie|marie|jacques)\b/i.test(n)) s += 40; // decent Apple voices
+      else if (/^(daniel|serena|kate|oliver|martha|arthur|stephanie|moira|karen|samantha|ava|tom|allison|susan|thomas|amélie|amelie|audrey|aurélie|aurelie|marie)\b/i.test(n)) s += 40; // decent Apple voices
       else if (/^microsoft (george|hazel|susan|david|zira|mark)\b/i.test(n)) s += 5; // old Windows desktop voices (robotic)
       if (/espeak|festival|pico|mbrola/i.test(n)) s -= 80;
       if (v.localService === false) s += 10;                               // cloud voices are usually more natural
@@ -201,6 +203,20 @@
       else if (l === "en-au" || l === "en-ca" || l === "en-nz") s += 8;
       if (/novelty|whisper|bells|bubbles|cellos|zarvox|trinoids|bad news|good news|jester|organ|superstar|wobble|boing|albert|bahh|grandma|grandpa|rocko|shelley|flo|eddy|reed|sandy/i.test(n)) s -= 300;
       return s;
+    }
+    if (lang === "fr") {
+      /* French: a natural voice with a France-French accent matters more than the gender,
+         so the gender only adds a bonus (Chrome: Google français / Thomas; Mac: Thomas, Audrey…). */
+      var top = null;
+      var topScore = -Infinity;
+      list.forEach(function (v) {
+        var sc = score(v) + (langOf(v) === "fr-fr" ? 25 : 0) + (genderOf(v) === gender ? 50 : 0);
+        if (sc > topScore) {
+          top = v;
+          topScore = sc;
+        }
+      });
+      return { voice: top, exact: !top || genderOf(top) === gender || !genderOf(top) };
     }
     var best = null;
     var bestAny = null;
@@ -239,7 +255,7 @@
   /* ---------- state ---------- */
 
   function freshLevel() {
-    return { pos: 0, best: 0, earned: {}, revealed: {}, solved: {} };
+    return { pos: 0, best: 0, earned: {}, revealed: {}, solved: {}, hints: {} };
   }
 
   function normaliseLevel(s, total) {
@@ -247,7 +263,7 @@
     if (!s || typeof s !== "object") return st;
     st.pos = Math.max(0, Math.floor(+s.pos || 0));
     st.best = Math.max(st.pos, Math.floor(+s.best || 0));
-    ["earned", "revealed", "solved"].forEach(function (k) {
+    ["earned", "revealed", "solved", "hints"].forEach(function (k) {
       st[k] = s[k] && typeof s[k] === "object" ? s[k] : {};
     });
     var max = Math.max(0, total - 1);
@@ -257,6 +273,13 @@
   }
 
   /* ---------- view ---------- */
+
+  /** Hint: first letter of every word, the rest as blanks — "Bonjour, je m'appelle Paul." -> "B______, j_ m'a______ P___." */
+  function hintText(text) {
+    return String(text).replace(/[A-Za-zÀ-ÖØ-öø-ÿŒœ]+/g, function (w) {
+      return w.charAt(0) + "_".repeat(w.length - 1);
+    });
+  }
 
   var FR_ACCENTS = ["é", "è", "ê", "à", "â", "ç", "ù", "û", "î", "ï", "ô", "œ", "ë"];
 
@@ -430,6 +453,10 @@
         return;
       }
 
+      if (state.hints[key]) {
+        card.appendChild(el("p", "dict__hint", hintText(p.text)));
+      }
+
       var label = el("label", "dict__label", t("dict_type_label"));
       label.setAttribute("for", "dict-input-" + level);
       card.appendChild(label);
@@ -495,6 +522,12 @@
         save();
         render(true);
       });
+      if (!state.hints[key]) {
+        var hintBtn = el("button", "dict__btn dict__btn--hint", t("dict_hint_cost"));
+        hintBtn.type = "button";
+        hintBtn.addEventListener("click", useHint);
+        btns.appendChild(hintBtn);
+      }
       btns.appendChild(reveal);
       card.appendChild(btns);
 
@@ -629,6 +662,32 @@
       }
       render(true);
       accentNote = "";
+    }
+
+    /** Hint: costs 1 point (once per phrase), shows the first letter of every word. */
+    function useHint() {
+      var p = current();
+      var key = String(p.idx);
+      if (state.hints[key]) return;
+      function tell(msg) {
+        if (!feedback) return;
+        feedback.innerHTML = "";
+        feedback.appendChild(el("p", "dict__msg is-info", msg));
+      }
+      if (!api.signedIn || !api.signedIn()) {
+        tell(t("dict_hint_signin"));
+        return;
+      }
+      if (!api.pointsAvailable || api.pointsAvailable() < HINT_COST) {
+        tell(t("dict_hint_no_points"));
+        return;
+      }
+      lastTyped = input ? input.value : lastTyped;
+      api.addPoints(-HINT_COST);
+      state.hints[key] = 1;
+      save();
+      render(true);
+      tell(t("dict_hint_used"));
     }
 
     function startPhase() {
