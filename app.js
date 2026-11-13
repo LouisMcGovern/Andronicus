@@ -187,7 +187,7 @@
     document.querySelectorAll(".btn-level").forEach(function (btn) {
       const level = btn.getAttribute("data-level");
       const desc = btn.querySelector(".btn-level__desc");
-      if (desc && level) desc.textContent = I18n.t("btn_level_desc_" + level);
+      if (desc && level) desc.textContent = I18n.t("btn_level_desc_" + baseLevelOf(level));
     });
     document.querySelectorAll(".level-landing__grid").forEach(function (grid) {
       grid.setAttribute("aria-label", I18n.t("level_landing_grid_aria"));
@@ -243,6 +243,7 @@
   const contentPasswordClose = document.getElementById("content-password-close");
   const contentPasswordForLevel = document.getElementById("content-password-for-level");
   const levelPicker = document.getElementById("level-picker");
+  const languagePicker = document.getElementById("language-picker");
   const contentBreadcrumb = document.getElementById("content-breadcrumb");
   const scrollTopBtn = document.getElementById("scroll-top-btn");
   const mobileBottomNav = document.getElementById("mobile-bottom-nav");
@@ -369,6 +370,21 @@
   const ADMIN_PASSWORD = "321";
 
   let pendingLevel = null;
+  let activeCourse = null; // "en" | "fr" | null — see setActiveCourse()
+  let autoEnglishUi = (function () {
+    try {
+      return sessionStorage.getItem("andronicus_auto_en_ui") === "1";
+    } catch (e) {
+      return false;
+    }
+  })();
+  function rememberAutoEnglishUi(on) {
+    autoEnglishUi = on;
+    try {
+      if (on) sessionStorage.setItem("andronicus_auto_en_ui", "1");
+      else sessionStorage.removeItem("andronicus_auto_en_ui");
+    } catch (e) {}
+  }
   let users = {};
   let activeUsername = null;
   let homeworkPanelRenderers = [];
@@ -1976,6 +1992,37 @@
     },
   };
 
+  /* ---------- French course (for English speakers) ----------
+   * French levels live next to the English ones as "fr-beginner" etc., so progress,
+   * stepping stones, grammar ticks and dictation are all kept per level automatically.
+   * Cards are stored target-language first (front = French), like the English course. */
+  const EN_LEVELS = ["beginner", "intermediate", "advanced"];
+  const FR_LEVELS = ["fr-beginner", "fr-intermediate", "fr-advanced"];
+  const ALL_LEVELS = EN_LEVELS.concat(FR_LEVELS);
+  function courseOfLevel(level) {
+    return String(level || "").indexOf("fr-") === 0 ? "fr" : "en";
+  }
+  function baseLevelOf(level) {
+    return String(level || "").replace(/^fr-/, "");
+  }
+  (function addFrenchCourse() {
+    const decks = (typeof window !== "undefined" && window.ANDRONICUS_FRENCH_DECKS) || {};
+    const grammar = (typeof window !== "undefined" && window.ANDRONICUS_FRENCH_GRAMMAR) || {};
+    EN_LEVELS.forEach(function (base) {
+      const fc = {};
+      Object.keys(decks[base] || {}).forEach(function (deckName) {
+        fc[deckName] = decks[base][deckName].map(function (row) {
+          return { front: row[0], back: row[1] };
+        });
+      });
+      learningData["fr-" + base] = {
+        flashcards: fc,
+        exercises: (grammar[base] || []).slice(),
+        homeworkChecklist: [],
+      };
+    });
+  })();
+
   (function attachWeeklyHomework() {
     var hw = window.ANDRONICUS_HOMEWORK || {};
     ["beginner", "intermediate", "advanced"].forEach(function (lvl) {
@@ -2213,7 +2260,7 @@
 
   (function buildFullDecks() {
     // "Full deck" = every themed word of the level together (no repeats).
-    ["beginner", "intermediate", "advanced"].forEach(function (lvl) {
+    ALL_LEVELS.forEach(function (lvl) {
       const fc = learningData[lvl] && learningData[lvl].flashcards;
       if (!fc) return;
       const all = [];
@@ -2350,7 +2397,188 @@
     });
   })();
 
+  /** French verbs for the French course: [infinitive, English, past participle, auxiliary, tenses]. */
+  function frenchVerbList() {
+    const raw = (typeof window !== "undefined" && window.ANDRONICUS_FR_VERBS) || [];
+    return raw
+      .map(function (r) {
+        return { inf: r[0], en: r[1], pp: r[2], aux: r[3], t: r[4] || {} };
+      })
+      .sort(function (a, b) {
+        return vocabNormalize(a.inf).localeCompare(vocabNormalize(b.inf));
+      });
+  }
+
+  (function addFrenchVerbFlashcards() {
+    const deck = frenchVerbList().map(function (v) {
+      return { front: v.inf, back: v.en };
+    });
+    if (!deck.length) return;
+    FR_LEVELS.forEach(function (lvl) {
+      if (learningData[lvl] && learningData[lvl].flashcards) {
+        learningData[lvl].flashcards[IRREGULAR_DECK_NAME] = deck.slice();
+      }
+    });
+  })();
+
+  /** French course: the verbs table with French tenses (same look as the English one). */
+  const FR_VERB_TENSE_GROUPS = [
+    ["overview", ["all"]],
+    ["present", ["present", "imperatif"]],
+    ["past", ["pc", "imparfait", "pqp"]],
+    ["future", ["futur"]],
+    ["conditional", ["conditionnel"]],
+    ["mood", ["subjonctif"]],
+  ];
+
+  function mountFrenchVerbs(level, panel, openFlashcardDeck) {
+    const verbs = frenchVerbList();
+    const searchIndex = verbs.map(function (v) {
+      return vocabNormalize([v.inf, v.pp, v.en].join(" "));
+    });
+    let tense = "all";
+    let query = "";
+
+    panel.innerHTML = "";
+    const shell = document.createElement("div");
+    shell.className = "iv iv--fr";
+    shell.innerHTML =
+      '<div class="iv-head">' +
+      '  <div><h3 class="iv-title"></h3><p class="iv-count"></p></div>' +
+      '  <button type="button" class="flashcard-btn iv-cards"></button>' +
+      "</div>" +
+      '<div class="iv-controls">' +
+      '  <div class="iv-tenses" role="group"></div>' +
+      '  <label class="iv-search"><span class="iv-search__lab"></span><input type="search" class="iv-search__input" autocomplete="off" spellcheck="false" /></label>' +
+      "</div>" +
+      '<p class="iv-hint"></p>' +
+      '<div class="iv-table-wrap"><table class="iv-table"><thead><tr></tr></thead><tbody></tbody></table></div>' +
+      '<p class="iv-none hidden"></p>';
+    panel.appendChild(shell);
+    const el = {
+      title: shell.querySelector(".iv-title"),
+      count: shell.querySelector(".iv-count"),
+      cards: shell.querySelector(".iv-cards"),
+      tenses: shell.querySelector(".iv-tenses"),
+      searchLab: shell.querySelector(".iv-search__lab"),
+      search: shell.querySelector(".iv-search__input"),
+      hint: shell.querySelector(".iv-hint"),
+      headRow: shell.querySelector(".iv-table thead tr"),
+      body: shell.querySelector(".iv-table tbody"),
+      none: shell.querySelector(".iv-none"),
+    };
+
+    function conjugation(v) {
+      const forms = (v.t && v.t[tense]) || [];
+      return forms.filter(Boolean).join(" · ");
+    }
+
+    function columns() {
+      if (tense === "all") {
+        return [
+          ["fv_col_inf", function (v) { return v.inf; }, "iv-base"],
+          ["fv_col_pp", function (v) { return v.pp; }, ""],
+          ["fv_col_aux", function (v) { return v.aux; }, ""],
+          ["verbs_col_fr", function (v) { return v.en; }, "iv-fr"],
+        ];
+      }
+      return [
+        ["fv_col_inf", function (v) { return v.inf; }, "iv-base"],
+        ["fv_col_conj", conjugation, "iv-conj"],
+        ["verbs_col_fr", function (v) { return v.en; }, "iv-fr"],
+      ];
+    }
+
+    function renderTable() {
+      const cols = columns();
+      el.headRow.innerHTML = "";
+      cols.forEach(function (c) {
+        const th = document.createElement("th");
+        th.scope = "col";
+        th.textContent = I18n.t(c[0]);
+        el.headRow.appendChild(th);
+      });
+      const q = vocabNormalize(query);
+      const frag = document.createDocumentFragment();
+      let shown = 0;
+      verbs.forEach(function (v, i) {
+        if (q && searchIndex[i].indexOf(q) < 0) return;
+        if (tense !== "all" && !conjugation(v)) return;
+        shown += 1;
+        const tr = document.createElement("tr");
+        cols.forEach(function (c) {
+          const td = document.createElement("td");
+          if (c[2]) td.className = c[2];
+          td.textContent = c[1](v);
+          tr.appendChild(td);
+        });
+        frag.appendChild(tr);
+      });
+      el.body.innerHTML = "";
+      el.body.appendChild(frag);
+      el.count.textContent = q
+        ? I18n.t("verbs_count_filtered", { n: String(shown), t: String(verbs.length) })
+        : I18n.t("verbs_count", { n: String(verbs.length) });
+      el.none.classList.toggle("hidden", shown > 0);
+      el.none.textContent = shown ? "" : I18n.t("verbs_none", { q: query.trim() });
+      el.headRow.parentNode.parentNode.classList.toggle("hidden", shown === 0);
+    }
+
+    function renderChrome() {
+      el.title.textContent = I18n.t("learning_tab_verbs");
+      el.cards.textContent = I18n.t("verbs_flashcards_btn");
+      el.searchLab.textContent = I18n.t("verbs_search_label");
+      el.search.placeholder = I18n.t("verbs_search_ph");
+      el.hint.textContent = I18n.t("verbs_hint");
+      el.tenses.innerHTML = "";
+      const lab = document.createElement("label");
+      lab.className = "iv-search iv-tense-pick";
+      const labText = document.createElement("span");
+      labText.className = "iv-search__lab";
+      labText.textContent = I18n.t("verbs_tense_label");
+      const sel = document.createElement("select");
+      sel.className = "iv-tense-select";
+      FR_VERB_TENSE_GROUPS.forEach(function (g) {
+        const og = document.createElement("optgroup");
+        og.label = I18n.t(g[0] === "mood" ? "fv_group_mood" : "verbs_group_" + g[0]);
+        g[1].forEach(function (t) {
+          const o = document.createElement("option");
+          o.value = t;
+          o.textContent = I18n.t("fv_tense_" + t);
+          og.appendChild(o);
+        });
+        sel.appendChild(og);
+      });
+      sel.value = tense;
+      sel.addEventListener("change", function () {
+        tense = sel.value;
+        renderTable();
+      });
+      lab.appendChild(labText);
+      lab.appendChild(sel);
+      el.tenses.appendChild(lab);
+    }
+
+    el.search.addEventListener("input", function () {
+      query = el.search.value;
+      renderTable();
+    });
+    el.cards.addEventListener("click", function () {
+      if (openFlashcardDeck) openFlashcardDeck(IRREGULAR_DECK_NAME);
+    });
+
+    renderChrome();
+    renderTable();
+    return {
+      render: function () {
+        renderChrome();
+        renderTable();
+      },
+    };
+  }
+
   function mountIrregularVerbs(level, panel, openFlashcardDeck) {
+    if (courseOfLevel(level) === "fr") return mountFrenchVerbs(level, panel, openFlashcardDeck);
     const verbs = irregularVerbList();
     const searchIndex = verbs.map(verbSearchText);
     let tense = "all";
@@ -2905,26 +3133,37 @@
   }
 
   const WORDGAME_KEY = "andronicus_wordgame_v1";
-  function readWordGameState() {
+  /* The French course has its own word wheel (its own rounds and its own saved progress). */
+  function wordGameStore(course) {
+    return course === "fr"
+      ? { key: WORDGAME_KEY + "_fr", field: "wordGameFr" }
+      : { key: WORDGAME_KEY, field: "wordGame" };
+  }
+  function wordGameData(course) {
+    return course === "fr" ? window.ANDRONICUS_WORDGAME_FR : window.ANDRONICUS_WORDGAME;
+  }
+  function readWordGameState(course) {
+    const store = wordGameStore(course);
     let local = null;
     try {
-      local = JSON.parse(localStorage.getItem(WORDGAME_KEY) || "null");
+      local = JSON.parse(localStorage.getItem(store.key) || "null");
     } catch (e) {
       local = null;
     }
     const user = getActiveUser();
-    const remote = user ? ensureLearningHub(ensureStats(user)).wordGame : null;
+    const remote = user ? ensureLearningHub(ensureStats(user))[store.field] : null;
     if (remote && (!local || (remote.best || 0) >= (local.best || 0))) return remote;
     return local || {};
   }
-  function writeWordGameState(st) {
+  function writeWordGameState(st, course) {
+    const store = wordGameStore(course);
     const copy = JSON.parse(JSON.stringify(st));
     try {
-      localStorage.setItem(WORDGAME_KEY, JSON.stringify(copy));
+      localStorage.setItem(store.key, JSON.stringify(copy));
     } catch (e) {}
     const user = getActiveUser();
     if (user) {
-      ensureLearningHub(ensureStats(user)).wordGame = copy;
+      ensureLearningHub(ensureStats(user))[store.field] = copy;
       saveUsers();
     }
     document.querySelectorAll(".learning-hub[data-learning-level]").forEach(function (hub) {
@@ -2993,10 +3232,12 @@
       });
     }
     if (tool === "words") {
-      const wg = readWordGameState();
+      const course = courseOfLevel(lvl);
+      const wg = readWordGameState(course);
+      const total = window.AndronicusWordGame ? window.AndronicusWordGame.count(wordGameData(course)) : 0;
       return I18n.t("learning_landing_words_progress", {
-        n: String(Math.min((wg.round || 0) + 1, window.AndronicusWordGame ? window.AndronicusWordGame.count() : 1)),
-        t: String(window.AndronicusWordGame ? window.AndronicusWordGame.count() : 0),
+        n: String(Math.min((wg.round || 0) + 1, total || 1)),
+        t: String(total),
       });
     }
     if (tool === "dictation") {
@@ -7627,7 +7868,7 @@
       !panelContent ||
       panelContent.classList.contains("hidden") ||
       !levelPicker ||
-      !levelPicker.classList.contains("hidden")
+      (languagePicker && !languagePicker.classList.contains("hidden"))
     ) {
       contentBreadcrumb.classList.add("hidden");
       contentBreadcrumb.innerHTML = "";
@@ -7647,13 +7888,14 @@
         openArticle = art;
       }
     });
-    if (!openLevel || !openArticle) {
+    const onLevelPicker = !levelPicker.classList.contains("hidden");
+    if (!onLevelPicker && (!openLevel || !openArticle)) {
       contentBreadcrumb.classList.add("hidden");
       contentBreadcrumb.innerHTML = "";
       return;
     }
 
-    const hub = openArticle.querySelector(".learning-hub");
+    const hub = openArticle && openArticle.querySelector(".learning-hub");
     const landingEl = hub && hub.querySelector("[data-level-landing]");
     const onLanding = landingEl && !landingEl.classList.contains("hidden");
 
@@ -7692,9 +7934,19 @@
       contentBreadcrumb.appendChild(cur);
     }
 
-    appendLink(I18n.t("nav_content_label"), showLevelPicker);
+    appendLink(I18n.t("nav_content_label"), showLanguagePicker);
     appendSep();
-    const levelLabel = I18n.t("level_" + openLevel);
+    const course = onLevelPicker ? activeCourse || "en" : courseOfLevel(openLevel);
+    const courseLabel = I18n.t(course === "fr" ? "course_fr_name" : "course_en_name");
+    if (onLevelPicker) {
+      appendCurrent(courseLabel);
+      return;
+    }
+    appendLink(courseLabel, function () {
+      showLevelPicker(course);
+    });
+    appendSep();
+    const levelLabel = I18n.t("level_" + baseLevelOf(openLevel));
     if (onLanding) {
       appendCurrent(levelLabel);
       return;
@@ -8287,7 +8539,7 @@
     saveUsers();
   }
 
-  const CONTENT_LEVELS = ["beginner", "intermediate", "advanced"];
+  const CONTENT_LEVELS = ALL_LEVELS;
 
   function recordLastLevel(level) {
     if (!level || CONTENT_LEVELS.indexOf(level) < 0) return;
@@ -8310,6 +8562,9 @@
     btnHome.classList.remove("hidden");
     pendingLevel = null;
     levelPicker.classList.add("hidden");
+    if (languagePicker) languagePicker.classList.add("hidden");
+    setActiveCourse(courseOfLevel(level));
+    document.body.setAttribute("data-open-level", baseLevelOf(level));
     contentPasswordOverlay.classList.add("hidden");
     contentPasswordInput.value = "";
     contentPasswordError.classList.add("hidden");
@@ -9267,17 +9522,59 @@
     syncVocabZone();
   }
 
-  function showLevelPicker() {
+  /* Which course is open in Learn a language: "en" (English for French speakers),
+     "fr" (French for English speakers) or null on the language picker.
+     The French course is for English speakers, so its screens switch to English;
+     leaving it switches the site back to French if that's what it was showing. */
+  function setActiveCourse(course) {
+    activeCourse = course === "en" || course === "fr" ? course : null;
+    const courseChanged = I18n.setCourse(activeCourse === "fr" ? "fr" : "en");
+    if (activeCourse === "fr" && I18n.getLang() === "fr") {
+      rememberAutoEnglishUi(true);
+      I18n.setLang("en");
+      return;
+    }
+    if (activeCourse !== "fr" && autoEnglishUi) {
+      rememberAutoEnglishUi(false);
+      if (I18n.getLang() === "en") {
+        I18n.setLang("fr");
+        return;
+      }
+    }
+    if (courseChanged) window.dispatchEvent(new CustomEvent("andronicus:langchange"));
+  }
+
+  function showLanguagePicker() {
     pendingLevel = null;
+    if (languagePicker) languagePicker.classList.remove("hidden");
+    levelPicker.classList.add("hidden");
+    contentPasswordOverlay.classList.add("hidden");
+    document.querySelectorAll(".level-article").forEach((el) => el.classList.add("hidden"));
+    document.body.removeAttribute("data-open-level");
+    document.querySelectorAll(".btn-level").forEach((b) => b.classList.remove("is-active"));
+    resetAllLearningHubsToLanding();
+    saveLearnPos(null);
+    setActiveCourse(null);
+    updateContentBreadcrumb();
+  }
+
+  function showLevelPicker(course) {
+    if (course !== "en" && course !== "fr") course = activeCourse || "en";
+    pendingLevel = null;
+    if (languagePicker) languagePicker.classList.add("hidden");
+    levelPicker.querySelectorAll(".level-buttons[data-course]").forEach(function (group) {
+      group.classList.toggle("hidden", group.getAttribute("data-course") !== course);
+    });
     levelPicker.classList.remove("hidden");
     contentPasswordOverlay.classList.add("hidden");
     contentPasswordInput.value = "";
     contentPasswordError.classList.add("hidden");
     document.querySelectorAll(".level-article").forEach((el) => el.classList.add("hidden"));
     document.body.removeAttribute("data-open-level");
-    saveLearnPos(null);
     document.querySelectorAll(".btn-level").forEach((b) => b.classList.remove("is-active"));
     resetAllLearningHubsToLanding();
+    saveLearnPos({ course: course });
+    setActiveCourse(course);
     updateContentBreadcrumb();
   }
 
@@ -9428,7 +9725,7 @@
   }
 
   function resetContentPanel() {
-    showLevelPicker();
+    showLanguagePicker();
   }
 
   function openSection(id, animate) {
@@ -9502,6 +9799,11 @@
         }
         window.scrollTo({ top: 0, behavior: "instant" });
         showLevelPicker();
+        return;
+      }
+      if (!levelPicker.classList.contains("hidden")) {
+        window.scrollTo({ top: 0, behavior: "instant" });
+        showLanguagePicker();
         return;
       }
     }
@@ -10004,6 +10306,8 @@
     pendingLevel = null;
     contentPasswordOverlay.classList.add("hidden");
     levelPicker.classList.add("hidden");
+    if (languagePicker) languagePicker.classList.add("hidden");
+    setActiveCourse(courseOfLevel(level));
     document.querySelectorAll(".btn-level").forEach((b) => b.classList.remove("is-active"));
     document.querySelectorAll(".level-article").forEach((art) => art.classList.add("hidden"));
     const btn = document.querySelector('.btn-level[data-level="' + level + '"]');
@@ -10011,7 +10315,7 @@
     const article = document.getElementById("content-" + level);
     if (article) {
       article.classList.remove("hidden");
-      document.body.setAttribute("data-open-level", level);
+      document.body.setAttribute("data-open-level", baseLevelOf(level));
       resetHubToLanding(article.querySelector(".learning-hub"));
       recordLastLevel(level);
     }
@@ -10026,6 +10330,13 @@
     btn.addEventListener("click", () => {
       const level = btn.getAttribute("data-level");
       if (level) openContentLevel(level);
+    });
+  });
+
+  document.querySelectorAll(".btn-course[data-course]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      window.scrollTo({ top: 0, behavior: "instant" });
+      showLevelPicker(btn.getAttribute("data-course"));
     });
   });
 
@@ -10307,7 +10618,7 @@
         },
       };
       const level = root.getAttribute("data-learning-level");
-      const levelColor = LEVEL_COLORS[level] || LEVEL_COLORS.beginner;
+      const levelColor = LEVEL_COLORS[baseLevelOf(level)] || LEVEL_COLORS.beginner;
       const data = learningData[level];
       if (!data) return;
 
@@ -10615,14 +10926,16 @@
           }),
           "#1a6fa3"
         );
-        statCard(
-          I18n.t("learning_progress_stat_homework_label"),
-          I18n.t("learning_progress_stat_homework", {
-            n: String(hwDone),
-            t: String(hwTotal),
-          }),
-          "#d97706"
-        );
+        if (hwTotal > 0) {
+          statCard(
+            I18n.t("learning_progress_stat_homework_label"),
+            I18n.t("learning_progress_stat_homework", {
+              n: String(hwDone),
+              t: String(hwTotal),
+            }),
+            "#d97706"
+          );
+        }
         const fa = stats.flashcards.attempts || 0;
         const fc = stats.flashcards.correct || 0;
         statCard(
@@ -10732,7 +11045,7 @@
         });
         hwDonutWrap.appendChild(hwCaption);
         hwSec.appendChild(hwDonutWrap);
-        progressGrid.appendChild(hwSec);
+        if (hwTotal > 0) progressGrid.appendChild(hwSec); // the French course has no homework
 
         const grammarSec = document.createElement("section");
         grammarSec.className = "lh-progress-section";
@@ -11005,8 +11318,13 @@
           t: function (k, vars) {
             return I18n.t(k, vars);
           },
-          loadState: readWordGameState,
-          saveState: writeWordGameState,
+          data: wordGameData(courseOfLevel(level)),
+          loadState: function () {
+            return readWordGameState(courseOfLevel(level));
+          },
+          saveState: function (st) {
+            writeWordGameState(st, courseOfLevel(level));
+          },
           signedIn: function () {
             return !!getActiveUser();
           },
@@ -12289,14 +12607,14 @@
           if (key) el.textContent = I18n.t(key);
         });
         const hubLevelLink = root.querySelector("[data-hub-level-link]");
-        if (hubLevelLink) hubLevelLink.textContent = I18n.t("level_" + level);
+        if (hubLevelLink) hubLevelLink.textContent = I18n.t("level_" + baseLevelOf(level));
         const backMenuBtn = root.querySelector(".lh-back-to-menu");
         if (backMenuBtn) backMenuBtn.textContent = I18n.t("learning_back_to_menu");
         const landingIntro = root.querySelector(".level-landing__intro");
         const landingHeading = root.querySelector(".level-landing__heading");
-        if (landingIntro) landingIntro.textContent = I18n.t("learning_level_desc_" + level);
+        if (landingIntro) landingIntro.textContent = I18n.t("learning_level_desc_" + baseLevelOf(level));
         if (landingHeading) {
-          landingHeading.textContent = I18n.t("level_" + level);
+          landingHeading.textContent = I18n.t("level_" + baseLevelOf(level));
           landingHeading.style.color = levelColor.accent;
         }
         applyBackToMenuColor();
@@ -12473,12 +12791,14 @@
     // Reloaded inside Learn English: reopen the same level and game (its intro plays again)
     if (
       savedLearnPos &&
-      savedLearnPos.level &&
+      (savedLearnPos.level || savedLearnPos.course) &&
       getVisibleTopLevelPanel() === document.getElementById("panel-content")
     ) {
       const pos = savedLearnPos;
       savedLearnPos = null;
-      if (document.getElementById("content-" + pos.level)) {
+      if (!pos.level) {
+        showLevelPicker(pos.course);
+      } else if (document.getElementById("content-" + pos.level)) {
         openContentLevel(pos.level);
         if (pos.tool) {
           const card = document.querySelector(

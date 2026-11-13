@@ -6,7 +6,7 @@
 (function () {
   "use strict";
 
-  var DATA = window.ANDRONICUS_WORDGAME || { rounds: [], fr: {} };
+  var DEFAULT_DATA = window.ANDRONICUS_WORDGAME || { rounds: [], fr: {} };
 
   function parseRound(raw, idx) {
     var words = raw[3].split(" ").map(function (s) {
@@ -34,7 +34,7 @@
     return { round: 0, best: 0, paid: 0, found: {}, hints: {}, bonusFound: {}, bonusTotal: 0 };
   }
 
-  function normalise(s) {
+  function normalise(s, DATA) {
     var st = freshState();
     if (!s || typeof s !== "object") return st;
     st.round = Math.max(0, Math.floor(+s.round || 0));
@@ -51,8 +51,9 @@
   }
 
   function mount(panel, api) {
+    var DATA = api.data || DEFAULT_DATA; // the French course passes its own rounds
     var t = api.t;
-    var state = normalise(api.loadState());
+    var state = normalise(api.loadState(), DATA);
     var round = null;
     var shuffled = [];
     var msgTimer = null;
@@ -600,7 +601,7 @@
     }
 
     function fullRender() {
-      state = normalise(api.loadState());
+      state = normalise(api.loadState(), DATA);
       render();
     }
 
@@ -608,5 +609,10 @@
     return { render: fullRender };
   }
 
-  window.AndronicusWordGame = { mount: mount, count: function () { return DATA.rounds.length; } };
+  window.AndronicusWordGame = {
+    mount: mount,
+    count: function (data) {
+      return ((data || DEFAULT_DATA).rounds || []).length;
+    },
+  };
 })();

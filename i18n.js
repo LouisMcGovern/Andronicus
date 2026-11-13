@@ -9,6 +9,67 @@
 
   const STRINGS = {
     en: {
+      /* ---- Language picker + French course ---- */
+      lang_pick_intro: "Which language do you want to learn?",
+      lang_pick_aria: "Choose a language",
+      course_en_name: "English",
+      course_en_tag: "For French speakers",
+      course_en_desc: "Three levels of games, flashcards, dictation and grammar to learn English.",
+      course_fr_name: "French",
+      course_fr_tag: "For English speakers",
+      course_fr_desc: "The same games, flashcards, dictation and grammar — to learn French.",
+      "level_fr-beginner": "French · Beginner",
+      "level_fr-intermediate": "French · Intermediate",
+      "level_fr-advanced": "French · Advanced",
+      frc_content_intro:
+        "Choose your level. Everything is free and open to everyone: <strong>create an account</strong> to save your progress, earn points and appear on the <strong>leaderboard</strong>.",
+      frc_content_levels_aria: "French level",
+      frc_btn_level_desc_beginner: "A1 to A2 — everyday words, the present tense and your first sentences.",
+      frc_btn_level_desc_intermediate: "B1 — past tenses, pronouns, the future and longer sentences.",
+      frc_btn_level_desc_advanced: "B2 and above — the subjunctive, conditionals, idioms and nuanced French.",
+      frc_learning_level_desc_beginner:
+        "Everyday words, the present tense and short practice tasks to build confidence in French step by step.",
+      frc_learning_level_desc_intermediate:
+        "Past tenses, pronouns and wider vocabulary for students who can already handle simple French.",
+      frc_learning_level_desc_advanced:
+        "The subjunctive, conditionals, idioms and precise vocabulary for confident, nuanced French.",
+      frc_vocab_path_ask_fr: "What does this mean in English?",
+      frc_vocab_path_ask_en: "How do you say this in French?",
+      frc_flashcard_side_english: "French — ",
+      frc_flashcard_side_french: "English — ",
+      frc_flashcard_order_en_option: "French (front)",
+      frc_flashcard_order_fr_option: "English (front)",
+      frc_flashcard_lang_toggle_to_fr: "English first",
+      frc_flashcard_lang_toggle_to_en: "French first",
+      frc_wg_progress: "{n} of {t} words found · tap a word to see it in English",
+      frc_wg_bonus: "{w} is a French word, but it's not in this grid. Bonus!",
+      frc_wg_not_word: "{w} isn't a French word.",
+      frc_wg_bonus_words: "Bonus words (French, but not in the grid)",
+      frc_wg_no_translation: "real French word",
+      frc_learning_landing_words: "Swipe across the letters to find French words",
+      frc_learning_landing_verbs: "French irregular verbs, in every tense",
+      frc_learning_tab_verbs: "French verbs",
+      frc_verbs_count: "{n} French verbs",
+      frc_verbs_search_ph: "Type a verb in French or English…",
+      frc_verbs_hint: "Verbs marked être add -e (feminine) and -s (plural) in compound tenses: elle est allée, nous sommes allés.",
+      frc_verbs_col_fr: "English",
+      fv_col_inf: "Infinitive",
+      fv_col_pp: "Past participle",
+      fv_col_aux: "Auxiliary",
+      fv_col_conj: "Conjugation",
+      fv_tense_all: "Key forms",
+      fv_tense_present: "Présent (present)",
+      fv_tense_imperatif: "Impératif (commands)",
+      fv_tense_pc: "Passé composé (past)",
+      fv_tense_imparfait: "Imparfait (was …ing / used to)",
+      fv_tense_pqp: "Plus-que-parfait (had …)",
+      fv_tense_futur: "Futur simple (will)",
+      fv_tense_conditionnel: "Conditionnel (would)",
+      fv_tense_subjonctif: "Subjonctif présent",
+      fv_group_mood: "Subjunctive",
+      dict_accents_label: "Accents",
+      dict_accent_note: "Correct! Watch the accents: {w}",
+      dict_accent_note_points: "Correct! +{n} points. Watch the accents: {w}",
       meta_title: "Andronicus · English Grinds",
       meta_description:
         "One-to-one online English grinds for French-speaking students. Weekly structure, progress checks. Louis McGovern, Trinity College Dublin.",
@@ -32,8 +93,8 @@
       nav_about_hint: "Who I am and how I teach",
       nav_process_label: "The Process",
       nav_process_hint: "How grinds work and what to expect",
-      nav_content_label: "Learn English",
-      nav_content_hint: "Games, flashcards and grammar",
+      nav_content_label: "Learn a language",
+      nav_content_hint: "English or French — games, flashcards and grammar",
       nav_content_free: "100% free",
       nav_booking_label: "Booking",
       nav_booking_hint: "Send a time request",
@@ -890,6 +951,62 @@
       account_metric_quiz_best: "Best {mode}: {pct}%",
     },
     fr: {
+      /* ---- Choix de la langue + cours de français ---- */
+      lang_pick_intro: "Quelle langue veux-tu apprendre ?",
+      lang_pick_aria: "Choisir une langue",
+      course_en_name: "Anglais",
+      course_en_tag: "Pour les francophones",
+      course_en_desc: "Trois niveaux de jeux, cartes mémoire, dictées et grammaire pour apprendre l’anglais.",
+      course_fr_name: "Français",
+      course_fr_tag: "For English speakers",
+      course_fr_desc: "Les mêmes jeux, cartes mémoire, dictées et grammaire — pour apprendre le français.",
+      "level_fr-beginner": "Français · Débutant",
+      "level_fr-intermediate": "Français · Intermédiaire",
+      "level_fr-advanced": "Français · Avancé",
+      frc_content_levels_aria: "Niveau de français",
+      frc_btn_level_desc_beginner: "A1 à A2 — mots du quotidien, le présent et les premières phrases.",
+      frc_btn_level_desc_intermediate: "B1 — temps du passé, pronoms, futur et phrases plus longues.",
+      frc_btn_level_desc_advanced: "B2 et plus — subjonctif, conditionnel, expressions et français nuancé.",
+      frc_learning_level_desc_beginner: "Mots du quotidien, le présent et des exercices courts pour progresser en français pas à pas.",
+      frc_learning_level_desc_intermediate: "Temps du passé, pronoms et vocabulaire plus riche pour ceux qui se débrouillent déjà en français.",
+      frc_learning_level_desc_advanced: "Subjonctif, conditionnel, expressions et vocabulaire précis pour un français sûr et nuancé.",
+      frc_vocab_path_ask_fr: "Qu’est-ce que ça veut dire en anglais ?",
+      frc_vocab_path_ask_en: "Comment dit-on ça en français ?",
+      frc_flashcard_side_english: "Français — ",
+      frc_flashcard_side_french: "Anglais — ",
+      frc_flashcard_order_en_option: "Français (recto)",
+      frc_flashcard_order_fr_option: "Anglais (recto)",
+      frc_flashcard_lang_toggle_to_fr: "Anglais d’abord",
+      frc_flashcard_lang_toggle_to_en: "Français d’abord",
+      frc_wg_progress: "{n} mots trouvés sur {t} · touche un mot pour le voir en anglais",
+      frc_wg_bonus: "{w} est un mot français, mais pas dans cette grille. Bonus !",
+      frc_wg_not_word: "{w} n’est pas un mot français.",
+      frc_wg_bonus_words: "Mots bonus (français, mais pas dans la grille)",
+      frc_wg_no_translation: "vrai mot français",
+      frc_learning_landing_words: "Glisse sur les lettres pour trouver des mots français",
+      frc_learning_landing_verbs: "Les verbes irréguliers français, à chaque temps",
+      frc_learning_tab_verbs: "Verbes français",
+      frc_verbs_count: "{n} verbes français",
+      frc_verbs_search_ph: "Tape un verbe en français ou en anglais…",
+      frc_verbs_hint: "Avec être, le participe s’accorde aux temps composés : elle est allée, nous sommes allés.",
+      frc_verbs_col_fr: "Anglais",
+      fv_col_inf: "Infinitif",
+      fv_col_pp: "Participe passé",
+      fv_col_aux: "Auxiliaire",
+      fv_col_conj: "Conjugaison",
+      fv_tense_all: "Formes clés",
+      fv_tense_present: "Présent",
+      fv_tense_imperatif: "Impératif",
+      fv_tense_pc: "Passé composé",
+      fv_tense_imparfait: "Imparfait",
+      fv_tense_pqp: "Plus-que-parfait",
+      fv_tense_futur: "Futur simple",
+      fv_tense_conditionnel: "Conditionnel présent",
+      fv_tense_subjonctif: "Subjonctif présent",
+      fv_group_mood: "Subjonctif",
+      dict_accents_label: "Accents",
+      dict_accent_note: "Correct ! Attention aux accents : {w}",
+      dict_accent_note_points: "Correct ! +{n} points. Attention aux accents : {w}",
       meta_title: "Andronicus · Cours d’anglais",
       meta_description:
         "Cours particuliers d’anglais en ligne pour élèves francophones. Cadre clair, suivi des progrès. Louis McGovern, Trinity College Dublin.",
@@ -913,8 +1030,8 @@
       nav_about_hint: "Qui je suis et comment j’enseigne",
       nav_process_label: "Le déroulement des cours",
       nav_process_hint: "Comment fonctionnent les cours et à quoi s’attendre",
-      nav_content_label: "Apprendre l’anglais",
-      nav_content_hint: "Jeux, cartes mémoire et grammaire",
+      nav_content_label: "Apprendre une langue",
+      nav_content_hint: "Anglais ou français — jeux, cartes mémoire et grammaire",
       nav_content_free: "100 % gratuit",
       nav_booking_label: "Inscription",
       nav_booking_hint: "Envoyer une demande de créneau",
@@ -1796,10 +1913,28 @@
     global.dispatchEvent(new CustomEvent("andronicus:langchange"));
   }
 
+  /* While a French-course level is open, "frc_<key>" strings replace the English-course wording. */
+  let course = "en";
+  function getCourse() {
+    return course;
+  }
+  function setCourse(c) {
+    const next = c === "fr" ? "fr" : "en";
+    if (next === course) return false;
+    course = next;
+    return true;
+  }
+  function lookup(L, key) {
+    if (course === "fr") {
+      const o = STRINGS[L]["frc_" + key] != null ? STRINGS[L]["frc_" + key] : STRINGS.en["frc_" + key];
+      if (o != null) return o;
+    }
+    return STRINGS[L][key] != null ? STRINGS[L][key] : STRINGS.en[key];
+  }
+
   function t(key, vars) {
     const L = getLang();
-    let s = STRINGS[L][key];
-    if (s == null) s = STRINGS.en[key];
+    let s = lookup(L, key);
     if (s == null) return key;
     if (vars) {
       Object.keys(vars).forEach(function (k) {
@@ -1816,28 +1951,28 @@
     document.querySelectorAll("[data-i18n]").forEach(function (el) {
       const key = el.getAttribute("data-i18n");
       if (!key) return;
-      const s = STRINGS[L][key] != null ? STRINGS[L][key] : STRINGS.en[key];
+      const s = lookup(L, key);
       if (s != null) el.textContent = s;
     });
 
     document.querySelectorAll("[data-i18n-html]").forEach(function (el) {
       const key = el.getAttribute("data-i18n-html");
       if (!key) return;
-      const s = STRINGS[L][key] != null ? STRINGS[L][key] : STRINGS.en[key];
+      const s = lookup(L, key);
       if (s != null) el.innerHTML = s;
     });
 
     document.querySelectorAll("[data-i18n-placeholder]").forEach(function (el) {
       const key = el.getAttribute("data-i18n-placeholder");
       if (!key) return;
-      const s = STRINGS[L][key] != null ? STRINGS[L][key] : STRINGS.en[key];
+      const s = lookup(L, key);
       if (s != null) el.setAttribute("placeholder", s);
     });
 
     document.querySelectorAll("[data-i18n-aria]").forEach(function (el) {
       const key = el.getAttribute("data-i18n-aria");
       if (!key) return;
-      const s = STRINGS[L][key] != null ? STRINGS[L][key] : STRINGS.en[key];
+      const s = lookup(L, key);
       if (s != null) el.setAttribute("aria-label", s);
     });
 
@@ -1860,7 +1995,7 @@
     document.querySelectorAll("[data-i18n-title]").forEach(function (el) {
       const key = el.getAttribute("data-i18n-title");
       if (!key) return;
-      const s = STRINGS[L][key] != null ? STRINGS[L][key] : STRINGS.en[key];
+      const s = lookup(L, key);
       if (s != null) el.setAttribute("title", s);
     });
 
@@ -1924,6 +2059,8 @@
     setTheme: setTheme,
     t: t,
     apply: apply,
+    getCourse: getCourse,
+    setCourse: setCourse,
     initLangSwitch: initLangSwitch,
     initThemeSwitch: initThemeSwitch,
   };

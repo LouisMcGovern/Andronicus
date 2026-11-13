@@ -1960,32 +1960,41 @@ details[open] .faq-q::after {
   outline-offset: 2px;
 }
 
-.btn-level[data-level="beginner"] {
+.btn-level[data-level="beginner"],
+.btn-level[data-level="fr-beginner"] {
   border-left: 3px solid #0f3d7a;
 }
 
 .btn-level[data-level="beginner"]:hover,
-.btn-level[data-level="beginner"].is-active {
+.btn-level[data-level="beginner"].is-active,
+.btn-level[data-level="fr-beginner"]:hover,
+.btn-level[data-level="fr-beginner"].is-active {
   border-left-color: #0a2e65;
   border-color: #0a2e65;
 }
 
-.btn-level[data-level="intermediate"] {
+.btn-level[data-level="intermediate"],
+.btn-level[data-level="fr-intermediate"] {
   border-left: 3px solid #1d4ed8;
 }
 
 .btn-level[data-level="intermediate"]:hover,
-.btn-level[data-level="intermediate"].is-active {
+.btn-level[data-level="intermediate"].is-active,
+.btn-level[data-level="fr-intermediate"]:hover,
+.btn-level[data-level="fr-intermediate"].is-active {
   border-left-color: #1e40af;
   border-color: #1e40af;
 }
 
-.btn-level[data-level="advanced"] {
+.btn-level[data-level="advanced"],
+.btn-level[data-level="fr-advanced"] {
   border-left: 3px solid #7c3aed;
 }
 
 .btn-level[data-level="advanced"]:hover,
-.btn-level[data-level="advanced"].is-active {
+.btn-level[data-level="advanced"].is-active,
+.btn-level[data-level="fr-advanced"]:hover,
+.btn-level[data-level="fr-advanced"].is-active {
   border-left-color: #6d28d9;
   border-color: #6d28d9;
 }
@@ -8617,21 +8626,27 @@ body.wr-open .pts {
 
 /* ---------- Level colours: green = beginner, orange = intermediate, red = advanced ---------- */
 .btn-level[data-level="beginner"],
-#content-beginner {
+#content-beginner,
+.btn-level[data-level="fr-beginner"],
+#content-fr-beginner {
   --lvl: #2f8a5b;
   --lvl-strong: #236b46;
   --lvl-wash: rgba(47, 138, 91, 0.07);
   --lvl-soft: rgba(47, 138, 91, 0.14);
 }
 .btn-level[data-level="intermediate"],
-#content-intermediate {
+#content-intermediate,
+.btn-level[data-level="fr-intermediate"],
+#content-fr-intermediate {
   --lvl: #e07a1f;
   --lvl-strong: #b85f12;
   --lvl-wash: rgba(224, 122, 31, 0.07);
   --lvl-soft: rgba(240, 130, 30, 0.16);
 }
 .btn-level[data-level="advanced"],
-#content-advanced {
+#content-advanced,
+.btn-level[data-level="fr-advanced"],
+#content-fr-advanced {
   --lvl: #d0453b;
   --lvl-strong: #a8332b;
   --lvl-wash: rgba(208, 69, 59, 0.06);
@@ -8689,7 +8704,10 @@ body.wr-open .pts {
 /* Level page: coloured top bar, light wash, coloured heading and touches */
 .level-article#content-beginner,
 .level-article#content-intermediate,
-.level-article#content-advanced {
+.level-article#content-advanced,
+.level-article#content-fr-beginner,
+.level-article#content-fr-intermediate,
+.level-article#content-fr-advanced {
   border-top: none !important;
   background: #d4e5f2;
 }
@@ -8713,23 +8731,35 @@ body.wr-open .pts {
 }
 #content-beginner .level-landing__card__icon,
 #content-intermediate .level-landing__card__icon,
-#content-advanced .level-landing__card__icon {
+#content-advanced .level-landing__card__icon,
+#content-fr-beginner .level-landing__card__icon,
+#content-fr-intermediate .level-landing__card__icon,
+#content-fr-advanced .level-landing__card__icon {
   color: var(--lvl-strong);
 }
 #content-beginner .level-landing__card,
 #content-intermediate .level-landing__card,
-#content-advanced .level-landing__card {
+#content-advanced .level-landing__card,
+#content-fr-beginner .level-landing__card,
+#content-fr-intermediate .level-landing__card,
+#content-fr-advanced .level-landing__card {
   border-top: 3px solid var(--lvl);
 }
 #content-beginner .level-landing__card:hover,
 #content-intermediate .level-landing__card:hover,
-#content-advanced .level-landing__card:hover {
+#content-advanced .level-landing__card:hover,
+#content-fr-beginner .level-landing__card:hover,
+#content-fr-intermediate .level-landing__card:hover,
+#content-fr-advanced .level-landing__card:hover {
   border-color: var(--lvl);
   background: var(--lvl-wash);
 }
 #content-beginner .learning-hub__tab[aria-selected="true"],
 #content-intermediate .learning-hub__tab[aria-selected="true"],
-#content-advanced .learning-hub__tab[aria-selected="true"] {
+#content-advanced .learning-hub__tab[aria-selected="true"],
+#content-fr-beginner .learning-hub__tab[aria-selected="true"],
+#content-fr-intermediate .learning-hub__tab[aria-selected="true"],
+#content-fr-advanced .learning-hub__tab[aria-selected="true"] {
   box-shadow: inset 0 -3px 0 var(--lvl);
 }
 
@@ -8808,21 +8838,30 @@ body.wr-open .pts {
 /* Back-to-levels button in the level's own colour */
 #content-beginner .btn-level-back,
 #content-intermediate .btn-level-back,
-#content-advanced .btn-level-back {
+#content-advanced .btn-level-back,
+#content-fr-beginner .btn-level-back,
+#content-fr-intermediate .btn-level-back,
+#content-fr-advanced .btn-level-back {
   color: var(--lvl-strong);
   border-color: var(--lvl);
   background: var(--surface-elevated);
 }
 #content-beginner .btn-level-back:hover,
 #content-intermediate .btn-level-back:hover,
-#content-advanced .btn-level-back:hover {
+#content-advanced .btn-level-back:hover,
+#content-fr-beginner .btn-level-back:hover,
+#content-fr-intermediate .btn-level-back:hover,
+#content-fr-advanced .btn-level-back:hover {
   color: #fff;
   background: var(--lvl);
   border-color: var(--lvl);
 }
 #content-beginner .btn-level-back:focus-visible,
 #content-intermediate .btn-level-back:focus-visible,
-#content-advanced .btn-level-back:focus-visible {
+#content-advanced .btn-level-back:focus-visible,
+#content-fr-beginner .btn-level-back:focus-visible,
+#content-fr-intermediate .btn-level-back:focus-visible,
+#content-fr-advanced .btn-level-back:focus-visible {
   outline-color: var(--lvl);
 }
 
@@ -9294,7 +9333,10 @@ body.vocab-zone .pts-btn__star { color: #3f8a60; }
 body.vocab-zone .level-article,
 body.vocab-zone .level-article#content-beginner,
 body.vocab-zone .level-article#content-intermediate,
-body.vocab-zone .level-article#content-advanced {
+body.vocab-zone .level-article#content-advanced,
+body.vocab-zone .level-article#content-fr-beginner,
+body.vocab-zone .level-article#content-fr-intermediate,
+body.vocab-zone .level-article#content-fr-advanced {
   background: transparent;
 }
 
@@ -9503,7 +9545,10 @@ body.ocean-zone.content-panel-open .panel--content {
 body.ocean-zone .level-article,
 body.ocean-zone .level-article#content-beginner,
 body.ocean-zone .level-article#content-intermediate,
-body.ocean-zone .level-article#content-advanced {
+body.ocean-zone .level-article#content-advanced,
+body.ocean-zone .level-article#content-fr-beginner,
+body.ocean-zone .level-article#content-fr-intermediate,
+body.ocean-zone .level-article#content-fr-advanced {
   background: transparent;
 }
 
@@ -9701,7 +9746,10 @@ body .sea-intro__word * {
 body.ocean-zone .level-article,
 body.ocean-zone .level-article#content-beginner,
 body.ocean-zone .level-article#content-intermediate,
-body.ocean-zone .level-article#content-advanced {
+body.ocean-zone .level-article#content-advanced,
+body.ocean-zone .level-article#content-fr-beginner,
+body.ocean-zone .level-article#content-fr-intermediate,
+body.ocean-zone .level-article#content-fr-advanced {
   padding-top: 1.1rem;
 }
 body.ocean-zone .lh-back-to-menu {
@@ -9934,7 +9982,10 @@ body.fire-zone.content-panel-open .panel--content {
 body.fire-zone .level-article,
 body.fire-zone .level-article#content-beginner,
 body.fire-zone .level-article#content-intermediate,
-body.fire-zone .level-article#content-advanced {
+body.fire-zone .level-article#content-advanced,
+body.fire-zone .level-article#content-fr-beginner,
+body.fire-zone .level-article#content-fr-intermediate,
+body.fire-zone .level-article#content-fr-advanced {
   background: transparent;
   padding-top: 1.1rem;
 }
@@ -10119,7 +10170,16 @@ body.content-panel-open .tool-panel[data-tool-panel="flashcards"] { padding-top:
 #content-advanced .level-landing__card[data-tool="vocab"],
 #content-beginner .level-landing__card[data-tool="words"],
 #content-intermediate .level-landing__card[data-tool="words"],
-#content-advanced .level-landing__card[data-tool="words"] {
+#content-advanced .level-landing__card[data-tool="words"],
+#content-fr-beginner .level-landing__card[data-tool="flashcards"],
+#content-fr-intermediate .level-landing__card[data-tool="flashcards"],
+#content-fr-advanced .level-landing__card[data-tool="flashcards"],
+#content-fr-beginner .level-landing__card[data-tool="vocab"],
+#content-fr-intermediate .level-landing__card[data-tool="vocab"],
+#content-fr-advanced .level-landing__card[data-tool="vocab"],
+#content-fr-beginner .level-landing__card[data-tool="words"],
+#content-fr-intermediate .level-landing__card[data-tool="words"],
+#content-fr-advanced .level-landing__card[data-tool="words"] {
   position: relative;
   overflow: hidden;
   border-color: var(--card-border) !important;
@@ -10133,7 +10193,16 @@ body.content-panel-open .tool-panel[data-tool-panel="flashcards"] { padding-top:
 #content-advanced .level-landing__card[data-tool="vocab"] > *,
 #content-beginner .level-landing__card[data-tool="words"] > *,
 #content-intermediate .level-landing__card[data-tool="words"] > *,
-#content-advanced .level-landing__card[data-tool="words"] > * {
+#content-advanced .level-landing__card[data-tool="words"] > *,
+#content-fr-beginner .level-landing__card[data-tool="flashcards"] > *,
+#content-fr-intermediate .level-landing__card[data-tool="flashcards"] > *,
+#content-fr-advanced .level-landing__card[data-tool="flashcards"] > *,
+#content-fr-beginner .level-landing__card[data-tool="vocab"] > *,
+#content-fr-intermediate .level-landing__card[data-tool="vocab"] > *,
+#content-fr-advanced .level-landing__card[data-tool="vocab"] > *,
+#content-fr-beginner .level-landing__card[data-tool="words"] > *,
+#content-fr-intermediate .level-landing__card[data-tool="words"] > *,
+#content-fr-advanced .level-landing__card[data-tool="words"] > * {
   position: relative;
   z-index: 1;
 }
@@ -10145,7 +10214,16 @@ body.content-panel-open .tool-panel[data-tool-panel="flashcards"] { padding-top:
 #content-advanced .level-landing__card[data-tool="vocab"]::after,
 #content-beginner .level-landing__card[data-tool="words"]::after,
 #content-intermediate .level-landing__card[data-tool="words"]::after,
-#content-advanced .level-landing__card[data-tool="words"]::after {
+#content-advanced .level-landing__card[data-tool="words"]::after,
+#content-fr-beginner .level-landing__card[data-tool="flashcards"]::after,
+#content-fr-intermediate .level-landing__card[data-tool="flashcards"]::after,
+#content-fr-advanced .level-landing__card[data-tool="flashcards"]::after,
+#content-fr-beginner .level-landing__card[data-tool="vocab"]::after,
+#content-fr-intermediate .level-landing__card[data-tool="vocab"]::after,
+#content-fr-advanced .level-landing__card[data-tool="vocab"]::after,
+#content-fr-beginner .level-landing__card[data-tool="words"]::after,
+#content-fr-intermediate .level-landing__card[data-tool="words"]::after,
+#content-fr-advanced .level-landing__card[data-tool="words"]::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -10160,7 +10238,16 @@ body.content-panel-open .tool-panel[data-tool-panel="flashcards"] { padding-top:
 #content-advanced .level-landing__card[data-tool="vocab"]:hover,
 #content-beginner .level-landing__card[data-tool="words"]:hover,
 #content-intermediate .level-landing__card[data-tool="words"]:hover,
-#content-advanced .level-landing__card[data-tool="words"]:hover {
+#content-advanced .level-landing__card[data-tool="words"]:hover,
+#content-fr-beginner .level-landing__card[data-tool="flashcards"]:hover,
+#content-fr-intermediate .level-landing__card[data-tool="flashcards"]:hover,
+#content-fr-advanced .level-landing__card[data-tool="flashcards"]:hover,
+#content-fr-beginner .level-landing__card[data-tool="vocab"]:hover,
+#content-fr-intermediate .level-landing__card[data-tool="vocab"]:hover,
+#content-fr-advanced .level-landing__card[data-tool="vocab"]:hover,
+#content-fr-beginner .level-landing__card[data-tool="words"]:hover,
+#content-fr-intermediate .level-landing__card[data-tool="words"]:hover,
+#content-fr-advanced .level-landing__card[data-tool="words"]:hover {
   border-color: var(--card-top) !important;
   box-shadow: 0 6px 18px var(--card-glow);
 }
@@ -10168,7 +10255,10 @@ body.content-panel-open .tool-panel[data-tool-panel="flashcards"] { padding-top:
 /* Fire */
 #content-beginner .level-landing__card[data-tool="flashcards"],
 #content-intermediate .level-landing__card[data-tool="flashcards"],
-#content-advanced .level-landing__card[data-tool="flashcards"] {
+#content-advanced .level-landing__card[data-tool="flashcards"],
+#content-fr-beginner .level-landing__card[data-tool="flashcards"],
+#content-fr-intermediate .level-landing__card[data-tool="flashcards"],
+#content-fr-advanced .level-landing__card[data-tool="flashcards"] {
   --card-border: #f0b9a2;
   --card-top: #e2533a;
   --card-glow: rgba(226, 83, 58, 0.18);
@@ -10176,29 +10266,50 @@ body.content-panel-open .tool-panel[data-tool-panel="flashcards"] { padding-top:
 }
 #content-beginner .level-landing__card[data-tool="flashcards"]:hover,
 #content-intermediate .level-landing__card[data-tool="flashcards"]:hover,
-#content-advanced .level-landing__card[data-tool="flashcards"]:hover {
+#content-advanced .level-landing__card[data-tool="flashcards"]:hover,
+#content-fr-beginner .level-landing__card[data-tool="flashcards"]:hover,
+#content-fr-intermediate .level-landing__card[data-tool="flashcards"]:hover,
+#content-fr-advanced .level-landing__card[data-tool="flashcards"]:hover {
   background: radial-gradient(70% 60% at 100% 110%, rgba(255, 140, 70, 0.38), transparent 70%), linear-gradient(170deg, #fff8f4 0%, #fde6d9 100%);
 }
 #content-beginner .level-landing__card[data-tool="flashcards"]::after,
 #content-intermediate .level-landing__card[data-tool="flashcards"]::after,
-#content-advanced .level-landing__card[data-tool="flashcards"]::after { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='110' viewBox='0 0 120 110'%3E%3Cpath d='M10 110 C 4 86, 22 74, 18 50 C 32 64, 36 76, 40 66 C 44 50, 40 34, 52 12 C 58 40, 76 52, 72 76 C 80 70, 84 60, 84 48 C 98 64, 104 86, 100 110 Z' fill='%23e2533a' fill-opacity='0.75'/%3E%3Cpath d='M24 110 C 20 94, 32 86, 30 70 C 40 80, 44 88, 48 80 C 52 70, 52 58, 60 44 C 64 64, 76 74, 74 92 C 80 88, 84 82, 86 74 C 94 88, 94 100, 90 110 Z' fill='%23f5843e' fill-opacity='0.9'/%3E%3Cpath d='M40 110 C 38 100, 46 94, 46 84 C 52 92, 56 96, 58 90 C 60 84, 62 78, 66 72 C 70 86, 76 96, 72 110 Z' fill='%23ffd9b0'/%3E%3C/svg%3E") no-repeat right 0.5rem bottom / auto 4.2rem; }
+#content-advanced .level-landing__card[data-tool="flashcards"]::after,
+#content-fr-beginner .level-landing__card[data-tool="flashcards"]::after,
+#content-fr-intermediate .level-landing__card[data-tool="flashcards"]::after,
+#content-fr-advanced .level-landing__card[data-tool="flashcards"]::after { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='110' viewBox='0 0 120 110'%3E%3Cpath d='M10 110 C 4 86, 22 74, 18 50 C 32 64, 36 76, 40 66 C 44 50, 40 34, 52 12 C 58 40, 76 52, 72 76 C 80 70, 84 60, 84 48 C 98 64, 104 86, 100 110 Z' fill='%23e2533a' fill-opacity='0.75'/%3E%3Cpath d='M24 110 C 20 94, 32 86, 30 70 C 40 80, 44 88, 48 80 C 52 70, 52 58, 60 44 C 64 64, 76 74, 74 92 C 80 88, 84 82, 86 74 C 94 88, 94 100, 90 110 Z' fill='%23f5843e' fill-opacity='0.9'/%3E%3Cpath d='M40 110 C 38 100, 46 94, 46 84 C 52 92, 56 96, 58 90 C 60 84, 62 78, 66 72 C 70 86, 76 96, 72 110 Z' fill='%23ffd9b0'/%3E%3C/svg%3E") no-repeat right 0.5rem bottom / auto 4.2rem; }
 #content-beginner .level-landing__card[data-tool="flashcards"] .level-landing__card__icon,
 #content-intermediate .level-landing__card[data-tool="flashcards"] .level-landing__card__icon,
-#content-advanced .level-landing__card[data-tool="flashcards"] .level-landing__card__icon { color: #e2533a; }
+#content-advanced .level-landing__card[data-tool="flashcards"] .level-landing__card__icon,
+#content-fr-beginner .level-landing__card[data-tool="flashcards"] .level-landing__card__icon,
+#content-fr-intermediate .level-landing__card[data-tool="flashcards"] .level-landing__card__icon,
+#content-fr-advanced .level-landing__card[data-tool="flashcards"] .level-landing__card__icon { color: #e2533a; }
 #content-beginner .level-landing__card[data-tool="flashcards"] .level-landing__card__label,
 #content-intermediate .level-landing__card[data-tool="flashcards"] .level-landing__card__label,
-#content-advanced .level-landing__card[data-tool="flashcards"] .level-landing__card__label { color: #4a1622; }
+#content-advanced .level-landing__card[data-tool="flashcards"] .level-landing__card__label,
+#content-fr-beginner .level-landing__card[data-tool="flashcards"] .level-landing__card__label,
+#content-fr-intermediate .level-landing__card[data-tool="flashcards"] .level-landing__card__label,
+#content-fr-advanced .level-landing__card[data-tool="flashcards"] .level-landing__card__label { color: #4a1622; }
 #content-beginner .level-landing__card[data-tool="flashcards"] .level-landing__card__hint,
 #content-intermediate .level-landing__card[data-tool="flashcards"] .level-landing__card__hint,
 #content-advanced .level-landing__card[data-tool="flashcards"] .level-landing__card__hint,
 #content-beginner .level-landing__card[data-tool="flashcards"] .level-landing__card__progress,
 #content-intermediate .level-landing__card[data-tool="flashcards"] .level-landing__card__progress,
-#content-advanced .level-landing__card[data-tool="flashcards"] .level-landing__card__progress { color: #a34e4a; }
+#content-advanced .level-landing__card[data-tool="flashcards"] .level-landing__card__progress,
+#content-fr-beginner .level-landing__card[data-tool="flashcards"] .level-landing__card__hint,
+#content-fr-intermediate .level-landing__card[data-tool="flashcards"] .level-landing__card__hint,
+#content-fr-advanced .level-landing__card[data-tool="flashcards"] .level-landing__card__hint,
+#content-fr-beginner .level-landing__card[data-tool="flashcards"] .level-landing__card__progress,
+#content-fr-intermediate .level-landing__card[data-tool="flashcards"] .level-landing__card__progress,
+#content-fr-advanced .level-landing__card[data-tool="flashcards"] .level-landing__card__progress { color: #a34e4a; }
 
 /* Forest */
 #content-beginner .level-landing__card[data-tool="vocab"],
 #content-intermediate .level-landing__card[data-tool="vocab"],
-#content-advanced .level-landing__card[data-tool="vocab"] {
+#content-advanced .level-landing__card[data-tool="vocab"],
+#content-fr-beginner .level-landing__card[data-tool="vocab"],
+#content-fr-intermediate .level-landing__card[data-tool="vocab"],
+#content-fr-advanced .level-landing__card[data-tool="vocab"] {
   --card-border: #b9cdb0;
   --card-top: #3f7a52;
   --card-glow: rgba(63, 122, 82, 0.18);
@@ -10207,29 +10318,50 @@ body.content-panel-open .tool-panel[data-tool-panel="flashcards"] { padding-top:
 }
 #content-beginner .level-landing__card[data-tool="vocab"]:hover,
 #content-intermediate .level-landing__card[data-tool="vocab"]:hover,
-#content-advanced .level-landing__card[data-tool="vocab"]:hover {
+#content-advanced .level-landing__card[data-tool="vocab"]:hover,
+#content-fr-beginner .level-landing__card[data-tool="vocab"]:hover,
+#content-fr-intermediate .level-landing__card[data-tool="vocab"]:hover,
+#content-fr-advanced .level-landing__card[data-tool="vocab"]:hover {
   background: linear-gradient(170deg, #f5f9f3 0%, #e2ecdb 100%);
 }
 #content-beginner .level-landing__card[data-tool="vocab"]::after,
 #content-intermediate .level-landing__card[data-tool="vocab"]::after,
-#content-advanced .level-landing__card[data-tool="vocab"]::after { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='34' viewBox='0 0 160 34'%3E%3Cpath d='M0 8 C 25 18, 55 -2, 80 8 S 135 18, 160 8' fill='none' stroke='%233f6e4a' stroke-width='2.4' stroke-linecap='round'/%3E%3Cpath d='M14 12 q 6 10 -2 18 q -6 -10 2 -18z' fill='%235f9461'/%3E%3Cpath d='M38 6 q 9 6 6 16 q -9 -6 -6 -16z' fill='%234a7d52'/%3E%3Cpath d='M62 4 q -2 11 -11 14 q 2 -11 11 -14z' fill='%2378a96f'/%3E%3Cpath d='M92 10 q 7 9 1 19 q -7 -9 -1 -19z' fill='%235f9461'/%3E%3Cpath d='M116 13 q 9 4 9 14 q -9 -4 -9 -14z' fill='%234a7d52'/%3E%3Cpath d='M140 8 q -1 10 -10 14 q 1 -10 10 -14z' fill='%2378a96f'/%3E%3C/svg%3E") repeat-x 0 0 / 120px 26px, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='110' height='90' viewBox='0 0 110 90'%3E%3Cg transform='translate(110 0) scale(-1 1)'%3E%3Cpath d='M6 90 C 14 60, 30 34, 62 14' fill='none' stroke='%233f6e4a' stroke-width='2.2' stroke-linecap='round'/%3E%3Cg fill='%235f9461'%3E%3Cpath d='M12 74 q -10 -6 -12 -18 q 12 4 12 18z'/%3E%3Cpath d='M14 70 q 12 -2 18 6 q -12 4 -18 -6z'/%3E%3Cpath d='M20 56 q -10 -8 -10 -20 q 12 6 10 20z'/%3E%3Cpath d='M23 52 q 12 -4 20 3 q -12 5 -20 -3z'/%3E%3Cpath d='M32 40 q -8 -9 -6 -20 q 10 8 6 20z'/%3E%3Cpath d='M35 37 q 11 -6 19 0 q -10 6 -19 0z'/%3E%3Cpath d='M46 27 q -5 -9 -1 -18 q 8 8 1 18z'/%3E%3Cpath d='M49 25 q 9 -6 16 -2 q -8 6 -16 2z'/%3E%3C/g%3E%3Cpath d='M40 90 C 44 74, 52 64, 70 56' fill='none' stroke='%234a7d52' stroke-width='1.8' stroke-linecap='round'/%3E%3Cg fill='%2378a96f'%3E%3Cpath d='M46 76 q 8 -6 16 -2 q -8 6 -16 2z'/%3E%3Cpath d='M44 78 q -6 -8 -4 -16 q 8 6 4 16z'/%3E%3Cpath d='M56 64 q 7 -6 14 -3 q -7 6 -14 3z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") no-repeat right bottom / auto 4.2rem; }
+#content-advanced .level-landing__card[data-tool="vocab"]::after,
+#content-fr-beginner .level-landing__card[data-tool="vocab"]::after,
+#content-fr-intermediate .level-landing__card[data-tool="vocab"]::after,
+#content-fr-advanced .level-landing__card[data-tool="vocab"]::after { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='34' viewBox='0 0 160 34'%3E%3Cpath d='M0 8 C 25 18, 55 -2, 80 8 S 135 18, 160 8' fill='none' stroke='%233f6e4a' stroke-width='2.4' stroke-linecap='round'/%3E%3Cpath d='M14 12 q 6 10 -2 18 q -6 -10 2 -18z' fill='%235f9461'/%3E%3Cpath d='M38 6 q 9 6 6 16 q -9 -6 -6 -16z' fill='%234a7d52'/%3E%3Cpath d='M62 4 q -2 11 -11 14 q 2 -11 11 -14z' fill='%2378a96f'/%3E%3Cpath d='M92 10 q 7 9 1 19 q -7 -9 -1 -19z' fill='%235f9461'/%3E%3Cpath d='M116 13 q 9 4 9 14 q -9 -4 -9 -14z' fill='%234a7d52'/%3E%3Cpath d='M140 8 q -1 10 -10 14 q 1 -10 10 -14z' fill='%2378a96f'/%3E%3C/svg%3E") repeat-x 0 0 / 120px 26px, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='110' height='90' viewBox='0 0 110 90'%3E%3Cg transform='translate(110 0) scale(-1 1)'%3E%3Cpath d='M6 90 C 14 60, 30 34, 62 14' fill='none' stroke='%233f6e4a' stroke-width='2.2' stroke-linecap='round'/%3E%3Cg fill='%235f9461'%3E%3Cpath d='M12 74 q -10 -6 -12 -18 q 12 4 12 18z'/%3E%3Cpath d='M14 70 q 12 -2 18 6 q -12 4 -18 -6z'/%3E%3Cpath d='M20 56 q -10 -8 -10 -20 q 12 6 10 20z'/%3E%3Cpath d='M23 52 q 12 -4 20 3 q -12 5 -20 -3z'/%3E%3Cpath d='M32 40 q -8 -9 -6 -20 q 10 8 6 20z'/%3E%3Cpath d='M35 37 q 11 -6 19 0 q -10 6 -19 0z'/%3E%3Cpath d='M46 27 q -5 -9 -1 -18 q 8 8 1 18z'/%3E%3Cpath d='M49 25 q 9 -6 16 -2 q -8 6 -16 2z'/%3E%3C/g%3E%3Cpath d='M40 90 C 44 74, 52 64, 70 56' fill='none' stroke='%234a7d52' stroke-width='1.8' stroke-linecap='round'/%3E%3Cg fill='%2378a96f'%3E%3Cpath d='M46 76 q 8 -6 16 -2 q -8 6 -16 2z'/%3E%3Cpath d='M44 78 q -6 -8 -4 -16 q 8 6 4 16z'/%3E%3Cpath d='M56 64 q 7 -6 14 -3 q -7 6 -14 3z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") no-repeat right bottom / auto 4.2rem; }
 #content-beginner .level-landing__card[data-tool="vocab"] .level-landing__card__icon,
 #content-intermediate .level-landing__card[data-tool="vocab"] .level-landing__card__icon,
-#content-advanced .level-landing__card[data-tool="vocab"] .level-landing__card__icon { color: #2f6b47; }
+#content-advanced .level-landing__card[data-tool="vocab"] .level-landing__card__icon,
+#content-fr-beginner .level-landing__card[data-tool="vocab"] .level-landing__card__icon,
+#content-fr-intermediate .level-landing__card[data-tool="vocab"] .level-landing__card__icon,
+#content-fr-advanced .level-landing__card[data-tool="vocab"] .level-landing__card__icon { color: #2f6b47; }
 #content-beginner .level-landing__card[data-tool="vocab"] .level-landing__card__label,
 #content-intermediate .level-landing__card[data-tool="vocab"] .level-landing__card__label,
-#content-advanced .level-landing__card[data-tool="vocab"] .level-landing__card__label { color: #1f4a33; }
+#content-advanced .level-landing__card[data-tool="vocab"] .level-landing__card__label,
+#content-fr-beginner .level-landing__card[data-tool="vocab"] .level-landing__card__label,
+#content-fr-intermediate .level-landing__card[data-tool="vocab"] .level-landing__card__label,
+#content-fr-advanced .level-landing__card[data-tool="vocab"] .level-landing__card__label { color: #1f4a33; }
 #content-beginner .level-landing__card[data-tool="vocab"] .level-landing__card__hint,
 #content-intermediate .level-landing__card[data-tool="vocab"] .level-landing__card__hint,
 #content-advanced .level-landing__card[data-tool="vocab"] .level-landing__card__hint,
 #content-beginner .level-landing__card[data-tool="vocab"] .level-landing__card__progress,
 #content-intermediate .level-landing__card[data-tool="vocab"] .level-landing__card__progress,
-#content-advanced .level-landing__card[data-tool="vocab"] .level-landing__card__progress { color: #557258; }
+#content-advanced .level-landing__card[data-tool="vocab"] .level-landing__card__progress,
+#content-fr-beginner .level-landing__card[data-tool="vocab"] .level-landing__card__hint,
+#content-fr-intermediate .level-landing__card[data-tool="vocab"] .level-landing__card__hint,
+#content-fr-advanced .level-landing__card[data-tool="vocab"] .level-landing__card__hint,
+#content-fr-beginner .level-landing__card[data-tool="vocab"] .level-landing__card__progress,
+#content-fr-intermediate .level-landing__card[data-tool="vocab"] .level-landing__card__progress,
+#content-fr-advanced .level-landing__card[data-tool="vocab"] .level-landing__card__progress { color: #557258; }
 
 /* Ocean */
 #content-beginner .level-landing__card[data-tool="words"],
 #content-intermediate .level-landing__card[data-tool="words"],
-#content-advanced .level-landing__card[data-tool="words"] {
+#content-advanced .level-landing__card[data-tool="words"],
+#content-fr-beginner .level-landing__card[data-tool="words"],
+#content-fr-intermediate .level-landing__card[data-tool="words"],
+#content-fr-advanced .level-landing__card[data-tool="words"] {
   --card-border: #93cfc8;
   --card-top: #168089;
   --card-glow: rgba(22, 128, 137, 0.18);
@@ -10237,24 +10369,42 @@ body.content-panel-open .tool-panel[data-tool-panel="flashcards"] { padding-top:
 }
 #content-beginner .level-landing__card[data-tool="words"]:hover,
 #content-intermediate .level-landing__card[data-tool="words"]:hover,
-#content-advanced .level-landing__card[data-tool="words"]:hover {
+#content-advanced .level-landing__card[data-tool="words"]:hover,
+#content-fr-beginner .level-landing__card[data-tool="words"]:hover,
+#content-fr-intermediate .level-landing__card[data-tool="words"]:hover,
+#content-fr-advanced .level-landing__card[data-tool="words"]:hover {
   background: linear-gradient(170deg, #f0faf9 0%, #cfeee9 100%);
 }
 #content-beginner .level-landing__card[data-tool="words"]::after,
 #content-intermediate .level-landing__card[data-tool="words"]::after,
-#content-advanced .level-landing__card[data-tool="words"]::after { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='96' viewBox='0 0 150 96'%3E%3Cg fill='none' stroke-linecap='round'%3E%3Cpath d='M128 96 C 120 76, 136 64, 126 44 S 132 20, 124 6' stroke='%2341a88f' stroke-width='5'/%3E%3Cpath d='M142 96 C 148 80, 136 70, 144 54' stroke='%2367c2a5' stroke-width='4'/%3E%3C/g%3E%3Cg transform='translate(58 30)'%3E%3Cpath d='M2 15 L12 5 L11 15 L12 25 Z' fill='%23f4a08f'/%3E%3Cellipse cx='28' cy='15' rx='18' ry='10' fill='%23ef7a63'/%3E%3Ccircle cx='38' cy='12' r='2.6' fill='%23fff'/%3E%3Ccircle cx='38.6' cy='12' r='1.3' fill='%230b3f47'/%3E%3C/g%3E%3Cg transform='translate(92 58) scale(0.6)'%3E%3Cpath d='M48 15 L38 5 L39 15 L38 25 Z' fill='%236cc6c8'/%3E%3Cellipse cx='22' cy='15' rx='18' ry='10' fill='%232a9fa6'/%3E%3Ccircle cx='12' cy='12' r='2.6' fill='%23fff'/%3E%3Ccircle cx='11.4' cy='12' r='1.3' fill='%230b3f47'/%3E%3C/g%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='1.6'%3E%3Ccircle cx='106' cy='26' r='4'/%3E%3Ccircle cx='112' cy='12' r='2.6'/%3E%3Ccircle cx='100' cy='6' r='2'/%3E%3C/g%3E%3C/svg%3E") no-repeat right 0.2rem bottom / auto 4.6rem, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='22' viewBox='0 0 200 22'%3E%3Cpath d='M0 10 C 25 0, 75 0, 100 10 S 175 20, 200 10 V 22 H 0 Z' fill='%2357bfba' fill-opacity='0.35'/%3E%3C/svg%3E") repeat-x 0 100% / 200px 22px; }
+#content-advanced .level-landing__card[data-tool="words"]::after,
+#content-fr-beginner .level-landing__card[data-tool="words"]::after,
+#content-fr-intermediate .level-landing__card[data-tool="words"]::after,
+#content-fr-advanced .level-landing__card[data-tool="words"]::after { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='96' viewBox='0 0 150 96'%3E%3Cg fill='none' stroke-linecap='round'%3E%3Cpath d='M128 96 C 120 76, 136 64, 126 44 S 132 20, 124 6' stroke='%2341a88f' stroke-width='5'/%3E%3Cpath d='M142 96 C 148 80, 136 70, 144 54' stroke='%2367c2a5' stroke-width='4'/%3E%3C/g%3E%3Cg transform='translate(58 30)'%3E%3Cpath d='M2 15 L12 5 L11 15 L12 25 Z' fill='%23f4a08f'/%3E%3Cellipse cx='28' cy='15' rx='18' ry='10' fill='%23ef7a63'/%3E%3Ccircle cx='38' cy='12' r='2.6' fill='%23fff'/%3E%3Ccircle cx='38.6' cy='12' r='1.3' fill='%230b3f47'/%3E%3C/g%3E%3Cg transform='translate(92 58) scale(0.6)'%3E%3Cpath d='M48 15 L38 5 L39 15 L38 25 Z' fill='%236cc6c8'/%3E%3Cellipse cx='22' cy='15' rx='18' ry='10' fill='%232a9fa6'/%3E%3Ccircle cx='12' cy='12' r='2.6' fill='%23fff'/%3E%3Ccircle cx='11.4' cy='12' r='1.3' fill='%230b3f47'/%3E%3C/g%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='1.6'%3E%3Ccircle cx='106' cy='26' r='4'/%3E%3Ccircle cx='112' cy='12' r='2.6'/%3E%3Ccircle cx='100' cy='6' r='2'/%3E%3C/g%3E%3C/svg%3E") no-repeat right 0.2rem bottom / auto 4.6rem, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='22' viewBox='0 0 200 22'%3E%3Cpath d='M0 10 C 25 0, 75 0, 100 10 S 175 20, 200 10 V 22 H 0 Z' fill='%2357bfba' fill-opacity='0.35'/%3E%3C/svg%3E") repeat-x 0 100% / 200px 22px; }
 #content-beginner .level-landing__card[data-tool="words"] .level-landing__card__icon,
 #content-intermediate .level-landing__card[data-tool="words"] .level-landing__card__icon,
-#content-advanced .level-landing__card[data-tool="words"] .level-landing__card__icon { color: #127880; }
+#content-advanced .level-landing__card[data-tool="words"] .level-landing__card__icon,
+#content-fr-beginner .level-landing__card[data-tool="words"] .level-landing__card__icon,
+#content-fr-intermediate .level-landing__card[data-tool="words"] .level-landing__card__icon,
+#content-fr-advanced .level-landing__card[data-tool="words"] .level-landing__card__icon { color: #127880; }
 #content-beginner .level-landing__card[data-tool="words"] .level-landing__card__label,
 #content-intermediate .level-landing__card[data-tool="words"] .level-landing__card__label,
-#content-advanced .level-landing__card[data-tool="words"] .level-landing__card__label { color: #0b3f47; }
+#content-advanced .level-landing__card[data-tool="words"] .level-landing__card__label,
+#content-fr-beginner .level-landing__card[data-tool="words"] .level-landing__card__label,
+#content-fr-intermediate .level-landing__card[data-tool="words"] .level-landing__card__label,
+#content-fr-advanced .level-landing__card[data-tool="words"] .level-landing__card__label { color: #0b3f47; }
 #content-beginner .level-landing__card[data-tool="words"] .level-landing__card__hint,
 #content-intermediate .level-landing__card[data-tool="words"] .level-landing__card__hint,
 #content-advanced .level-landing__card[data-tool="words"] .level-landing__card__hint,
 #content-beginner .level-landing__card[data-tool="words"] .level-landing__card__progress,
 #content-intermediate .level-landing__card[data-tool="words"] .level-landing__card__progress,
-#content-advanced .level-landing__card[data-tool="words"] .level-landing__card__progress { color: #4d7f84; }
+#content-advanced .level-landing__card[data-tool="words"] .level-landing__card__progress,
+#content-fr-beginner .level-landing__card[data-tool="words"] .level-landing__card__hint,
+#content-fr-intermediate .level-landing__card[data-tool="words"] .level-landing__card__hint,
+#content-fr-advanced .level-landing__card[data-tool="words"] .level-landing__card__hint,
+#content-fr-beginner .level-landing__card[data-tool="words"] .level-landing__card__progress,
+#content-fr-intermediate .level-landing__card[data-tool="words"] .level-landing__card__progress,
+#content-fr-advanced .level-landing__card[data-tool="words"] .level-landing__card__progress { color: #4d7f84; }
 
 #content-beginner .level-landing__card[data-tool="flashcards"] .level-landing__card__hint,
 #content-beginner .level-landing__card[data-tool="flashcards"] .level-landing__card__progress,
@@ -10273,7 +10423,25 @@ body.content-panel-open .tool-panel[data-tool-panel="flashcards"] { padding-top:
 #content-advanced .level-landing__card[data-tool="vocab"] .level-landing__card__hint,
 #content-advanced .level-landing__card[data-tool="vocab"] .level-landing__card__progress,
 #content-advanced .level-landing__card[data-tool="words"] .level-landing__card__hint,
-#content-advanced .level-landing__card[data-tool="words"] .level-landing__card__progress {
+#content-advanced .level-landing__card[data-tool="words"] .level-landing__card__progress,
+#content-fr-beginner .level-landing__card[data-tool="flashcards"] .level-landing__card__hint,
+#content-fr-beginner .level-landing__card[data-tool="flashcards"] .level-landing__card__progress,
+#content-fr-beginner .level-landing__card[data-tool="vocab"] .level-landing__card__hint,
+#content-fr-beginner .level-landing__card[data-tool="vocab"] .level-landing__card__progress,
+#content-fr-beginner .level-landing__card[data-tool="words"] .level-landing__card__hint,
+#content-fr-beginner .level-landing__card[data-tool="words"] .level-landing__card__progress,
+#content-fr-intermediate .level-landing__card[data-tool="flashcards"] .level-landing__card__hint,
+#content-fr-intermediate .level-landing__card[data-tool="flashcards"] .level-landing__card__progress,
+#content-fr-intermediate .level-landing__card[data-tool="vocab"] .level-landing__card__hint,
+#content-fr-intermediate .level-landing__card[data-tool="vocab"] .level-landing__card__progress,
+#content-fr-intermediate .level-landing__card[data-tool="words"] .level-landing__card__hint,
+#content-fr-intermediate .level-landing__card[data-tool="words"] .level-landing__card__progress,
+#content-fr-advanced .level-landing__card[data-tool="flashcards"] .level-landing__card__hint,
+#content-fr-advanced .level-landing__card[data-tool="flashcards"] .level-landing__card__progress,
+#content-fr-advanced .level-landing__card[data-tool="vocab"] .level-landing__card__hint,
+#content-fr-advanced .level-landing__card[data-tool="vocab"] .level-landing__card__progress,
+#content-fr-advanced .level-landing__card[data-tool="words"] .level-landing__card__hint,
+#content-fr-advanced .level-landing__card[data-tool="words"] .level-landing__card__progress {
   max-width: calc(100% - 4.5rem);
 }
 
@@ -10426,7 +10594,10 @@ body.music-zone.content-panel-open .panel--content {
 body.music-zone .level-article,
 body.music-zone .level-article#content-beginner,
 body.music-zone .level-article#content-intermediate,
-body.music-zone .level-article#content-advanced {
+body.music-zone .level-article#content-advanced,
+body.music-zone .level-article#content-fr-beginner,
+body.music-zone .level-article#content-fr-intermediate,
+body.music-zone .level-article#content-fr-advanced {
   background: transparent;
   padding-top: 1.1rem;
 }
@@ -10540,7 +10711,10 @@ body.content-panel-open .tool-panel[data-tool-panel="dictation"],
 /* Level menu – dictation card in its music theme */
 #content-beginner .level-landing__card[data-tool="dictation"],
 #content-intermediate .level-landing__card[data-tool="dictation"],
-#content-advanced .level-landing__card[data-tool="dictation"] {
+#content-advanced .level-landing__card[data-tool="dictation"],
+#content-fr-beginner .level-landing__card[data-tool="dictation"],
+#content-fr-intermediate .level-landing__card[data-tool="dictation"],
+#content-fr-advanced .level-landing__card[data-tool="dictation"] {
   position: relative;
   overflow: hidden;
   border-color: #c7b8e6 !important;
@@ -10549,20 +10723,29 @@ body.content-panel-open .tool-panel[data-tool-panel="dictation"],
 }
 #content-beginner .level-landing__card[data-tool="dictation"]:hover,
 #content-intermediate .level-landing__card[data-tool="dictation"]:hover,
-#content-advanced .level-landing__card[data-tool="dictation"]:hover {
+#content-advanced .level-landing__card[data-tool="dictation"]:hover,
+#content-fr-beginner .level-landing__card[data-tool="dictation"]:hover,
+#content-fr-intermediate .level-landing__card[data-tool="dictation"]:hover,
+#content-fr-advanced .level-landing__card[data-tool="dictation"]:hover {
   border-color: #6a46c2 !important;
   background: linear-gradient(170deg, #faf8fe 0%, #ebe4f8 100%);
   box-shadow: 0 6px 18px rgba(106, 70, 194, 0.18);
 }
 #content-beginner .level-landing__card[data-tool="dictation"] > *,
 #content-intermediate .level-landing__card[data-tool="dictation"] > *,
-#content-advanced .level-landing__card[data-tool="dictation"] > * {
+#content-advanced .level-landing__card[data-tool="dictation"] > *,
+#content-fr-beginner .level-landing__card[data-tool="dictation"] > *,
+#content-fr-intermediate .level-landing__card[data-tool="dictation"] > *,
+#content-fr-advanced .level-landing__card[data-tool="dictation"] > * {
   position: relative;
   z-index: 1;
 }
 #content-beginner .level-landing__card[data-tool="dictation"]::after,
 #content-intermediate .level-landing__card[data-tool="dictation"]::after,
-#content-advanced .level-landing__card[data-tool="dictation"]::after {
+#content-advanced .level-landing__card[data-tool="dictation"]::after,
+#content-fr-beginner .level-landing__card[data-tool="dictation"]::after,
+#content-fr-intermediate .level-landing__card[data-tool="dictation"]::after,
+#content-fr-advanced .level-landing__card[data-tool="dictation"]::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -10572,16 +10755,28 @@ body.content-panel-open .tool-panel[data-tool-panel="dictation"],
 }
 #content-beginner .level-landing__card[data-tool="dictation"] .level-landing__card__icon,
 #content-intermediate .level-landing__card[data-tool="dictation"] .level-landing__card__icon,
-#content-advanced .level-landing__card[data-tool="dictation"] .level-landing__card__icon { color: #6a46c2; }
+#content-advanced .level-landing__card[data-tool="dictation"] .level-landing__card__icon,
+#content-fr-beginner .level-landing__card[data-tool="dictation"] .level-landing__card__icon,
+#content-fr-intermediate .level-landing__card[data-tool="dictation"] .level-landing__card__icon,
+#content-fr-advanced .level-landing__card[data-tool="dictation"] .level-landing__card__icon { color: #6a46c2; }
 #content-beginner .level-landing__card[data-tool="dictation"] .level-landing__card__label,
 #content-intermediate .level-landing__card[data-tool="dictation"] .level-landing__card__label,
-#content-advanced .level-landing__card[data-tool="dictation"] .level-landing__card__label { color: #2b1a4e; }
+#content-advanced .level-landing__card[data-tool="dictation"] .level-landing__card__label,
+#content-fr-beginner .level-landing__card[data-tool="dictation"] .level-landing__card__label,
+#content-fr-intermediate .level-landing__card[data-tool="dictation"] .level-landing__card__label,
+#content-fr-advanced .level-landing__card[data-tool="dictation"] .level-landing__card__label { color: #2b1a4e; }
 #content-beginner .level-landing__card[data-tool="dictation"] .level-landing__card__hint,
 #content-intermediate .level-landing__card[data-tool="dictation"] .level-landing__card__hint,
 #content-advanced .level-landing__card[data-tool="dictation"] .level-landing__card__hint,
 #content-beginner .level-landing__card[data-tool="dictation"] .level-landing__card__progress,
 #content-intermediate .level-landing__card[data-tool="dictation"] .level-landing__card__progress,
-#content-advanced .level-landing__card[data-tool="dictation"] .level-landing__card__progress { color: #6f5c98; max-width: calc(100% - 4.5rem); }
+#content-advanced .level-landing__card[data-tool="dictation"] .level-landing__card__progress,
+#content-fr-beginner .level-landing__card[data-tool="dictation"] .level-landing__card__hint,
+#content-fr-intermediate .level-landing__card[data-tool="dictation"] .level-landing__card__hint,
+#content-fr-advanced .level-landing__card[data-tool="dictation"] .level-landing__card__hint,
+#content-fr-beginner .level-landing__card[data-tool="dictation"] .level-landing__card__progress,
+#content-fr-intermediate .level-landing__card[data-tool="dictation"] .level-landing__card__progress,
+#content-fr-advanced .level-landing__card[data-tool="dictation"] .level-landing__card__progress { color: #6f5c98; max-width: calc(100% - 4.5rem); }
 
 /* ==========================================================================
    Homework – school intro: the page rules itself, a pencil writes the title,
@@ -10766,7 +10961,10 @@ body.school-zone.content-panel-open .panel--content { background: #f1f2ef; }
 body.school-zone .level-article,
 body.school-zone .level-article#content-beginner,
 body.school-zone .level-article#content-intermediate,
-body.school-zone .level-article#content-advanced {
+body.school-zone .level-article#content-advanced,
+body.school-zone .level-article#content-fr-beginner,
+body.school-zone .level-article#content-fr-intermediate,
+body.school-zone .level-article#content-fr-advanced {
   background: transparent;
   padding-top: 1.1rem;
 }
@@ -10898,7 +11096,10 @@ body.content-panel-open .tool-panel[data-tool-panel="homework"] .lh-lesson-card 
 /* Level menu – homework card on notebook paper */
 #content-beginner .level-landing__card[data-tool="homework"],
 #content-intermediate .level-landing__card[data-tool="homework"],
-#content-advanced .level-landing__card[data-tool="homework"] {
+#content-advanced .level-landing__card[data-tool="homework"],
+#content-fr-beginner .level-landing__card[data-tool="homework"],
+#content-fr-intermediate .level-landing__card[data-tool="homework"],
+#content-fr-advanced .level-landing__card[data-tool="homework"] {
   position: relative;
   overflow: hidden;
   border-color: #d5d8de !important;
@@ -10909,16 +11110,25 @@ body.content-panel-open .tool-panel[data-tool-panel="homework"] .lh-lesson-card 
 }
 #content-beginner .level-landing__card[data-tool="homework"]:hover,
 #content-intermediate .level-landing__card[data-tool="homework"]:hover,
-#content-advanced .level-landing__card[data-tool="homework"]:hover {
+#content-advanced .level-landing__card[data-tool="homework"]:hover,
+#content-fr-beginner .level-landing__card[data-tool="homework"]:hover,
+#content-fr-intermediate .level-landing__card[data-tool="homework"]:hover,
+#content-fr-advanced .level-landing__card[data-tool="homework"]:hover {
   border-color: #d0453f !important;
   box-shadow: 0 6px 18px rgba(208, 69, 63, 0.14);
 }
 #content-beginner .level-landing__card[data-tool="homework"] > *,
 #content-intermediate .level-landing__card[data-tool="homework"] > *,
-#content-advanced .level-landing__card[data-tool="homework"] > * { position: relative; z-index: 1; }
+#content-advanced .level-landing__card[data-tool="homework"] > *,
+#content-fr-beginner .level-landing__card[data-tool="homework"] > *,
+#content-fr-intermediate .level-landing__card[data-tool="homework"] > *,
+#content-fr-advanced .level-landing__card[data-tool="homework"] > * { position: relative; z-index: 1; }
 #content-beginner .level-landing__card[data-tool="homework"]::after,
 #content-intermediate .level-landing__card[data-tool="homework"]::after,
-#content-advanced .level-landing__card[data-tool="homework"]::after {
+#content-advanced .level-landing__card[data-tool="homework"]::after,
+#content-fr-beginner .level-landing__card[data-tool="homework"]::after,
+#content-fr-intermediate .level-landing__card[data-tool="homework"]::after,
+#content-fr-advanced .level-landing__card[data-tool="homework"]::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -10928,16 +11138,28 @@ body.content-panel-open .tool-panel[data-tool-panel="homework"] .lh-lesson-card 
 }
 #content-beginner .level-landing__card[data-tool="homework"] .level-landing__card__icon,
 #content-intermediate .level-landing__card[data-tool="homework"] .level-landing__card__icon,
-#content-advanced .level-landing__card[data-tool="homework"] .level-landing__card__icon { color: #d0453f; }
+#content-advanced .level-landing__card[data-tool="homework"] .level-landing__card__icon,
+#content-fr-beginner .level-landing__card[data-tool="homework"] .level-landing__card__icon,
+#content-fr-intermediate .level-landing__card[data-tool="homework"] .level-landing__card__icon,
+#content-fr-advanced .level-landing__card[data-tool="homework"] .level-landing__card__icon { color: #d0453f; }
 #content-beginner .level-landing__card[data-tool="homework"] .level-landing__card__label,
 #content-intermediate .level-landing__card[data-tool="homework"] .level-landing__card__label,
-#content-advanced .level-landing__card[data-tool="homework"] .level-landing__card__label { color: #23272f; }
+#content-advanced .level-landing__card[data-tool="homework"] .level-landing__card__label,
+#content-fr-beginner .level-landing__card[data-tool="homework"] .level-landing__card__label,
+#content-fr-intermediate .level-landing__card[data-tool="homework"] .level-landing__card__label,
+#content-fr-advanced .level-landing__card[data-tool="homework"] .level-landing__card__label { color: #23272f; }
 #content-beginner .level-landing__card[data-tool="homework"] .level-landing__card__hint,
 #content-intermediate .level-landing__card[data-tool="homework"] .level-landing__card__hint,
 #content-advanced .level-landing__card[data-tool="homework"] .level-landing__card__hint,
 #content-beginner .level-landing__card[data-tool="homework"] .level-landing__card__progress,
 #content-intermediate .level-landing__card[data-tool="homework"] .level-landing__card__progress,
-#content-advanced .level-landing__card[data-tool="homework"] .level-landing__card__progress { color: #5f6672; max-width: calc(100% - 4.5rem); }
+#content-advanced .level-landing__card[data-tool="homework"] .level-landing__card__progress,
+#content-fr-beginner .level-landing__card[data-tool="homework"] .level-landing__card__hint,
+#content-fr-intermediate .level-landing__card[data-tool="homework"] .level-landing__card__hint,
+#content-fr-advanced .level-landing__card[data-tool="homework"] .level-landing__card__hint,
+#content-fr-beginner .level-landing__card[data-tool="homework"] .level-landing__card__progress,
+#content-fr-intermediate .level-landing__card[data-tool="homework"] .level-landing__card__progress,
+#content-fr-advanced .level-landing__card[data-tool="homework"] .level-landing__card__progress { color: #5f6672; max-width: calc(100% - 4.5rem); }
 
 /* ==========================================================================
    Grammar – space intro: stars twinkle in, a galaxy opens behind the title
@@ -11111,7 +11333,10 @@ body.space-zone.content-panel-open .panel--content {
 body.space-zone .level-article,
 body.space-zone .level-article#content-beginner,
 body.space-zone .level-article#content-intermediate,
-body.space-zone .level-article#content-advanced {
+body.space-zone .level-article#content-advanced,
+body.space-zone .level-article#content-fr-beginner,
+body.space-zone .level-article#content-fr-intermediate,
+body.space-zone .level-article#content-fr-advanced {
   background: transparent;
   padding-top: 1.1rem;
 }
@@ -11216,7 +11441,10 @@ body.content-panel-open .tool-panel[data-tool-panel="grammar"] .lh-lesson-card {
 /* Level menu – grammar card in its space theme */
 #content-beginner .level-landing__card[data-tool="grammar"],
 #content-intermediate .level-landing__card[data-tool="grammar"],
-#content-advanced .level-landing__card[data-tool="grammar"] {
+#content-advanced .level-landing__card[data-tool="grammar"],
+#content-fr-beginner .level-landing__card[data-tool="grammar"],
+#content-fr-intermediate .level-landing__card[data-tool="grammar"],
+#content-fr-advanced .level-landing__card[data-tool="grammar"] {
   position: relative;
   overflow: hidden;
   border-color: #c9c5e8 !important;
@@ -11228,16 +11456,25 @@ body.content-panel-open .tool-panel[data-tool-panel="grammar"] .lh-lesson-card {
 }
 #content-beginner .level-landing__card[data-tool="grammar"]:hover,
 #content-intermediate .level-landing__card[data-tool="grammar"]:hover,
-#content-advanced .level-landing__card[data-tool="grammar"]:hover {
+#content-advanced .level-landing__card[data-tool="grammar"]:hover,
+#content-fr-beginner .level-landing__card[data-tool="grammar"]:hover,
+#content-fr-intermediate .level-landing__card[data-tool="grammar"]:hover,
+#content-fr-advanced .level-landing__card[data-tool="grammar"]:hover {
   border-color: #c2408f !important;
   box-shadow: 0 6px 18px rgba(124, 111, 216, 0.2);
 }
 #content-beginner .level-landing__card[data-tool="grammar"] > *,
 #content-intermediate .level-landing__card[data-tool="grammar"] > *,
-#content-advanced .level-landing__card[data-tool="grammar"] > * { position: relative; z-index: 1; }
+#content-advanced .level-landing__card[data-tool="grammar"] > *,
+#content-fr-beginner .level-landing__card[data-tool="grammar"] > *,
+#content-fr-intermediate .level-landing__card[data-tool="grammar"] > *,
+#content-fr-advanced .level-landing__card[data-tool="grammar"] > * { position: relative; z-index: 1; }
 #content-beginner .level-landing__card[data-tool="grammar"]::after,
 #content-intermediate .level-landing__card[data-tool="grammar"]::after,
-#content-advanced .level-landing__card[data-tool="grammar"]::after {
+#content-advanced .level-landing__card[data-tool="grammar"]::after,
+#content-fr-beginner .level-landing__card[data-tool="grammar"]::after,
+#content-fr-intermediate .level-landing__card[data-tool="grammar"]::after,
+#content-fr-advanced .level-landing__card[data-tool="grammar"]::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -11247,16 +11484,28 @@ body.content-panel-open .tool-panel[data-tool-panel="grammar"] .lh-lesson-card {
 }
 #content-beginner .level-landing__card[data-tool="grammar"] .level-landing__card__icon,
 #content-intermediate .level-landing__card[data-tool="grammar"] .level-landing__card__icon,
-#content-advanced .level-landing__card[data-tool="grammar"] .level-landing__card__icon { color: #c2408f; }
+#content-advanced .level-landing__card[data-tool="grammar"] .level-landing__card__icon,
+#content-fr-beginner .level-landing__card[data-tool="grammar"] .level-landing__card__icon,
+#content-fr-intermediate .level-landing__card[data-tool="grammar"] .level-landing__card__icon,
+#content-fr-advanced .level-landing__card[data-tool="grammar"] .level-landing__card__icon { color: #c2408f; }
 #content-beginner .level-landing__card[data-tool="grammar"] .level-landing__card__label,
 #content-intermediate .level-landing__card[data-tool="grammar"] .level-landing__card__label,
-#content-advanced .level-landing__card[data-tool="grammar"] .level-landing__card__label { color: #23214f; }
+#content-advanced .level-landing__card[data-tool="grammar"] .level-landing__card__label,
+#content-fr-beginner .level-landing__card[data-tool="grammar"] .level-landing__card__label,
+#content-fr-intermediate .level-landing__card[data-tool="grammar"] .level-landing__card__label,
+#content-fr-advanced .level-landing__card[data-tool="grammar"] .level-landing__card__label { color: #23214f; }
 #content-beginner .level-landing__card[data-tool="grammar"] .level-landing__card__hint,
 #content-intermediate .level-landing__card[data-tool="grammar"] .level-landing__card__hint,
 #content-advanced .level-landing__card[data-tool="grammar"] .level-landing__card__hint,
 #content-beginner .level-landing__card[data-tool="grammar"] .level-landing__card__progress,
 #content-intermediate .level-landing__card[data-tool="grammar"] .level-landing__card__progress,
-#content-advanced .level-landing__card[data-tool="grammar"] .level-landing__card__progress { color: #5e5b8a; max-width: calc(100% - 4.5rem); }
+#content-advanced .level-landing__card[data-tool="grammar"] .level-landing__card__progress,
+#content-fr-beginner .level-landing__card[data-tool="grammar"] .level-landing__card__hint,
+#content-fr-intermediate .level-landing__card[data-tool="grammar"] .level-landing__card__hint,
+#content-fr-advanced .level-landing__card[data-tool="grammar"] .level-landing__card__hint,
+#content-fr-beginner .level-landing__card[data-tool="grammar"] .level-landing__card__progress,
+#content-fr-intermediate .level-landing__card[data-tool="grammar"] .level-landing__card__progress,
+#content-fr-advanced .level-landing__card[data-tool="grammar"] .level-landing__card__progress { color: #5e5b8a; max-width: calc(100% - 4.5rem); }
 
 /* Homework – lock card and buttons in red pen */
 .tool-panel[data-tool-panel="homework"] .hw-lock {
@@ -11539,7 +11788,10 @@ body.desert-zone.content-panel-open .panel--content { background: #f5e7e8; }
 body.desert-zone .level-article,
 body.desert-zone .level-article#content-beginner,
 body.desert-zone .level-article#content-intermediate,
-body.desert-zone .level-article#content-advanced {
+body.desert-zone .level-article#content-advanced,
+body.desert-zone .level-article#content-fr-beginner,
+body.desert-zone .level-article#content-fr-intermediate,
+body.desert-zone .level-article#content-fr-advanced {
   background: transparent;
   padding-top: 1.1rem;
 }
@@ -11679,7 +11931,10 @@ body.content-panel-open .tool-panel[data-tool-panel="verbs"],
 /* Level menu – irregular verbs card in its desert theme */
 #content-beginner .level-landing__card[data-tool="verbs"],
 #content-intermediate .level-landing__card[data-tool="verbs"],
-#content-advanced .level-landing__card[data-tool="verbs"] {
+#content-advanced .level-landing__card[data-tool="verbs"],
+#content-fr-beginner .level-landing__card[data-tool="verbs"],
+#content-fr-intermediate .level-landing__card[data-tool="verbs"],
+#content-fr-advanced .level-landing__card[data-tool="verbs"] {
   position: relative;
   overflow: hidden;
   border-color: #e3c4c4 !important;
@@ -11688,16 +11943,25 @@ body.content-panel-open .tool-panel[data-tool-panel="verbs"],
 }
 #content-beginner .level-landing__card[data-tool="verbs"]:hover,
 #content-intermediate .level-landing__card[data-tool="verbs"]:hover,
-#content-advanced .level-landing__card[data-tool="verbs"]:hover {
+#content-advanced .level-landing__card[data-tool="verbs"]:hover,
+#content-fr-beginner .level-landing__card[data-tool="verbs"]:hover,
+#content-fr-intermediate .level-landing__card[data-tool="verbs"]:hover,
+#content-fr-advanced .level-landing__card[data-tool="verbs"]:hover {
   border-color: #b4566a !important;
   box-shadow: 0 6px 18px rgba(180, 86, 106, 0.16);
 }
 #content-beginner .level-landing__card[data-tool="verbs"] > *,
 #content-intermediate .level-landing__card[data-tool="verbs"] > *,
-#content-advanced .level-landing__card[data-tool="verbs"] > * { position: relative; z-index: 1; }
+#content-advanced .level-landing__card[data-tool="verbs"] > *,
+#content-fr-beginner .level-landing__card[data-tool="verbs"] > *,
+#content-fr-intermediate .level-landing__card[data-tool="verbs"] > *,
+#content-fr-advanced .level-landing__card[data-tool="verbs"] > * { position: relative; z-index: 1; }
 #content-beginner .level-landing__card[data-tool="verbs"]::after,
 #content-intermediate .level-landing__card[data-tool="verbs"]::after,
-#content-advanced .level-landing__card[data-tool="verbs"]::after {
+#content-advanced .level-landing__card[data-tool="verbs"]::after,
+#content-fr-beginner .level-landing__card[data-tool="verbs"]::after,
+#content-fr-intermediate .level-landing__card[data-tool="verbs"]::after,
+#content-fr-advanced .level-landing__card[data-tool="verbs"]::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -11707,16 +11971,28 @@ body.content-panel-open .tool-panel[data-tool-panel="verbs"],
 }
 #content-beginner .level-landing__card[data-tool="verbs"] .level-landing__card__icon,
 #content-intermediate .level-landing__card[data-tool="verbs"] .level-landing__card__icon,
-#content-advanced .level-landing__card[data-tool="verbs"] .level-landing__card__icon { color: #b4566a; }
+#content-advanced .level-landing__card[data-tool="verbs"] .level-landing__card__icon,
+#content-fr-beginner .level-landing__card[data-tool="verbs"] .level-landing__card__icon,
+#content-fr-intermediate .level-landing__card[data-tool="verbs"] .level-landing__card__icon,
+#content-fr-advanced .level-landing__card[data-tool="verbs"] .level-landing__card__icon { color: #b4566a; }
 #content-beginner .level-landing__card[data-tool="verbs"] .level-landing__card__label,
 #content-intermediate .level-landing__card[data-tool="verbs"] .level-landing__card__label,
-#content-advanced .level-landing__card[data-tool="verbs"] .level-landing__card__label { color: #3d1e2a; }
+#content-advanced .level-landing__card[data-tool="verbs"] .level-landing__card__label,
+#content-fr-beginner .level-landing__card[data-tool="verbs"] .level-landing__card__label,
+#content-fr-intermediate .level-landing__card[data-tool="verbs"] .level-landing__card__label,
+#content-fr-advanced .level-landing__card[data-tool="verbs"] .level-landing__card__label { color: #3d1e2a; }
 #content-beginner .level-landing__card[data-tool="verbs"] .level-landing__card__hint,
 #content-intermediate .level-landing__card[data-tool="verbs"] .level-landing__card__hint,
 #content-advanced .level-landing__card[data-tool="verbs"] .level-landing__card__hint,
 #content-beginner .level-landing__card[data-tool="verbs"] .level-landing__card__progress,
 #content-intermediate .level-landing__card[data-tool="verbs"] .level-landing__card__progress,
-#content-advanced .level-landing__card[data-tool="verbs"] .level-landing__card__progress { color: #8a5a66; max-width: calc(100% - 4.8rem); }
+#content-advanced .level-landing__card[data-tool="verbs"] .level-landing__card__progress,
+#content-fr-beginner .level-landing__card[data-tool="verbs"] .level-landing__card__hint,
+#content-fr-intermediate .level-landing__card[data-tool="verbs"] .level-landing__card__hint,
+#content-fr-advanced .level-landing__card[data-tool="verbs"] .level-landing__card__hint,
+#content-fr-beginner .level-landing__card[data-tool="verbs"] .level-landing__card__progress,
+#content-fr-intermediate .level-landing__card[data-tool="verbs"] .level-landing__card__progress,
+#content-fr-advanced .level-landing__card[data-tool="verbs"] .level-landing__card__progress { color: #8a5a66; max-width: calc(100% - 4.8rem); }
 
 .tool-panel[data-tool-panel="verbs"] .iv-head { margin-bottom: 0.2rem; }
 .tool-panel[data-tool-panel="verbs"] .iv-title { font-size: 1.5rem; margin: 0; }
@@ -11903,7 +12179,10 @@ body.zoo-zone.content-panel-open .panel--content { background: #eceee9; }
 body.zoo-zone .level-article,
 body.zoo-zone .level-article#content-beginner,
 body.zoo-zone .level-article#content-intermediate,
-body.zoo-zone .level-article#content-advanced {
+body.zoo-zone .level-article#content-advanced,
+body.zoo-zone .level-article#content-fr-beginner,
+body.zoo-zone .level-article#content-fr-intermediate,
+body.zoo-zone .level-article#content-fr-advanced {
   background: transparent;
   padding-top: 1.1rem;
 }
@@ -12017,7 +12296,10 @@ body.content-panel-open .tool-panel[data-tool-panel="leaderboard"],
 /* Level menu – leaderboard card in its wild theme */
 #content-beginner .level-landing__card[data-tool="leaderboard"],
 #content-intermediate .level-landing__card[data-tool="leaderboard"],
-#content-advanced .level-landing__card[data-tool="leaderboard"] {
+#content-advanced .level-landing__card[data-tool="leaderboard"],
+#content-fr-beginner .level-landing__card[data-tool="leaderboard"],
+#content-fr-intermediate .level-landing__card[data-tool="leaderboard"],
+#content-fr-advanced .level-landing__card[data-tool="leaderboard"] {
   position: relative;
   overflow: hidden;
   border-color: #c9d1c4 !important;
@@ -12026,16 +12308,25 @@ body.content-panel-open .tool-panel[data-tool-panel="leaderboard"],
 }
 #content-beginner .level-landing__card[data-tool="leaderboard"]:hover,
 #content-intermediate .level-landing__card[data-tool="leaderboard"]:hover,
-#content-advanced .level-landing__card[data-tool="leaderboard"]:hover {
+#content-advanced .level-landing__card[data-tool="leaderboard"]:hover,
+#content-fr-beginner .level-landing__card[data-tool="leaderboard"]:hover,
+#content-fr-intermediate .level-landing__card[data-tool="leaderboard"]:hover,
+#content-fr-advanced .level-landing__card[data-tool="leaderboard"]:hover {
   border-color: #b8324a !important;
   box-shadow: 0 6px 18px rgba(184, 50, 74, 0.15);
 }
 #content-beginner .level-landing__card[data-tool="leaderboard"] > *,
 #content-intermediate .level-landing__card[data-tool="leaderboard"] > *,
-#content-advanced .level-landing__card[data-tool="leaderboard"] > * { position: relative; z-index: 1; }
+#content-advanced .level-landing__card[data-tool="leaderboard"] > *,
+#content-fr-beginner .level-landing__card[data-tool="leaderboard"] > *,
+#content-fr-intermediate .level-landing__card[data-tool="leaderboard"] > *,
+#content-fr-advanced .level-landing__card[data-tool="leaderboard"] > * { position: relative; z-index: 1; }
 #content-beginner .level-landing__card[data-tool="leaderboard"]::after,
 #content-intermediate .level-landing__card[data-tool="leaderboard"]::after,
-#content-advanced .level-landing__card[data-tool="leaderboard"]::after {
+#content-advanced .level-landing__card[data-tool="leaderboard"]::after,
+#content-fr-beginner .level-landing__card[data-tool="leaderboard"]::after,
+#content-fr-intermediate .level-landing__card[data-tool="leaderboard"]::after,
+#content-fr-advanced .level-landing__card[data-tool="leaderboard"]::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -12045,16 +12336,28 @@ body.content-panel-open .tool-panel[data-tool-panel="leaderboard"],
 }
 #content-beginner .level-landing__card[data-tool="leaderboard"] .level-landing__card__icon,
 #content-intermediate .level-landing__card[data-tool="leaderboard"] .level-landing__card__icon,
-#content-advanced .level-landing__card[data-tool="leaderboard"] .level-landing__card__icon { color: #b8324a; }
+#content-advanced .level-landing__card[data-tool="leaderboard"] .level-landing__card__icon,
+#content-fr-beginner .level-landing__card[data-tool="leaderboard"] .level-landing__card__icon,
+#content-fr-intermediate .level-landing__card[data-tool="leaderboard"] .level-landing__card__icon,
+#content-fr-advanced .level-landing__card[data-tool="leaderboard"] .level-landing__card__icon { color: #b8324a; }
 #content-beginner .level-landing__card[data-tool="leaderboard"] .level-landing__card__label,
 #content-intermediate .level-landing__card[data-tool="leaderboard"] .level-landing__card__label,
-#content-advanced .level-landing__card[data-tool="leaderboard"] .level-landing__card__label { color: #2a2230; }
+#content-advanced .level-landing__card[data-tool="leaderboard"] .level-landing__card__label,
+#content-fr-beginner .level-landing__card[data-tool="leaderboard"] .level-landing__card__label,
+#content-fr-intermediate .level-landing__card[data-tool="leaderboard"] .level-landing__card__label,
+#content-fr-advanced .level-landing__card[data-tool="leaderboard"] .level-landing__card__label { color: #2a2230; }
 #content-beginner .level-landing__card[data-tool="leaderboard"] .level-landing__card__hint,
 #content-intermediate .level-landing__card[data-tool="leaderboard"] .level-landing__card__hint,
 #content-advanced .level-landing__card[data-tool="leaderboard"] .level-landing__card__hint,
 #content-beginner .level-landing__card[data-tool="leaderboard"] .level-landing__card__progress,
 #content-intermediate .level-landing__card[data-tool="leaderboard"] .level-landing__card__progress,
-#content-advanced .level-landing__card[data-tool="leaderboard"] .level-landing__card__progress { color: #63606a; max-width: calc(100% - 4.5rem); }
+#content-advanced .level-landing__card[data-tool="leaderboard"] .level-landing__card__progress,
+#content-fr-beginner .level-landing__card[data-tool="leaderboard"] .level-landing__card__hint,
+#content-fr-intermediate .level-landing__card[data-tool="leaderboard"] .level-landing__card__hint,
+#content-fr-advanced .level-landing__card[data-tool="leaderboard"] .level-landing__card__hint,
+#content-fr-beginner .level-landing__card[data-tool="leaderboard"] .level-landing__card__progress,
+#content-fr-intermediate .level-landing__card[data-tool="leaderboard"] .level-landing__card__progress,
+#content-fr-advanced .level-landing__card[data-tool="leaderboard"] .level-landing__card__progress { color: #63606a; max-width: calc(100% - 4.5rem); }
 body.content-panel-open .tool-panel[data-tool-panel="verbs"],
 .panel--content .tool-panel[data-tool-panel="verbs"] {
   overflow: clip;
@@ -12295,7 +12598,10 @@ body.wind-zone.content-panel-open .panel--content { background: #eceef0; }
 body.wind-zone .level-article,
 body.wind-zone .level-article#content-beginner,
 body.wind-zone .level-article#content-intermediate,
-body.wind-zone .level-article#content-advanced {
+body.wind-zone .level-article#content-advanced,
+body.wind-zone .level-article#content-fr-beginner,
+body.wind-zone .level-article#content-fr-intermediate,
+body.wind-zone .level-article#content-fr-advanced {
   background: transparent;
   padding-top: 1.1rem;
 }
@@ -12419,7 +12725,10 @@ body.content-panel-open .tool-panel[data-tool-panel="progress"],
 /* Level menu – progress card in its wind theme */
 #content-beginner .level-landing__card[data-tool="progress"],
 #content-intermediate .level-landing__card[data-tool="progress"],
-#content-advanced .level-landing__card[data-tool="progress"] {
+#content-advanced .level-landing__card[data-tool="progress"],
+#content-fr-beginner .level-landing__card[data-tool="progress"],
+#content-fr-intermediate .level-landing__card[data-tool="progress"],
+#content-fr-advanced .level-landing__card[data-tool="progress"] {
   position: relative;
   overflow: hidden;
   border-color: #ccd2d9 !important;
@@ -12430,16 +12739,25 @@ body.content-panel-open .tool-panel[data-tool-panel="progress"],
 }
 #content-beginner .level-landing__card[data-tool="progress"]:hover,
 #content-intermediate .level-landing__card[data-tool="progress"]:hover,
-#content-advanced .level-landing__card[data-tool="progress"]:hover {
+#content-advanced .level-landing__card[data-tool="progress"]:hover,
+#content-fr-beginner .level-landing__card[data-tool="progress"]:hover,
+#content-fr-intermediate .level-landing__card[data-tool="progress"]:hover,
+#content-fr-advanced .level-landing__card[data-tool="progress"]:hover {
   border-color: #3e4a5c !important;
   box-shadow: 0 6px 18px rgba(38, 48, 61, 0.15);
 }
 #content-beginner .level-landing__card[data-tool="progress"] > *,
 #content-intermediate .level-landing__card[data-tool="progress"] > *,
-#content-advanced .level-landing__card[data-tool="progress"] > * { position: relative; z-index: 1; }
+#content-advanced .level-landing__card[data-tool="progress"] > *,
+#content-fr-beginner .level-landing__card[data-tool="progress"] > *,
+#content-fr-intermediate .level-landing__card[data-tool="progress"] > *,
+#content-fr-advanced .level-landing__card[data-tool="progress"] > * { position: relative; z-index: 1; }
 #content-beginner .level-landing__card[data-tool="progress"]::after,
 #content-intermediate .level-landing__card[data-tool="progress"]::after,
-#content-advanced .level-landing__card[data-tool="progress"]::after {
+#content-advanced .level-landing__card[data-tool="progress"]::after,
+#content-fr-beginner .level-landing__card[data-tool="progress"]::after,
+#content-fr-intermediate .level-landing__card[data-tool="progress"]::after,
+#content-fr-advanced .level-landing__card[data-tool="progress"]::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -12449,16 +12767,28 @@ body.content-panel-open .tool-panel[data-tool-panel="progress"],
 }
 #content-beginner .level-landing__card[data-tool="progress"] .level-landing__card__icon,
 #content-intermediate .level-landing__card[data-tool="progress"] .level-landing__card__icon,
-#content-advanced .level-landing__card[data-tool="progress"] .level-landing__card__icon { color: #3e4a5c; }
+#content-advanced .level-landing__card[data-tool="progress"] .level-landing__card__icon,
+#content-fr-beginner .level-landing__card[data-tool="progress"] .level-landing__card__icon,
+#content-fr-intermediate .level-landing__card[data-tool="progress"] .level-landing__card__icon,
+#content-fr-advanced .level-landing__card[data-tool="progress"] .level-landing__card__icon { color: #3e4a5c; }
 #content-beginner .level-landing__card[data-tool="progress"] .level-landing__card__label,
 #content-intermediate .level-landing__card[data-tool="progress"] .level-landing__card__label,
-#content-advanced .level-landing__card[data-tool="progress"] .level-landing__card__label { color: #26303d; }
+#content-advanced .level-landing__card[data-tool="progress"] .level-landing__card__label,
+#content-fr-beginner .level-landing__card[data-tool="progress"] .level-landing__card__label,
+#content-fr-intermediate .level-landing__card[data-tool="progress"] .level-landing__card__label,
+#content-fr-advanced .level-landing__card[data-tool="progress"] .level-landing__card__label { color: #26303d; }
 #content-beginner .level-landing__card[data-tool="progress"] .level-landing__card__hint,
 #content-intermediate .level-landing__card[data-tool="progress"] .level-landing__card__hint,
 #content-advanced .level-landing__card[data-tool="progress"] .level-landing__card__hint,
 #content-beginner .level-landing__card[data-tool="progress"] .level-landing__card__progress,
 #content-intermediate .level-landing__card[data-tool="progress"] .level-landing__card__progress,
-#content-advanced .level-landing__card[data-tool="progress"] .level-landing__card__progress { color: #646d78; max-width: calc(100% - 4.5rem); }
+#content-advanced .level-landing__card[data-tool="progress"] .level-landing__card__progress,
+#content-fr-beginner .level-landing__card[data-tool="progress"] .level-landing__card__hint,
+#content-fr-intermediate .level-landing__card[data-tool="progress"] .level-landing__card__hint,
+#content-fr-advanced .level-landing__card[data-tool="progress"] .level-landing__card__hint,
+#content-fr-beginner .level-landing__card[data-tool="progress"] .level-landing__card__progress,
+#content-fr-intermediate .level-landing__card[data-tool="progress"] .level-landing__card__progress,
+#content-fr-advanced .level-landing__card[data-tool="progress"] .level-landing__card__progress { color: #646d78; max-width: calc(100% - 4.5rem); }
 body.content-panel-open .tool-panel[data-tool-panel="progress"],
 .panel--content .tool-panel[data-tool-panel="progress"] {
   min-height: 22rem;
@@ -12897,4 +13227,129 @@ body.content-panel-open .intro-title,
 body.content-panel-open .intro-title .char {
   font-family: "Playfair Display", Georgia, serif !important;
   letter-spacing: -0.02em !important;
+}
+
+/* ---------- Learn a language: choose English or French ---------- */
+.language-picker {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100dvh - 3rem);
+  padding: 3.25rem 0 0;
+  box-sizing: border-box;
+}
+.language-picker.hidden,
+.level-buttons.hidden {
+  display: none !important;
+}
+.language-picker .content-intro {
+  text-align: center;
+  padding: 1rem 1.25rem 0.5rem;
+  margin: 0;
+}
+.course-buttons {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 0.75rem 1rem 1.5rem;
+}
+.btn-course {
+  --course: #0f3d7a;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  min-height: 5.5rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--course);
+  border-radius: var(--radius-sm);
+  background: var(--surface-elevated);
+  color: var(--ink-heading);
+  font-family: var(--font-tagline);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.btn-course[data-course="fr"] {
+  --course: #3a5aa8;
+}
+.btn-course:hover {
+  border-color: var(--course);
+  background: rgba(15, 61, 122, 0.06);
+}
+.btn-course:focus-visible {
+  outline: 2px solid var(--course);
+  outline-offset: 2px;
+}
+.language-picker .btn-course__mark {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  border: 1.5px solid var(--course);
+  border-radius: 50%;
+  color: var(--course);
+  font-family: "Playfair Display", Georgia, serif !important;
+  font-size: 1.15rem;
+  letter-spacing: 0.04em !important;
+}
+.btn-course__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+.btn-course__top {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.btn-course__name {
+  font-weight: 700;
+  font-size: clamp(1.15rem, 2.6vw, 1.45rem);
+  color: var(--course);
+}
+.language-picker .btn-course__tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  color: var(--muted);
+}
+.btn-course__desc {
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+/* French course: no homework (that's for class students) */
+.learning-hub[data-learning-level^="fr-"] [data-tool="homework"] {
+  display: none !important;
+}
+
+/* French dictation: accent buttons under the answer box */
+.dict__accents {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.5rem 0 0.25rem;
+}
+.dict__accent {
+  min-width: 2.2rem;
+  height: 2.2rem;
+  padding: 0 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink-heading);
+  font-size: 1.05rem;
+  cursor: pointer;
+}
+.dict__accent:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }

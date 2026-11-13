@@ -50,8 +50,37 @@
   };
   var NUMBERS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
 
+  /** French: letters keep their accents for display; comparison ignores them (see wordsFr). */
+  function stripAccents(s) {
+    return String(s || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/œ/g, "oe")
+      .replace(/æ/g, "ae");
+  }
+  /** French words, lower case, accents kept: "L’été arrive." -> ["l", "été", "arrive"]. */
+  function rawWordsFr(s) {
+    return String(s || "")
+      .toLowerCase()
+      .normalize("NFC")
+      .replace(/[‘’ʼ`]/g, "'")
+      .replace(/'/g, "' ") // l'été -> l + été, so "l ete" and "l'ete" compare the same
+      .replace(/-/g, " ")
+      .replace(/[^a-z0-9'àâäéèêëîïôöùûüÿçœæ ]+/g, " ")
+      .split(/\s+/)
+      .map(function (w) {
+        return w.replace(/^'+|'+$/g, "");
+      })
+      .filter(Boolean);
+  }
+  /** French comparison words: like rawWordsFr, but accent-insensitive. */
+  function wordsFr(s) {
+    return rawWordsFr(s).map(stripAccents);
+  }
+
   /** Words for comparison: lower case, no punctuation, contractions expanded. */
-  function words(s) {
+  function words(s, lang) {
+    if (lang === "fr") return wordsFr(s);
     var out = [];
     String(s || "")
       .toLowerCase()
@@ -74,9 +103,9 @@
   }
 
   /** Display tokens of the real phrase, each with its comparison words. */
-  function displayTokens(text) {
+  function displayTokens(text, lang) {
     return text.split(/\s+/).map(function (tok) {
-      return { shown: tok, norm: words(tok) };
+      return { shown: tok, norm: words(tok, lang) };
     });
   }
 
@@ -117,8 +146,8 @@
 
   /* Browsers don't say whether a voice is male or female, so go by known names
      (Chrome, Edge, macOS/iOS, Windows). If nothing matches, the pitch is shifted instead. */
-  var MALE = /\b(male|daniel|arthur|oliver|george|ryan|thomas|alfie|elliot|ethan|noah|harry|fred|alex|aaron|tom|evan|rishi|gordon|lee|david|mark|guy|christopher|eric|roger|steffan|brian|andrew|davis|tony|jason|ralph)\b/i;
-  var FEMALE = /\b(female|kate|serena|stephanie|martha|moira|sonia|libby|maisie|hazel|susan|bella|hollie|abbie|olivia|mia|samantha|victoria|karen|tessa|fiona|allison|ava|nicky|zoe|zira|aria|jenny|michelle|emma|ana|sara|nancy|amber|ashley|cora|elizabeth|jane|catherine|natasha|emily|siri)\b/i;
+  var MALE = /\b(male|thomas|jacques|nicolas|henri|remy|rémy|paul|alain|claude|antoine|jerome|jérôme|yves|daniel|arthur|oliver|george|ryan|thomas|alfie|elliot|ethan|noah|harry|fred|alex|aaron|tom|evan|rishi|gordon|lee|david|mark|guy|christopher|eric|roger|steffan|brian|andrew|davis|tony|jason|ralph)\b/i;
+  var FEMALE = /\b(female|amelie|amélie|audrey|aurelie|aurélie|marie|virginie|denise|eloise|éloise|vivienne|julie|hortense|josephine|joséphine|brigitte|celine|céline|coralie|sylvie|kate|serena|stephanie|martha|moira|sonia|libby|maisie|hazel|susan|bella|hollie|abbie|olivia|mia|samantha|victoria|karen|tessa|fiona|allison|ava|nicky|zoe|zira|aria|jenny|michelle|emma|ana|sara|nancy|amber|ashley|cora|elizabeth|jane|catherine|natasha|emily|siri)\b/i;
 
   function getGender() {
     try {
@@ -144,11 +173,12 @@
     return "";
   }
 
-  /** Best English voice for the chosen gender; `exact` says whether the gender really matched. */
-  function pickVoice(gender) {
+  /** Best voice in the course language ("en" or "fr") for the chosen gender; `exact` says whether the gender really matched. */
+  function pickVoice(gender, lang) {
     if (!synth) return { voice: null, exact: false };
+    lang = lang === "fr" ? "fr" : "en";
     var list = (synth.getVoices() || []).filter(function (v) {
-      return langOf(v).indexOf("en") === 0;
+      return langOf(v).indexOf(lang) === 0;
     });
     /* Voice quality comes first: modern "natural"/neural voices sound like a real person,
        older built-in voices sound robotic. Accent only breaks ties between similar voices. */
@@ -159,10 +189,12 @@
       if (/natural|neural|premium|enhanced|siri/i.test(n)) s += 100;      // Edge "Online (Natural)", Apple Premium/Enhanced
       else if (/online/i.test(n)) s += 90;                                 // Microsoft online voices
       else if (/^google/i.test(n)) s += 70;                                // Chrome's Google voices
-      else if (/^(daniel|serena|kate|oliver|martha|arthur|stephanie|moira|karen|samantha|ava|tom|allison|susan)\b/i.test(n)) s += 40; // decent Apple voices
+      else if (/^(daniel|serena|kate|oliver|martha|arthur|stephanie|moira|karen|samantha|ava|tom|allison|susan|thomas|amélie|amelie|audrey|aurélie|aurelie|marie|jacques)\b/i.test(n)) s += 40; // decent Apple voices
       else if (/^microsoft (george|hazel|susan|david|zira|mark)\b/i.test(n)) s += 5; // old Windows desktop voices (robotic)
       if (/espeak|festival|pico|mbrola/i.test(n)) s -= 80;
       if (v.localService === false) s += 10;                               // cloud voices are usually more natural
+      if (l === "fr-fr") s += 20;
+      else if (l === "fr-ca" || l === "fr-be" || l === "fr-ch") s += 12;
       if (l === "en-gb") s += 20;
       else if (l === "en-ie") s += 18;
       else if (l === "en-us") s += 12;
@@ -184,13 +216,13 @@
     if (typeof synth.addEventListener === "function") synth.addEventListener("voiceschanged", function () {});
   }
 
-  function speak(text, rate, gender, onStart, onEnd) {
+  function speak(text, rate, gender, onStart, onEnd, lang) {
     if (!synth) return false;
     synth.cancel();
-    var picked = pickVoice(gender);
+    var picked = pickVoice(gender, lang);
     var u = new SpeechSynthesisUtterance(text);
     if (picked.voice) u.voice = picked.voice;
-    u.lang = picked.voice ? picked.voice.lang : "en-GB";
+    u.lang = picked.voice ? picked.voice.lang : lang === "fr" ? "fr-FR" : "en-GB";
     u.rate = rate;
     /* No voice of the right gender on this device: shift the pitch instead. */
     if (!picked.exact) {
@@ -226,13 +258,17 @@
 
   /* ---------- view ---------- */
 
+  var FR_ACCENTS = ["é", "è", "ê", "à", "â", "ç", "ù", "û", "î", "ï", "ô", "œ", "ë"];
+
   function mount(panel, level, api) {
+    var lang = String(level).indexOf("fr-") === 0 ? "fr" : "en";
     var t = api.t;
     var list = phrases(level);
     var all = api.loadState() || {};
     var state = normaliseLevel(all[level], list.length);
     var phase = "typing"; // typing | wrong | done
     var lastTyped = "";
+    var accentNote = ""; // French: shown once after a correct answer with accent slips
 
     var root = el("div", "dict");
     panel.innerHTML = "";
@@ -366,7 +402,9 @@
             "p",
             "dict__msg " + (state.solved[key] ? "is-good" : "is-info"),
             state.solved[key]
-              ? earnedHere
+              ? accentNote
+                ? accentNote
+                : earnedHere
                 ? t("dict_solved_points", { n: String(earnedHere) })
                 : t("dict_solved")
               : t("dict_revealed_note")
@@ -411,6 +449,32 @@
         }
       });
       card.appendChild(input);
+
+      /* French: accent buttons, for students typing on an English keyboard */
+      if (lang === "fr") {
+        var accents = el("div", "dict__accents");
+        accents.setAttribute("role", "group");
+        accents.setAttribute("aria-label", t("dict_accents_label"));
+        FR_ACCENTS.forEach(function (ch) {
+          var ab = el("button", "dict__accent", ch);
+          ab.type = "button";
+          ab.addEventListener("mousedown", function (e) {
+            e.preventDefault(); // keep the cursor in the text box
+          });
+          ab.addEventListener("click", function () {
+            if (!input) return;
+            var a = input.selectionStart != null ? input.selectionStart : input.value.length;
+            var b = input.selectionEnd != null ? input.selectionEnd : a;
+            input.value = input.value.slice(0, a) + ch + input.value.slice(b);
+            try {
+              input.focus({ preventScroll: true });
+              input.setSelectionRange(a + ch.length, a + ch.length);
+            } catch (e) {}
+          });
+          accents.appendChild(ab);
+        });
+        card.appendChild(accents);
+      }
 
       feedback = el("div", "dict__feedback");
       feedback.setAttribute("aria-live", "polite");
@@ -462,7 +526,8 @@
         },
         function () {
           btn.classList.remove("is-playing");
-        }
+        },
+        lang
       );
       if (input) {
         try {
@@ -474,7 +539,7 @@
     /** Shows the real phrase, with the words the student missed highlighted. */
     function renderAnswer(container, p, flags, allGood) {
       var box = el("p", "dict__answer");
-      var toks = displayTokens(p.text);
+      var toks = displayTokens(p.text, lang);
       var cursor = 0;
       toks.forEach(function (tok, i) {
         var ok = true;
@@ -491,15 +556,15 @@
 
     function renderWrong(p, typed) {
       feedback.innerHTML = "";
-      var expected = words(p.text);
-      var flags = matchedFlags(expected, words(typed));
+      var expected = words(p.text, lang);
+      var flags = matchedFlags(expected, words(typed, lang));
       var right = flags.filter(Boolean).length;
       feedback.appendChild(
         el("p", "dict__msg is-bad", t("dict_almost", { n: String(right), t: String(expected.length) }))
       );
       /* Only the shape, not the words: blanks for missed words so they listen again. */
       var hintBox = el("p", "dict__answer dict__answer--hint");
-      var toks = displayTokens(p.text);
+      var toks = displayTokens(p.text, lang);
       var cursor = 0;
       toks.forEach(function (tok, i) {
         var ok = true;
@@ -517,14 +582,14 @@
       var p = current();
       var key = String(p.idx);
       var typed = input ? input.value : "";
-      if (!words(typed).length) {
+      if (!words(typed, lang).length) {
         feedback.innerHTML = "";
         feedback.appendChild(el("p", "dict__msg is-info", t("dict_empty")));
         return;
       }
       lastTyped = typed;
-      var expected = words(p.text);
-      var got = words(typed);
+      var expected = words(p.text, lang);
+      var got = words(typed, lang);
       var perfect = expected.length === got.length && expected.every(function (w, i) {
         return w === got[i];
       });
@@ -539,15 +604,31 @@
         return;
       }
       state.solved[key] = 1;
+      var pts = 0;
       if (!state.earned[key] && !state.revealed[key] && api.signedIn && api.signedIn()) {
-        var pts = POINTS[p.diff];
+        pts = POINTS[p.diff];
         state.earned[key] = pts;
         api.addPoints(pts);
       }
       advanceBest();
       phase = "done";
       save();
+      /* French: right words but an accent missing or wrong — accept it, and point out the spelling. */
+      accentNote = "";
+      if (lang === "fr") {
+        var want = rawWordsFr(p.text);
+        var have = rawWordsFr(typed);
+        var off = want.filter(function (w, i) {
+          return have[i] !== w;
+        });
+        if (off.length) {
+          accentNote = pts
+            ? t("dict_accent_note_points", { n: String(pts), w: off.join(", ") })
+            : t("dict_accent_note", { w: off.join(", ") });
+        }
+      }
       render(true);
+      accentNote = "";
     }
 
     function startPhase() {

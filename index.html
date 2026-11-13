@@ -239,9 +239,28 @@
       <section id="panel-content" class="panel panel--content hidden">
         <nav id="content-breadcrumb" class="content-breadcrumb hidden" data-i18n-aria="content_breadcrumb_aria" aria-label="Content location"></nav>
         <div id="content-levels" class="content-levels">
-          <div id="level-picker" class="level-picker">
+          <div id="language-picker" class="language-picker">
+            <p class="content-intro" data-i18n="lang_pick_intro">Quelle langue veux-tu apprendre ?</p>
+            <div class="course-buttons" role="group" data-i18n-aria="lang_pick_aria" aria-label="Choisir une langue">
+              <button type="button" class="btn-course" data-course="en">
+                <span class="btn-course__mark notranslate" translate="no" aria-hidden="true">EN</span>
+                <span class="btn-course__body">
+                  <span class="btn-course__top"><span class="btn-course__name" data-i18n="course_en_name">Anglais</span><span class="btn-course__tag" data-i18n="course_en_tag">Pour les francophones</span></span>
+                  <span class="btn-course__desc" data-i18n="course_en_desc">Trois niveaux de jeux, cartes mémoire, dictées et grammaire pour apprendre l’anglais.</span>
+                </span>
+              </button>
+              <button type="button" class="btn-course" data-course="fr">
+                <span class="btn-course__mark notranslate" translate="no" aria-hidden="true">FR</span>
+                <span class="btn-course__body">
+                  <span class="btn-course__top"><span class="btn-course__name" data-i18n="course_fr_name">Français</span><span class="btn-course__tag" data-i18n="course_fr_tag">For English speakers</span></span>
+                  <span class="btn-course__desc" data-i18n="course_fr_desc">Les mêmes jeux, cartes mémoire, dictées et grammaire — pour apprendre le français.</span>
+                </span>
+              </button>
+            </div>
+          </div>
+          <div id="level-picker" class="level-picker hidden">
             <p class="content-intro" data-i18n-html="content_intro"></p>
-            <div class="level-buttons" role="group" data-i18n-aria="content_levels_aria" aria-label="English level">
+            <div class="level-buttons" data-course="en" role="group" data-i18n-aria="content_levels_aria" aria-label="English level">
               <button type="button" class="btn-level" reveal data-level="beginner">
                 <span class="btn-level__top"><span class="btn-level__name" data-i18n="level_beginner">Débutant</span><span class="lvl-meter" role="img" data-i18n-aria="level_meter_1" aria-label="Difficulté 1 sur 3"><span class="lvl-meter__lab" data-i18n="level_meter_label">Difficulté</span><span class="lvl-meter__box is-on"></span><span class="lvl-meter__box"></span><span class="lvl-meter__box"></span></span></span>
                 <span class="btn-level__desc" data-i18n="btn_level_desc_beginner">A1 à A2 — vocabulaire de base, grammaire du quotidien et exercices courts.</span>
@@ -251,6 +270,20 @@
                 <span class="btn-level__desc" data-i18n="btn_level_desc_intermediate">B1 — grammaire plus solide, vocabulaire élargi et tâches écrites plus longues.</span>
               </button>
               <button type="button" class="btn-level" reveal data-level="advanced">
+                <span class="btn-level__top"><span class="btn-level__name" data-i18n="level_advanced">Avancé</span><span class="lvl-meter" role="img" data-i18n-aria="level_meter_3" aria-label="Difficulté 3 sur 3"><span class="lvl-meter__lab" data-i18n="level_meter_label">Difficulté</span><span class="lvl-meter__box is-on"></span><span class="lvl-meter__box is-on"></span><span class="lvl-meter__box is-on"></span></span></span>
+                <span class="btn-level__desc" data-i18n="btn_level_desc_advanced">B2 et plus — grammaire nuancée, vocabulaire académique et pratique type examen.</span>
+              </button>
+            </div>
+            <div class="level-buttons hidden" data-course="fr" role="group" data-i18n-aria="content_levels_aria" aria-label="English level">
+              <button type="button" class="btn-level" reveal data-level="fr-beginner">
+                <span class="btn-level__top"><span class="btn-level__name" data-i18n="level_beginner">Débutant</span><span class="lvl-meter" role="img" data-i18n-aria="level_meter_1" aria-label="Difficulté 1 sur 3"><span class="lvl-meter__lab" data-i18n="level_meter_label">Difficulté</span><span class="lvl-meter__box is-on"></span><span class="lvl-meter__box"></span><span class="lvl-meter__box"></span></span></span>
+                <span class="btn-level__desc" data-i18n="btn_level_desc_beginner">A1 à A2 — vocabulaire de base, grammaire du quotidien et exercices courts.</span>
+              </button>
+              <button type="button" class="btn-level" reveal data-level="fr-intermediate">
+                <span class="btn-level__top"><span class="btn-level__name" data-i18n="level_intermediate">Intermédiaire</span><span class="lvl-meter" role="img" data-i18n-aria="level_meter_2" aria-label="Difficulté 2 sur 3"><span class="lvl-meter__lab" data-i18n="level_meter_label">Difficulté</span><span class="lvl-meter__box is-on"></span><span class="lvl-meter__box is-on"></span><span class="lvl-meter__box"></span></span></span>
+                <span class="btn-level__desc" data-i18n="btn_level_desc_intermediate">B1 — grammaire plus solide, vocabulaire élargi et tâches écrites plus longues.</span>
+              </button>
+              <button type="button" class="btn-level" reveal data-level="fr-advanced">
                 <span class="btn-level__top"><span class="btn-level__name" data-i18n="level_advanced">Avancé</span><span class="lvl-meter" role="img" data-i18n-aria="level_meter_3" aria-label="Difficulté 3 sur 3"><span class="lvl-meter__lab" data-i18n="level_meter_label">Difficulté</span><span class="lvl-meter__box is-on"></span><span class="lvl-meter__box is-on"></span><span class="lvl-meter__box is-on"></span></span></span>
                 <span class="btn-level__desc" data-i18n="btn_level_desc_advanced">B2 et plus — grammaire nuancée, vocabulaire académique et pratique type examen.</span>
               </button>
@@ -448,6 +481,264 @@
               <button type="button" class="btn-level-close btn-icon-close" data-i18n-aria="content_close_aria" aria-label="Close and return to levels">×</button>
             </div>
             <div class="learning-tools learning-hub" data-learning-level="advanced">
+              <section class="level-landing" data-level-landing>
+                <div class="level-landing__head"><h2 class="level-landing__heading" data-i18n="level_advanced">Avancé</h2><span class="lvl-meter" role="img" data-i18n-aria="level_meter_3" aria-label="Difficulté 3 sur 3"><span class="lvl-meter__lab" data-i18n="level_meter_label">Difficulté</span><span class="lvl-meter__box is-on"></span><span class="lvl-meter__box is-on"></span><span class="lvl-meter__box is-on"></span></span></div>
+                <p class="level-landing__intro" data-i18n="learning_level_desc_advanced">Grammaire nuancée, vocabulaire académique et pratique type examen pour un anglais précis et assuré.</p>
+                <div class="level-landing__grid" role="navigation" data-i18n-aria="level_landing_grid_aria" aria-label="Choose activity">
+                  <button type="button" class="level-landing__card" data-tool="flashcards">
+                    <span class="level-landing__card__icon" aria-hidden="true"></span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_flashcards">Cartes mémoire</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_flashcards">Entraîne-toi avec des cartes à retourner</span>
+                  </button>
+                  <button type="button" class="level-landing__card" data-tool="vocab">
+                    <span class="level-landing__card__icon" aria-hidden="true"></span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_vocab">Vocabulaire</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_vocab">Traverse le chemin de pierres, un mot à la fois</span>
+                  </button>
+                  <button type="button" class="level-landing__card" data-tool="words">
+                    <span class="level-landing__card__icon" aria-hidden="true"></span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_words">Roue des mots</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_words">Glisse sur les lettres pour trouver les mots</span>
+                  </button>
+                  <button type="button" class="level-landing__card" data-tool="dictation">
+                    <span class="level-landing__card__icon" aria-hidden="true"></span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_dictation">Dictée</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_dictation">Écoute la phrase et écris-la</span>
+                  </button>
+                  <button type="button" class="level-landing__card" data-tool="grammar">
+                    <span class="level-landing__card__icon" aria-hidden="true"></span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_grammar">Grammaire</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_grammar">Exercices interactifs avec retour immédiat</span>
+                  </button>
+                  <button type="button" class="level-landing__card" data-tool="verbs">
+                    <span class="level-landing__card__icon" aria-hidden="true"></span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_verbs">Verbes irréguliers</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_verbs">Tous les verbes irréguliers, à chaque temps</span>
+                  </button>
+                  <button type="button" class="level-landing__card" data-tool="homework">
+                    <span class="level-landing__card__icon" aria-hidden="true"></span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_homework">Devoirs</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_homework">Ta liste de devoirs et ton suivi</span>
+                  </button>
+                  <button type="button" class="level-landing__card" data-tool="progress">
+                    <span class="level-landing__card__icon" aria-hidden="true"></span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_progress">Progrès</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_progress">Ta série et ton activité</span>
+                  </button>
+                  <button type="button" class="level-landing__card" data-tool="leaderboard">
+                    <span class="level-landing__card__icon" aria-hidden="true"></span>
+                    <span class="level-landing__card__label" data-i18n="lb_title">Classement</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_leaderboard">Tous les niveaux réunis, classés par points</span>
+                  </button>
+                </div>
+              </section>
+              <div class="learning-hub__workspace hidden" data-hub-workspace>
+                <div class="learning-hub__toolbar learning-hub__toolbar--sticky">
+                  <button type="button" class="learning-hub__level-link" data-hub-level-link data-i18n="level_advanced">Avancé</button>
+                  <div class="tool-menu tool-menu--learning" role="tablist" aria-label="Learning tools">
+                    <button type="button" class="tool-menu__btn is-active learning-hub__tab" data-tool="flashcards" data-i18n="learning_tab_flashcards" aria-selected="true">Cartes mémoire</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="vocab" data-i18n="learning_tab_vocab" aria-selected="false">Vocabulaire</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="words" data-i18n="learning_tab_words" aria-selected="false">Roue des mots</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="dictation" data-i18n="learning_tab_dictation" aria-selected="false">Dictée</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="grammar" data-i18n="learning_tab_grammar" aria-selected="false">Grammaire</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="verbs" data-i18n="learning_tab_verbs" aria-selected="false">Verbes irréguliers</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="homework" data-i18n="learning_tab_homework" aria-selected="false">Devoirs</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="progress" data-i18n="learning_tab_progress" aria-selected="false">Progrès</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="leaderboard" data-i18n="lb_title" aria-selected="false">Classement</button>
+                  </div>
+                </div>
+                <div class="learning-hub__body">
+                  <section class="tool-panel learning-hub__panel" data-tool-panel="flashcards"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="vocab"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="words"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="dictation"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="grammar"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="verbs"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="homework"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="progress"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="leaderboard"></section>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article id="content-fr-beginner" class="level-article hidden">
+            <div class="level-article__top">
+              <button type="button" class="btn-level-back" data-i18n="content_back_levels">← Retour aux niveaux</button>
+              <button type="button" class="btn-level-close btn-icon-close" data-i18n-aria="content_close_aria" aria-label="Close and return to levels">×</button>
+            </div>
+            <div class="learning-tools learning-hub" data-learning-level="fr-beginner">
+              <section class="level-landing" data-level-landing>
+                <div class="level-landing__head"><h2 class="level-landing__heading" data-i18n="level_beginner">Débutant</h2><span class="lvl-meter" role="img" data-i18n-aria="level_meter_1" aria-label="Difficulté 1 sur 3"><span class="lvl-meter__lab" data-i18n="level_meter_label">Difficulté</span><span class="lvl-meter__box is-on"></span><span class="lvl-meter__box"></span><span class="lvl-meter__box"></span></span></div>
+                <p class="level-landing__intro" data-i18n="learning_level_desc_beginner">Vocabulaire de base, grammaire du quotidien et exercices courts pour progresser pas à pas.</p>
+                <div class="level-landing__grid" role="navigation" data-i18n-aria="level_landing_grid_aria" aria-label="Choose activity">
+                  <button type="button" class="level-landing__card" data-tool="flashcards">
+                    <span class="level-landing__card__icon" aria-hidden="true"></span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_flashcards">Cartes mémoire</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_flashcards">Entraîne-toi avec des cartes à retourner</span>
+                  </button>
+                  <button type="button" class="level-landing__card" data-tool="vocab">
+                    <span class="level-landing__card__icon" aria-hidden="true"></span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_vocab">Vocabulaire</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_vocab">Traverse le chemin de pierres, un mot à la fois</span>
+                  </button>
+                  <button type="button" class="level-landing__card" data-tool="words">
+                    <span class="level-landing__card__icon" aria-hidden="true"></span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_words">Roue des mots</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_words">Glisse sur les lettres pour trouver les mots</span>
+                  </button>
+                  <button type="button" class="level-landing__card" data-tool="dictation">
+                    <span class="level-landing__card__icon" aria-hidden="true"></span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_dictation">Dictée</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_dictation">Écoute la phrase et écris-la</span>
+                  </button>
+                  <button type="button" class="level-landing__card" data-tool="grammar">
+                    <span class="level-landing__card__icon" aria-hidden="true"></span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_grammar">Grammaire</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_grammar">Exercices interactifs avec retour immédiat</span>
+                  </button>
+                  <button type="button" class="level-landing__card" data-tool="verbs">
+                    <span class="level-landing__card__icon" aria-hidden="true"></span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_verbs">Verbes irréguliers</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_verbs">Tous les verbes irréguliers, à chaque temps</span>
+                  </button>
+                  <button type="button" class="level-landing__card" data-tool="homework">
+                    <span class="level-landing__card__icon" aria-hidden="true"></span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_homework">Devoirs</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_homework">Ta liste de devoirs et ton suivi</span>
+                  </button>
+                  <button type="button" class="level-landing__card" data-tool="progress">
+                    <span class="level-landing__card__icon" aria-hidden="true"></span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_progress">Progrès</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_progress">Ta série et ton activité</span>
+                  </button>
+                  <button type="button" class="level-landing__card" data-tool="leaderboard">
+                    <span class="level-landing__card__icon" aria-hidden="true"></span>
+                    <span class="level-landing__card__label" data-i18n="lb_title">Classement</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_leaderboard">Tous les niveaux réunis, classés par points</span>
+                  </button>
+                </div>
+              </section>
+              <div class="learning-hub__workspace hidden" data-hub-workspace>
+                <div class="learning-hub__toolbar learning-hub__toolbar--sticky">
+                  <button type="button" class="learning-hub__level-link" data-hub-level-link data-i18n="level_beginner">Débutant</button>
+                  <div class="tool-menu tool-menu--learning" role="tablist" aria-label="Learning tools">
+                    <button type="button" class="tool-menu__btn is-active learning-hub__tab" data-tool="flashcards" data-i18n="learning_tab_flashcards" aria-selected="true">Cartes mémoire</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="vocab" data-i18n="learning_tab_vocab" aria-selected="false">Vocabulaire</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="words" data-i18n="learning_tab_words" aria-selected="false">Roue des mots</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="dictation" data-i18n="learning_tab_dictation" aria-selected="false">Dictée</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="grammar" data-i18n="learning_tab_grammar" aria-selected="false">Grammaire</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="verbs" data-i18n="learning_tab_verbs" aria-selected="false">Verbes irréguliers</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="homework" data-i18n="learning_tab_homework" aria-selected="false">Devoirs</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="progress" data-i18n="learning_tab_progress" aria-selected="false">Progrès</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="leaderboard" data-i18n="lb_title" aria-selected="false">Classement</button>
+                  </div>
+                </div>
+                <div class="learning-hub__body">
+                  <section class="tool-panel learning-hub__panel" data-tool-panel="flashcards"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="vocab"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="words"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="dictation"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="grammar"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="verbs"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="homework"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="progress"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="leaderboard"></section>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article id="content-fr-intermediate" class="level-article hidden">
+            <div class="level-article__top">
+              <button type="button" class="btn-level-back" data-i18n="content_back_levels">← Retour aux niveaux</button>
+              <button type="button" class="btn-level-close btn-icon-close" data-i18n-aria="content_close_aria" aria-label="Close and return to levels">×</button>
+            </div>
+            <div class="learning-tools learning-hub" data-learning-level="fr-intermediate">
+              <section class="level-landing" data-level-landing>
+                <div class="level-landing__head"><h2 class="level-landing__heading" data-i18n="level_intermediate">Intermédiaire</h2><span class="lvl-meter" role="img" data-i18n-aria="level_meter_2" aria-label="Difficulté 2 sur 3"><span class="lvl-meter__lab" data-i18n="level_meter_label">Difficulté</span><span class="lvl-meter__box is-on"></span><span class="lvl-meter__box is-on"></span><span class="lvl-meter__box"></span></span></div>
+                <p class="level-landing__intro" data-i18n="learning_level_desc_intermediate">Grammaire plus solide, vocabulaire élargi et tâches plus longues si tu maîtrises déjà l'anglais courant.</p>
+                <div class="level-landing__grid" role="navigation" data-i18n-aria="level_landing_grid_aria" aria-label="Choose activity">
+                  <button type="button" class="level-landing__card" data-tool="flashcards">
+                    <span class="level-landing__card__icon" aria-hidden="true"></span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_flashcards">Cartes mémoire</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_flashcards">Entraîne-toi avec des cartes à retourner</span>
+                  </button>
+                  <button type="button" class="level-landing__card" data-tool="vocab">
+                    <span class="level-landing__card__icon" aria-hidden="true"></span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_vocab">Vocabulaire</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_vocab">Traverse le chemin de pierres, un mot à la fois</span>
+                  </button>
+                  <button type="button" class="level-landing__card" data-tool="words">
+                    <span class="level-landing__card__icon" aria-hidden="true"></span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_words">Roue des mots</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_words">Glisse sur les lettres pour trouver les mots</span>
+                  </button>
+                  <button type="button" class="level-landing__card" data-tool="dictation">
+                    <span class="level-landing__card__icon" aria-hidden="true"></span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_dictation">Dictée</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_dictation">Écoute la phrase et écris-la</span>
+                  </button>
+                  <button type="button" class="level-landing__card" data-tool="grammar">
+                    <span class="level-landing__card__icon" aria-hidden="true"></span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_grammar">Grammaire</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_grammar">Exercices interactifs avec retour immédiat</span>
+                  </button>
+                  <button type="button" class="level-landing__card" data-tool="verbs">
+                    <span class="level-landing__card__icon" aria-hidden="true"></span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_verbs">Verbes irréguliers</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_verbs">Tous les verbes irréguliers, à chaque temps</span>
+                  </button>
+                  <button type="button" class="level-landing__card" data-tool="homework">
+                    <span class="level-landing__card__icon" aria-hidden="true"></span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_homework">Devoirs</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_homework">Ta liste de devoirs et ton suivi</span>
+                  </button>
+                  <button type="button" class="level-landing__card" data-tool="progress">
+                    <span class="level-landing__card__icon" aria-hidden="true"></span>
+                    <span class="level-landing__card__label" data-i18n="learning_tab_progress">Progrès</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_progress">Ta série et ton activité</span>
+                  </button>
+                  <button type="button" class="level-landing__card" data-tool="leaderboard">
+                    <span class="level-landing__card__icon" aria-hidden="true"></span>
+                    <span class="level-landing__card__label" data-i18n="lb_title">Classement</span>
+                    <span class="level-landing__card__hint" data-i18n="learning_landing_leaderboard">Tous les niveaux réunis, classés par points</span>
+                  </button>
+                </div>
+              </section>
+              <div class="learning-hub__workspace hidden" data-hub-workspace>
+                <div class="learning-hub__toolbar learning-hub__toolbar--sticky">
+                  <button type="button" class="learning-hub__level-link" data-hub-level-link data-i18n="level_intermediate">Intermédiaire</button>
+                  <div class="tool-menu tool-menu--learning" role="tablist" aria-label="Learning tools">
+                    <button type="button" class="tool-menu__btn is-active learning-hub__tab" data-tool="flashcards" data-i18n="learning_tab_flashcards" aria-selected="true">Cartes mémoire</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="vocab" data-i18n="learning_tab_vocab" aria-selected="false">Vocabulaire</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="words" data-i18n="learning_tab_words" aria-selected="false">Roue des mots</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="dictation" data-i18n="learning_tab_dictation" aria-selected="false">Dictée</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="grammar" data-i18n="learning_tab_grammar" aria-selected="false">Grammaire</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="verbs" data-i18n="learning_tab_verbs" aria-selected="false">Verbes irréguliers</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="homework" data-i18n="learning_tab_homework" aria-selected="false">Devoirs</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="progress" data-i18n="learning_tab_progress" aria-selected="false">Progrès</button>
+                    <button type="button" class="tool-menu__btn learning-hub__tab" data-tool="leaderboard" data-i18n="lb_title" aria-selected="false">Classement</button>
+                  </div>
+                </div>
+                <div class="learning-hub__body">
+                  <section class="tool-panel learning-hub__panel" data-tool-panel="flashcards"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="vocab"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="words"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="dictation"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="grammar"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="verbs"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="homework"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="progress"></section>
+                  <section class="tool-panel learning-hub__panel hidden" data-tool-panel="leaderboard"></section>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article id="content-fr-advanced" class="level-article hidden">
+            <div class="level-article__top">
+              <button type="button" class="btn-level-back" data-i18n="content_back_levels">← Retour aux niveaux</button>
+              <button type="button" class="btn-level-close btn-icon-close" data-i18n-aria="content_close_aria" aria-label="Close and return to levels">×</button>
+            </div>
+            <div class="learning-tools learning-hub" data-learning-level="fr-advanced">
               <section class="level-landing" data-level-landing>
                 <div class="level-landing__head"><h2 class="level-landing__heading" data-i18n="level_advanced">Avancé</h2><span class="lvl-meter" role="img" data-i18n-aria="level_meter_3" aria-label="Difficulté 3 sur 3"><span class="lvl-meter__lab" data-i18n="level_meter_label">Difficulté</span><span class="lvl-meter__box is-on"></span><span class="lvl-meter__box is-on"></span><span class="lvl-meter__box is-on"></span></span></div>
                 <p class="level-landing__intro" data-i18n="learning_level_desc_advanced">Grammaire nuancée, vocabulaire académique et pratique type examen pour un anglais précis et assuré.</p>
@@ -911,12 +1202,17 @@
   <script src="i18n.js"></script>
   <script src="flashcard-merge-data.js"></script>
   <script src="irregular-verbs.js"></script>
+  <script src="irregular-verbs-fr.js"></script>
   <script src="homework.js"></script>
   <script src="wordgame-data.js"></script>
+  <script src="wordgame-data-fr.js"></script>
   <script src="wordgame.js"></script>
   <script src="icons.js"></script>
   <script src="vocab-decks.js"></script>
+  <script src="french-decks.js"></script>
+  <script src="french-grammar.js"></script>
   <script src="dictation-data.js"></script>
+  <script src="dictation-data-fr.js"></script>
   <script src="dictation.js"></script>
   <button type="button" id="scroll-top-btn" class="scroll-top-btn" aria-label="Back to top">↑</button>
 
