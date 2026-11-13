@@ -12781,3 +12781,62 @@ body.content-panel-open .tool-panel[data-tool-panel="progress"],
     flex-wrap: wrap;
   }
 }
+
+
+/* ---------- Single back arrow (replaces the separate back buttons) ---------- */
+.btn-back-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--back-arrow-color, var(--accent));
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  transition: background 0.2s, transform 0.2s;
+}
+.btn-back-arrow:hover {
+  background: var(--surface-elevated);
+  transform: translateX(-2px);
+}
+.btn-back-arrow:focus-visible {
+  outline: 2px solid var(--back-arrow-color, var(--accent));
+  outline-offset: 2px;
+}
+.btn-back-arrow.hidden {
+  display: none;
+}
+body.content-panel-open .panel-toolbar .btn-back-arrow {
+  width: 2.2rem;
+  height: 2.2rem;
+}
+
+/* The old text back buttons stay in the page (the arrow triggers them) but are not shown */
+.level-article__top,
+.lh-back-to-menu,
+.lh-back-to-menu.hidden,
+.lh-lesson-view__back {
+  display: none !important;
+}
+
+/* Arrow colour follows the level on the level menu… */
+body[data-open-level="beginner"] { --back-arrow-color: #2f8a5b; }
+body[data-open-level="intermediate"] { --back-arrow-color: #e07a1f; }
+body[data-open-level="advanced"] { --back-arrow-color: #d0453b; }
+
+/* …and the game's own theme colour inside each game zone */
+body.vocab-zone,
+body.ocean-zone,
+body.fire-zone,
+body.music-zone,
+body.school-zone,
+body.space-zone,
+body.desert-zone,
+body.zoo-zone,
+body.wind-zone {
+  --back-arrow-color: var(--accent);
+}

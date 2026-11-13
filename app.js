@@ -9254,6 +9254,7 @@
     contentPasswordInput.value = "";
     contentPasswordError.classList.add("hidden");
     document.querySelectorAll(".level-article").forEach((el) => el.classList.add("hidden"));
+    document.body.removeAttribute("data-open-level");
     document.querySelectorAll(".btn-level").forEach((b) => b.classList.remove("is-active"));
     resetAllLearningHubsToLanding();
     updateContentBreadcrumb();
@@ -9462,7 +9463,31 @@
     openSection(card.getAttribute("data-section"));
   });
 
-  btnHome.addEventListener("click", showHome);
+  /** The single back arrow: steps back one level from wherever the user is. */
+  function goBackOneStep() {
+    const contentPanel = document.getElementById("panel-content");
+    if (contentPanel && getVisibleTopLevelPanel() === contentPanel) {
+      const article = contentPanel.querySelector(".level-article:not(.hidden)");
+      if (article) {
+        const lessonBack = article.querySelector(".lh-lesson-view__back");
+        if (lessonBack && !lessonBack.closest(".hidden, .is-hidden-panel")) {
+          lessonBack.click();
+          return;
+        }
+        const menuBack = article.querySelector(".lh-back-to-menu:not(.hidden)");
+        if (menuBack && !menuBack.closest(".hidden")) {
+          menuBack.click();
+          return;
+        }
+        window.scrollTo({ top: 0, behavior: "instant" });
+        showLevelPicker();
+        return;
+      }
+    }
+    showHome();
+  }
+
+  btnHome.addEventListener("click", goBackOneStep);
 
   if (mobileBottomNav) {
     mobileBottomNav.addEventListener("click", function (e) {
@@ -9965,6 +9990,7 @@
     const article = document.getElementById("content-" + level);
     if (article) {
       article.classList.remove("hidden");
+      document.body.setAttribute("data-open-level", level);
       resetHubToLanding(article.querySelector(".learning-hub"));
       recordLastLevel(level);
     }
