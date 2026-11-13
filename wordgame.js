@@ -27,7 +27,7 @@
     return e;
   }
 
-  var ROUND_POINTS = 5;
+  var ROUND_POINTS = 10;
   var HINT_COST = 1;
 
   function freshState() {
