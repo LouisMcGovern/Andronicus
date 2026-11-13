@@ -12840,3 +12840,16 @@ body.zoo-zone,
 body.wind-zone {
   --back-arrow-color: var(--accent);
 }
+
+/* Back arrow stays on screen while scrolling (outside the learning area, whose top bar is already fixed) */
+body:not(.content-panel-open) .panel-toolbar {
+  position: sticky;
+  top: 0.75rem;
+  z-index: 55;
+  pointer-events: none;
+}
+body:not(.content-panel-open) .panel-toolbar .btn-back-arrow {
+  pointer-events: auto;
+  background: var(--surface-elevated);
+  box-shadow: 0 2px 10px rgba(13, 27, 42, 0.14);
+}
