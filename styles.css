@@ -12885,3 +12885,9 @@ body.content-panel-open .panel-toolbar__brand {
     font-size: 1.3rem;
   }
 }
+body.content-panel-open .panel-toolbar__brand {
+  font-family: "Playfair Display", Georgia, serif !important;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: #0d1b2a;
+}
