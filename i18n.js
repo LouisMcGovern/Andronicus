@@ -123,6 +123,9 @@
       home_free_banner_text:
         "Your first class is free — no commitment, no payment until you decide to continue.",
       hero_cta_book_now: "Claim your free class",
+      home_play_banner_text:
+        "Free games to practise English or French — vocabulary, word wheel, dictation, grammar and more. No sign-up needed.",
+      home_play_cta: "Play games",
       nav_account_label: "Student Account",
       nav_account_hint: "Optional login to track practice",
       mobile_nav_aria: "Mobile navigation",
@@ -1085,6 +1088,9 @@
       home_free_banner_text:
         "Votre premier cours est gratuit — sans engagement, et aucun paiement tant que vous n'avez pas décidé de continuer.",
       hero_cta_book_now: "Réserver mon cours gratuit",
+      home_play_banner_text:
+        "Des jeux gratuits pour pratiquer l’anglais ou le français — vocabulaire, roue des mots, dictée, grammaire et plus encore. Sans inscription.",
+      home_play_cta: "Jouer aux jeux",
       nav_account_label: "Compte élève",
       nav_account_hint: "Connexion facultative pour suivre ses progrès",
       mobile_nav_aria: "Navigation mobile",
