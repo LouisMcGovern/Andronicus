@@ -13519,9 +13519,9 @@ body.content-panel-open .intro-title .char {
 .install-ios-tip {
   position: fixed;
   left: 50%;
-  bottom: calc(1rem + env(safe-area-inset-bottom));
+  top: calc(4.5rem + env(safe-area-inset-top)); /* top of the screen, under the language switch: the bottom menu and Safari's toolbar would cover it */
   transform: translateX(-50%);
-  z-index: 300;
+  z-index: 2000;
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -13540,7 +13540,12 @@ body.content-panel-open .intro-title .char {
   font-size: 0.92rem;
   line-height: 1.4;
 }
-.install-ios-tip .btn-text {
-  color: #c8daea;
+.install-ios-tip .install-ios-tip__close {
+  flex-shrink: 0;
+  padding: 0.35rem 0.9rem;
+  border: 1px solid rgba(244, 247, 251, 0.55);
+  border-radius: 999px;
+  background: transparent;
+  color: #f4f7fb;
   font-weight: 700;
 }
