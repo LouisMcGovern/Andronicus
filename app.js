@@ -6156,8 +6156,12 @@
     function renderStones(st, hop) {
       el.stones.innerHTML = "";
       const here = st.lapDone ? total : st.correct;
-      const from = Math.max(0, here - VOCAB_PATH_WINDOW_BEFORE);
-      const to = Math.min(total, here + VOCAB_PATH_WINDOW_AFTER);
+      /* Phones show fewer, bigger stones so the path fits without clipping. */
+      const narrow = window.innerWidth < 560;
+      const before = narrow ? 2 : VOCAB_PATH_WINDOW_BEFORE;
+      const after = narrow ? 3 : VOCAB_PATH_WINDOW_AFTER;
+      const from = Math.max(0, here - before);
+      const to = Math.min(total, here + after);
       const viewable = {};
       (Array.isArray(st.recent) ? st.recent : []).forEach(function (r) {
         viewable[r.n] = true;
@@ -7915,6 +7919,11 @@
     document.body.classList.toggle("desert-zone", panelOpen("verbs"));
     document.body.classList.toggle("zoo-zone", panelOpen("leaderboard"));
     document.body.classList.toggle("wind-zone", panelOpen("progress"));
+    /* Any game open: lets the phone layout give the game the whole screen. */
+    document.body.classList.toggle(
+      "game-open",
+      ["vocab", "words", "flashcards", "dictation", "homework", "grammar", "verbs", "leaderboard", "progress"].some(panelOpen)
+    );
   }
 
   function updateContentBreadcrumb() {

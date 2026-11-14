@@ -199,9 +199,9 @@
       gridEl.style.gridTemplateRows = "repeat(" + round.rows + ", var(--wg-cell))";
       gridEl.style.setProperty(
         "--wg-cell",
-        "min(2.4rem, calc((min(100vw, 34rem) - 5.5rem) / " +
+        "min(var(--wg-cell-max, 2.4rem), calc((min(100vw, 34rem) - var(--wg-side, 5.5rem)) / " +
           Math.max(round.cols, 5) +
-          "), calc(34vh / " +
+          "), calc(var(--wg-grid-h, 34vh) / " +
           Math.max(round.rows, 5) +
           "))"
       );

@@ -13549,3 +13549,215 @@ body.content-panel-open .intro-title .char {
   color: #f4f7fb;
   font-weight: 700;
 }
+
+/* ==========================================================================
+   Phones: games fill the screen
+   While any game is open (body.game-open), strip the nested frames and
+   empty space so the game itself uses the width and height of the phone,
+   and lay buttons out in rows instead of one per line, to cut scrolling.
+   Ids in the selectors keep this above the per-zone theme rules.
+   ========================================================================== */
+@media (max-width: 640px) {
+  /* Breadcrumb: one slim line that scrolls sideways instead of wrapping */
+  body.game-open #content-breadcrumb {
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    font-size: 0.74rem;
+    padding: 0.3rem 0.75rem;
+    gap: 0.3rem;
+  }
+  body.game-open #content-breadcrumb::-webkit-scrollbar { display: none; }
+  body.game-open #content-breadcrumb > * { flex: 0 0 auto; white-space: nowrap; }
+
+  /* No big gap above the game, slim side margins */
+  body.game-open #panel-content #content-levels .level-article {
+    padding: 0.45rem 0.35rem calc(0.8rem + env(safe-area-inset-bottom));
+  }
+  body.game-open #panel-content #content-levels .learning-tools.learning-hub { margin-top: 0; }
+  /* The page itself was a full screen tall *below* the header, so it always scrolled a bit */
+  body.game-open #app,
+  body.game-open #panel-content { min-height: 0; }
+
+  /* The game frame: nearly edge to edge, and at least as tall as the screen */
+  body.game-open #panel-content #content-levels .tool-panel.learning-hub__panel {
+    padding: 0.7rem 0.6rem 0.9rem;
+    border-radius: 1rem;
+    min-height: calc(100svh - 6.2rem);
+  }
+
+  /* ---------- Vocabulary: stepping stones ---------- */
+  body.game-open #content-levels .lh-vocab__header { margin: 0 0 0.45rem; }
+  body.game-open #content-levels .lh-vocab__header .lh-chip {
+    padding: 0.2rem 0.65rem;
+    font-size: 0.85rem;
+  }
+  body.game-open #content-levels .vp-card { padding: 1.55rem 0.7rem 0.8rem; }
+  body.game-open #content-levels .vp-top { text-align: left; }
+  body.game-open #content-levels .vp-top__text { text-align: left; }
+  body.game-open #content-levels .vp-title {
+    font-size: 1.45rem;
+    line-height: 1.15;
+    margin: 0 0 0.1rem;
+  }
+  body.game-open #content-levels .vp-meta { font-size: 0.85rem; margin: 0; }
+  body.game-open #content-levels .vp-level { font-size: 0.8rem; }
+  body.game-open #content-levels .vp-bar { margin-top: 0.5rem; }
+  body.game-open #content-levels .vp-river {
+    margin: 0.6rem 0 0.2rem;
+    padding: 1.7rem 0.4rem 0.95rem;
+  }
+  body.game-open #content-levels .vp-stones { gap: 0.4rem; }
+  body.game-open #content-levels .vp-stone { width: 2.85rem; height: 2.05rem; }
+  body.game-open #content-levels .vp-stone.is-here { width: 3.45rem; height: 2.45rem; }
+  body.game-open #content-levels .vp-play {
+    margin-top: 0.65rem;
+    padding: 0.85rem 0.7rem 0.9rem;
+  }
+  body.game-open #content-levels .vp-instruction { font-size: 0.88rem; line-height: 1.35; }
+  body.game-open #content-levels .vp-word {
+    font-size: 2.35rem;
+    line-height: 1.1;
+    margin: 0.25rem 0 0.85rem;
+  }
+  body.game-open #content-levels .vp-options { gap: 0.5rem; }
+  body.game-open #content-levels .vp-option {
+    padding: 0.75rem 0.85rem;
+    min-height: 3.2rem;
+  }
+  body.game-open #content-levels .vp-feedback { margin-top: 0.6rem; }
+  body.game-open #content-levels .vp-foot { margin-top: 0.7rem; font-size: 0.8rem; }
+
+  /* ---------- Word wheel ---------- */
+  body.game-open #content-levels [data-tool-panel="words"] .wg {
+    --wg-cell-max: 2.9rem;
+    --wg-side: 2.6rem;
+    --wg-grid-h: 27svh;
+  }
+  body.game-open #content-levels .wg__sub { font-size: 0.8rem; line-height: 1.35; margin-top: 0.1rem; }
+  body.game-open #content-levels .wg__mid { min-height: 2.6rem; }
+  body.game-open #content-levels [data-tool-panel="words"] .wg__wheel {
+    width: min(15.5rem, 29svh, 72vw);
+  }
+  body.game-open #content-levels .wg__actions {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.25rem;
+    margin-top: 0.4rem;
+    width: 100%;
+    max-width: none;
+  }
+  body.game-open #content-levels .wg__act {
+    margin: 0;
+    padding: 0.4rem 0.45rem;
+    font-size: 0.74rem;
+    gap: 0.25rem;
+    white-space: nowrap;
+  }
+  body.game-open #content-levels .wg__bonuscount { flex-basis: 100%; margin: 0.1rem 0 0; text-align: center; }
+
+  /* ---------- Flashcards ---------- */
+  body.game-open #content-levels .flashcard-session-hint { font-size: 0.78rem; line-height: 1.35; margin: 0.15rem 0 0.4rem; }
+  body.game-open #content-levels .flashcard-progress-label { margin: 0.3rem 0; }
+  body.game-open #content-levels .flashcard-live-score { margin: 0.4rem 0 0.5rem; }
+  body.game-open #content-levels .flashcard {
+    min-height: clamp(15rem, 44svh, 26rem);
+  }
+  body.game-open #content-levels .flashcard__side { font-size: 1.6rem; }
+  body.game-open #content-levels .flashcard-controls { margin-top: 0.7rem; gap: 0.5rem; }
+  body.game-open #content-levels .flashcard-controls .flashcard-btn {
+    padding: 0.65rem 1.2rem;
+    font-size: 1rem;
+  }
+
+  /* ---------- Dictation ---------- */
+  body.game-open #content-levels .dict__sub { font-size: 0.8rem; line-height: 1.35; margin-top: 0.1rem; }
+  body.game-open #content-levels .dict__head { margin-bottom: 0.5rem; }
+  body.game-open #content-levels .dict__card { padding: 0.85rem 0.75rem; }
+  body.game-open #content-levels .dict__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.4rem;
+  }
+  body.game-open #content-levels .dict__players {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0.75rem 0;
+  }
+  body.game-open #content-levels .dict__players > * { margin: 0; }
+  body.game-open #content-levels .dict__input { min-height: 4.2rem; }
+  body.game-open #content-levels .dict__btns {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.45rem;
+    margin-top: 0.6rem;
+  }
+  body.game-open #content-levels .dict__btn {
+    margin: 0;
+    flex: 1 1 0;
+    padding: 0.6rem 0.6rem;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+  body.game-open #content-levels .dict__btn--primary { flex-basis: 100%; font-size: 1rem; }
+  body.game-open #content-levels .dict__note { font-size: 0.8rem; margin-top: 0.6rem; }
+
+  /* ---------- Grammar: topics as a two-column grid of tiles ---------- */
+  body.game-open #content-levels .lh-topic-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+  body.game-open #content-levels .lh-topic-card {
+    margin: 0;
+    padding: 0.7rem 0.65rem;
+    min-height: 4.6rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+  body.game-open #content-levels .lh-topic-card__title { font-size: 0.92rem; line-height: 1.25; }
+  body.game-open #content-levels .lh-topic-card__start-here { font-size: 0.66rem; }
+
+  /* Grammar lesson: fewer nested insets so the text gets the width */
+  body.game-open #content-levels .lh-lesson-view__title { font-size: 1.4rem; margin-bottom: 0.5rem; }
+  body.game-open #content-levels .lh-lesson-block {
+    padding: 0.8rem 0.7rem;
+    margin-bottom: 0.6rem;
+  }
+  body.game-open #content-levels .lh-lesson-block__title { margin-bottom: 0.5rem; }
+  body.game-open #content-levels .lh-learn-panel { padding: 0.75rem 0.75rem; }
+  body.game-open #content-levels .lh-learn-panel__prose { font-size: 0.98rem; line-height: 1.5; }
+  body.game-open #content-levels .lh-learn-panel__examples { margin-top: 0.6rem; font-size: 0.95rem; }
+  body.game-open #content-levels .lh-gap-card { padding: 0.75rem 0.65rem; }
+  body.game-open #content-levels .lh-gap-card__options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.45rem;
+  }
+  body.game-open #content-levels .lh-gap-card__options > * { margin: 0; min-width: 0; }
+
+  /* ---------- Irregular verbs: tighter header and controls side by side ---------- */
+  body.game-open #content-levels .iv-title { font-size: 1.45rem; }
+  body.game-open #content-levels .iv-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin: 0.6rem 0 0.4rem;
+  }
+  body.game-open #content-levels .iv-controls > * { margin: 0; min-width: 0; }
+  body.game-open #content-levels .iv-hint { font-size: 0.76rem; }
+  body.game-open #content-levels .iv-table { font-size: 0.88rem; }
+}
