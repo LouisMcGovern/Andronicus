@@ -22,6 +22,14 @@
   <!-- og-image.png: place at public/assets/og-image.png, 1200×630 px, Andronicus title on the site background colour — create and upload separately -->
   <title>Andronicus · Cours d’anglais</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <!-- Web app (installable): icon, name and colours -->
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
+  <meta name="theme-color" content="#d4e3f0" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Andronicus" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <link rel="icon" type="image/png" href="/favicon.svg" />
   <script>
     try {
@@ -1032,6 +1040,7 @@
         <div id="account-dashboard" class="account-dashboard hidden">
           <div class="account-dashboard__top">
             <p id="account-welcome" class="account-welcome"></p>
+            <button type="button" class="btn-text install-app-btn hidden" data-i18n="pwa_install_btn">Installer l’app</button>
             <button type="button" id="account-logout-btn" class="btn-text" data-i18n="account_btn_logout">Se déconnecter</button>
           </div>
           <div id="account-profile" class="account-card account-profile"></div>
@@ -1186,7 +1195,12 @@
         ·
         <a href="https://instagram.com/learn.english.andronicus" target="_blank" rel="noopener noreferrer"><svg class="and-icon" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="5"/><circle cx="12" cy="12" r="3.9"/><circle cx="17" cy="7" r=".7" fill="currentColor" stroke="none"/></svg> @learn.english.andronicus</a>
       </p>
+      <p class="site-footer__app"><button type="button" class="install-app-btn hidden" data-i18n="pwa_install_btn">Installer l’app</button></p>
     </footer>
+    <div id="install-ios-tip" class="install-ios-tip hidden" role="dialog" aria-modal="false">
+      <p data-i18n-html="pwa_ios_tip">Sur iPhone ou iPad : touche <strong>Partager</strong>, puis <strong>Sur l’écran d’accueil</strong>.</p>
+      <button type="button" class="btn-text install-ios-tip__close" data-i18n="pwa_ios_ok">OK</button>
+    </div>
   </div>
   <button type="button" id="admin-corner-btn" class="admin-corner-btn" data-i18n-aria="admin_corner_aria" aria-label="Open admin"></button>
 
@@ -1240,5 +1254,6 @@
   <script src="payments-config.js"></script>
 
   <script src="app.js"></script>
+  <script src="pwa.js"></script>
 </body>
 </html>

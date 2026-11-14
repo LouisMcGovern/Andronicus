@@ -13498,3 +13498,49 @@ body.content-panel-open .intro-title .char {
 .profile-msg.is-bad {
   color: #c0392b;
 }
+
+/* ---------- Web app: install button + iPhone tip ---------- */
+.site-footer__app {
+  margin: 0.6rem 0 0;
+}
+.site-footer__app .install-app-btn {
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.95rem;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.install-app-btn.hidden {
+  display: none !important;
+}
+.install-ios-tip {
+  position: fixed;
+  left: 50%;
+  bottom: calc(1rem + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: min(92vw, 26rem);
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  background: #0f3d7a;
+  color: #f4f7fb;
+  box-shadow: 0 8px 28px rgba(13, 27, 42, 0.3);
+}
+.install-ios-tip.hidden {
+  display: none;
+}
+.install-ios-tip p {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+.install-ios-tip .btn-text {
+  color: #c8daea;
+  font-weight: 700;
+}

@@ -9,6 +9,9 @@
 
   const STRINGS = {
     en: {
+      pwa_install_btn: "Install the app",
+      pwa_ios_tip: "On iPhone or iPad: tap <strong>Share</strong>, then <strong>Add to Home Screen</strong>.",
+      pwa_ios_ok: "OK",
       /* ---- Leaderboard profile (account) ---- */
       profile_heading: "Your leaderboard profile",
       profile_intro: "Choose the name and the character other students see on the leaderboard.",
@@ -973,6 +976,9 @@
       account_metric_quiz_best: "Best {mode}: {pct}%",
     },
     fr: {
+      pwa_install_btn: "Installer l’app",
+      pwa_ios_tip: "Sur iPhone ou iPad : touche <strong>Partager</strong>, puis <strong>Sur l’écran d’accueil</strong>.",
+      pwa_ios_ok: "OK",
       /* ---- Profil du classement (compte) ---- */
       profile_heading: "Ton profil sur le classement",
       profile_intro: "Choisis le nom et le personnage que les autres élèves voient dans le classement.",
