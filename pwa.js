@@ -13,9 +13,82 @@
 
   if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
     window.addEventListener("load", function () {
-      navigator.serviceWorker.register("/sw.js").catch(function () {});
+      navigator.serviceWorker
+        .register("/sw.js", { updateViaCache: "none" })
+        .then(function (reg) {
+          reg.update().catch(function () {});
+        })
+        .catch(function () {});
     });
   }
+
+  /* Keep the website and the home-screen app on the newest version.
+   * A home-screen app resumes from memory instead of reloading, so when it comes
+   * back to the front we ask the server whether the site has changed, and if it has
+   * we reload: straight away on the home page, otherwise next time it's reopened
+   * (never in the middle of a game). */
+  (function keepFresh() {
+    if (!window.fetch || location.protocol !== "https:") return;
+    var FILES = ["/index.html", "/app.js", "/styles.css", "/i18n.js"];
+    var known = null;
+    var hiddenAt = 0;
+    var pending = false;
+
+    function fingerprint() {
+      return Promise.all(
+        FILES.map(function (f) {
+          return fetch(f, { method: "HEAD", cache: "no-store" }).then(function (r) {
+            return r.ok ? r.headers.get("etag") || r.headers.get("last-modified") || "" : "";
+          });
+        })
+      ).then(function (tags) {
+        return tags.join("|");
+      });
+    }
+    function onHome() {
+      return !location.hash || location.hash === "#home";
+    }
+    function check() {
+      fingerprint()
+        .then(function (fp) {
+          if (!fp) return;
+          if (known === null) {
+            known = fp;
+            return;
+          }
+          if (fp !== known) pending = true;
+          if (pending && (onHome() || document.visibilityState === "hidden")) location.reload();
+        })
+        .catch(function () {});
+    }
+
+    window.addEventListener("load", function () {
+      setTimeout(check, 1500);
+    });
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState === "hidden") {
+        hiddenAt = Date.now();
+        return;
+      }
+      if (pending) {
+        location.reload();
+        return;
+      }
+      if (Date.now() - hiddenAt > 60 * 1000) {
+        if ("serviceWorker" in navigator && navigator.serviceWorker.getRegistration) {
+          navigator.serviceWorker.getRegistration().then(function (reg) {
+            if (reg) reg.update().catch(function () {});
+          });
+        }
+        check();
+      }
+    });
+    function reloadIfHome() {
+      if (pending && onHome()) location.reload();
+    }
+    window.addEventListener("hashchange", reloadIfHome);
+    window.addEventListener("popstate", reloadIfHome);
+  })();
   if (isStandalone) document.documentElement.classList.add("is-installed-app");
 
   function buttons() {

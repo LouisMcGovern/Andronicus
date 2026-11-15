@@ -179,7 +179,10 @@
     const bannerText = document.querySelector(".home-free-banner__text");
     if (bannerText) bannerText.textContent = I18n.t("home_play_banner_text");
     const bannerBtn = document.querySelector(".home-free-banner__btn");
-    if (bannerBtn) bannerBtn.textContent = I18n.t("home_play_cta");
+    if (bannerBtn) {
+      bannerBtn.textContent = I18n.t("home_play_cta");
+      bannerBtn.setAttribute("data-section", "content");
+    }
     const navPrice = document.querySelector('.nav-card[data-section="booking"] .nav-card__price');
     if (navPrice) navPrice.textContent = I18n.t("nav_booking_price");
     const bookingCallout = document.querySelector(".booking-price-callout");

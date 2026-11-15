@@ -4,7 +4,7 @@
  * - Images and fonts: saved copy first (they rarely change), refreshed in the background.
  * - Supabase, Stripe and other outside services are never cached.
  * Bump VERSION to clear old saved copies. */
-var VERSION = "andronicus-v1";
+var VERSION = "andronicus-v2";
 var CORE = [
   "/",
   "/index.html",
@@ -88,8 +88,14 @@ self.addEventListener("fetch", function (event) {
   }
 
   // pages, scripts, styles, data: network first, saved copy when offline
+  // cache: "no-cache" makes the browser check with the server every time, so a new
+  // version of the site is never hidden behind an old saved page.
+  var fresh =
+    req.mode === "navigate"
+      ? fetch(req.url, { cache: "no-cache", credentials: "same-origin" })
+      : fetch(req, { cache: "no-cache" });
   event.respondWith(
-    fetch(req)
+    fresh
       .then(function (res) {
         if (res && res.ok) {
           var copy = res.clone();
